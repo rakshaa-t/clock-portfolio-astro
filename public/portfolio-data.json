@@ -1,0 +1,49 @@
+{
+  "notes": [
+    {
+      "title": "Top-tier prompting is more than words",
+      "date": "Today",
+      "preview": "The gap between what you imagine and what you build is closing fast..."
+    },
+    {
+      "title": "Don't be shy, use these libraries",
+      "date": "Yesterday",
+      "preview": "A curated list of the tools and resources I actually use daily..."
+    },
+    {
+      "title": "How I vibe-code complex animations",
+      "date": "Feb 6",
+      "preview": "Physics-based springs, momentum curves, and making things feel alive..."
+    },
+    {
+      "title": "All Claude skills in my MD file",
+      "date": "Feb 2",
+      "preview": "The skill files I've built up over months of working with Claude..."
+    },
+    {
+      "title": "Fewer tools, tighter workflow",
+      "date": "Jan 28",
+      "preview": "I used to juggle 15 apps. Now it's Figma, Claude, and a terminal..."
+    },
+    {
+      "title": "The design-engineering gap",
+      "date": "Jan 20",
+      "preview": "The tension between design and code isn't a problem to solve..."
+    }
+  ],
+
+  "mymind": [
+    { "type": "image", "color": "linear-gradient(145deg,#A699D4,#7B6CB8)", "height": 110, "caption": "UI component patterns" },
+    { "type": "note",  "text": "\"Good design is as little design as possible.\"", "author": "Dieter Rams" },
+    { "type": "image", "color": "linear-gradient(145deg,#7E8EC8,#5E6EA8)", "height": 140, "caption": "Devouring Details" },
+    { "type": "link",  "icon": "🌐", "title": "Aiverse", "desc": "AI UX interactions library" },
+    { "type": "image", "color": "linear-gradient(145deg,#C4956A,#8E6B3E)", "height": 100, "caption": "Animations on the Web" },
+    { "type": "link",  "icon": "◈",  "title": "Spectrums", "desc": "Reusable shaders & effects" },
+    { "type": "note",  "text": "SwiftUI + spring animations = closest to native feel on web" },
+    { "type": "image", "color": "linear-gradient(145deg,#2D6A4F,#1B4332)", "height": 120, "caption": "Three.js 3D Library" },
+    { "type": "link",  "icon": "▶",  "title": "Remotion", "desc": "React-based MP4 production" },
+    { "type": "image", "color": "linear-gradient(145deg,#B090C8,#7B52A0)", "height": 90,  "caption": "Design Engineer skills" },
+    { "type": "link",  "icon": "✎",  "title": "Using AI as a Design Engineer", "desc": "Jakub's workflow guide" },
+    { "type": "note",  "text": "column-count CSS for masonry without JS — works beautifully" }
+  ]
+}

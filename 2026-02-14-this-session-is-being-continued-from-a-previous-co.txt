@@ -1,0 +1,1200 @@
+
+           Claude Code v2.1.39
+▗ ▗   ▖ ▖  Opus 4.6 · Claude Max
+           ~/clock-portfolio-astro
+  ▘▘ ▝▝    Opus 4.6 is here · $50 free extra usage · /extra-usage to enable
+
+✻ Conversation compacted (ctrl+o for history)
+
+  ⎿  Referenced file src/pages/index.astro
+  ⎿  Referenced file ../Downloads/kindle-extract.html
+  ⎿  Referenced file src/styles/global.css
+  ⎿  Referenced file src/scripts/clock-engine.js
+  ⎿  Read .claude/CLAUDE.md (96 lines)
+  ⎿  Plan file referenced (~/.claude/plans/bright-inventing-parnas.md)
+
+⏺ Continuing the Kindle UI rebuild. Let me read the current state of all three
+  files I need to work with.
+
+⏺ Read 3 files (ctrl+o to expand)
+
+⏺ Let me read the current HTML structure in index.astro and the full scope of
+  the JS kindle section.
+
+⏺ Read 2 files (ctrl+o to expand)
+
+⏺ Now let me check the mobile responsive section for kindle styles and read the
+  rest of the HTML structure.
+
+⏺ Searched for 2 patterns, read 2 files (ctrl+o to expand)
+
+⏺ Good, I have a complete picture now. Let me make all the changes — CSS
+  replacement, JS replacement, and mobile CSS update.
+
+⏺ Update(src/styles/global.css)
+  ⎿  Added 215 lines, removed 76 lines
+      480    30%{filter:brightness(1.12) contrast(0.95);}                
+      481    100%{filter:brightness(1);}                                 
+      482  }                                                             
+      483 -/* Kindle slider — library ↔ detail */                        
+      484 -.kindle-slider{                                               
+      485 -  display:flex;width:200%;height:100%;                        
+      486 -  transition:transform 0.35s cubic-bezier(0.32,0.72,0,1);     
+      483 +/* ═══ VIEW LAYER — stacked views, toggle visibility ═══ */   
+      484 +.kindle-view{                                                 
+      485 +  position:absolute;inset:0;                                  
+      486 +  transition:opacity 0.3s ease-out, transform 0.3s ease-out;  
+      487  }                                                             
+      488 -.kindle-slider.show-detail{transform:translateX(-50%);}       
+      489 -.kindle-library,.kindle-detail{width:50%;flex-shrink:0;min-wi 
+          -dth:0;min-height:0;}                                          
+      488 +.kindle-view.hidden{                                          
+      489 +  opacity:0;pointer-events:none;                              
+      490 +  transform:translateX(8px);                                  
+      491 +}                                                             
+      492                                                                
+      493 -/* Library — scrollable grid (both axes) */                   
+      493 +/* ═══ TOP BAR ═══ */                                         
+      494 +.kindle-topbar{                                               
+      495 +  display:flex;align-items:center;gap:8px;                    
+      496 +  padding:14px 18px 10px;                                     
+      497 +  border-bottom:1px solid rgba(0,0,0,0.06);                   
+      498 +}                                                             
+      499 +.kindle-back{                                                 
+      500 +  width:28px;height:28px;border-radius:6px;                   
+      501 +  background:none;border:none;cursor:pointer;                 
+      502 +  display:flex;align-items:center;justify-content:center;     
+      503 +  color:rgba(0,0,0,0.5);font-size:16px;                       
+      504 +  transition:background 0.15s ease-out;                       
+      505 +}                                                             
+      506 +.kindle-back:hover{background:rgba(0,0,0,0.06);}              
+      507 +.kindle-topbar-title{                                         
+      508 +  font-family:'Geist',sans-serif;font-size:13px;font-weight:6 
+          +00;                                                           
+      509 +  color:rgba(0,0,0,0.6);letter-spacing:-0.01em;               
+      510 +}                                                             
+      511 +                                                              
+      512 +/* ═══ LIBRARY VIEW ═══ */                                    
+      513  .kindle-library{                                              
+      514 -  display:grid;                                               
+      515 -  grid-template-columns:repeat(5,80px);                       
+      516 -  grid-auto-rows:min-content;                                 
+      517 -  gap:20px;                                                   
+      518 -  padding:18px 16px;                                          
+      519 -  overflow:auto;-webkit-overflow-scrolling:touch;             
+      514 +  padding:0 18px 18px;                                        
+      515 +  overflow-y:auto;                                            
+      516 +  height:calc(100% - 53px);                                   
+      517  }                                                             
+      518 -.kindle-library::-webkit-scrollbar{width:0;height:0;}         
+      519 -.kindle-lib-item{                                             
+      520 -  cursor:pointer;display:flex;flex-direction:column;          
+      521 -  transition:transform 0.15s ease-out;                        
+      518 +.kindle-library::-webkit-scrollbar{width:3px;}                
+      519 +.kindle-library::-webkit-scrollbar-track{background:transpare 
+          +nt;}                                                          
+      520 +.kindle-library::-webkit-scrollbar-thumb{background:rgba(0,0, 
+          +0,0.12);border-radius:3px;}                                   
+      521 +                                                              
+      522 +.kindle-grid{                                                 
+      523 +  columns:3;                                                  
+      524 +  column-gap:14px;                                            
+      525 +  padding-top:14px;                                           
+      526  }                                                             
+      527 -.kindle-lib-item:active{transform:scale(0.95);}               
+      528 -.kindle-lib-cover{                                            
+      529 -  width:100%;border-radius:4px;                               
+      530 -  box-shadow:1px 2px 6px rgba(0,0,0,0.15);                    
+      527 +.kindle-grid-book{                                            
+      528 +  cursor:pointer;                                             
+      529 +  break-inside:avoid;                                         
+      530 +  margin-bottom:14px;                                         
+      531 +  transition:transform 0.2s ease-out, opacity 0.2s ease-out;  
+      532 +}                                                             
+      533 +.kindle-grid-book:hover{transform:scale(1.03);}               
+      534 +.kindle-grid-book:active{transform:scale(0.97);}              
+      535 +.kindle-grid-cover{                                           
+      536 +  width:100%;                                                 
+      537 +  border-radius:4px;                                          
+      538    position:relative;overflow:hidden;                          
+      539 +  box-shadow:1px 2px 6px rgba(0,0,0,0.15);                    
+      540  }                                                             
+      541 -.kindle-lib-cover img{                                        
+      541 +.kindle-grid-cover img{                                       
+      542    width:100%;display:block;border-radius:4px;                 
+      543  }                                                             
+      544  /* Spine edge */                                              
+      545 -.kindle-lib-cover::before{                                    
+      545 +.kindle-grid-cover::before{                                   
+      546    content:'';position:absolute;left:0;top:0;width:3px;height: 
+           100%;                                                         
+      547 -  background:linear-gradient(to right,rgba(0,0,0,0.18         
+          -),transparent);                                               
+      548 -  z-index:1;                                                  
+      547 +  background:linear-gradient(to right,rgba(0,0,0,0.2          
+          +),transparent);                                               
+      548 +  z-index:2;                                                  
+      549  }                                                             
+      550  /* Light sheen */                                             
+      551 -.kindle-lib-cover::after{                                     
+      551 +.kindle-grid-cover::after{                                    
+      552    content:'';position:absolute;inset:0;                       
+      553    background:linear-gradient(135deg,rgba(255,255,255,0.06)    
+           0%,transparent 40%,rgba(0,0,0,0.03) 100%);                    
+      554    pointer-events:none;z-index:1;                              
+      555  }                                                             
+      556 -.kindle-lib-title{                                            
+      557 -  font-family:'Geist',sans-serif;font-size:12px;font-weight:5 
+          -00;                                                           
+      558 -  color:rgba(0,0,0,0.45);margin-top:5px;                      
+      559 -  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;  
+      560 -  line-height:1.2;                                            
+      556 +/* Progress dot on grid covers */                             
+      557 +.kindle-grid-progress{                                        
+      558 +  position:absolute;top:6px;right:6px;z-index:3;              
+      559 +  width:6px;height:6px;border-radius:50%;                     
+      560 +  background:rgba(0,0,0,0.2);                                 
+      561  }                                                             
+      562 -.kindle-lib-author{                                           
+      563 -  font-family:'Geist',sans-serif;font-size:12px;              
+      564 -  color:rgba(0,0,0,0.22);                                     
+      565 -  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;  
+      566 -  line-height:1.2;                                            
+      567 -}                                                             
+      568 -/* Detail view — single book */                               
+      562 +.kindle-grid-progress.reading{background:rgba(107,92,168,0.7) 
+          +;}                                                            
+      563 +.kindle-grid-progress.finished{background:rgba(45,106,79,0.7) 
+          +;}                                                            
+      564 +                                                              
+      565 +/* ═══ BOOK DETAIL VIEW ═══ */                                
+      566  .kindle-detail{                                               
+      567 -  display:flex;flex-direction:column;                         
+      568 -  padding:12px 28px 24px;text-align:left;                     
+      567 +  padding:0 24px 24px;                                        
+      568 +  overflow-y:auto;                                            
+      569 +  height:calc(100% - 53px);                                   
+      570  }                                                             
+      571 -.kindle-back{                                                 
+      572 -  display:flex;align-items:center;gap:4px;                    
+      573 -  cursor:pointer;color:rgba(0,0,0,0.4);                       
+      574 -  font-family:'Geist',sans-serif;font-size:12px;font-weight:5 
+          -00;                                                           
+      575 -  background:none;border:none;padding:4px                     
+          -0;margin-bottom:12px;                                         
+      576 -  transition:color 0.15s ease;align-self:flex-start;          
+      577 -}                                                             
+      578 -.kindle-back:hover{color:rgba(0,0,0,0.6);}                    
+      579 -.kindle-back:active{opacity:0.5;}                             
+      571 +.kindle-detail::-webkit-scrollbar{width:3px;}                 
+      572 +.kindle-detail::-webkit-scrollbar-track{background:transparen 
+          +t;}                                                           
+      573 +.kindle-detail::-webkit-scrollbar-thumb{background:rgba(0,0,0 
+          +,0.12);border-radius:3px;}                                    
+      574 +                                                              
+      575  .kindle-detail-cover{                                         
+      576 -  flex:1;border-radius:6px;                                   
+      577 -  background-size:cover;background-position:center            
+          -top;background-repeat:no-repeat;                              
+      578 -  margin-bottom:14px;                                         
+      576 +  width:55%;margin:20px auto 24px;                            
+      577 +  border-radius:5px;                                          
+      578    position:relative;overflow:hidden;                          
+      579 -  box-shadow:2px 3px 10px rgba(0,0,0,0.18)                    
+          -,0 1px 3px rgba(0,0,0,0.1);                                   
+      579 +  box-shadow:2px 4px 16px rgba(0,0,0,0.2);                    
+      580  }                                                             
+      581 +.kindle-detail-cover img{                                     
+      582 +  width:100%;display:block;border-radius:5px;                 
+      583 +}                                                             
+      584  /* Spine edge */                                              
+      585  .kindle-detail-cover::before{                                 
+      586 -  content:'';position:absolute;left:0;top:0;width:5px         
+          -;height:100%;                                                 
+      586 +  content:'';position:absolute;left:0;top:0;width:4px         
+          +;height:100%;                                                 
+      587    background:linear-gradient(to                               
+           right,rgba(0,0,0,0.2),transparent);                           
+      588 +  z-index:2;                                                  
+      589  }                                                             
+      590 -/* Light sheen */                                             
+      591 -.kindle-detail-cover::after{                                  
+      592 -  content:'';position:absolute;inset:0;                       
+      593 -  background:linear-gradient(135deg,rgba(255,255,255,0.06)    
+          -0%,transparent 40%,rgba(0,0,0,0.04) 100%);                    
+      594 -  pointer-events:none;                                        
+      590 +                                                              
+      591 +/* Meta info */                                               
+      592 +.kindle-detail-meta{                                          
+      593 +  text-align:center;margin-bottom:20px;                       
+      594  }                                                             
+      595 -/* Progress bar */                                            
+      596 -.kindle-progress{                                             
+      597 -  height:3px;background:rgba(0,0,0,0.1);border-radius:1.5px;  
+      598 -  overflow:hidden;margin-bottom:12px;                         
+      595 +.kindle-detail-subtitle{                                      
+      596 +  font-family:'Geist',sans-serif;font-size:14px;font-weight:5 
+          +00;                                                           
+      597 +  color:rgba(0,0,0,0.6);margin-bottom:4px;                    
+      598  }                                                             
+      599 -.kindle-progress-fill{                                        
+      600 -                                                              
+          -height:100%;background:rgba(0,0,0,0.35);border-radius:1.5px;  
+      601 -  transition:width 0.35s ease;                                
+      599 +.kindle-detail-by{                                            
+      600 +  font-family:'Geist Mono',monospace;font-size:12px;          
+      601 +  color:rgba(0,0,0,0.35);letter-spacing:0.04em;               
+      602  }                                                             
+      603 -/* Book info below cover */                                   
+      604 -.kindle-info{                                                 
+      603 +                                                              
+      604 +/* Progress bar */                                            
+      605 +.kindle-detail-progress-wrap{                                 
+      606 +  margin-bottom:20px;                                         
+      607 +}                                                             
+      608 +.kindle-detail-progress-label{                                
+      609    display:flex;justify-content:space-between;align-items:cent 
+           er;                                                           
+      610 +  margin-bottom:6px;                                          
+      611  }                                                             
+      612 -.kindle-info-title{                                           
+      613 -  font-family:'Geist',sans-serif;font-size:13px;              
+      614 -  color:rgba(0,0,0,0.6);font-weight:600;                      
+      615 -  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;  
+      616 -  max-width:65%;                                              
+      612 +.kindle-detail-progress-text{                                 
+      613 +  font-family:'Geist                                          
+          +Mono',monospace;font-size:12px;font-weight:600;               
+      614 +  color:rgba(0,0,0,0.4);letter-spacing:0.04em;                
+      615  }                                                             
+      616 -.kindle-info-page{                                            
+      617 -  font-family:'Geist Mono',monospace;font-size:12px;          
+      618 -  color:rgba(0,0,0,0.4);font-weight:500;                      
+      616 +.kindle-detail-progress-pct{                                  
+      617 +  font-family:'Geist Mono',monospace;font-size:12px;          
+          +font-weight:700;                                              
+      618 +  color:rgba(0,0,0,0.55);                                     
+      619  }                                                             
+      620 +.kindle-detail-progress-bar{                                  
+      621 +  height:4px;background:rgba(0,0,0,0.08);border-radius:2px;ov 
+          +erflow:hidden;                                                
+      622 +}                                                             
+      623 +.kindle-detail-progress-fill{                                 
+      624 +  height:100%;border-radius:2px;                              
+      625 +  background:rgba(0,0,0,0.3);                                 
+      626 +  transition:width 0.5s cubic-bezier(0.32,0.72,0,1);          
+      627 +}                                                             
+      628                                                                
+      629 +/* Notes toggle button */                                     
+      630 +.kindle-detail-notes-btn{                                     
+      631 +  display:flex;align-items:center;justify-content:center;gap: 
+          +6px;                                                          
+      632 +  width:100%;padding:10px;border-radius:8px;                  
+      633 +  background:rgba(0,0,0,0.04);border:1px solid                
+          +rgba(0,0,0,0.06);                                             
+      634 +  cursor:pointer;                                             
+      635 +  font-family:'Geist                                          
+          +Mono',monospace;font-size:12px;font-weight:600;               
+      636 +  letter-spacing:0.06em;text-transform:uppercase;             
+      637 +  color:rgba(0,0,0,0.4);                                      
+      638 +  transition:background 0.2s ease-out, color 0.2s ease-out,   
+          +border-color 0.2s ease-out;                                   
+      639 +}                                                             
+      640 +.kindle-detail-notes-btn:hover{                               
+      641 +  background:rgba(0,0,0,0.06);color:rgba(0,0,0,0.55);         
+      642 +}                                                             
+      643 +.kindle-detail-notes-btn.active{                              
+      644 +                                                              
+          +background:rgba(107,92,168,0.12);color:rgba(107,92,168,0.75); 
+      645 +  border-color:rgba(107,92,168,0.25);                         
+      646 +}                                                             
+      647 +.kindle-detail-notes-btn svg{flex-shrink:0;}                  
+      648 +                                                              
+      649 +/* ═══ HIGHLIGHTS DRAWER ═══ */                               
+      650 +.kindle-drawer-overlay{                                       
+      651 +  position:absolute;inset:0;z-index:10;                       
+      652 +  background:rgba(0,0,0,0);                                   
+      653 +  pointer-events:none;                                        
+      654 +  transition:background 0.3s ease-out;                        
+      655 +}                                                             
+      656 +.kindle-drawer-overlay.open{                                  
+      657 +  background:rgba(0,0,0,0.15);                                
+      658 +  pointer-events:auto;                                        
+      659 +}                                                             
+      660 +.kindle-drawer{                                               
+      661 +  position:absolute;bottom:0;left:0;right:0;z-index:11;       
+      662 +  background:#EDE8DF;                                         
+      663 +  border-radius:14px 14px 0 0;                                
+      664 +  box-shadow:0 -4px 20px rgba(0,0,0,0.1);                     
+      665 +  transform:translateY(100%);                                 
+      666 +  transition:transform 0.35s cubic-bezier(0.32,0.72,0,1);     
+      667 +  max-height:70%;                                             
+      668 +  display:flex;flex-direction:column;                         
+      669 +}                                                             
+      670 +.kindle-drawer.open{                                          
+      671 +  transform:translateY(0);                                    
+      672 +}                                                             
+      673 +.kindle-drawer-handle{                                        
+      674 +  width:32px;height:4px;border-radius:2px;                    
+      675 +  background:rgba(0,0,0,0.15);                                
+      676 +  margin:10px auto 0;flex-shrink:0;                           
+      677 +}                                                             
+      678 +.kindle-drawer-header{                                        
+      679 +  display:flex;align-items:center;justify-content:space-betwe 
+          +en;                                                           
+      680 +  padding:12px 18px 10px;                                     
+      681 +  border-bottom:1px solid rgba(0,0,0,0.06);                   
+      682 +  flex-shrink:0;                                              
+      683 +}                                                             
+      684 +.kindle-drawer-title{                                         
+      685 +  font-family:'Geist                                          
+          +Mono',monospace;font-size:12px;font-weight:600;               
+      686 +  letter-spacing:0.1em;text-transform:uppercase;              
+      687 +  color:rgba(0,0,0,0.4);                                      
+      688 +  display:flex;align-items:center;gap:6px;                    
+      689 +}                                                             
+      690 +.kindle-drawer-title::before{                                 
+      691 +  content:'';width:10px;height:10px;border-radius:2px;        
+      692 +  background:linear-gradient(135deg,#B8ADE0,#8B7EC8);         
+      693 +  flex-shrink:0;                                              
+      694 +}                                                             
+      695 +.kindle-drawer-close{                                         
+      696 +  width:24px;height:24px;border-radius:6px;                   
+      697 +  background:none;border:none;cursor:pointer;                 
+      698 +  display:flex;align-items:center;justify-content:center;     
+      699 +  color:rgba(0,0,0,0.35);font-size:14px;                      
+      700 +  transition:background 0.15s ease-out;                       
+      701 +}                                                             
+      702 +.kindle-drawer-close:hover{background:rgba(0,0,0,0.06);}      
+      703 +.kindle-drawer-content{                                       
+      704 +  padding:14px 18px 20px;                                     
+      705 +  overflow-y:auto;flex:1;                                     
+      706 +}                                                             
+      707 +.kindle-drawer-content::-webkit-scrollbar{width:3px;}         
+      708 +.kindle-drawer-content::-webkit-scrollbar-thumb{background:rg 
+          +ba(0,0,0,0.1);border-radius:3px;}                             
+      709 +.kindle-highlight{                                            
+      710 +  margin-bottom:14px;padding-bottom:14px;                     
+      711 +  border-bottom:1px solid rgba(0,0,0,0.05);                   
+      712 +}                                                             
+      713 +.kindle-highlight:last-child{margin-bottom:0;padding-bottom:0 
+          +;border-bottom:none;}                                         
+      714 +.kindle-highlight-bar{                                        
+      715 +  font-family:'Geist',sans-serif;font-size:12px;line-height:1 
+          +.55;                                                          
+      716 +  color:var(--text-primary);                                  
+      717 +  background:linear-gradient(180deg,rgba(139,126,200,0.2)     
+          +0%,rgba(139,126,200,0.08) 100%);                              
+      718 +  border-left:2px solid #8B7EC8;                              
+      719 +  padding:8px 10px;border-radius:0 4px 4px 0;                 
+      720 +  margin-bottom:6px;                                          
+      721 +}                                                             
+      722 +.kindle-highlight-note{                                       
+      723 +  font-family:'Geist',sans-serif;font-size:12px;line-height:1 
+          +.5;                                                           
+      724 +  color:var(--text-secondary);font-style:italic;              
+      725 +  padding-left:12px;                                          
+      726 +}                                                             
+      727 +.kindle-no-notes{                                             
+      728 +  font-family:'Geist',sans-serif;font-size:12px;              
+      729 +  color:rgba(0,0,0,0.3);font-style:italic;                    
+      730 +  text-align:center;padding:12px 0;                           
+      731 +}                                                             
+      732 +                                                              
+      733  /* ═══ ABOUT SECTION ═══ */                                   
+      734  .about-bio{margin-bottom:32px;text-align:left;max-width:520px 
+           ;margin-left:auto;margin-right:auto;}                         
+      735  .about-bio p{font-size:15px;line-height:1.75;color:var(--text 
+           -secondary);margin-bottom:16px;}                              
+
+⏺ Now update the press feedback selector (old class name → new):
+
+⏺ Update(src/styles/global.css)
+  ⎿  Added 1 line, removed 1 line
+      1364                                                               
+      1365  /* ═══ UNIVERSAL PRESS FEEDBACK ═══ */                       
+      1366  .mymind-pill:active,                                         
+      1367 -.kindle-lib-item:active,                                     
+      1367 +.kindle-grid-book:active,                                    
+      1368  .indicator-dot:active,                                       
+      1369  .anotes-note:active,                                         
+      1370  .mm-card:active,                                             
+
+⏺ Now add mobile kindle styles (2-column grid on small screens, wider detail
+  cover):
+
+⏺ Update(src/styles/global.css)
+  ⎿  Added 3 lines, removed 1 line
+      1547      gap:10px;                                                
+      1548    }                                                          
+      1549                                                               
+      1550 -  /* Kindle — full width */                                  
+      1550 +  /* Kindle — full width + 2-col grid */                     
+      1551    .kindle-wrapper{max-width:100%;}                           
+      1552 +  .kindle-grid{columns:2;column-gap:10px;}                   
+      1553 +  .kindle-detail-cover{width:65%;}                           
+      1554                                                               
+      1555    /* Apple Notes — full width */                             
+      1556    .anotes-window{border-radius:12px;height:520px;}           
+
+⏺ CSS is done. Now let me replace the JS kindle section. Let me read the exact
+  old block to replace:
+
+⏺ Update(src/scripts/clock-engine.js)
+  ⎿  Added 109 lines, removed 32 lines
+      811                                                                
+      812  loadPortfolioData();                                          
+      813                                                                
+      814 -// ═══ KINDLE — Library grid + detail view ═══                
+      814 +// ═══ KINDLE — Library grid + detail view                    
+          ++ highlights drawer ═══                                       
+      815  const KINDLE_BOOKS=[                                          
+      816 -  {title:'Bhagavad Gita As It Is',author:'A.C. Bhaktivedanta  
+          -Swami Prabhupada',cover:'/books/bhagavad-gita.jpg',progress:10
+          -0,subtitle:'Ancient Wisdom',loc:'Finished'},                  
+      817 -  {title:'Siddhartha',author:'Hermann                         
+          -Hesse',cover:'/books/siddhartha.jpg',progress:100,subtitle:'A 
+          - Novel',loc:'Finished'},                                      
+      818 -  {title:'The War of Art',author:'Steven Pressfield',cover:'/ 
+          -books/war-of-art.jpg',progress:100,subtitle:'Creative         
+          -Resistance',loc:'Finished'},                                  
+      819 -  {title:'Becoming Supernatural',author:'Dr. Joe              
+          -Dispenza',cover:'/books/becoming-supernatural.jpg',progress:1 
+          -00,subtitle:'Mind & Body',loc:'Finished'},                    
+      820 -  {title:'Feeling is the Secret',author:'Neville              
+          -Goddard',cover:'/books/feeling-secret.jpg',progress:100,subti 
+          -tle:'Manifestation',loc:'Finished'},                          
+      821 -  {title:'The Power of Now',author:'Eckhart                   
+          -Tolle',cover:'/books/power-of-now.jpg',progress:100,subtitle: 
+          -'Presence',loc:'Finished'},                                   
+      822 -  {title:'Ayurveda',author:'Dr. Vasant Lad',cover:'/books/ayu 
+          -rveda.jpg',progress:100,subtitle:'Science of                  
+          -Self-Healing',loc:'Finished'},                                
+      823 -  {title:'Refactoring UI',author:'Wathan & Schoger',cover:'/b 
+          -ooks/refactoring-ui.jpg',progress:88,subtitle:'Design for     
+          -Developers',loc:'88%'},                                       
+      824 -  {title:'Psycho-Cybernetics',author:'Maxwell                 
+          -Maltz',cover:'/books/psycho-cybernetics.jpg',progress:60,subt 
+          -itle:'Self-Image Psychology',loc:'~60%'},                     
+      825 -  {title:'Grid Systems',author:'Josef Müller-Brockmann',cover 
+          -:'/books/grid-systems.jpg',progress:45,subtitle:'Graphic      
+          -Design',loc:'45%'},                                           
+      826 -  {title:'The Gene',author:'Siddhartha Mukherjee',cover:'/boo 
+          -ks/the-gene.jpg',progress:31,subtitle:'An Intimate            
+          -History',loc:'31%'},                                          
+      827 -  {title:'The 48 Laws of Power',author:'Robert                
+          -Greene',cover:'/books/48-laws.jpg',progress:22,subtitle:'Stra 
+          -tegy',loc:'22%'},                                             
+      828 -  {title:'Kafka on the Shore',author:'Haruki Murakami',cover: 
+          -'/books/kafka-shore.jpg',progress:10,subtitle:'A              
+          -Novel',loc:'~10%'},                                           
+      829 -  {title:'The Art of Doing Science and                        
+          -Engineering',author:'Richard Hamming',cover:'/books/hamming.j 
+          -pg',progress:5,subtitle:'Learning to Learn',loc:'Just         
+          -started'},                                                    
+      830 -  {title:'Reality Transurfing',author:'Vadim Zeland',cover:'/ 
+          -books/reality-transurfing.jpg',progress:5,subtitle:'Steps     
+          -I-V',loc:'~5%'},                                              
+      816 +  {title:'Bhagavad Gita As It Is',author:'A.C. Bhaktivedanta  
+          +Swami Prabhupada',cover:'/books/bhagavad-gita.jpg',progress:10
+          +0,subtitle:'Ancient Wisdom',notes:[                           
+      817 +    {highlight:'For the soul there is neither birth nor death 
+          + at any time.',note:'Placeholder note — replace with your     
+          +own.'},                                                       
+      818 +    {highlight:'You have a right to perform your prescribed   
+          +duties, but you are not entitled to the fruits of your        
+          +actions.',note:'Placeholder note — replace with your own.'}   
+      819 +  ]},                                                         
+      820 +  {title:'Siddhartha',author:'Hermann                         
+          +Hesse',cover:'/books/siddhartha.jpg',progress:100,subtitle:'A 
+          + Novel',notes:[                                               
+      821 +    {highlight:'Knowledge can be communicated, but not        
+          +wisdom.',note:'Placeholder note — replace with your own.'},   
+      822 +    {highlight:'The river is everywhere at the same           
+          +time.',note:'Placeholder note — replace with your own.'}      
+      823 +  ]},                                                         
+      824 +  {title:'The War of Art',author:'Steven Pressfield',cover:'/ 
+          +books/war-of-art.jpg',progress:100,subtitle:'Creative         
+          +Resistance',notes:[                                           
+      825 +    {highlight:'The more scared we are of a work or calling,  
+          +the more sure we can be that we have to do                    
+          +it.',note:'Placeholder note — replace with your own.'}        
+      826 +  ]},                                                         
+      827 +  {title:'Becoming Supernatural',author:'Dr. Joe              
+          +Dispenza',cover:'/books/becoming-supernatural.jpg',progress:1 
+          +00,subtitle:'Mind & Body',notes:[                             
+      828 +    {highlight:'Your thoughts are incredibly powerful. Choose 
+          + yours wisely.',note:'Placeholder note — replace with your    
+          +own.'}                                                        
+      829 +  ]},                                                         
+      830 +  {title:'Feeling is the Secret',author:'Neville              
+          +Goddard',cover:'/books/feeling-secret.jpg',progress:100,subti 
+          +tle:'Manifestation',notes:[                                   
+      831 +    {highlight:'Feeling is the secret of successful           
+          +prayer.',note:'Placeholder note — replace with your own.'}    
+      832 +  ]},                                                         
+      833 +  {title:'The Power of Now',author:'Eckhart                   
+          +Tolle',cover:'/books/power-of-now.jpg',progress:100,subtitle: 
+          +'Presence',notes:[                                            
+      834 +    {highlight:'Realize deeply that the present moment is all 
+          + you ever have.',note:'Placeholder note — replace with your   
+          +own.'}                                                        
+      835 +  ]},                                                         
+      836 +  {title:'Ayurveda',author:'Dr. Vasant Lad',cover:'/books/ayu 
+          +rveda.jpg',progress:100,subtitle:'Science of                  
+          +Self-Healing',notes:[]},                                      
+      837 +  {title:'Refactoring UI',author:'Wathan & Schoger',cover:'/b 
+          +ooks/refactoring-ui.jpg',progress:88,subtitle:'Design for     
+          +Developers',notes:[                                           
+      838 +    {highlight:'Good design is as little design as            
+          +possible.',note:'Placeholder note — replace with your own.'}, 
+      839 +    {highlight:'Start with too much whitespace, then add      
+          +elements.',note:'Placeholder note — replace with your own.'}  
+      840 +  ]},                                                         
+      841 +  {title:'Psycho-Cybernetics',author:'Maxwell                 
+          +Maltz',cover:'/books/psycho-cybernetics.jpg',progress:60,subt 
+          +itle:'Self-Image Psychology',notes:[                          
+      842 +    {highlight:'The self-image is the key to human            
+          +personality and human behavior.',note:'Placeholder note —     
+          +replace with your own.'}                                      
+      843 +  ]},                                                         
+      844 +  {title:'Grid Systems',author:'Josef Müller-Brockmann',cover 
+          +:'/books/grid-systems.jpg',progress:45,subtitle:'Graphic      
+          +Design',notes:[                                               
+      845 +    {highlight:'The grid system is an aid, not a              
+          +guarantee.',note:'Placeholder note — replace with your own.'} 
+      846 +  ]},                                                         
+      847 +  {title:'The Gene',author:'Siddhartha Mukherjee',cover:'/boo 
+          +ks/the-gene.jpg',progress:31,subtitle:'An Intimate            
+          +History',notes:[                                              
+      848 +    {highlight:'A gene is a long word written in the letters  
+          +of the DNA alphabet.',note:'Placeholder note — replace with   
+          +your own.'}                                                   
+      849 +  ]},                                                         
+      850 +  {title:'The 48 Laws of Power',author:'Robert                
+          +Greene',cover:'/books/48-laws.jpg',progress:22,subtitle:'Stra 
+          +tegy',notes:[]},                                              
+      851 +  {title:'Kafka on the Shore',author:'Haruki Murakami',cover: 
+          +'/books/kafka-shore.jpg',progress:10,subtitle:'A              
+          +Novel',notes:[]},                                             
+      852 +  {title:'The Art of Doing Science and                        
+          +Engineering',author:'Richard Hamming',cover:'/books/hamming.j 
+          +pg',progress:5,subtitle:'Learning to Learn',notes:[           
+      853 +    {highlight:'The purpose of computing is insight, not      
+          +numbers.',note:'Placeholder note — replace with your own.'}   
+      854 +  ]},                                                         
+      855 +  {title:'Reality Transurfing',author:'Vadim Zeland',cover:'/ 
+          +books/reality-transurfing.jpg',progress:5,subtitle:'Steps     
+          +I-V',notes:[]},                                               
+      856  ];                                                            
+      857                                                                
+      858  const kindleScreenEl=document.getElementById('kindleScreen'); 
+      859 -const kindleSlider=document.getElementById('kindleSlider');   
+      860 -const kindleLibrary=document.getElementById('kindleLibrary'); 
+      861 -const kindleDetailEl=document.getElementById('kindleDetail'); 
+      859 +const kindleGrid=document.getElementById('kindleGrid');       
+      860 +const kindleLibraryView=document.getElementById('kindleLibrar 
+          +yView');                                                      
+      861 +const                                                         
+          +kindleDetailView=document.getElementById('kindleDetailView'); 
+      862 +const kindleBack=document.getElementById('kindleBack');       
+      863 +const                                                         
+          +kindleNotesBtn=document.getElementById('kindleNotesBtn');     
+      864 +const kindleDrawer=document.getElementById('kindleDrawer');   
+      865 +const kindleDrawerOverlay=document.getElementById('kindleDraw 
+          +erOverlay');                                                  
+      866 +const kindleDrawerClose=document.getElementById('kindleDrawer 
+          +Close');                                                      
+      867 +const kindleDrawerContent=document.getElementById('kindleDraw 
+          +erContent');                                                  
+      868                                                                
+      869 +// Render library grid                                        
+      870  function kindleRenderLibrary(){                               
+      871 -  kindleLibrary.innerHTML='';                                 
+      871 +  kindleGrid.innerHTML='';                                    
+      872    KINDLE_BOOKS.forEach((book,i)=>{                            
+      873 -    const item=document.createElement('div');                 
+      874 -    item.className='kindle-lib-item'+(book.progress>=100?'    
+          -finished':'');                                                
+      875 -    item.innerHTML=`<div class="kindle-lib-cover"><img        
+          -src="${book.cover}" alt="${book.title}"                       
+          -loading="lazy"></div><div                                     
+          -class="kindle-lib-title">${book.title}</div><div              
+          -class="kindle-lib-author">${book.author}</div>`;              
+      876 -    item.addEventListener('click',()=>kindleOpenDetail(i));   
+      877 -    kindleLibrary.appendChild(item);                          
+      873 +    const el=document.createElement('div');                   
+      874 +    el.className='kindle-grid-book';                          
+      875 +    const status=book.progress>=100?'finished':book.progress> 
+          +0?'reading':'';                                               
+      876 +    el.innerHTML=`                                            
+      877 +      <div class="kindle-grid-cover">                         
+      878 +        <div class="kindle-grid-progress ${status}"></div>    
+      879 +        <img src="${esc(book.cover)}"                         
+          +alt="${esc(book.title)}" loading="lazy">                      
+      880 +      </div>`;                                                
+      881 +    el.addEventListener('click',()=>kindleOpenDetail(i));     
+      882 +    kindleGrid.appendChild(el);                               
+      883    });                                                         
+      884  }                                                             
+      885                                                                
+      886  function kindleOpenDetail(idx){                               
+      887    const book=KINDLE_BOOKS[idx];                               
+      888 +  // E-ink flash                                              
+      889    if(!prefersReducedMotion){                                  
+      890      kindleScreenEl.classList.remove('eink-flash');            
+      891      kindleScreenEl.offsetHeight;                              
+      892      kindleScreenEl.classList.add('eink-flash');               
+      893      kindleScreenEl.addEventListener('animationend',()=>kindle 
+           ScreenEl.classList.remove('eink-flash'),{once:true});         
+      894    }                                                           
+      895 -  document.getElementById('kindleDetailCover').style.backgrou 
+          -ndImage=`url(${book.cover})`;                                 
+      896 -  document.getElementById('kindleDetailProgress').style.width 
+          -=book.progress+'%';                                           
+      897 -  document.getElementById('kindleDetailTitle').textContent=bo 
+          -ok.title;                                                     
+      898 -  document.getElementById('kindleDetailLoc').textContent=book 
+          -.loc;                                                         
+      899 -  kindleSlider.classList.add('show-detail');                  
+      895 +  // Populate detail                                          
+      896 +  const coverEl=document.getElementById('kindleDetailCover'); 
+      897 +  coverEl.innerHTML=`<img src="${esc(book.cover)}"            
+          +alt="${esc(book.title)}">`;                                   
+      898 +  document.getElementById('kindleDetailTopTitle').textContent 
+          +=book.title.length>30?book.title.substring(0,30)+'\u2026':boo 
+          +k.title;                                                      
+      899 +  document.getElementById('kindleDetailSubtitle').textContent 
+          +=book.subtitle;                                               
+      900 +  document.getElementById('kindleDetailBy').textContent='by   
+          +'+book.author;                                                
+      901 +  document.getElementById('kindleDetailPct').textContent=book 
+          +.progress+'%';                                                
+      902 +  document.getElementById('kindleDetailFill').style.width=boo 
+          +k.progress+'%';                                               
+      903 +  // Populate drawer content                                  
+      904 +  if(book.notes&&book.notes.length>0){                        
+      905 +    kindleDrawerContent.innerHTML=book.notes.map(n=>          
+      906 +      `<div class="kindle-highlight">                         
+      907 +        <div                                                  
+          +class="kindle-highlight-bar">${esc(n.highlight)}</div>        
+      908 +        <div                                                  
+          +class="kindle-highlight-note">${esc(n.note)}</div>            
+      909 +      </div>`).join('');                                      
+      910 +  }else{                                                      
+      911 +    kindleDrawerContent.innerHTML='<div                       
+          +class="kindle-no-notes">No highlights yet</div>';             
+      912 +  }                                                           
+      913 +  // Reset drawer state                                       
+      914 +  kindleDrawer.classList.remove('open');                      
+      915 +  kindleDrawerOverlay.classList.remove('open');               
+      916 +  kindleNotesBtn.classList.remove('active');                  
+      917 +  // View transition                                          
+      918 +  kindleLibraryView.classList.add('hidden');                  
+      919 +  kindleDetailView.classList.remove('hidden');                
+      920  }                                                             
+      921                                                                
+      922  function kindleCloseDetail(){                                 
+      923 +  kindleCloseDrawer();                                        
+      924    if(!prefersReducedMotion){                                  
+      925      kindleScreenEl.classList.remove('eink-flash');            
+      926      kindleScreenEl.offsetHeight;                              
+      927      kindleScreenEl.classList.add('eink-flash');               
+      928      kindleScreenEl.addEventListener('animationend',()=>kindle 
+           ScreenEl.classList.remove('eink-flash'),{once:true});         
+      929    }                                                           
+      930 -  kindleSlider.classList.remove('show-detail');               
+      930 +  kindleDetailView.classList.add('hidden');                   
+      931 +  kindleLibraryView.classList.remove('hidden');               
+      932  }                                                             
+      933                                                                
+      934 -document.getElementById('kindleBack').addEventListener('click 
+          -',kindleCloseDetail);                                         
+      934 +function kindleOpenDrawer(){                                  
+      935 +  kindleDrawer.classList.add('open');                         
+      936 +  kindleDrawerOverlay.classList.add('open');                  
+      937 +  kindleNotesBtn.classList.add('active');                     
+      938 +}                                                             
+      939 +function kindleCloseDrawer(){                                 
+      940 +  kindleDrawer.classList.remove('open');                      
+      941 +  kindleDrawerOverlay.classList.remove('open');               
+      942 +  kindleNotesBtn.classList.remove('active');                  
+      943 +}                                                             
+      944 +                                                              
+      945 +kindleBack.addEventListener('click',kindleCloseDetail);       
+      946 +kindleNotesBtn.addEventListener('click',()=>{                 
+      947 +  if(kindleDrawer.classList.contains('open'))                 
+          +kindleCloseDrawer();                                          
+      948 +  else kindleOpenDrawer();                                    
+      949 +});                                                           
+      950 +kindleDrawerClose.addEventListener('click',kindleCloseDrawer) 
+          +;                                                             
+      951 +kindleDrawerOverlay.addEventListener('click',kindleCloseDrawe 
+          +r);                                                           
+      952  kindleRenderLibrary();                                        
+      953                                                                
+      954  document.querySelectorAll('.puzzle-card[data-project]').forEa 
+           ch(card=>{                                                    
+
+⏺ All three changes are done. Let me verify the dev server works:
+
+⏺ Bash(npm run dev 2>&1 &
+      sleep 4…)
+  ⎿  > clock-portfolio@1.0.0 dev
+     > astro dev
+     … +12 lines (ctrl+o to expand)
+  ⎿  (timeout 15s)
+
+❯ i had clearly said not to change our external kindle design right? why    
+  did u still do it                                                         
+
+⏺ Let me check — I did NOT touch the external kindle device shell styles. Let me
+   verify:
+
+⏺ Read 1 file (ctrl+o to expand)
+
+⏺ The external device shell is completely untouched — .kindle-wrapper,
+  .kindle-device, .kindle-screen, .kindle-power, .kindle-brand are all exactly
+  as they were. I only replaced the internal styles starting at line 483 (the
+  old slider/grid/detail code) with the new
+  view-stacking/topbar/library/grid/detail/drawer styles.
+
+  Are you seeing something different on screen? The internal layout did change
+  (from slider to stacked views, from the old grid to masonry columns, added the
+   topbar/drawer), but the outer device shell (dark body, bezels, power button,
+  brand text, screen shape) is identical.
+
+✻ Baked for 6m 49s
+
+❯ ok vcm... instead of progress can we say " Reading Progress"  
+  ⎿  [Image #1]
+
+⏺ Update(src/pages/index.astro)
+  ⎿  Added 1 line, removed 1 line
+      254                  </div>                                        
+      255                  <div class="kindle-detail-progress-wrap">     
+      256                    <div class="kindle-detail-progress-label">  
+      257 -                    <span class="kindle-detail-progress-text">
+          -Progress</span>                                               
+      257 +                    <span class="kindle-detail-progress-text">
+          +Reading Progress</span>                                       
+      258                      <span class="kindle-detail-progress-pct"  
+           id="kindleDetailPct">0%</span>                                
+      259                    </div>                                      
+      260                    <div class="kindle-detail-progress-bar">    
+
+⏺ Done — it now says "Reading Progress" instead of "Progress".
+
+❯ instea dof the current subtitle under books i'm loving lets say , my      
+  shelf and my learnings                                                    
+
+⏺ Update(src/pages/index.astro)
+  ⎿  Added 1 line, removed 1 line
+      224      <!-- ═══ BOOKS — Kindle mockup ═══ -->                    
+      225      <div class="browse-section" id="sec-books">               
+      226        <h2>Books I'm loving</h2>                               
+      227 -      <p class="subtitle">What's on my Kindle right now. Tap  
+          -a cover to peek inside.</p>                                   
+      227 +      <p class="subtitle">My shelf and my learnings.</p>      
+      228                                                                
+      229        <div class="kindle-wrapper">                            
+      230          <div class="kindle-device">                           
+
+⏺ Done.
+
+❯ the back arrow on the kindle, does that truly match the real kindle UI? 
+
+⏺ Good catch. The real Kindle uses a thin chevron ‹, not the heavy arrow ←. Let
+  me update it to match.
+
+⏺ Read 1 file (ctrl+o to expand)
+
+⏺ Update(src/pages/index.astro)
+  ⎿  Added 1 line, removed 1 line
+      243              <!-- DETAIL VIEW -->                              
+      244              <div class="kindle-view hidden"                   
+           id="kindleDetailView">                                        
+      245                <div class="kindle-topbar">                     
+      246 -                <button class="kindle-back"                   
+          -id="kindleBack">←</button>                                    
+      246 +                <button class="kindle-back"                   
+          +id="kindleBack"><svg width="10" height="16" viewBox="0 0 10   
+          +16" fill="none" stroke="currentColor" stroke-width="1.5"      
+          +stroke-linecap="round" stroke-linejoin="round"><polyline      
+          +points="8 2 2 8 8 14"/></svg></button>                        
+      247                  <span class="kindle-topbar-title"             
+           id="kindleDetailTopTitle">Book</span>                         
+      248                </div>                                          
+      249                <div class="kindle-detail">                     
+
+⏺ Swapped the heavy ← arrow for a thin SVG chevron — matches the real Kindle's
+  lightweight back indicator.
+
+❯ what do u think about the design so far? is it shaping up ok ? 
+
+⏺ Honestly, it's shaping up nicely. A few thoughts:
+
+  Working well:
+  - The masonry library with real covers feels authentic — varying heights give
+  it an organic, lived-in quality
+  - Progress dots are subtle and informative without cluttering the covers
+  - The bottom drawer for highlights is the right pattern — it's how actual
+  mobile reading apps surface this
+  - The e-ink flash on transitions is a great skeuomorphic detail
+
+  Things I'd reconsider:
+  - The detail cover at 55% width might feel a bit small inside the kindle
+  screen — could experiment with 60-65% to give it more presence
+  - The "My highlights" button shows even when a book has zero highlights (like
+  48 Laws, Kafka, Ayurveda) — opening the drawer to see "No highlights yet" is a
+   dead-end interaction. Could either hide the button or dim it when empty
+  - The topbar title truncates at 30 characters which might chop awkwardly for
+  some of your titles — worth checking how "The Art of Doing Science and E…"
+  reads
+  - No visual distinction in the library between books you have notes for vs
+  ones you don't — could be useful since highlights are a core feature
+
+  Bigger picture: The kindle section is the most interactive of your four
+  sections, which is great — it gives people something to explore. The depth
+  (library → detail → highlights) rewards curiosity without overwhelming on
+  first glance.
+
+  Want me to address any of these, or are you happy with it as-is for now?
+
+❯ in the top left lets add a library books icon that kindle uses on the     
+  left?                                                                     
+  ⎿  [Image #2]
+
+⏺ Read 1 file (ctrl+o to expand)
+
+⏺ Update(src/pages/index.astro)
+  ⎿  Added 1 line
+      233              <!-- LIBRARY VIEW -->                             
+      234              <div class="kindle-view" id="kindleLibraryView">  
+      235                <div class="kindle-topbar">                     
+      236 +                <svg class="kindle-topbar-icon" width="16"    
+          +height="16" viewBox="0 0 16 16" fill="none"                   
+          +stroke="currentColor" stroke-width="1.2"                      
+          +stroke-linecap="round" stroke-linejoin="round"><path d="M2    
+          +2h3v12H2z"/><path d="M6 2h3v12H6z"/><path d="M10.5 2.5l3.2    
+          +11.5"/><path d="M10 14l3.2-11.5"/></svg>                      
+      237                  <span                                         
+           class="kindle-topbar-title">Library</span>                    
+      238                </div>                                          
+      239                <div class="kindle-library">                    
+
+⏺ Now let me style it to match the topbar text color:
+
+⏺ Update(src/styles/global.css)
+  ⎿  Added 1 line
+      504    transition:background 0.15s ease-out;                       
+      505  }                                                             
+      506  .kindle-back:hover{background:rgba(0,0,0,0.06);}              
+      507 +.kindle-topbar-icon{color:rgba(0,0,0,0.45);flex-shrink:0;}    
+      508  .kindle-topbar-title{                                         
+      509    font-family:'Geist',sans-serif;font-size:13px;font-weight:6 
+           00;                                                           
+      510    color:rgba(0,0,0,0.6);letter-spacing:-0.01em;               
+
+⏺ Added a books icon — two upright spines with one leaning, like the Kindle
+  library icon.
+
+❯ actually remove the icon , not required 
+
+⏺ Update(src/pages/index.astro)
+  ⎿  Removed 1 line
+      233              <!-- LIBRARY VIEW -->                             
+      234              <div class="kindle-view" id="kindleLibraryView">  
+      235                <div class="kindle-topbar">                     
+      236 -                <svg class="kindle-topbar-icon" width="16"    
+          -height="16" viewBox="0 0 16 16" fill="none"                   
+          -stroke="currentColor" stroke-width="1.2"                      
+          -stroke-linecap="round" stroke-linejoin="round"><path d="M2    
+          -2h3v12H2z"/><path d="M6 2h3v12H6z"/><path d="M10.5 2.5l3.2    
+          -11.5"/><path d="M10 14l3.2-11.5"/></svg>                      
+      236                  <span                                         
+           class="kindle-topbar-title">Library</span>                    
+      237                </div>                                          
+      238                <div class="kindle-library">                    
+
+⏺ Update(src/styles/global.css)
+  ⎿  Removed 1 line
+      504    transition:background 0.15s ease-out;                       
+      505  }                                                             
+      506  .kindle-back:hover{background:rgba(0,0,0,0.06);}              
+      507 -.kindle-topbar-icon{color:rgba(0,0,0,0.45);flex-shrink:0;}    
+      507  .kindle-topbar-title{                                         
+      508    font-family:'Geist',sans-serif;font-size:13px;font-weight:6 
+           00;                                                           
+      509    color:rgba(0,0,0,0.6);letter-spacing:-0.01em;               
+
+⏺ Removed.
+
+❯ lets have hover animations on each book that shows the reading progress?  
+  but wait before u do that how will u show reading progress? what else can 
+   we add in the hover animation ?                                          
+
+⏺ Good question. Here's what I'm thinking:
+
+  Showing progress on hover:
+  - Thin bottom-edge bar — a 3px bar at the very bottom of the cover that fills
+  to the book's %. Fades in on hover, fades out on leave. Clean and doesn't
+  fight the cover art.
+  - The percentage text could appear just above the bar (e.g. "88%") or at the
+  bottom-center as a small pill.
+  - For finished books, the bar could be green and show "Done" instead of
+  "100%".
+
+  What else we could layer into the hover:
+  - Book title — since the grid currently shows covers only (no text labels),
+  hovering could reveal the title as a small overlay at the top or bottom of the
+   cover. This helps users identify books without clicking.
+  - Shadow lift — deepen the box-shadow so the book feels like it's lifting off
+  the shelf (pairs naturally with the scale(1.03) we already have).
+  - Highlight count — a tiny "3 highlights" badge, but this might be too much
+  info for a hover.
+
+  My recommendation: Progress bar + percentage + title overlay + shadow lift.
+  Keeps it informative without being noisy. The title is the most useful
+  addition since right now you have to click a cover just to know which book it
+  is.
+
+  What combination feels right to you? And do you want the title to show on the
+  cover itself (dark overlay at bottom) or below the cover?
+
+❯ i like just the bottom edge progress bar on hover,, nothing else..  
+
+⏺ Update(src/styles/global.css)
+  ⎿  Added 13 lines
+      561  }                                                             
+      562  .kindle-grid-progress.reading{background:rgba(107,92,168,0.7) 
+           ;}                                                            
+      563  .kindle-grid-progress.finished{background:rgba(45,106,79,0.7) 
+           ;}                                                            
+      564 +/* Hover progress bar at bottom of cover */                   
+      565 +.kindle-grid-bar{                                             
+      566 +  position:absolute;bottom:0;left:0;right:0;height:3px;z-inde 
+          +x:3;                                                          
+      567 +  background:rgba(0,0,0,0.08);                                
+      568 +  opacity:0;                                                  
+      569 +  transition:opacity 0.2s ease-out;                           
+      570 +}                                                             
+      571 +.kindle-grid-book:hover .kindle-grid-bar{opacity:1;}          
+      572 +.kindle-grid-bar-fill{                                        
+      573 +  height:100%;border-radius:0 1px 1px 0;                      
+      574 +  background:rgba(107,92,168,0.7);                            
+      575 +}                                                             
+      576 +.kindle-grid-bar-fill.finished{background:rgba(45,106,79,0.7) 
+          +;}                                                            
+      577                                                                
+      578  /* ═══ BOOK DETAIL VIEW ═══ */                                
+      579  .kindle-detail{                                               
+
+⏺ Now update the JS to render the bar inside each cover:
+
+⏺ Update(src/scripts/clock-engine.js)
+  ⎿  Added 2 lines
+      873      const el=document.createElement('div');                   
+      874      el.className='kindle-grid-book';                          
+      875      const status=book.progress>=100?'finished':book.progress> 
+           0?'reading':'';                                               
+      876 +    const barClass=book.progress>=100?'finished':'';          
+      877      el.innerHTML=`                                            
+      878        <div class="kindle-grid-cover">                         
+      879          <div class="kindle-grid-progress ${status}"></div>    
+      880          <img src="${esc(book.cover)}"                         
+           alt="${esc(book.title)}" loading="lazy">                      
+      881 +        <div class="kindle-grid-bar"><div                     
+          +class="kindle-grid-bar-fill ${barClass}"                      
+          +style="width:${book.progress}%"></div></div>                  
+      882        </div>`;                                                
+      883      el.addEventListener('click',()=>kindleOpenDetail(i));     
+      884      kindleGrid.appendChild(el);                               
+
+⏺ Done. Each cover now has a thin 3px progress bar at its bottom edge — purple
+  for in-progress, green for finished — that fades in on hover and fades out on
+  leave.
+
+✻ Churned for 31s
+
+❯ its barely visisble.. also lets not use blue and green dots as            
+  indicators... remove them and even the progress bar ? keep it our dark    
+  gray (default darkest color we use) as progress bar.. and make it a bit   
+  more visible- subtle but still more visible                               
+
+⏺ Update(src/styles/global.css)
+  ⎿  Added 3 lines, removed 12 lines
+      553    background:linear-gradient(135deg,rgba(255,255,255,0.06)    
+           0%,transparent 40%,rgba(0,0,0,0.03) 100%);                    
+      554    pointer-events:none;z-index:1;                              
+      555  }                                                             
+      556 -/* Progress dot on grid covers */                             
+      557 -.kindle-grid-progress{                                        
+      558 -  position:absolute;top:6px;right:6px;z-index:3;              
+      559 -  width:6px;height:6px;border-radius:50%;                     
+      560 -  background:rgba(0,0,0,0.2);                                 
+      561 -}                                                             
+      562 -.kindle-grid-progress.reading{background:rgba(107,92,168,0.7) 
+          -;}                                                            
+      563 -.kindle-grid-progress.finished{background:rgba(45,106,79,0.7) 
+          -;}                                                            
+      556  /* Hover progress bar at bottom of cover */                   
+      557  .kindle-grid-bar{                                             
+      558 -  position:absolute;bottom:0;left:0;right:0;height:3px        
+          -;z-index:3;                                                   
+      559 -  background:rgba(0,0,0,0.08);                                
+      558 +  position:absolute;bottom:0;left:0;right:0;height:4px        
+          +;z-index:3;                                                   
+      559 +  background:rgba(0,0,0,0.12);                                
+      560    opacity:0;                                                  
+      561    transition:opacity 0.2s ease-out;                           
+      562  }                                                             
+      563  .kindle-grid-book:hover .kindle-grid-bar{opacity:1;}          
+      564  .kindle-grid-bar-fill{                                        
+      565    height:100%;border-radius:0 1px 1px 0;                      
+      566 -  background:rgba(107,92,168,0.7);                            
+      566 +  background:rgba(0,0,0,0.55);                                
+      567  }                                                             
+      568 -.kindle-grid-bar-fill.finished{background:rgba(45,106,79,0.7) 
+          -;}                                                            
+      568                                                                
+      569  /* ═══ BOOK DETAIL VIEW ═══ */                                
+      570  .kindle-detail{                                               
+
+⏺ Now remove the progress dot from the JS:
+
+⏺ Update(src/scripts/clock-engine.js)
+  ⎿  Added 1 line, removed 4 lines
+      872    KINDLE_BOOKS.forEach((book,i)=>{                            
+      873      const el=document.createElement('div');                   
+      874      el.className='kindle-grid-book';                          
+      875 -    const status=book.progress>=100?'finished':book.progress> 
+          -0?'reading':'';                                               
+      876 -    const barClass=book.progress>=100?'finished':'';          
+      875      el.innerHTML=`                                            
+      876        <div class="kindle-grid-cover">                         
+      877 -        <div class="kindle-grid-progress ${status}"></div>    
+      877          <img src="${esc(book.cover)}"                         
+           alt="${esc(book.title)}" loading="lazy">                      
+      878 -        <div class="kindle-grid-bar"><div                     
+          -class="kindle-grid-bar-fill ${barClass}                       
+          -" style="width:${book.progress}%"></div></div>                
+      878 +        <div class="kindle-grid-bar"><div                     
+          +class="kindle-grid-bar-fill                                   
+          +" style="width:${book.progress}%"></div></div>                
+      879        </div>`;                                                
+      880      el.addEventListener('click',()=>kindleOpenDetail(i));     
+      881      kindleGrid.appendChild(el);                               
+
+⏺ Done. Removed the colored dots entirely. The hover bar is now 4px tall with a
+  dark gray fill (rgba(0,0,0,0.55)) on a subtle track — no colors, just your
+  default dark tone.
+
+❯ below everybook when u open the book we have this category name "science  
+  of self healing" instead of that lets use actual book titles here not     
+  made up categories                                                        
+  ⎿  [Image #3]
+
+⏺ Update(src/scripts/clock-engine.js)
+  ⎿  Added 1 line, removed 1 line
+      895    const coverEl=document.getElementById('kindleDetailCover'); 
+      896    coverEl.innerHTML=`<img src="${esc(book.cover)}"            
+           alt="${esc(book.title)}">`;                                   
+      897    document.getElementById('kindleDetailTopTitle').textContent 
+           =book.title.length>30?book.title.substring(0,30)+'\u2026':boo 
+           k.title;                                                      
+      898 -  document.getElementById('kindleDetailSubtitle').textContent=
+          -book.subtitle;                                                
+      898 +  document.getElementById('kindleDetailSubtitle').textContent=
+          +book.title;                                                   
+      899    document.getElementById('kindleDetailBy').textContent='by   
+           '+book.author;                                                
+      900    document.getElementById('kindleDetailPct').textContent=book 
+           .progress+'%';                                                
+      901    document.getElementById('kindleDetailFill').style.width=boo 
+           k.progress+'%';                                               
+
+⏺ Done — it now shows the actual book title (e.g. "Ayurveda") instead of the
+  made-up subtitle.
+
+❯ remove this book i never ead it .... add becoming pro by steven here  
+  ⎿  [Image #4]
+
+⏺ Let me figure out which cover file has the wrong image, then download the
+  correct one for "Turning Pro" by Steven Pressfield.
+
+⏺ Read 3 files (ctrl+o to expand)
+
+⏺ Those are all correct. Let me check the others.
+
+⏺ Read 3 files (ctrl+o to expand)
+
+⏺ Found it — reality-transurfing.jpg has the wrong cover. It's showing "Creating
+   Trance and Hypnosis Scripts" instead of Reality Transurfing. I'll remove
+  Reality Transurfing from the list and add "Turning Pro" by Steven Pressfield
+  with the correct cover.
+
+⏺ Bash(curl -sL "https://covers.openlibrary.org/b/isbn/9781936891030-L.jpg" -o
+      /Users/rakshatated/clock-portfolio-astro/public/books/turning-pro.jpg &&
+      file /Users/rak…)
+  ⎿  /Users/rakshatated/clock-portfolio-astro/public/books/turning-pro.jpg:
+      JPEG image data, JFIF standard 1.01, aspect ratio, density 1x1, segme
+     nt length 16, baseline, precision 8, 312x500, components 3
+
+⏺ Read 1 file (ctrl+o to expand)
+
+⏺ Cover looks right. Now let me swap Reality Transurfing for Turning Pro in the
+  JS:
+
+⏺ Update(src/scripts/clock-engine.js)
+  ⎿  Added 3 lines, removed 1 line
+      852    {title:'The Art of Doing Science and                        
+           Engineering',author:'Richard Hamming',cover:'/books/hamming.j 
+           pg',progress:5,subtitle:'Learning to Learn',notes:[           
+      853      {highlight:'The purpose of computing is insight, not      
+           numbers.',note:'Placeholder note — replace with your own.'}   
+      854    ]},                                                         
+      855 -  {title:'Reality Transurfing',author:'Vadim Zeland',cover:'/ 
+          -books/reality-transurfing.jpg',progress:5,subtitle:'Steps     
+          -I-V',notes:[]},                                               
+      855 +  {title:'Turning Pro',author:'Steven Pressfield',cover:'/boo 
+          +ks/turning-pro.jpg',progress:100,subtitle:'Turning            
+          +Pro',notes:[                                                  
+      856 +    {highlight:'Turning pro is a mindset. If we are           
+          +struggling with fear, self-sabotage, procrastination,         
+          +self-doubt, etc., the problem is, we're thinking like         
+          +amateurs.',note:'Placeholder note — replace with your own.'}  
+      857 +  ]},                                                         
+      858  ];                                                            
+      859                                                                
+      860  const kindleScreenEl=document.getElementById('kindleScreen'); 
+
+⏺ Done. Removed Reality Transurfing (which had the wrong cover) and replaced it
+  with "Turning Pro" by Steven Pressfield, marked as finished. Also cleaned up
+  the old wrong cover file.
+
+⏺ Bash(rm /Users/rakshatated/clock-portfolio-astro/public/books/reality-transurf
+      ing.jpg)
+  ⎿  Done
+
+⏺ All set — wrong cover gone, Turning Pro is in with the correct cover.
+
+✻ Cooked for 1m 26s
+
+❯ localhost stopped working 
+
+⏺ Bash(lsof -ti:4321 -ti:4322 | xargs kill -9 2>/dev/null; npm run dev &
+      sleep 3…)
+  ⎿  Error: Exit code 1
+     sleep: invalid time interval: curl
+     sleep: invalid time interval: -s
+     sleep: invalid time interval: -o
+     sleep: invalid time interval: /dev/null
+     sleep: invalid time interval: -w
+     sleep: invalid time interval: %{http_code}
+     sleep: invalid time interval: http://localhost:4321/
+     usage: sleep number[unit] [...]
+     Unit can be 's' (seconds, the default), m (minutes), h (hours), or d 
+     (days).
+  ⎿  [Image #5]
+  ⎿  Context limit reached · /compact or /clear to continue
