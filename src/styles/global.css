@@ -1693,7 +1693,8 @@ body{}
   .modal-title{font-size:18px;}
   .modal-close{top:10px;right:10px;width:28px;height:28px;font-size:12px;opacity:1;}
 
-  /* Browse sections */
+  /* Browse content — reduce top space on mobile */
+  .browse-content{padding-top:52px;}
   .browse-section{padding:36px 20px;}
   .browse-section h2{font-size:24px;}
 

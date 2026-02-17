@@ -62,6 +62,21 @@ let pushHandAngle=0;          // extra hand rotation during push (winding down)
 const _AC=window.AudioContext||window.webkitAudioContext;
 let _actx=null,_lastTick=0,_soundOn=true;
 
+// Mobile: AudioContext starts suspended — resume on first user gesture
+function _ensureAudioCtx(){
+  if(!_actx)_actx=new _AC();
+  if(_actx.state==='suspended')_actx.resume();
+  return _actx;
+}
+let _audioUnlocked=false;
+function _unlockAudio(){
+  if(_audioUnlocked)return;
+  _audioUnlocked=true;
+  _ensureAudioCtx();
+}
+document.addEventListener('touchstart',_unlockAudio,{once:true,passive:true});
+document.addEventListener('click',_unlockAudio,{once:true});
+
 // Sound knob toggle
 const _knob=document.getElementById('soundKnob');
 const _knobTip=document.getElementById('knobTooltip');
@@ -74,7 +89,7 @@ _knob.addEventListener('click',function(){
 
 function clockTick(){
   if(!_soundOn)return;
-  if(!_actx)_actx=new _AC();
+  _ensureAudioCtx();
   const t=_actx.currentTime;
   const bs=_actx.sampleRate*0.008;
   const b=_actx.createBuffer(1,bs,_actx.sampleRate);
@@ -88,7 +103,7 @@ function clockTick(){
 
 // Rotary knob — brass watch crown rotation
 function knobClick(){
-  if(!_actx)_actx=new _AC();
+  _ensureAudioCtx();
   const t=_actx.currentTime;
   // Brass body resonance
   const ring=_actx.createOscillator();
@@ -1666,7 +1681,7 @@ fetch('/magic-mouse-click.mp3')
   }).catch(()=>{});
 function noteClickSound(){
   if(!_soundOn||!_mouseClickBuf)return;
-  if(!_actx)_actx=new _AC();
+  _ensureAudioCtx();
   const src=_actx.createBufferSource();
   src.buffer=_mouseClickBuf;
   const vol=_actx.createGain();
@@ -2037,9 +2052,14 @@ requestAnimationFrame(()=>{
 // ═══ ABOUT — click sounds + toggle ═══
 const AboutAudioCtx=window.AudioContext||window.webkitAudioContext;
 let aboutAudioCtx=null;
+function _ensureAboutCtx(){
+  if(!aboutAudioCtx)aboutAudioCtx=new AboutAudioCtx();
+  if(aboutAudioCtx.state==='suspended')aboutAudioCtx.resume();
+  return aboutAudioCtx;
+}
 function aboutClickSound(type){
   if(!_soundOn||prefersReducedMotion)return;
-  if(!aboutAudioCtx)aboutAudioCtx=new AboutAudioCtx();
+  _ensureAboutCtx();
   const t=aboutAudioCtx.currentTime;
   const bufLen=aboutAudioCtx.sampleRate*0.015;
   const buf=aboutAudioCtx.createBuffer(1,bufLen,aboutAudioCtx.sampleRate);
@@ -2068,7 +2088,7 @@ document.querySelectorAll('.about-cta-strip .about-cta').forEach(btn=>{
 let stackGain=null,stackSrc=null;
 function stackShuffleStart(){
   if(!_soundOn||prefersReducedMotion)return;
-  if(!aboutAudioCtx)aboutAudioCtx=new AboutAudioCtx();
+  _ensureAboutCtx();
   stackShuffleStop();
   const t=aboutAudioCtx.currentTime;
   const dur=0.25;
