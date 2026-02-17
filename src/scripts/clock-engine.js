@@ -1,48 +1,46 @@
 // ═══ DATA ═══
 const SECTIONS=[
-  {name:'Work',desc:'Selected projects & case studies',angle:0},
-  {name:'Notes',desc:'Articles & reflections',angle:90},
-  {name:'Mymind',desc:'Saves & inspiration',angle:180},
-  {name:'About',desc:'Who I am & how to reach me',angle:270},
+  {name:'About',desc:'Who I am & how to reach me',angle:0},
+  {name:'Work',desc:'Selected projects & case studies',angle:90},
+  {name:'Notes',desc:'Articles & reflections',angle:180},
+  {name:'Mymind',desc:'Saves & inspiration',angle:270},
 ];
 const THUMB_COLORS=[
+  ['#E8E4E0','#E8E4E0','#E8E4E0','#E8E4E0'],
   ['#A699D4','#9488C8','#B8ADDC','#8278B8'],
   ['#F2D98B','#E8CC7A','#F5E0A0','#EDD590'],
   null,
-  ['#E8E4E0','#E8E4E0','#E8E4E0','#E8E4E0'],
 ];
 const THUMB_IMAGES=[
+  null,
   ['/projects/pet-tickle.jpg','/projects/ova-app.jpg','/projects/greex-defi.jpg','/projects/indianoil.jpg'],
   null,
   ['/mymind/framer-layout.png','/mymind/satisfying-checkbox.gif','/mymind/generative-logo.jpg','/mymind/devouring-details.png'],
-  null,
 ];
 const THUMB_SVGS=[
-  null,null,null,
   [
-    '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a4 4 0 00-8 0v2"/></svg>',
     '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>',
     '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>',
+    '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>',
     '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>',
   ],
+  null,null,null,
 ];
 const PROJECTS=[
+  [{title:'Twitter / X',tags:['Social'],link:'https://x.com/rakshaa_t',desc:'Design insights and vibe coding process.',slides:['#A080BC','#9070AC','#80609C']},{title:'GitHub',tags:['Code'],link:'https://github.com/rakshaa-t',desc:'Open source components and experiments.',slides:['#C4A4D8','#B494C8','#A484B8']},{title:'LinkedIn',tags:['Connect'],link:'https://www.linkedin.com/in/rakshatated/',desc:'Connect with me.',slides:['#B090C8','#A080B8','#9070A8']},{title:'Send a Message',tags:['Email'],link:'mailto:hey@raksha.design',desc:'Let\'s chat about design, code, or anything creative.',slides:['#9470B0','#8460A0','#745090']}],
   [{title:'AI Usage Optimizer',tags:['React','Figma','2024'],link:'#',desc:'A dashboard tool with 3D tilt effects and metallic animations for tracking AI API usage.',slides:['#A699D4','#9488C8','#8278B8']},{title:'Component Marketplace',tags:['SwiftUI','Design System'],link:'#',desc:'Premium UI component marketplace with liquid animations and haptic micro-interactions.',slides:['#9488C8','#8478BC','#7468AC']},{title:'Tab Switcher Component',tags:['React','Animation'],link:'#',desc:'Buttery smooth tab switcher with liquid mercury transitions. Built with spring physics.',slides:['#B8ADDC','#A89DCC','#988DBC']},{title:'3D Dice App',tags:['SwiftUI','Three.js'],link:'#',desc:'Interactive 3D dice with realistic physics and satisfying roll animations.',slides:['#8278B8','#7268A8','#625898']}],
   [{title:'On Vibe Coding',tags:['Essay','2024'],link:'#',desc:'How designing in the browser with AI assistants changes prototyping.',slides:['#7E8EC8','#6E7EB8','#5E6EA8']},{title:'The Flow State Protocol',tags:['Personal'],link:'#',desc:'Lessons from chasing peak creative states.',slides:['#6C7EB8','#5C6EA8','#4C5E98']},{title:'Design Engineering Manifesto',tags:['Essay'],link:'#',desc:'Why the design-engineering gap is a feature, not a bug.',slides:['#90A0D4','#8090C4','#7080B4']},{title:'Design Systems Deep Dive',tags:['Essay'],link:'#',desc:'Why the design-engineering gap is a feature, not a bug.',slides:['#A4B2DC','#94A2CC','#8492BC']}],
   [{title:'Animation References',tags:['Bookmark'],link:'#',desc:'Curated animation patterns from iOS, Material, and indie apps.',slides:['#8BA8C4','#7B98B4','#6B88A4']},{title:'Design System Resources',tags:['Bookmark'],link:'#',desc:'Tokens and implementation guides from top design systems.',slides:['#7998B8','#6988A8','#597898']},{title:'Reading List 2024',tags:['Books'],link:'#',desc:'Notes from design engineering books, essays, and technical reads.',slides:['#9DB8D0','#8DA8C0','#7D98B0']},{title:'Creative Process Notes',tags:['Personal'],link:'#',desc:'Documenting flow states, creative rituals, and what makes the best work happen.',slides:['#6B88A8','#5B7898','#4B6888']}],
-  [{title:'Work With Me',tags:['Freelance'],link:'#',desc:'Premium UI components and design engineering.',slides:['#B090C8','#A080B8','#9070A8']},{title:'Twitter / X',tags:['Social'],link:'https://twitter.com',desc:'Design insights and vibe coding process.',slides:['#A080BC','#9070AC','#80609C']},{title:'GitHub',tags:['Code'],link:'https://github.com',desc:'Open source components and experiments.',slides:['#C4A4D8','#B494C8','#A484B8']},{title:'Send a Message',tags:['Email'],link:'mailto:hello@raks.design',desc:'Let\'s chat about design, code, or anything creative.',slides:['#9470B0','#8460A0','#745090']}],
 ];
 
 // Flat project data for puzzle grid cards
 const PUZZLE_PROJECTS=[
-  {title:'AI Usage Optimizer',tags:['React','Figma','2024'],link:'#',desc:'A dashboard tool with 3D tilt effects and metallic animations for tracking AI API usage.',slides:['#A699D4','#9488C8','#8278B8']},
-  {title:'Component Marketplace',tags:['SwiftUI','Design System'],link:'#',desc:'Premium UI component marketplace with liquid animations and haptic micro-interactions.',slides:['#9488C8','#8478BC','#7468AC']},
-  {title:'Tab Switcher Component',tags:['React','Animation'],link:'#',desc:'Buttery smooth tab switcher with liquid mercury transitions. Built with spring physics.',slides:['#B8ADDC','#A89DCC','#988DBC']},
-  {title:'3D Dice App',tags:['SwiftUI','Three.js'],link:'#',desc:'Interactive 3D dice with realistic physics and satisfying roll animations.',slides:['#7E8EC8','#6E7EB8','#5E6EA8']},
-  {title:'Magicpath Experiments',tags:['AI Design','Components'],link:'#',desc:'Design experiments and premium UI components built with Magicpath AI design software.',slides:['#8BA8C4','#7B98B4','#6B88A4']},
-  {title:'Bewakoof Redesign',tags:['E-Commerce','2023'],link:'#',desc:'Full e-commerce redesign — product pages, checkout flow, and mobile-first shopping experience.',slides:['#B090C8','#A080B8','#9070A8']},
-  {title:'Ova App',tags:['Health','0→1'],link:'#',desc:'End-to-end product design for a women\'s health tracking application.',slides:['#6C7EB8','#5C6EA8','#4C5E98']},
-  {title:'Greex DeFi',tags:['Fintech','Trading'],link:'#',desc:['DeFi trading platform with real-time charts, portfolio management, and swap interfaces. Built the entire trading experience from scratch — order books, candlestick charts, portfolio breakdowns, and one-tap swap flows. Every interaction had to feel instant because traders don\'t wait.\n\nWe designed a complete trading suite: limit orders, market orders, stop-losses, and trailing stops. The portfolio view breaks down holdings by asset class with real-time P&L calculations. The swap interface supports multi-hop routing across liquidity pools to find the best rates automatically.','The hardest part was making complex financial data feel approachable. We used progressive disclosure everywhere: simple view by default, pro mode one tap away.','Designed a real-time order book that updates 60 times per second without layout thrash. Candlestick charts render thousands of data points with buttery smooth pan and zoom.'],slides:['#9DB8D0','#8DA8C0','#7D98B0']},
+  {title:'Tickle',tags:['Mobile','MVP','2025'],link:'#',desc:['Max came to me with a quirky ask: "Can you design a pet you can tickle every day?" A self care pet app where the main way you take care of the pet is by tickling it everyday. When you tickle it, it laughs uncontrollably and makes you feel great. Mood boosting and anxiety/stress relieving. The MVP was really focused on that daily tickling, character interaction and streak building.','We didn\'t have answers to a lot of things honestly. Why would someone want to tickle a pet every day? What role could this play in their life? How will this app make an impact?','Before sketches I dove head-first into product strategy, user psychology, and the crowded self-care market. Looked at Finch, Ahead and Honestly. What stood out across all of them: emotional bonding, personality-first UX, gamified mood tracking, playful onboarding, fun facts, surprise moments.','From that research and some creative chaos I developed 3 distinct product paths.\n\nFirst one: Tickle as an "emotional pit stop". A place to recharge without feeling guilty about not being productive. Second: your rebellious little escape. Not a mood tracker or self-help tool but your "happy chaos companion", a place to hit pause on life and just let loose. Third: a self-love app disguised as a cute emotional companion. Users practice being gentle with themselves by caring for the pet\'s moods and well-being.\n\nMax and his team went ahead with the first direction.','To make a pet you tickle daily matter I didn\'t just map screens. I mapped meaning. This is Tickle\'s Product Experience Architecture. A behavior-first, emotion-led journey from curiosity to connection. Each interaction carefully placed to spark delight, form habit, and build an emotional loop without ever feeling like self-improvement.','Onboarding wasn\'t about filling forms. We used curiosity, suspense, and micro-rewards to pull users in and get them attached fast. Choose your pet with a color picker. Each pet has a different giggle and personality. Name your pet for a personalised experience. From picking a pet to hearing its first giggle the goal was emotional buy-in early. Every screen is a step toward attachment, not just progression.','The whole experience is built around one simple action: tickle your pet. That tickle becomes a ritual. Something light, easy, and weirdly satisfying. It\'s mood care without calling it that.\n\nEverytime you log in your pet is doing something. Tickle them in the middle of the act to surprise them and hear them giggle. Practice daily rituals with your pet for a quick mood boost.','Tickle\'s Wisdom is my favourite part honestly. When users share how they feel, Tickle replies with nonsense advice that somehow makes sense. It\'s light, it\'s weird, and it\'s built to be shared. Perfect for screenshots, inside jokes, or TikTok bait.\n\nLow-friction mood input that feeds emotional logic to the pet. Emotional UX disguised as a laugh. Builds reciprocal bonding. Feels like progress without pressure.','Every screen was handed off with clear logic, interaction intent, and emotional context so devs didn\'t just build what they saw but why it mattered. From button behavior to mood-based animations, nothing was left to guesswork. The goal was to make implementation smooth, scalable, and just as emotionally sharp as the design.'],slides:['#A699D4','#9488C8','#B8ADDC','#8278B8','#A699D4','#9488C8','#B8ADDC','#8278B8','#A699D4']},
+  {title:'Ova App',tags:['Health','0-1','Figma','Rive'],link:'#',desc:['A privacy-first period tracking app for women of all ages. The core idea was a companion character called Ova who guides users through their cycles, gives them insights and predicts upcoming symptoms and moods. Not just another tracker but a warm buddy throughout the reproductive journey. I handled product strategy, vision, UX and UI design.','Hannah came to me clear about what she wanted: a privacy-first, teenage friendly period tracking app. Her frustration came from competitors that make period tracking explicit and unfriendly for younger users and also share their data. She has a few consumer apps on Base and wanted to bring this under her parent company Cryptiq. I connected with her vision immediately and we started the same day.','I dug into the competitor landscape. Looked at Flo and others. A few things became clear quickly. We needed something that felt less analytical and more warm. We needed an educational layer because not every woman knows what luteal phase or ovulation is. Users had to know their data is encrypted. And a companion resonated the most because that seemed slightly missing from the market. AI companions are on a rise and it made sense to hop onto that wave.','Explored two design directions. Digital Confection: bright, colorful, approachable, sweet, new school, feminine. Fun, slightly gamified, light hearted. Not just cycles but symptoms, cravings, the whole picture. This would align with the younger demographic.\n\nWarm Constructivism: warm, grown up, sophisticated, subtle, grounded. Bold and expressive, mature but full of energy. Tactile, confident, a little sensual. The palette pulls from natural tones like clay, skin and peach.','Digital Confection won. The idea that we wanted to cater to a bigger demographic and not just grown ups steered that decision.\n\nFor the companion we wanted something not too complicated. Something cute and relatable. The finalized characters were based off the resemblance of an egg (OVA) which is the main biological element. Minimal, youthful and curious. During onboarding users pick their Ova, give it a unique color, name and character. That personalisation was important for emotional connection.','The Oracle dashboard shows current cycle status, lets users log symptoms and periods which helps predict future cycles. Ova Chat is a companion you can talk to for personalized recommendations on the paid plan, with voice enabled chat.\n\nOnboarding asks basic questions about hormonal health, birth control and goals to align the app to specific needs. Beta releases on Base first, then iOS and Android after early feedback.'],slides:['#6C7EB8','#5C6EA8','#4C5E98','#5C6EA8','#6C7EB8','#4C5E98']},
+  {title:'Greex DeFi',tags:['Fintech','Trading','2024'],link:'#',desc:['Greex was a decentralized options and futures trading platform. The idea was to make strategy-based trading more accessible. Users could apply predefined strategies, understand risk-reward visually, and execute trades across web and mobile. I led the complete product design for both platforms, from wireframing and UX architecture to polished UI.','The hardest part was designing for a space I had zero experience in. Options and futures trading has a steep learning curve even for users, let alone designers. So before I touched any UX I spent time understanding trading logic, strategies, risk curves and market mechanics. That groundwork changed everything about how I approached the screens.','The UX flow I landed on let users browse and apply prebuilt trading strategies, see the strategy logic and risk profile visually, place trades through a simplified execution UI, and track everything in real time through a portfolio dashboard. The whole thing had to feel instant because traders don\'t wait.','The strategic decision that made this work was educating users while letting them act. The flow didn\'t just look clean, it actively supported decision-making. Every screen was designed to remove hesitation and guide action.\n\nThe platform was designed and tested with strong feedback during early demos. The company shut down due to investor issues but the product foundation remains a complete deep-dive into a complex domain translated into a clean experience. One of my proudest projects honestly.'],slides:['#9DB8D0','#8DA8C0','#7D98B0','#8DA8C0']},
+  {title:'IndianOil Dashboard',tags:['Dashboard','Enterprise'],link:'#',desc:'Dashboard design for IndianOil.',slides:['#7E8EC8','#6E7EB8','#5E6EA8']},
+  {title:'DealDoc',tags:['SaaS','Dashboard','2025'],link:'#',desc:['DealDoc is a workspace for investment teams. The problem was straightforward: too many clicks, too many tabs, no idea what\'s going on at a glance. My job was to take a messy multi-source process and turn it into something that feels calm, navigable and sharp for people juggling around ten deals at once.','The redesigned dashboard surfaces active deals, ongoing tasks, recent changes and AI suggestions all in one view. Built an AI-powered smart search for quickly finding anything across deals. The deal overview page was redesigned with a visual hierarchy that actually makes sense when you\'re scanning fast.','On the system side I built components for deal notes, updates, tasks, document trails and team mentions. The interface had to respect mental load. No visual clutter, no over-design. Everything scalable across the different functional areas the teams work in.','Delivered comprehensive specs covering states, empty flows, placeholder logic, permissions, microcopy and layout rules for handoff. Both light and dark theme versions. The kind of documentation where devs don\'t have to come back and ask what happens when something is empty or who can see what.'],slides:['#8BA8C4','#7B98B4','#6B88A4','#7B98B4']},
+  {title:'ADiagnosis',tags:['Medical','AI'],link:'#',desc:'Medical diagnosis application.',slides:['#B090C8','#A080B8','#9070A8']},
 ];
 
 // ═══ STATE ═══
@@ -464,7 +462,7 @@ function enterBrowseMode(){
   window.addEventListener('scroll',updateMiniClockHand);
   // If navigated via label click, scroll to that section
   if(_navTarget!==null){
-    const secId=['sec-work','sec-notes','sec-bookmarks','sec-about'][_navTarget];
+    const secId=['sec-about','sec-work','sec-notes','sec-bookmarks'][_navTarget];
     const target=document.getElementById(secId);
     if(target)requestAnimationFrame(()=>target.scrollIntoView({behavior:'smooth',block:'start'}));
     _navTarget=null;
@@ -627,8 +625,8 @@ function reenterClockMode(){
   document.querySelectorAll('.menu-label').forEach(l=>l.classList.toggle('active',+l.dataset.section===0));
   document.querySelectorAll('.thumbnail').forEach(t=>{t.classList.toggle('active-quadrant',+t.dataset.quadrant===0);t.classList.remove('focused');});
   document.querySelectorAll('.indicator-dot').forEach(d=>d.classList.toggle('active',+d.dataset.section===0));
-  document.getElementById('activeSectionTitle').textContent='Work';
-  document.getElementById('activeSectionDesc').textContent='Selected projects & case studies';
+  document.getElementById('activeSectionTitle').textContent='About';
+  document.getElementById('activeSectionDesc').textContent='Who I am & how to reach me';
 }
 
 // ═══ CLICK NAV ═══
@@ -636,7 +634,7 @@ let _navTarget=null;
 function navigateTo(s){
   if(modalOpen)return;
   if(phase==='browse'){
-    const target=document.getElementById(['sec-work','sec-notes','sec-bookmarks','sec-about'][s]);
+    const target=document.getElementById(['sec-about','sec-work','sec-notes','sec-bookmarks'][s]);
     if(target)target.scrollIntoView({behavior:'smooth',block:'start'});
     return;
   }
@@ -686,7 +684,7 @@ function renderThumbnails(){
       th.style.cssText=`position:absolute;left:${x-sz/2}px;top:${y-sz/2}px;width:${sz}px;height:${sz}px;`;
       const ph=document.createElement('div');
       ph.className='thumbnail-placeholder';
-      if(q===1){
+      if(q===2){
         ph.className='thumbnail-placeholder notes-icon';
         ph.style.background='#fff';ph.style.padding='0';ph.style.overflow='hidden';
         ph.innerHTML=`<div class="ni-yellow"></div><div class="ni-dots"></div><div class="ni-lines"><span></span><span></span></div>`;
@@ -903,12 +901,18 @@ function closeModal(){
   if(tiltRaf){cancelAnimationFrame(tiltRaf);tiltRaf=null;}
   if(dockProgress>0)applyDockProgress(dockProgress);else clockScreen.style.transform='';
 }
+function updateTitleTagsVisibility(){
+  const show=carouselIndex===0;
+  document.getElementById('modalTitle').style.display=show?'':'none';
+  document.getElementById('modalTags').style.display=show?'':'none';
+}
 function carouselNext(){
   if(!currentModalData||carouselIndex>=currentModalData.slides.length-1)return;
   carouselIndex++;
   document.getElementById('carouselTrack').style.transform=`translateX(-${carouselIndex*100}%)`;
   document.getElementById('carouselCounter').textContent=`${carouselIndex+1} / ${currentModalData.slides.length}`;
   if(Array.isArray(currentModalData.desc)){renderModalDesc(currentModalData,carouselIndex);recheckScrollLine();}
+  updateTitleTagsVisibility();
   updateCarouselButtons();
 }
 function carouselPrev(){
@@ -917,6 +921,7 @@ function carouselPrev(){
   document.getElementById('carouselTrack').style.transform=`translateX(-${carouselIndex*100}%)`;
   document.getElementById('carouselCounter').textContent=`${carouselIndex+1} / ${currentModalData.slides.length}`;
   if(Array.isArray(currentModalData.desc)){renderModalDesc(currentModalData,carouselIndex);recheckScrollLine();}
+  updateTitleTagsVisibility();
   updateCarouselButtons();
 }
 
@@ -952,6 +957,11 @@ if(puzzleShowMore){
 }
 document.querySelectorAll('.thumbnail[data-quadrant="0"]').forEach(t=>t.classList.add('active-quadrant'));
 applyDockProgress(0);
+
+// Default to browse mode on load — clock is accessible via mini dock icon
+enterBrowseMode();
+miniClockBar.classList.add('visible');
+_lastMini=true;
 
 
 // ═══ CMS: Optionally override Notes + Mymind from portfolio-data.json ═══
@@ -1137,33 +1147,151 @@ window.openPuzzleModal = openPuzzleModal;
 // ═══ NOTES (Apple Notes interactive component) ═══
 const NOTES=[
   {
-    title:"How spring physics actually works",
-    date:"Today",sortDate:20260211,
-    tags:["animation","code","interactive"],
-    preview:"The math behind buttery animations, with live demos you can touch...",
+    title:"Process Breakdown: Building this portfolio",
+    date:"Feb 16, 2026",sortDate:20260216,
+    tags:["design","process","portfolio"],
+    preview:"How a random Tuesday, a clock app, and an obsessive build process turned into this website...",
     rich:true,
     body:[
-      {type:"text",html:`<p>Every animation you love on iOS uses <span class="term" data-term="spring-physics">spring physics</span>. Not easing curves, not keyframes. Springs. And once you understand the three numbers that control them, you'll never animate any other way.</p>`},
-      {type:"callout",html:`This note has live demos. Drag things. Break things. That's the point.`},
-      {type:"text",html:`<p>A spring animation is driven by three properties: <span class="term" data-term="stiffness">stiffness</span>, <span class="term" data-term="damping">damping</span>, and <span class="term" data-term="mass">mass</span>. Together they simulate how a physical spring behaves. The result is motion that feels real because it literally follows the same differential equations as a real spring.</p>`},
-      {type:"demo",id:"spring-ball"},
-      {type:"text",html:`<p>See how it overshoots and settles? That's the spring. High stiffness = snappy. High damping = less bounce. High mass = slower, heavier. The interplay between these three values is what gives each animation its character.</p>`},
-      {type:"text",html:`<p>Here's what the code looks like in <a class="note-link" href="https://www.framer.com/motion/" target="_blank">Framer Motion</a>:</p>`},
-      {type:"code",html:`<span class="cm">// Spring with personality</span>\n<span class="kw">const</span> transition = {\n  type: <span class="str">"spring"</span>,\n  stiffness: <span class="num">300</span>,\n  damping: <span class="num">24</span>,\n  mass: <span class="num">0.8</span>\n}`},
-      {type:"text",html:`<p>Compare that to a CSS easing curve. The spring feels alive. The easing feels programmed. Users can't tell you why, but they feel the difference immediately.</p>`},
-      {type:"demo",id:"easing-vs-spring"},
-      {type:"text",html:`<p>The top ball uses a CSS <span class="term" data-term="bezier">cubic-bezier</span> ease-out. The bottom uses a spring. Watch how the spring overshoots slightly then settles. That tiny overshoot is what makes it feel physical.</p>`},
-      {type:"image",gradient:"linear-gradient(135deg,#667eea 0%,#764ba2 100%)",caption:"Spring curves visualized: stiffness vs damping matrix"},
-      {type:"text",html:`<p>My workflow: I start with stiffness <span class="term" data-term="stiffness">300</span> and damping <span class="term" data-term="damping">20</span> as defaults. Then I adjust by feel in the browser. No amount of Figma prototyping replaces tuning a spring in real time at 60fps.</p>`},
-      {type:"callout",html:`Rule of thumb: if it moves, spring it. If it appears, fade it. If it resizes, use layout animation. Never combine all three.`},
+      {type:"text",html:`<p>The whole thing started with me looking at the iPhone clock app on a random Tuesday. Beautiful interface. I'd never seen a webpage with circular navigation like a clock. So naturally I had to fiddle with the idea.</p>`},
+      {type:"text",html:`<p>The initial idea was actually the entire webpage as a clock component. Rotate through sections, everything lives inside the clock face. Looked cool but the UX was genuinely bad. So the clock became a preview and navigation system instead. You can hop between sections or glance at primary content in each category right from the clock face.</p>`},
+      {type:"image",src:"/article/clock-overview.png",caption:"The clock navigation system"},
+      {type:"image",src:"/article/work-modal.jpg",caption:"Each section is its own interactable object"},
+      {type:"text",html:`<p>Once the clock was the muse, the next step was looking at familiar objects. Kindle, Notes app, <a class="note-link" href="https://mymind.com" target="_blank">Mymind</a>. These products are already widely used. People more or less know their UX. No need to reinvent the wheel. So they're built into the portfolio as they are, or as close as possible. The navigation is rotation but the experience feels linear.</p>`},
+      {type:"image",src:"/article/notes-list.png",caption:"The Notes app"},
+      {type:"image",src:"/article/mymind-masonry.jpg",caption:"The Mymind board"},
+      {type:"text",html:`<p><strong>The facets</strong></p>`},
+      {type:"text",html:`<p><a class="note-link" href="https://x.com/joshpuckett?s=20" target="_blank">Josh Puckett</a> has this thing he talks about famously which is uncommon care and his facets of design. Keeping that as integral part of my design I drafted my facets alongside my design explorations:</p>`},
+      {type:"text",html:`<p><em>Discoverability</em> / Users can discover more about me but only if they wish to. Want to see what I think about a book I read? Glance through my Kindle highlights. Share my notes on X? Visit my bookmarks? Copy the links to your clipboard? All available but nothing shown by default. Every section has its own navigation. Only what's necessary is on screen, and if the viewer's curiosity persists they can go deeper.</p>`},
+      {type:"text",html:`<p><em>Nostalgia</em> / Each section connects to something the viewer already knows. A Kindle, a notes app, <a class="note-link" href="https://mymind.com" target="_blank">Mymind</a>. My approach might be a bit biased towards iOS users but the interfaces are easy to pick up even if not familiar. I also added sound to interactions. Rotating the clock, clicking through notes, shuffling the stack cards. Each one has its own sound. That part took me a while to get right honestly.</p>`},
+      {type:"text",html:`<p><em>Compartmentalisation</em> / The website works in compartments (the clock quadrants) and each one gives its own experience. Each compartment holds the power to expand as more of my data comes. Maybe someday the Kindle becomes a full reading experience, or the bookmarks board becomes an extension of my entire <a class="note-link" href="https://mymind.com" target="_blank">Mymind</a>. That kind of expansion may never be needed but the architecture allows for it.</p>`},
+      {type:"text",html:`<p><em>Continuous refinement</em> / This website is how I work. You can see in real time what I'm drawing inspiration from, what I'm reading, what I'm writing about, what designs I'm experimenting with. A living space.</p>`},
+      {type:"image",src:"/article/about-section.jpg",caption:"The about section"},
+      {type:"text",html:`<p><strong>The build</strong></p>`},
+      {type:"text",html:`<p>All started with a rough sketch and Claude Code's CLI. Instead of building the whole website at once the build process was compartmentalised too. Clock component first. Get that working, get the rotation feeling right, get the hand snapping to sections. Once that felt solid, objectify the rest of the content one section at a time. Clock, then Kindle, then Notes, then <a class="note-link" href="https://mymind.com" target="_blank">Mymind</a>. Each one its own mini project within the project.</p>`},
+      {type:"image",src:"/article/mymind-cards.jpg",caption:"Compartmentalised build: each section in isolation"},
+      {type:"text",html:`<p>Quick prototypes in vanilla HTML first, to see if the interaction patterns actually worked, then Astro as the build framework. The design keeps things simple on the framework side. Static pages with JS doing the heavy lifting. Astro was the right fit.</p>`},
+      {type:"text",html:`<p>Sounds use the Web Audio API. Took a bit of back and forth to find the right tone for each interaction. Everything is synthesised in real-time through code so each sound responds to exactly how you interact with it. That was a fun rabbit hole.</p>`},
+      {type:"text",html:`<p>The whole stack is vanilla JS and one CSS file. These components took about three weeks and close to 100 iterations.</p>`},
+      {type:"text",html:`<p>Thats all for now, cheers!</p>`},
     ]
   },
-  {title:"Top-tier prompting is more than words",date:"Yesterday",sortDate:20260210,tags:["workflow","ai"],preview:"The gap between what you imagine and what you build is closing fast...",body:`<p>The gap between what you imagine and what you build is closing fast. But closing isn't closed. The last mile is still taste, specificity, and knowing what to ask for.</p><p>Most people prompt like they're filling out a form. The best prompts read like creative briefs: they carry intent, constraints, references, and a clear picture of what done looks like.</p><p>I've started treating every prompt like a design spec. Context first, then the ask, then the constraints. The output quality difference is night and day.</p><p>The skill isn't writing code or even understanding code. It's being able to articulate what you want with enough precision that the machine can close the gap. That's a design skill.</p>`},
-  {title:"Don't be shy, use these libraries",date:"Feb 8",sortDate:20260208,tags:["tools","code"],preview:"A curated list of the tools and resources I actually use daily...",body:`<p>A curated list of the tools and resources I actually use daily. Not the ones I bookmarked and forgot about. The ones that are open in my tabs right now.</p><p>Framer Motion for React animations. Not because it's the best, but because the API matches how I think about motion. Spring physics out of the box, layout animations that just work.</p><p>Recharts for data viz. Simple, composable, doesn't try to be D3. For dashboards and product UIs it's exactly enough.</p><p>Tailwind for spacing and layout. I know the debate. I don't care. It's fast, it's consistent, and it maps directly to the spacing system I use in Figma.</p><p>Claude for everything else. Not as a replacement for thinking, but as an accelerant. First drafts, refactoring, exploring approaches I wouldn't try manually because of time.</p>`},
-  {title:"How I vibe-code complex animations",date:"Feb 6",sortDate:20260206,tags:["animation","workflow"],preview:"Physics-based springs, momentum curves, and making things feel alive...",body:`<p>Physics-based springs, momentum curves, and making things feel alive. This is the part of design engineering that gets me out of bed.</p><p>The trick isn't learning animation libraries. It's developing a feel for what 'right' looks like at 60fps. You can't spec that in Figma. You have to feel it in the browser.</p><p>My process: start with the interaction design in my head. Not a mockup, a feeling. How should this feel when you drag it? What happens when you let go? Then I translate that feeling into spring parameters.</p><p>Stiffness controls the snap. Damping controls the settle. Mass controls the weight. Once you internalize those three, you stop copying and start designing motion.</p>`},
-  {title:"All Claude skills in my MD file",date:"Feb 2",sortDate:20260202,tags:["ai","workflow"],preview:"The skill files I've built up over months of working with Claude...",body:`<p>The skill files I've built up over months of working with Claude. Not prompts, not templates. Skill files: structured instructions that shape how Claude approaches specific tasks.</p><p>I have one for React components. One for animations. One for design system tokens. Each one encodes the patterns and preferences I'd otherwise repeat in every conversation.</p><p>The key insight: Claude gets dramatically better when you give it your design principles, not just your requirements. Tell it you prefer spring physics over easing curves. Tell it you want 4px spacing grids. Tell it your color system.</p><p>It's like onboarding a junior designer, except the onboarding doc is the entire relationship.</p>`},
-  {title:"Fewer tools, tighter workflow",date:"Jan 28",sortDate:20260128,tags:["workflow","tools"],preview:"I used to juggle 15 apps. Now it's Figma, Claude, and a terminal...",body:`<p>I used to juggle 15 apps. Now it's Figma, Claude, and a terminal. That's it. Everything else is noise.</p><p>Figma for thinking. Not wireframing, not pixel-pushing. Thinking. I use it like a whiteboard that happens to produce production-ready specs.</p><p>Claude for building. Not for generating code I don't understand. For pair-programming with something that has infinite patience and zero ego.</p><p>Terminal for shipping. Git, npm, deploy. The fewer steps between idea and live URL, the more ideas you actually test.</p><p>Every tool you add is a context switch. Every context switch is a tiny tax on creative momentum. Protect your momentum like your life depends on it.</p>`},
-  {title:"The design-engineering gap",date:"Jan 20",sortDate:20260120,tags:["career","design"],preview:"The tension between design and code isn't a problem to solve...",body:`<p>The tension between design and code isn't a problem to solve. It's a creative space to work in.</p><p>Designers who code make different design decisions. Not better, not worse. Different. They think in terms of state, transitions, and edge cases because they've felt the cost of ignoring them.</p><p>Engineers who design make different architecture decisions. They leave room for delight because they understand that the user experience is the product, not the system behind it.</p><p>The gap isn't shrinking. The people who can work in both spaces are just getting more valuable. That's where I'm trying to be.</p>`},
+  {
+    title:"Code and canvas as methods of communication",
+    date:"Today",sortDate:20260217,
+    tags:["design","code","thinking"],
+    preview:"All design is communication. Code just gave it more dimensions...",
+    body:`<p>With the canvas the permutations of what you could do with a rectangle, ellipse or polygon felt endless. All that freedom. But ultimately all design is communication. If you communicate through visual shapes long enough you naturally develop taste.</p><p>I think code is also a form of communication. It just never got seen that way because of the technical barrier around it.</p><p>Canvas restricts you to a one dimensional output. With code you see design in a multi dimensional form. I don't just see a rectangle anymore, I see a plane. A plane on which I can add sound, depth, interaction, math and physics. Code in itself is a system. I like to call design with code systems design because that's what's happening. You're building systems and articulating ideas into words at the same time. It stimulates a lot of your expressive mechanisms all at once.</p><p>This doesn't mean the canvas is going anywhere. For people who truly love it their craft will only deepen. The canvas has existed for centuries and it will continue to exist for the creatives. All the noise around AI and code doesn't change someone's method of expression. If it's the canvas, staying true to it is a moat.</p><p>Code and canvas are closer than they appear. It's not duality as an output. It's duality as an input. A child who likes math may not like chemistry. Both are sciences of their own sort. The output is a good user experience but the input depends on what the creator has leverage in. Interest, passion, love. Different inputs don't mean the outputs should differ.</p><p>I'm not here to say which is superior. Canvas will always exist. Code just gave wings to people who were multi dimensional in their thought process and ideas.</p>`
+  },
+  {
+    title:"All Claude skills in my MD file",
+    date:"Today",sortDate:20260217,
+    tags:["ai","workflow","tools"],
+    preview:"41 skills, 4 MCP servers, and 3 custom skills I've built up working with Claude Code...",
+    rich:true,
+    body:[
+      {type:"text",html:`<p><strong>41 installed skills</strong></p>`},
+      {type:"text",html:`<p><em>Animation & Motion (9)</em></p>`},
+      {type:"text",html:`<p style="margin-top:36px"><strong>12 Principles of Animation</strong><br><span style="color:rgba(0,0,0,0.4)">Audit animations against Disney's 12 principles adapted for web</span></p>`},
+      {type:"code",html:`npx ui-skills add 12-principles-of-animation`},
+      {type:"text",html:`<p style="margin-top:36px"><strong>Animate Presence</strong><br><span style="color:rgba(0,0,0,0.4)">Exit animations with Motion's AnimatePresence for modals, toasts, page transitions</span></p>`},
+      {type:"code",html:`<span class="cm"># Custom skill — ~/.claude/skills/</span>`},
+      {type:"text",html:`<p style="margin-top:36px"><strong>Axiom UIKit Animation Debugging</strong><br><span style="color:rgba(0,0,0,0.4)">Diagnose CAAnimation issues, spring physics, device-specific jank</span></p>`},
+      {type:"code",html:`npx skills add syntag-umd/claude-agent-skills --skill axiom-uikit-animation-debugging`},
+      {type:"text",html:`<p style="margin-top:36px"><strong>Fixing Motion Performance</strong><br><span style="color:rgba(0,0,0,0.4)">Fix repaints, layout thrashing, GPU layer issues in animations</span></p>`},
+      {type:"code",html:`npx ui-skills add fixing-motion-performance`},
+      {type:"text",html:`<p style="margin-top:36px"><strong>Framer Motion Animator</strong><br><span style="color:rgba(0,0,0,0.4)">Page transitions, gestures, scroll-based animations, orchestrated sequences</span></p>`},
+      {type:"code",html:`npx skills add syntag-umd/claude-agent-skills --skill framer-motion-animator`},
+      {type:"text",html:`<p style="margin-top:36px"><strong>Motion (Nuxt)</strong><br><span style="color:rgba(0,0,0,0.4)">Motion component API and composables for Vue 3 / Nuxt</span></p>`},
+      {type:"code",html:`npx skills add onmax/nuxt-skills --skill motion`},
+      {type:"text",html:`<p style="margin-top:36px"><strong>Shared Layout Animations</strong><br><span style="color:rgba(0,0,0,0.4)">Seamless layout transitions using Motion's layoutId</span></p>`},
+      {type:"code",html:`<span class="cm"># Custom skill — ~/.claude/skills/</span>`},
+      {type:"text",html:`<p style="margin-top:36px"><strong>Shadow Design</strong><br><span style="color:rgba(0,0,0,0.4)">Generate beautiful, realistic layered CSS shadows</span></p>`},
+      {type:"code",html:`<span class="cm"># Custom skill — ~/.claude/skills/</span>`},
+      {type:"text",html:`<p style="margin-top:36px"><strong>Three.js Animation</strong><br><span style="color:rgba(0,0,0,0.4)">Keyframe, skeletal, morph target animations and procedural motion</span></p>`},
+      {type:"code",html:`npx skills add cloudai-x/threejs-skills --skill threejs-animation`},
+      {type:"text",html:`<p style="margin-top:28px"><em>UI/UX Design (10)</em></p>`},
+      {type:"text",html:`<p style="margin-top:36px"><strong>Baseline UI</strong><br><span style="color:rgba(0,0,0,0.4)">Opinionated UI baseline to prevent AI-generated interface slop</span></p>`},
+      {type:"code",html:`npx ui-skills add baseline-ui`},
+      {type:"text",html:`<p style="margin-top:36px"><strong>Canvas Design</strong><br><span style="color:rgba(0,0,0,0.4)">Create visual art in .png and .pdf using design philosophy</span></p>`},
+      {type:"code",html:`npx ui-skills add canvas-design`},
+      {type:"text",html:`<p style="margin-top:36px"><strong>Design Lab</strong><br><span style="color:rgba(0,0,0,0.4)">Generate five distinct UI variations, collect feedback, produce implementation plans</span></p>`},
+      {type:"code",html:`npx ui-skills add design-lab`},
+      {type:"text",html:`<p style="margin-top:36px"><strong>Frontend Design</strong><br><span style="color:rgba(0,0,0,0.4)">Production-grade frontend interfaces with high design quality</span></p>`},
+      {type:"code",html:`npx skills add anthropics/skills --skill frontend-design`},
+      {type:"text",html:`<p style="margin-top:36px"><strong>Implement Design</strong><br><span style="color:rgba(0,0,0,0.4)">Translate Figma designs into production code with 1:1 visual fidelity</span></p>`},
+      {type:"code",html:`npx skills add figma/mcp-server-guide --skill implement-design`},
+      {type:"text",html:`<p style="margin-top:36px"><strong>Interaction Design</strong><br><span style="color:rgba(0,0,0,0.4)">Microinteractions, motion design, transitions, user feedback patterns</span></p>`},
+      {type:"code",html:`npx ui-skills add interaction-design`},
+      {type:"text",html:`<p style="margin-top:36px"><strong>Interface Design</strong><br><span style="color:rgba(0,0,0,0.4)">Dashboards, admin panels, apps, tools, interactive products</span></p>`},
+      {type:"code",html:`npx ui-skills add interface-design`},
+      {type:"text",html:`<p style="margin-top:36px"><strong>Mobile Design</strong><br><span style="color:rgba(0,0,0,0.4)">Mobile-first design for iOS and Android — touch, performance, offline</span></p>`},
+      {type:"code",html:`npx skills add sickn33/antigravity-awesome-skills --skill mobile-design`},
+      {type:"text",html:`<p style="margin-top:36px"><strong>UI/UX Pro Max</strong><br><span style="color:rgba(0,0,0,0.4)">50 styles, 21 palettes, 50 font pairings, 9 stacks</span></p>`},
+      {type:"code",html:`npx ui-skills add ui-ux-pro-max`},
+      {type:"text",html:`<p style="margin-top:36px"><strong>Web Design Guidelines</strong><br><span style="color:rgba(0,0,0,0.4)">Review UI against Web Interface Guidelines for best practices</span></p>`},
+      {type:"code",html:`npx skills add vercel-labs/agent-skills --skill web-design-guidelines`},
+      {type:"text",html:`<p style="margin-top:28px"><em>Layout & Responsive (6)</em></p>`},
+      {type:"text",html:`<p style="margin-top:36px"><strong>Frontend Responsive Design Standards</strong><br><span style="color:rgba(0,0,0,0.4)">Responsive layouts with fluid containers and mobile-first breakpoints</span></p>`},
+      {type:"code",html:`npx skills add am-will/codex-skills --skill "Frontend Responsive Design Standards"`},
+      {type:"text",html:`<p style="margin-top:36px"><strong>Responsive Design</strong><br><span style="color:rgba(0,0,0,0.4)">Container queries, fluid typography, CSS Grid, mobile-first strategies</span></p>`},
+      {type:"code",html:`npx skills add wshobson/agents --skill responsive-design`},
+      {type:"text",html:`<p style="margin-top:36px"><strong>Responsive Web Design</strong><br><span style="color:rgba(0,0,0,0.4)">CSS Grid, Flexbox, media queries, adaptive interfaces across devices</span></p>`},
+      {type:"code",html:`npx skills add aj-geddes/useful-ai-prompts --skill responsive-web-design`},
+      {type:"text",html:`<p style="margin-top:36px"><strong>Tailwind CSS</strong><br><span style="color:rgba(0,0,0,0.4)">Utility-first framework for rapid UI development with dark mode</span></p>`},
+      {type:"code",html:`npx skills add bobmatnyc/claude-mpm-skills --skill tailwind-css`},
+      {type:"text",html:`<p style="margin-top:36px"><strong>Tailwind CSS Mobile First</strong><br><span style="color:rgba(0,0,0,0.4)">Mobile-first responsive patterns for Tailwind CSS v4</span></p>`},
+      {type:"code",html:`npx skills add josiahsiegel/claude-plugin-marketplace --skill tailwindcss-mobile-first`},
+      {type:"text",html:`<p style="margin-top:36px"><strong>Tailwind CSS Patterns</strong><br><span style="color:rgba(0,0,0,0.4)">Layout utilities, flexbox, grid, spacing, typography, colors</span></p>`},
+      {type:"code",html:`npx skills add giuseppe-trisciuoglio/developer-kit --skill tailwind-css-patterns`},
+      {type:"text",html:`<p style="margin-top:28px"><em>Design Systems & Tokens (3)</em></p>`},
+      {type:"text",html:`<p style="margin-top:36px"><strong>Design Systems</strong><br><span style="color:rgba(0,0,0,0.4)">Build and scale design systems — component libraries, brand consistency</span></p>`},
+      {type:"code",html:`npx skills add syntag-umd/claude-agent-skills --skill design-systems`},
+      {type:"text",html:`<p style="margin-top:36px"><strong>Design Tokens</strong><br><span style="color:rgba(0,0,0,0.4)">DTCG spec tokens — color spaces, theming, multi-platform systems</span></p>`},
+      {type:"code",html:`npx skills add syntag-umd/claude-agent-skills --skill design-tokens`},
+      {type:"text",html:`<p style="margin-top:36px"><strong>Tailwind Advanced Design Systems</strong><br><span style="color:rgba(0,0,0,0.4)">Advanced design systems with design tokens and @theme configuration</span></p>`},
+      {type:"code",html:`npx skills add syntag-umd/claude-agent-skills --skill tailwindcss-advanced-design-systems`},
+      {type:"text",html:`<p style="margin-top:28px"><em>Accessibility & Quality (4)</em></p>`},
+      {type:"text",html:`<p style="margin-top:36px"><strong>Fixing Accessibility</strong><br><span style="color:rgba(0,0,0,0.4)">Identify and fix accessibility issues across components</span></p>`},
+      {type:"code",html:`npx ui-skills add fixing-accessibility`},
+      {type:"text",html:`<p style="margin-top:36px"><strong>Fixing Metadata</strong><br><span style="color:rgba(0,0,0,0.4)">Ship correct, complete metadata for SEO and social sharing</span></p>`},
+      {type:"code",html:`npx ui-skills add fixing-metadata`},
+      {type:"text",html:`<p style="margin-top:36px"><strong>WCAG Audit Patterns</strong><br><span style="color:rgba(0,0,0,0.4)">WCAG 2.2 audits with automated testing and remediation guidance</span></p>`},
+      {type:"code",html:`npx ui-skills add wcag-audit-patterns`},
+      {type:"text",html:`<p style="margin-top:36px"><strong>Web Performance Optimization</strong><br><span style="color:rgba(0,0,0,0.4)">Core Web Vitals, bundle size, caching strategies, runtime performance</span></p>`},
+      {type:"code",html:`npx skills add sickn33/antigravity-awesome-skills --skill web-performance-optimization`},
+      {type:"text",html:`<p style="margin-top:28px"><em>Code Quality & Review (4)</em></p>`},
+      {type:"text",html:`<p style="margin-top:36px"><strong>Code Reviewer</strong><br><span style="color:rgba(0,0,0,0.4)">Review code for correctness, maintainability, and project standards</span></p>`},
+      {type:"code",html:`npx skills add google-gemini/gemini-cli --skill code-reviewer`},
+      {type:"text",html:`<p style="margin-top:36px"><strong>Frontend Patterns</strong><br><span style="color:rgba(0,0,0,0.4)">React, Next.js, state management, performance optimization patterns</span></p>`},
+      {type:"code",html:`npx skills add sickn33/antigravity-awesome-skills --skill frontend-patterns`},
+      {type:"text",html:`<p style="margin-top:36px"><strong>Karpathy Guidelines</strong><br><span style="color:rgba(0,0,0,0.4)">Reduce common LLM coding mistakes — surgical changes, surface assumptions</span></p>`},
+      {type:"code",html:`npx skills add forrestchang/andrej-karpathy-skills --skill karpathy-guidelines`},
+      {type:"text",html:`<p style="margin-top:36px"><strong>Vercel React Best Practices</strong><br><span style="color:rgba(0,0,0,0.4)">React and Next.js performance optimization from Vercel Engineering</span></p>`},
+      {type:"code",html:`npx skills add vercel-labs/agent-skills --skill vercel-react-best-practices`},
+      {type:"text",html:`<p style="margin-top:28px"><em>Workflow & Planning (4)</em></p>`},
+      {type:"text",html:`<p style="margin-top:36px"><strong>Ask Questions if Underspecified</strong><br><span style="color:rgba(0,0,0,0.4)">Clarify requirements before implementing when doubts arise</span></p>`},
+      {type:"code",html:`npx skills add trailofbits/skills --skill ask-questions-if-underspecified`},
+      {type:"text",html:`<p style="margin-top:36px"><strong>Executing Plans</strong><br><span style="color:rgba(0,0,0,0.4)">Execute implementation plans in separate sessions with review checkpoints</span></p>`},
+      {type:"code",html:`npx skills add obra/superpowers --skill executing-plans`},
+      {type:"text",html:`<p style="margin-top:36px"><strong>Find Skills</strong><br><span style="color:rgba(0,0,0,0.4)">Discover and install new agent skills from the community</span></p>`},
+      {type:"code",html:`npx skills add vercel-labs/skills --skill find-skills`},
+      {type:"text",html:`<p style="margin-top:36px"><strong>Humanizer</strong><br><span style="color:rgba(0,0,0,0.4)">Remove signs of AI-generated writing to sound more natural</span></p>`},
+      {type:"code",html:`npx skills add blader/humanizer --skill humanizer`},
+      {type:"text",html:`<p style="margin-top:28px"><em>Platform Specific (1)</em></p>`},
+      {type:"text",html:`<p style="margin-top:36px"><strong>SwiftUI UI Patterns</strong><br><span style="color:rgba(0,0,0,0.4)">SwiftUI views, TabView architecture, component-specific patterns</span></p>`},
+      {type:"code",html:`npx ui-skills add swiftui-ui-patterns`},
+      {type:"text",html:`<p style="margin-top:28px"><strong>4 MCP servers</strong></p>`},
+      {type:"text",html:`<p style="margin-top:36px"><strong>Motion</strong><br><span style="color:rgba(0,0,0,0.4)">Motion.dev Studio — animation code generation</span></p>`},
+      {type:"code",html:`motion`},
+      {type:"text",html:`<p style="margin-top:36px"><strong>Pencil</strong><br><span style="color:rgba(0,0,0,0.4)">.pen design files</span></p>`},
+      {type:"code",html:`pencil`},
+      {type:"text",html:`<p style="margin-top:36px"><strong>Figma</strong><br><span style="color:rgba(0,0,0,0.4)">Figma design integration</span></p>`},
+      {type:"code",html:`figma`},
+      {type:"text",html:`<p>Up-to-date library documentation</p>`},
+      {type:"code",html:`context7`},
+    ]
+  },
 ];
 
 const GLOSSARY={
@@ -1423,13 +1551,37 @@ function renderBody(note){
     }else if(block.type==='callout'){
       const div=document.createElement('div');div.className='note-callout';div.textContent=block.html;container.appendChild(div);
     }else if(block.type==='code'){
-      const pre=document.createElement('div');pre.className='note-code';pre.innerHTML=block.html;container.appendChild(pre);
+      const wrap=document.createElement('div');wrap.style.cssText='position:relative;';
+      const pre=document.createElement('div');pre.className='note-code';pre.innerHTML=block.html;
+      const copyBtn=document.createElement('button');copyBtn.className='note-code-copy';copyBtn.textContent='copy';
+      const rawText=pre.textContent;
+      copyBtn.addEventListener('click',()=>{navigator.clipboard.writeText(rawText);copyBtn.textContent='copied';setTimeout(()=>copyBtn.textContent='copy',1500);});
+      wrap.appendChild(pre);wrap.appendChild(copyBtn);container.appendChild(wrap);
     }else if(block.type==='image'){
       const wrap=document.createElement('div');wrap.className='note-img';
-      const placeholder=document.createElement('div');
-      placeholder.style.cssText=`width:100%;height:160px;background:${block.gradient};border-radius:10px;`;
-      wrap.appendChild(placeholder);container.appendChild(wrap);
+      if(block.src){
+        const img=document.createElement('img');img.src=block.src;img.alt=block.caption||'';img.loading='lazy';
+        wrap.appendChild(img);
+      }else{
+        const placeholder=document.createElement('div');
+        placeholder.style.cssText=`width:100%;height:160px;background:${block.gradient};border-radius:10px;`;
+        wrap.appendChild(placeholder);
+      }
+      container.appendChild(wrap);
       if(block.caption){const cap=document.createElement('div');cap.className='note-img-caption';cap.textContent=block.caption;container.appendChild(cap);}
+    }else if(block.type==='embed'){
+      const wrap=document.createElement('div');wrap.className='note-embed';
+      const ph=document.createElement('div');ph.className='note-embed-placeholder';
+      const lbl=document.createElement('div');lbl.className='note-embed-label';lbl.textContent='Interactive prototype';
+      const btn=document.createElement('button');btn.className='note-embed-btn';btn.textContent='Try it';
+      ph.appendChild(lbl);ph.appendChild(btn);wrap.appendChild(ph);
+      ph.addEventListener('click',()=>{
+        const iframe=document.createElement('iframe');iframe.src=block.src;iframe.loading='lazy';
+        iframe.setAttribute('sandbox','allow-scripts allow-same-origin');
+        wrap.replaceChild(iframe,ph);
+      });
+      container.appendChild(wrap);
+      if(block.caption){const cap=document.createElement('div');cap.className='note-embed-caption';cap.textContent=block.caption;container.appendChild(cap);}
     }else if(block.type==='demo'){
       const demo=DEMOS[block.id];if(!demo)return;
       const wrap=document.createElement('div');wrap.className='note-demo';
@@ -1492,6 +1644,13 @@ function shareOnX(){
 
 document.getElementById('anotesReaderBack').addEventListener('click',closeNote);
 document.getElementById('anotesFooterShare').addEventListener('click',shareOnX);
+document.getElementById('anotesFooterCopy').addEventListener('click',()=>{
+  const body=document.getElementById('anotesReaderBody');
+  if(!body)return;
+  navigator.clipboard.writeText(body.innerText);
+  const btn=document.getElementById('anotesFooterCopy');
+  btn.textContent='Copied!';setTimeout(()=>btn.textContent='Copy note',1500);
+});
 
 // Magic Mouse click — real Apple Magic Mouse sample (CC0, BigSoundBank)
 let _mouseClickBuf=null;

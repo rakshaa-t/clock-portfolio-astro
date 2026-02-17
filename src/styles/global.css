@@ -461,7 +461,7 @@ body{}
 }
 .puzzle-grid.collapsing .puzzle-extra{display:none;}
 .puzzle-show-more{
-  display:block;margin:16px auto 0;
+  display:block;margin:32px auto 0;
   font-family:'Geist Mono',monospace;font-size:12px;font-weight:500;
   letter-spacing:0.01em;text-transform:uppercase;
   padding:8px 20px;border-radius:4px;
@@ -1182,11 +1182,23 @@ body{}
 .note-demo canvas{display:block;width:100%;aspect-ratio:460/140;cursor:grab;}
 .note-demo canvas:active{cursor:grabbing;}
 .note-demo-hint{text-align:center;padding:6px;font-size:12px;color:rgba(0,0,0,0.2);border-top:1px solid rgba(0,0,0,0.04);}
-.note-code{background:#1A1A1A;border-radius:12px;padding:16px;margin:12px 0;font-family:'Geist Mono',monospace;font-size:12px;line-height:1.6;color:rgba(255,255,255,0.75);overflow-x:auto;}
-.note-code .kw{color:#C792EA;}.note-code .fn{color:#82AAFF;}
-.note-code .str{color:#C3E88D;}.note-code .num{color:#F78C6C;}
-.note-code .cm{color:rgba(255,255,255,0.3);}
+.note-code{background:rgba(0,0,0,0.03);border:1px solid rgba(0,0,0,0.06);border-radius:10px;padding:12px 14px;padding-right:60px;margin:4px 0 0;font-family:'Geist Mono',monospace;font-size:11.5px;line-height:1.7;color:rgba(0,0,0,0.55);overflow-x:auto;word-break:break-all;}
+.note-code .kw{color:#7B6BA5;}.note-code .fn{color:#5A7BAF;}
+.note-code .str{color:#6B8F5E;}.note-code .num{color:#B87A4A;}
+.note-code .cm{color:rgba(0,0,0,0.25);}
+.note-code-copy{position:absolute;top:50%;right:8px;transform:translateY(-50%);background:rgba(0,0,0,0.04);border:1px solid rgba(0,0,0,0.06);border-radius:6px;padding:4px 8px;font-family:'Geist Mono',monospace;font-size:10px;color:rgba(0,0,0,0.3);cursor:pointer;transition:opacity 0.15s ease-out;}
+.note-code-copy:hover{opacity:0.7;}
+.note-code-copy:active{transform:translateY(-50%) scale(0.97);}
 .note-callout{background:rgba(139,126,200,0.06);border-left:3px solid #8B7EC8;border-radius:0 8px 8px 0;padding:12px 16px;margin:12px 0;font-size:13px;color:rgba(0,0,0,0.5);line-height:1.6;}
+.note-embed{width:100%;border-radius:12px;margin:12px 0 4px;overflow:hidden;border:1px solid rgba(0,0,0,0.06);}
+.note-embed-placeholder{width:100%;height:280px;background:linear-gradient(145deg,#F5F3EF,#EDEAE6);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;cursor:pointer;transition:opacity 0.2s ease-out;}
+.note-embed-placeholder:hover{opacity:0.85;}
+.note-embed-label{font-family:'Geist Mono',monospace;font-size:12px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:rgba(0,0,0,0.2);}
+.note-embed-btn{font-family:'Geist',sans-serif;font-size:13px;font-weight:500;color:#fff;background:#8B7EC8;border:none;border-radius:20px;padding:8px 20px;cursor:pointer;transition:transform 0.15s ease-out,opacity 0.15s ease-out;}
+.note-embed-btn:hover{opacity:0.9;}
+.note-embed-btn:active{transform:scale(0.97);}
+.note-embed iframe{width:100%;height:480px;border:none;display:block;}
+.note-embed-caption{font-size:12px;color:rgba(0,0,0,0.3);margin:6px 0 12px;font-style:italic;}
 
 /* ═══ MYMIND ═══ */
 .mymind-app{
@@ -1422,7 +1434,8 @@ body{}
   position:fixed;top:14px;left:50%;
   transform:translateX(-50%) scale(0.92);
   z-index:200;
-  display:flex;align-items:center;justify-content:center;
+  width:min(680px, calc(100% - 48px));
+  display:flex;align-items:center;justify-content:flex-start;
   opacity:0;pointer-events:none;
   transform-origin:center top;
   transition:opacity 0.25s ease-out,transform 0.25s ease-out;
@@ -1524,7 +1537,7 @@ body{}
 
 /* ═══ ROTARY SOUND KNOB ═══ */
 .sound-knob-wrap{
-  position:fixed;top:14px;right:16px;z-index:999;
+  position:fixed;top:14px;right:calc(50% - min(340px, 50vw - 24px));z-index:999;
   width:48px;height:48px;
   border-radius:50%;
   /* Recessed well the knob sits in */

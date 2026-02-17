@@ -1,394 +1,208 @@
 ---
-import Layout from '../layouts/Layout.astro';
-import '../styles/global.css';
+/**
+ * Coming Soon — placeholder page for raksha.design / rakshatated.com
+ * Uses the clock outer box as the card shape.
+ */
 ---
 
-<Layout title="Raks — Clock Portfolio" description="Product designer, half design engineer.">
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Raksha T — Design Engineer. Portfolio coming soon." />
+    <title>Raksha T — Coming Soon</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+    <style>
+      *{margin:0;padding:0;box-sizing:border-box;}
 
-<!-- ═══ SOUND KNOB ═══ -->
-<div class="sound-knob-wrap">
-  <div class="sound-knob" id="soundKnob">
-    <div class="knob-dot"></div>
-  </div>
-  <span class="knob-tooltip" id="knobTooltip">Sound on</span>
-</div>
+      :root{
+        --bg:#E4E0DA;
+        --face-bg:#EDEAE6;
+        --face-border:#D8D4CE;
+        --text-primary:#3A3632;
+        --text-secondary:#8A857D;
+        --text-muted:#B0AAA2;
+        --accent:#8B7EC8;
+        --noise-felt:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+        /* --shadow-deep from global.css — 2 layers max, blur ≤16px */
+        --shadow-deep:
+          8px 8px 16px rgba(0,0,0,0.12),
+          -4px -4px 16px rgba(255,255,255,0.6),
+          inset 0 1px 0 rgba(255,255,255,0.8),
+          inset 0 -1px 0 rgba(0,0,0,0.04);
+      }
 
-<!-- ═══ CLOCK MODE ═══ -->
-<div class="clock-screen" id="clockScreen">
-  <div class="page-header" id="pageHeader">
-    <h1>Raks</h1>
-    <p>Product Designer · Design Engineer</p>
-  </div>
-  <div class="clock-wrapper">
-    <div class="clock-face" id="clockFace">
-      <div class="menu-label active" data-pos="12" data-section="0" onclick="navigateTo(0)">Work<span class="label-sub">Projects</span><span class="label-hover">Explore all work</span></div>
-      <div class="menu-label" data-pos="3" data-section="1" onclick="navigateTo(1)">Notes<span class="label-sub">Articles</span><span class="label-hover">Explore all notes</span></div>
-      <div class="menu-label" data-pos="6" data-section="2" onclick="navigateTo(2)">Mymind<span class="label-sub">Saves</span><span class="label-hover">Explore all saves</span></div>
-      <div class="menu-label" data-pos="9" data-section="3" onclick="navigateTo(3)">About<span class="label-sub">Contact</span><span class="label-hover">Explore about me</span></div>
-      <div class="clock-pop-wrap" id="clockPopWrap"><div class="clock-pop" id="clockPop"></div></div>
-      <div class="clock-pop-scrim" id="clockPopScrim"></div>
-      <div class="hand-container" id="handContainer">
-        <svg class="hand-svg" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet">
-          <defs>
-            <linearGradient id="handGrad" x1="50" y1="16" x2="50" y2="50" gradientUnits="userSpaceOnUse">
-              <stop offset="0%" stop-color="#5A5550"/>
-              <stop offset="100%" stop-color="#3A3632"/>
-            </linearGradient>
-          </defs>
-          <polygon points="49,16 48.2,48 50,50 51.8,48 51,16" fill="url(#handGrad)"/>
-          <circle cx="50" cy="16" r="1.2" fill="#5A5550"/>
-          <polygon points="49.2,52 50,57 50.8,52" fill="#3A3632"/>
-          <line x1="50" y1="16" x2="50" y2="22" stroke="#8B7EC8" stroke-width="1.6" stroke-linecap="round"/>
-          <circle cx="50" cy="50" r="2.5" fill="#3A3632"/>
-          <circle cx="50" cy="50" r="1.2" fill="#EDEAE6"/>
-          <circle cx="50" cy="50" r="0.5" fill="#8B7EC8"/>
-        </svg>
+      html,body{
+        height:100%;
+        background:var(--bg);
+        font-family:'Geist',-apple-system,BlinkMacSystemFont,sans-serif;
+        -webkit-font-smoothing:antialiased;
+        color:var(--text-primary);
+      }
+
+      /* Felt desk surface */
+      body{
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        min-height:100vh;
+        min-height:100dvh;
+        position:relative;
+      }
+      body::before{
+        content:'';
+        position:fixed;
+        inset:0;
+        background-image:var(--noise-felt);
+        background-size:200px 200px;
+        opacity:0.04;
+        pointer-events:none;
+      }
+
+      /* Clock outer box — exact match of .clock-face from global.css */
+      .clock-box{
+        position:relative;
+        width:min(420px,85vw);
+        aspect-ratio:1;
+        border-radius:22%;
+        background:linear-gradient(145deg,#F0EDE9,#E2DED8);
+        box-shadow:var(--shadow-deep);
+        border:1px solid rgba(255,255,255,0.4);
+        overflow:hidden;
+
+        display:flex;
+        flex-direction:column;
+        align-items:center;
+        justify-content:center;
+        text-align:center;
+
+        /* Entry animation */
+        opacity:0;
+        transform:translateY(12px);
+        animation:cardIn 200ms ease-out 100ms forwards;
+      }
+
+      /* Inner bezel ring — inset groove (matches .clock-face::before) */
+      .clock-box::before{
+        content:'';
+        position:absolute;
+        inset:10px;
+        border-radius:19%;
+        box-shadow:
+          inset 2px 2px 6px rgba(0,0,0,0.06),
+          inset -1px -1px 4px rgba(255,255,255,0.5);
+        border:1px solid rgba(0,0,0,0.03);
+        pointer-events:none;
+        z-index:1;
+      }
+
+      /* Outer rim highlight (matches .clock-face::after) */
+      .clock-box::after{
+        content:'';
+        position:absolute;
+        inset:0;
+        border-radius:22%;
+        background:linear-gradient(135deg,rgba(255,255,255,0.15) 0%,transparent 50%,rgba(0,0,0,0.02) 100%);
+        pointer-events:none;
+        z-index:2;
+      }
+
+      .content{
+        position:relative;
+        z-index:3;
+        padding:32px;
+      }
+
+      @keyframes cardIn{
+        to{
+          opacity:1;
+          transform:translateY(0);
+        }
+      }
+
+      @media(prefers-reduced-motion:reduce){
+        .clock-box{
+          animation:none;
+          opacity:1;
+          transform:none;
+        }
+      }
+
+      .name{
+        font-family:'Geist',sans-serif;
+        font-weight:600;
+        font-size:24px;
+        color:var(--text-primary);
+        letter-spacing:-0.01em;
+        line-height:1.2;
+      }
+
+      .role{
+        font-family:'Geist Mono',monospace;
+        font-weight:500;
+        font-size:14px;
+        color:var(--text-secondary);
+        margin-top:6px;
+        letter-spacing:-0.01em;
+      }
+
+      .divider{
+        width:48px;
+        height:1px;
+        background:linear-gradient(90deg,transparent,rgba(139,126,200,0.25),transparent);
+        margin:28px auto;
+      }
+
+      .coming-soon{
+        font-family:'Geist Mono',monospace;
+        font-weight:600;
+        font-size:13px;
+        text-transform:uppercase;
+        letter-spacing:0.12em;
+        color:var(--accent);
+      }
+
+      .email{
+        display:inline-block;
+        margin-top:24px;
+        font-family:'Geist Mono',monospace;
+        font-size:13px;
+        color:var(--text-muted);
+        text-decoration:none;
+        transition:color 200ms ease-out;
+      }
+      .email:hover{
+        color:var(--text-secondary);
+      }
+      .email:focus-visible{
+        outline:2px solid var(--accent);
+        outline-offset:4px;
+        border-radius:4px;
+      }
+
+      @media(max-width:480px){
+        .clock-box{
+          width:min(340px,85vw);
+        }
+        .name{
+          font-size:21px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="clock-box" role="main">
+      <div class="content">
+        <h1 class="name">Raksha T</h1>
+        <p class="role">0.5 Design Engineer</p>
+        <div class="divider" aria-hidden="true"></div>
+        <p class="coming-soon">Coming Soon</p>
+        <a class="email" href="mailto:hey@raksha.design">hey@raksha.design</a>
       </div>
-    </div>
-  </div>
-  <div class="active-section-title" id="sectionTitle">
-    <h2 id="activeSectionTitle">Work</h2>
-    <p class="section-desc" id="activeSectionDesc">Selected projects & case studies</p>
-  </div>
-</div>
-
-<!-- ═══ DOCKED MINI CLOCK ═══ -->
-<div class="mini-clock-bar" id="miniClockBar">
-  <div class="mini-clock" id="miniClock" onclick="reenterClockMode()">
-    <div class="mini-clock-inner">
-      <svg viewBox="0 0 100 100">
-        <polygon id="miniHand" points="49,20 48.5,48 50,50 51.5,48 51,20" fill="#3A3632"/>
-        <circle cx="50" cy="50" r="3" fill="#3A3632"/>
-        <circle cx="50" cy="50" r="1.5" fill="#EDEAE6"/>
-        <circle cx="50" cy="50" r="0.6" fill="#8B7EC8"/>
-      </svg>
-    </div>
-    <span class="mini-clock-tooltip">Clock mode</span>
-  </div>
-</div>
-
-<!-- ═══ MODAL ═══ -->
-<div class="modal-overlay" id="modalOverlay">
-  <div class="modal-backdrop" onclick="closeModal()"></div>
-  <div class="modal-card" id="modalCard" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
-    <div class="modal-card-inner">
-      <button class="modal-close" onclick="closeModal()" aria-label="Close modal">✕</button>
-      <div class="modal-carousel">
-        <div class="carousel-track" id="carouselTrack"></div>
-        <div class="carousel-counter" id="carouselCounter">1 / 3</div>
-        <button class="carousel-btn prev" onclick="carouselPrev()" aria-label="Previous slide"><svg width="10" height="16" viewBox="0 0 10 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="8 2 2 8 8 14"/></svg></button>
-        <button class="carousel-btn next" onclick="carouselNext()" aria-label="Next slide"><svg width="10" height="16" viewBox="0 0 10 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2 2 8 8 2 14"/></svg></button>
-      </div>
-      <div class="modal-body">
-        <h3 class="modal-title" id="modalTitle"></h3>
-        <div class="modal-tags" id="modalTags"></div>
-        <p class="modal-desc" id="modalDesc"></p>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ═══ BOTTOM UI ═══ -->
-<div class="bottom-ui" id="bottomUI">
-  <div class="section-indicator" id="sectionIndicator">
-    <div class="indicator-dot active" data-section="0" onclick="navigateTo(0)"></div>
-    <div class="indicator-dot" data-section="1" onclick="navigateTo(1)"></div>
-    <div class="indicator-dot" data-section="2" onclick="navigateTo(2)"></div>
-    <div class="indicator-dot" data-section="3" onclick="navigateTo(3)"></div>
-  </div>
-  <span class="skip-link" id="skipLink" onclick="skipToContent()">skip to content <svg class="skip-chevron" width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="2 3 5 6 8 3"/></svg></span>
-</div>
-
-<!-- ═══ BROWSE CONTENT ═══ -->
-<div class="browse-content" id="browseContent">
-  <div class="browse-inner">
-
-    <!-- ═══ WORK — Puzzle grid of project cards ═══ -->
-    <div class="browse-section" id="sec-work">
-      <h2>Design Work</h2>
-      <p class="subtitle">Tap to explore case studies</p>
-
-      <div class="puzzle-grid">
-        <div class="puzzle-card" data-project="0">
-          <div class="puzzle-img"><img src="/projects/pet-tickle.jpg" alt="Pet Tickle App" loading="lazy"></div>
-          <div class="puzzle-overlay"><span>Pet Tickle App</span></div>
-        </div>
-        <div class="puzzle-card" data-project="1">
-          <div class="puzzle-img"><img src="/projects/ova-app.jpg" alt="Ova App" loading="lazy"></div>
-          <div class="puzzle-overlay"><span>Ova App</span></div>
-        </div>
-        <div class="puzzle-card" data-project="2">
-          <div class="puzzle-img"><img src="/projects/greex-defi.jpg" alt="Greex DeFi" loading="lazy"></div>
-          <div class="puzzle-overlay"><span>Greex DeFi</span></div>
-        </div>
-        <div class="puzzle-card" data-project="3">
-          <div class="puzzle-img"><img src="/projects/indianoil.jpg" alt="IndianOil Dashboard" loading="lazy"></div>
-          <div class="puzzle-overlay"><span>IndianOil Dashboard</span></div>
-        </div>
-        <div class="puzzle-card" data-project="4">
-          <div class="puzzle-img"><img src="/projects/dealdoc-overview.jpg" alt="DealDoc" loading="lazy"></div>
-          <div class="puzzle-overlay"><span>DealDoc</span></div>
-        </div>
-        <div class="puzzle-card" data-project="5">
-          <div class="puzzle-img"><img src="/projects/adiagnosis.jpg" alt="ADiagnosis" loading="lazy"></div>
-          <div class="puzzle-overlay"><span>ADiagnosis</span></div>
-        </div>
-        <div class="puzzle-card puzzle-extra" data-project="6">
-          <div class="puzzle-img"><img src="/projects/vault-defi.jpg" alt="Vault DeFi" loading="lazy"></div>
-          <div class="puzzle-overlay"><span>Vault DeFi</span></div>
-        </div>
-        <div class="puzzle-card puzzle-extra" data-project="7">
-          <div class="puzzle-img"><img src="/projects/cycling-app.jpg" alt="Cycling App" loading="lazy"></div>
-          <div class="puzzle-overlay"><span>Cycling App</span></div>
-        </div>
-        <div class="puzzle-card puzzle-extra" data-project="8">
-          <div class="puzzle-img"><img src="/projects/chain-landing.jpg" alt="Chain Landing" loading="lazy"></div>
-          <div class="puzzle-overlay"><span>Chain Landing</span></div>
-        </div>
-        <div class="puzzle-card puzzle-extra" data-project="9">
-          <div class="puzzle-img"><img src="/projects/data-collection.jpg" alt="Data Collection" loading="lazy"></div>
-          <div class="puzzle-overlay"><span>Data Collection</span></div>
-        </div>
-        <div class="puzzle-card puzzle-extra" data-project="10">
-          <div class="puzzle-img"><img src="/projects/skeu-buttons.jpg" alt="Skeuomorphic Buttons" loading="lazy"></div>
-          <div class="puzzle-overlay"><span>Skeuomorphic Buttons</span></div>
-        </div>
-        <div class="puzzle-card puzzle-extra" data-project="11">
-          <div class="puzzle-img"><img src="/projects/dealdoc-deal.jpg" alt="DealDoc Detail" loading="lazy"></div>
-          <div class="puzzle-overlay"><span>DealDoc Detail</span></div>
-        </div>
-        <div class="puzzle-card puzzle-extra" data-project="12">
-          <div class="puzzle-img"><img src="/projects/vercel-dashboard.jpg" alt="Vercel Dashboard" loading="lazy"></div>
-          <div class="puzzle-overlay"><span>Vercel Dashboard</span></div>
-        </div>
-        <div class="puzzle-card puzzle-extra" data-project="13">
-          <div class="puzzle-img"><video src="/projects/magicpath-3.mp4" autoplay loop muted playsinline preload="none"></video></div>
-          <div class="puzzle-overlay"><span>MagicPath</span></div>
-        </div>
-        <div class="puzzle-card puzzle-extra" data-project="14">
-          <div class="puzzle-img"><video src="/projects/card-tilt.mp4" autoplay loop muted playsinline preload="none"></video></div>
-          <div class="puzzle-overlay"><span>Card Tilt</span></div>
-        </div>
-        <div class="puzzle-card puzzle-extra" data-project="15">
-          <div class="puzzle-img"><video src="/projects/magicpath-2.mp4" autoplay loop muted playsinline preload="none"></video></div>
-          <div class="puzzle-overlay"><span>MagicPath Experiments</span></div>
-        </div>
-        <div class="puzzle-card puzzle-extra" data-project="16">
-          <div class="puzzle-img"><video src="/projects/dealdoc-video.mp4" autoplay loop muted playsinline preload="none"></video></div>
-          <div class="puzzle-overlay"><span>DealDoc Demo</span></div>
-        </div>
-      </div>
-      <button class="puzzle-show-more" id="puzzleShowMore">Show more work</button>
-    </div>
-
-    <!-- ═══ NOTES — Articles & writing ═══ -->
-    <div class="browse-section" id="sec-notes">
-      <h2>Things I'm writing about</h2>
-      <p class="subtitle">I draft everything in Apple Notes. Here's what's open right now.</p>
-
-      <div class="anotes-window">
-        <div class="anotes-slider" id="anotesSlider">
-          <!-- LIST VIEW -->
-          <div class="anotes-list-view">
-            <div class="anotes-titlebar">
-              <span class="anotes-titlebar-label">Notes</span>
-              <div class="anotes-titlebar-spacer"></div>
-              <button class="anotes-sort" id="anotesSortBtn" title="Sort by date">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14"/><path d="M19 12l-7 7-7-7"/></svg>
-                <span>Newest</span>
-              </button>
-            </div>
-            <div class="anotes-search-wrap">
-              <div class="anotes-search">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="7"/><line x1="16.5" y1="16.5" x2="21" y2="21"/></svg>
-                <input type="text" class="anotes-search-input" id="anotesSearchInput" placeholder="Search 7 notes" spellcheck="false" autocomplete="off">
-                <button class="anotes-search-clear" id="anotesSearchClear">&times;</button>
-              </div>
-              <div class="search-dropdown" id="anotesSearchDropdown">
-                <div class="search-dropdown-label">Filter by tag</div>
-                <div class="search-dropdown-tags" id="anotesDropdownTags"></div>
-              </div>
-            </div>
-            <div class="anotes-list" id="anotesList"></div>
-            <div class="anotes-no-results" id="anotesNoResults">No notes found</div>
-            <div class="anotes-list-footer" id="anotesListFooter">7 Notes</div>
-          </div>
-          <!-- READER VIEW -->
-          <div class="anotes-reader">
-            <div class="reader-toolbar">
-              <button class="reader-back" id="anotesReaderBack">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
-                Notes
-              </button>
-            </div>
-            <div class="reader-scroll" id="anotesReaderScroll">
-              <div class="reader-date" id="anotesReaderDate"></div>
-              <div class="reader-tags" id="anotesReaderTags"></div>
-              <h1 class="reader-title" id="anotesReaderTitle"></h1>
-              <div class="reader-body" id="anotesReaderBody"></div>
-            </div>
-            <div class="reader-footer">
-              <button class="reader-footer-action" id="anotesFooterShare">
-                Share on <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" style="margin-left:2px;"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ═══ MYMIND — Masonry grid styled like the real app ═══ -->
-    <div class="browse-section" id="sec-bookmarks">
-      <h2>Things I'm saving</h2>
-      <p class="subtitle">My bookmarks live in <a href="https://mymind.com" target="_blank" style="color:var(--accent);text-decoration:none;border-bottom:1px solid rgba(139,126,200,0.3);">Mymind</a>. Here's what's caught my eye lately.</p>
-
-      <div class="mymind-app">
-        <div class="mymind-header">
-          <input type="text" class="mymind-search" id="mmindSearchInput" placeholder="Search my mind..." autocomplete="off">
-        </div>
-        <div class="mymind-filters" id="mmindFilters">
-          <span class="mymind-pill active" data-filter="all">All</span>
-          <span class="mymind-pill" data-filter="animation">Animation</span>
-          <span class="mymind-pill" data-filter="ui design">UI Design</span>
-          <span class="mymind-pill" data-filter="tools">Tools</span>
-          <span class="mymind-pill" data-filter="inspiration">Inspiration</span>
-          <span class="mymind-pill" data-filter="notes">Notes</span>
-        </div>
-        <div class="mymind-grid-scroll">
-          <div class="mymind-grid" id="mmindGrid"></div>
-        </div>
-        <div class="mm-popover-wrap" id="mmindPopWrap">
-          <div class="mm-popover" id="mmindPopover"></div>
-        </div>
-      </div>
-      <div class="mm-scrim" id="mmindScrim"></div>
-    </div>
-
-    <!-- ═══ BOOKS — Kindle mockup ═══ -->
-    <div class="browse-section" id="sec-books">
-      <h2>Books I'm loving</h2>
-      <p class="subtitle">My shelf and my learnings.</p>
-
-      <div class="kindle-wrapper">
-        <div class="kindle-device">
-          <div class="kindle-screen" id="kindleScreen">
-
-            <!-- LIBRARY VIEW -->
-            <div class="kindle-view" id="kindleLibraryView">
-              <div class="kindle-topbar">
-                <span class="kindle-topbar-title">Library</span>
-              </div>
-              <div class="kindle-library">
-                <div class="kindle-grid" id="kindleGrid"></div>
-              </div>
-            </div>
-
-            <!-- DETAIL VIEW -->
-            <div class="kindle-view hidden" id="kindleDetailView">
-              <div class="kindle-topbar">
-                <button class="kindle-back" id="kindleBack"><svg width="10" height="16" viewBox="0 0 10 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="8 2 2 8 8 14"/></svg></button>
-                <span class="kindle-topbar-title" id="kindleDetailTopTitle">Book</span>
-              </div>
-              <div class="kindle-detail">
-                <div class="kindle-detail-cover" id="kindleDetailCover"></div>
-                <div class="kindle-detail-meta">
-                  <div class="kindle-detail-subtitle" id="kindleDetailSubtitle"></div>
-                  <div class="kindle-detail-by" id="kindleDetailBy"></div>
-                </div>
-                <div class="kindle-detail-progress-wrap">
-                  <div class="kindle-detail-progress-label">
-                    <span class="kindle-detail-progress-text">Reading Progress</span>
-                    <span class="kindle-detail-progress-pct" id="kindleDetailPct">0%</span>
-                  </div>
-                  <div class="kindle-detail-progress-bar">
-                    <div class="kindle-detail-progress-fill" id="kindleDetailFill" style="width:0%"></div>
-                  </div>
-                </div>
-                <button class="kindle-detail-notes-btn" id="kindleNotesBtn">
-                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1" y="2.5" width="12" height="2" rx="0.5" fill="currentColor" opacity="0.6"/><rect x="1" y="6" width="8" height="2" rx="0.5" fill="currentColor" opacity="0.4"/><rect x="1" y="9.5" width="5" height="2" rx="0.5" fill="currentColor" opacity="0.25"/></svg>
-                  My highlights
-                </button>
-              </div>
-            </div>
-
-            <!-- NOTES DRAWER -->
-            <div class="kindle-drawer-overlay" id="kindleDrawerOverlay"></div>
-            <div class="kindle-drawer" id="kindleDrawer">
-              <div class="kindle-drawer-handle"></div>
-              <div class="kindle-drawer-header">
-                <span class="kindle-drawer-title">My highlights</span>
-                <button class="kindle-drawer-close" id="kindleDrawerClose">✕</button>
-              </div>
-              <div class="kindle-drawer-content" id="kindleDrawerContent"></div>
-            </div>
-
-          </div>
-          <div class="kindle-power"></div>
-          <div class="kindle-brand">kindle</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ═══ ABOUT — Bio + CTAs ═══ -->
-    <div class="browse-section" id="sec-about">
-      <h2>Raksha Tated</h2>
-      <p class="subtitle">1 Product designer · 0.5 Design engineer</p>
-
-      <div class="about-bio">
-        <p>Product designer, half design engineer. I build <strong>mini products</strong>, take select client work, and live inside Figma and Claude's terminal finding new ways to ship.</p>
-        <p><em>Prototype first, design later.</em></p>
-        <p>Process (2026 edition): idea dump → explore the range → pick a direction → refine to exhaustion.</p>
-      </div>
-
-      <div class="about-ctas">
-        <div class="about-cta-primary-wrap">
-          <a href="mailto:hello@raks.design" class="about-cta-primary">Get in touch ↗</a>
-        </div>
-        <div class="about-cta-strip">
-          <a href="#" class="about-cta" aria-label="Twitter">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4l11.733 16h4.267l-11.733-16zM4 20l6.768-6.768M17.5 4l-6.768 6.768"/></svg>
-          </a>
-          <a href="#" class="about-cta" aria-label="GitHub">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></svg>
-          </a>
-          <a href="#" class="about-cta" aria-label="LinkedIn">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect width="4" height="12" x="2" y="9"/><circle cx="4" cy="4" r="2"/></svg>
-          </a>
-          <a href="#" class="about-cta" aria-label="Gumroad">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v8"/><path d="M16 12a4 4 0 1 1-4-4"/></svg>
-          </a>
-        </div>
-      </div>
-
-      <div class="about-details">
-        <div class="about-detail">
-          <span class="about-detail-label">Location</span>
-          <span class="about-detail-value">
-            <span class="toggle" id="locationToggle" role="switch" aria-checked="false" tabindex="0"><span class="toggle-knob"></span></span>
-            <span id="locationText">Travel around</span>
-          </span>
-        </div>
-        <div class="about-detail">
-          <span class="about-detail-label">Status</span>
-          <span class="about-detail-value"><span class="led"></span>Available for select projects</span>
-        </div>
-        <div class="about-detail">
-          <span class="about-detail-label">Stack</span>
-          <span class="stack-cards">
-            <span class="stack-card">Figma</span>
-            <span class="stack-card">React</span>
-            <span class="stack-card">SwiftUI</span>
-            <span class="stack-card">Claude Code</span>
-          </span>
-        </div>
-      </div>
-    </div>
-
-  </div>
-</div>
-
-<script>
-  import '../scripts/clock-engine.js';
-</script>
-
-</Layout>
+    </main>
+  </body>
+</html>

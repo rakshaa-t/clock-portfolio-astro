@@ -5,6 +5,7 @@ interface Props {
 }
 
 const { title, description } = Astro.props;
+const siteUrl = 'https://raksha.design';
 ---
 
 <!doctype html>
@@ -13,7 +14,28 @@ const { title, description } = Astro.props;
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content={description} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="canonical" href={siteUrl} />
     <title>{title}</title>
+
+    <!-- Open Graph -->
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={siteUrl} />
+    <meta property="og:site_name" content="Raksha Tated" />
+    <meta property="og:locale" content="en_US" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:site" content="@rakshaa_t" />
+    <meta name="twitter:creator" content="@rakshaa_t" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+
+    <!-- Additional SEO -->
+    <meta name="author" content="Raksha Tated" />
+    <meta name="theme-color" content="#EDEAE6" />
   </head>
   <body>
     <slot />

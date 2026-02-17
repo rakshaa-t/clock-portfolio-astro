@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Raks — Clock Portfolio</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600&family=Instrument+Serif:ital@0;1&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --clock-size: min(520px, 85vw);
+    --face-bg: #FAFAF8;
+    --face-border: #E8E6E1;
+    --tick-color: #2C2C2C;
+    --tick-minor: #C8C5BD;
+    --hand-color: #1D1D1F;
+    --accent: #F5742E;
+    --shadow-deep: 0 20px 60px rgba(0,0,0,0.12), 0 4px 16px rgba(0,0,0,0.06);
+    --bg: #F0EEEA;
+    --text-primary: #1D1D1F;
+    --text-secondary: #86868B;
+    --thumbnail-size: 28px;
+  }
+
+  html { overflow: hidden; height: 100%; }
+
+  body {
+    font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--bg);
+    color: var(--text-primary);
+    height: 100%; overflow: hidden;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ═══ LAYOUT ═══ */
+  .page-container {
+    position: fixed; top: 0; left: 0;
+    width: 100%; height: 100%;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    z-index: 2; gap: 24px;
+    transition: filter 0.25s ease, transform 0.25s ease;
+  }
+  .page-container.dimmed {
+    filter: blur(8px) brightness(0.7);
+    transform: scale(0.97);
+    pointer-events: none;
+  }
+
+  /* ═══ CLOCK ═══ */
+  .clock-wrapper {
+    position: relative;
+    width: var(--clock-size); height: var(--clock-size);
+    flex-shrink: 0;
+  }
+  .clock-face {
+    width: 100%; height: 100%;
+    border-radius: 22%;
+    background: var(--face-bg);
+    box-shadow: var(--shadow-deep),
+                inset 0 1px 0 rgba(255,255,255,0.9),
+                inset 0 -1px 0 rgba(0,0,0,0.03);
+    position: relative; overflow: hidden;
+    border: 1px solid var(--face-border);
+  }
+  .clock-face::before {
+    content: ''; position: absolute; inset: 6px;
+    border-radius: 20%; border: 1px solid rgba(0,0,0,0.02);
+    pointer-events: none; z-index: 1;
+  }
+
+  /* ═══ MENU LABELS ═══ */
+  .menu-label {
+    position: absolute; z-index: 10;
+    font-family: 'Instrument Serif', Georgia, serif;
+    font-size: 18px; font-weight: 400;
+    color: var(--text-primary); cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.32, 1.2, 0.6, 1);
+    user-select: none; text-align: center;
+    letter-spacing: -0.01em;
+  }
+  .menu-label:hover { color: var(--accent); }
+  .menu-label.active { color: var(--accent); font-weight: 500; }
+  .menu-label .label-sub {
+    display: block; font-family: 'DM Sans', sans-serif;
+    font-size: 9px; font-weight: 500;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--text-secondary); margin-top: 2px;
+    transition: color 0.4s ease;
+  }
+  .menu-label.active .label-sub,
+  .menu-label:hover .label-sub { color: var(--accent); opacity: 0.8; }
+
+  .menu-label[data-pos="12"] { top: 8%; left: 50%; transform: translateX(-50%); }
+  .menu-label[data-pos="12"]:hover, .menu-label[data-pos="12"].active { transform: translateX(-50%) scale(1.08); }
+  .menu-label[data-pos="3"] { top: 50%; right: 7%; transform: translateY(-50%); }
+  .menu-label[data-pos="3"]:hover, .menu-label[data-pos="3"].active { transform: translateY(-50%) scale(1.08); }
+  .menu-label[data-pos="6"] { bottom: 8%; left: 50%; transform: translateX(-50%); }
+  .menu-label[data-pos="6"]:hover, .menu-label[data-pos="6"].active { transform: translateX(-50%) scale(1.08); }
+  .menu-label[data-pos="9"] { top: 50%; left: 7%; transform: translateY(-50%); }
+  .menu-label[data-pos="9"]:hover, .menu-label[data-pos="9"].active { transform: translateY(-50%) scale(1.08); }
+
+  /* ═══ THUMBNAILS ═══ */
+  .thumbnail {
+    position: absolute;
+    width: var(--thumbnail-size); height: var(--thumbnail-size);
+    border-radius: 6px; overflow: hidden; z-index: 6;
+    transition: all 0.5s cubic-bezier(0.32, 1.2, 0.6, 1);
+    cursor: pointer;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    border: 1.5px solid rgba(255,255,255,0.8);
+    opacity: 0.55;
+  }
+  .thumbnail.active-quadrant {
+    opacity: 1; transform: scale(1.15);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    border-color: var(--accent);
+  }
+  .thumbnail:hover {
+    opacity: 1; transform: scale(1.35) !important;
+    z-index: 15; box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+  }
+  .thumbnail.focused {
+    opacity: 1; transform: scale(1.4) !important;
+    z-index: 16;
+    box-shadow: 0 4px 16px rgba(245,116,46,0.3), 0 0 0 2px var(--accent);
+    border-color: var(--accent);
+  }
+  .thumbnail-placeholder {
+    width: 100%; height: 100%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px; font-weight: 600; color: white;
+  }
+
+
+
+  /* ═══ MODAL ═══ */
+  .modal-overlay {
+    position: fixed; inset: 0; z-index: 200;
+    display: flex; align-items: center; justify-content: center;
+    pointer-events: none; opacity: 0;
+    transition: opacity 0.2s ease;
+  }
+  .modal-overlay.open { pointer-events: auto; opacity: 1; }
+
+  .modal-backdrop {
+    position: absolute; inset: 0;
+    background: rgba(0,0,0,0.35);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+  }
+
+  .modal-card {
+    position: relative;
+    width: min(560px, 90vw);
+    max-height: 85vh;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 24px 80px rgba(0,0,0,0.2), 0 8px 24px rgba(0,0,0,0.1);
+    overflow: hidden; overflow-y: auto;
+    opacity: 0;
+    transform: scale(0.6);
+    transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+                opacity 0.12s ease-out;
+    will-change: transform, opacity;
+  }
+  .modal-overlay.open .modal-card {
+    transform: scale(1);
+    opacity: 1;
+  }
+
+  .modal-close {
+    position: absolute; top: 12px; right: 12px;
+    width: 32px; height: 32px; border-radius: 50%;
+    background: rgba(255,255,255,0.9);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(0,0,0,0.08);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; z-index: 10;
+    font-size: 16px; color: var(--text-primary);
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  }
+  .modal-close:hover { background: white; transform: scale(1.1); }
+
+  /* Carousel */
+  .modal-carousel {
+    position: relative; width: 100%; height: 320px;
+    overflow: hidden; background: #F5F5F3;
+  }
+  .carousel-track {
+    display: flex; height: 100%;
+    transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+  .carousel-slide {
+    min-width: 100%; height: 100%;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .carousel-slide-color {
+    width: 85%; height: 85%; border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 32px; font-weight: 600; color: white;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+  }
+  .carousel-counter {
+    position: absolute; top: 12px; left: 12px;
+    background: rgba(0,0,0,0.5); color: white;
+    padding: 4px 10px; border-radius: 20px;
+    font-size: 11px; font-weight: 500;
+    backdrop-filter: blur(4px);
+  }
+  .carousel-btn {
+    position: absolute; top: 50%; transform: translateY(-50%);
+    width: 36px; height: 36px; border-radius: 50%;
+    background: rgba(255,255,255,0.9);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(0,0,0,0.06);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; font-size: 18px; color: var(--text-primary);
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  }
+  .carousel-btn:hover { background: white; transform: translateY(-50%) scale(1.1); }
+  .carousel-btn.prev { left: 12px; }
+  .carousel-btn.next { right: 12px; }
+
+  /* Modal body */
+  .modal-body { padding: 24px 28px 28px; }
+  .modal-title {
+    font-family: 'Instrument Serif', Georgia, serif;
+    font-size: 22px; font-weight: 400;
+    color: var(--text-primary); letter-spacing: -0.02em;
+    margin-bottom: 12px;
+  }
+  .modal-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 16px; }
+  .modal-tag {
+    padding: 4px 10px; border-radius: 20px;
+    font-size: 11px; font-weight: 500;
+    background: var(--bg); color: var(--text-secondary);
+    border: 1px solid var(--face-border);
+  }
+  .modal-tag.link {
+    cursor: pointer; color: var(--accent);
+    border-color: var(--accent);
+    background: rgba(245,116,46,0.06);
+    text-decoration: none;
+    display: inline-flex; align-items: center; gap: 4px;
+  }
+  .modal-tag.link:hover { background: rgba(245,116,46,0.12); }
+  .modal-desc {
+    font-size: 14px; line-height: 1.65;
+    color: var(--text-secondary);
+  }
+
+  /* ═══ HAND ═══ */
+  .hand-container {
+    position: absolute; top: 0; left: 0;
+    width: 100%; height: 100%;
+    z-index: 18; pointer-events: none;
+    transform-origin: 50% 50%;
+    will-change: transform;
+  }
+  .hand-svg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+
+  /* ═══ BOTTOM UI ═══ */
+  .section-indicator {
+    position: fixed; bottom: 24px; left: 50%;
+    transform: translateX(-50%);
+    display: flex; gap: 8px; align-items: center; z-index: 50;
+  }
+  .indicator-dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--tick-minor); cursor: pointer;
+    transition: all 0.4s ease;
+  }
+  .indicator-dot.active { background: var(--accent); width: 20px; border-radius: 3px; }
+
+  .scroll-hint {
+    position: fixed; bottom: 48px; left: 50%;
+    transform: translateX(-50%);
+    display: flex; flex-direction: column;
+    align-items: center; gap: 6px; z-index: 50;
+    opacity: 1; transition: opacity 0.6s ease; pointer-events: none;
+  }
+  .scroll-hint.hidden { opacity: 0; }
+  .scroll-hint span {
+    font-size: 11px; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--text-secondary); font-weight: 500;
+  }
+  .scroll-arrow {
+    width: 16px; height: 16px;
+    border-right: 1.5px solid var(--text-secondary);
+    border-bottom: 1.5px solid var(--text-secondary);
+    transform: rotate(45deg);
+    animation: scrollBounce 2s ease-in-out infinite;
+  }
+  @keyframes scrollBounce {
+    0%, 100% { transform: rotate(45deg) translateY(0); opacity: 1; }
+    50% { transform: rotate(45deg) translateY(4px); opacity: 0.5; }
+  }
+
+  /* Header + Section Title */
+  .page-header { text-align: center; margin-bottom: 8px; }
+  .page-header h1 {
+    font-family: 'Instrument Serif', Georgia, serif;
+    font-size: 28px; font-weight: 400; letter-spacing: -0.02em;
+  }
+  .page-header p { font-size: 13px; color: var(--text-secondary); margin-top: 4px; }
+
+  .active-section-title {
+    text-align: center; margin-top: 8px; min-height: 36px;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+  }
+  .active-section-title h2 {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px; font-weight: 600;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--accent); transition: opacity 0.3s ease;
+  }
+  .active-section-title .section-desc {
+    font-size: 12px; color: var(--text-secondary); margin-top: 2px;
+  }
+
+  /* ═══ RESPONSIVE ═══ */
+  @media (max-width: 480px) {
+    :root { --clock-size: 88vw; --thumbnail-size: 22px; }
+    .menu-label { font-size: 15px; }
+    .page-header h1 { font-size: 22px; }
+    .modal-carousel { height: 240px; }
+    .modal-body { padding: 20px; }
+    .hover-preview { display: none !important; }
+  }
+  @media (min-width: 768px) {
+    :root { --clock-size: 520px; --thumbnail-size: 32px; }
+  }
+  @media (min-width: 1200px) {
+    :root { --clock-size: 560px; --thumbnail-size: 36px; }
+    .menu-label { font-size: 20px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="page-container" id="pageContainer">
+  <div class="page-header">
+    <h1>Raks</h1>
+    <p>Product Designer · Design Engineer</p>
+  </div>
+  <div class="clock-wrapper">
+    <div class="clock-face" id="clockFace">
+      <div class="menu-label active" data-pos="12" data-section="0" onclick="navigateTo(0)">Work<span class="label-sub">Projects</span></div>
+      <div class="menu-label" data-pos="3" data-section="1" onclick="navigateTo(1)">Writing<span class="label-sub">Essays</span></div>
+      <div class="menu-label" data-pos="6" data-section="2" onclick="navigateTo(2)">Notes<span class="label-sub">Bookmarks</span></div>
+      <div class="menu-label" data-pos="9" data-section="3" onclick="navigateTo(3)">Connect<span class="label-sub">Say hello</span></div>
+      <div class="hand-container" id="handContainer">
+        <svg class="hand-svg" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet">
+          <polygon points="49,16 48.2,48 50,50 51.8,48 51,16" fill="#1D1D1F"/>
+          <circle cx="50" cy="16" r="1.2" fill="#1D1D1F"/>
+          <polygon points="49.2,52 50,57 50.8,52" fill="#1D1D1F"/>
+          <line x1="50" y1="16" x2="50" y2="22" stroke="#F5742E" stroke-width="1.6" stroke-linecap="round"/>
+          <circle cx="50" cy="50" r="2" fill="#1D1D1F"/>
+          <circle cx="50" cy="50" r="1" fill="#FAFAF8"/>
+        </svg>
+      </div>
+    </div>
+  </div>
+  <div class="active-section-title">
+    <h2 id="activeSectionTitle">Work</h2>
+    <p class="section-desc" id="activeSectionDesc">Selected projects & case studies</p>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal-backdrop" onclick="closeModal()"></div>
+  <div class="modal-card" id="modalCard">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div class="modal-carousel">
+      <div class="carousel-track" id="carouselTrack"></div>
+      <div class="carousel-counter" id="carouselCounter">1 / 3</div>
+      <button class="carousel-btn prev" onclick="carouselPrev()">‹</button>
+      <button class="carousel-btn next" onclick="carouselNext()">›</button>
+    </div>
+    <div class="modal-body">
+      <h3 class="modal-title" id="modalTitle"></h3>
+      <div class="modal-tags" id="modalTags"></div>
+      <p class="modal-desc" id="modalDesc"></p>
+    </div>
+  </div>
+</div>
+
+<!-- Bottom UI -->
+<div class="section-indicator">
+  <div class="indicator-dot active" data-section="0" onclick="navigateTo(0)"></div>
+  <div class="indicator-dot" data-section="1" onclick="navigateTo(1)"></div>
+  <div class="indicator-dot" data-section="2" onclick="navigateTo(2)"></div>
+  <div class="indicator-dot" data-section="3" onclick="navigateTo(3)"></div>
+</div>
+<div class="scroll-hint" id="scrollHint">
+  <span>Scroll to explore</span>
+  <div class="scroll-arrow"></div>
+</div>
+
+<script>
+const SECTIONS = [
+  { name: 'Work', desc: 'Selected projects & case studies', angle: 0 },
+  { name: 'Writing', desc: 'Essays & reflections', angle: 90 },
+  { name: 'Notes', desc: 'Bookmarks & resources', angle: 180 },
+  { name: 'Connect', desc: 'Let\'s work together', angle: 270 },
+];
+
+const THUMB_COLORS = [
+  ['#E8927C','#D4A574','#C4956A','#B8A088'],
+  ['#7CA8C4','#6B9AB8','#8BB4CC','#A0C4D8'],
+  ['#7CB88C','#68A878','#8CC49C','#A0D4B0'],
+  ['#B07CC4','#C488D0','#A874B8','#D49CE0'],
+];
+
+const PROJECTS = [
+  [
+    { title:'AI Usage Optimizer', tags:['React','Figma','2024'], link:'#',
+      desc:'A dashboard tool with 3D tilt effects and metallic animations that helps teams track and optimize their AI API usage across providers.',
+      slides:['#E8927C','#D4756A','#C4826E'] },
+    { title:'Component Marketplace', tags:['SwiftUI','Design System'], link:'#',
+      desc:'Premium UI component marketplace featuring liquid animations, haptic-inspired micro-interactions, and dark mode variants.',
+      slides:['#D4A574','#C49564','#B48554'] },
+    { title:'Tab Switcher Component', tags:['React','Animation'], link:'#',
+      desc:'A buttery smooth tab switcher with liquid mercury transition effects. Built with Framer Motion and spring physics.',
+      slides:['#C4956A','#B4855A','#A4754A'] },
+    { title:'3D Dice App', tags:['SwiftUI','Three.js'], link:'#',
+      desc:'Interactive 3D dice with realistic physics, shadow casting, and satisfying roll animations. Designed for tabletop gaming.',
+      slides:['#B8A088','#A89078','#988068'] },
+  ],
+  [
+    { title:'On Vibe Coding', tags:['Essay','2024'], link:'#',
+      desc:'How designing in the browser with AI assistants is changing the way we think about prototyping and production.',
+      slides:['#7CA8C4','#6C98B4','#5C88A4'] },
+    { title:'The Flow State Protocol', tags:['Personal','Productivity'], link:'#',
+      desc:'Lessons from chasing peak creative states — what works, what doesn\'t, and why simplicity beats complexity.',
+      slides:['#6B9AB8','#5B8AA8','#4B7A98'] },
+    { title:'Design Engineering Manifesto', tags:['Essay','Design'], link:'#',
+      desc:'Why the gap between design and engineering is a feature, not a bug — and how to bridge it gracefully.',
+      slides:['#8BB4CC','#7BA4BC','#6B94AC'] },
+    { title:'Ancient Wisdom, Modern Code', tags:['Philosophy','Tech'], link:'#',
+      desc:'Drawing parallels between the Bhagavad Gita\'s teachings on detachment and the craft of writing software.',
+      slides:['#A0C4D8','#90B4C8','#80A4B8'] },
+  ],
+  [
+    { title:'Animation References', tags:['Bookmark','Motion'], link:'#',
+      desc:'A curated collection of the best animation patterns from iOS, Material Design, and indie apps.',
+      slides:['#7CB88C','#6CA87C','#5C986C'] },
+    { title:'Design System Resources', tags:['Bookmark','Systems'], link:'#',
+      desc:'Tokens, documentation patterns, and implementation guides from the best design systems in production.',
+      slides:['#68A878','#589868','#488858'] },
+    { title:'Reading List 2024', tags:['Books','Notes'], link:'#',
+      desc:'Notes and highlights from Reality Transurfing, Neville Goddard, and other explorations of consciousness.',
+      slides:['#8CC49C','#7CB48C','#6CA47C'] },
+    { title:'Spiritual Practices Log', tags:['Personal','Practice'], link:'#',
+      desc:'A living document tracking meditation practices, yoga sequences, and their effects on creative work.',
+      slides:['#A0D4B0','#90C4A0','#80B490'] },
+  ],
+  [
+    { title:'Work With Me', tags:['Freelance','Design'], link:'#',
+      desc:'I specialize in premium UI components, design engineering, and bringing Figma designs to life with buttery smooth animations.',
+      slides:['#B07CC4','#A06CB4','#905CA4'] },
+    { title:'Twitter / X', tags:['Social','@raks'], link:'https://twitter.com',
+      desc:'Follow my journey building UI components, sharing design insights, and documenting the vibe coding process.',
+      slides:['#C488D0','#B478C0','#A468B0'] },
+    { title:'GitHub', tags:['Code','Open Source'], link:'https://github.com',
+      desc:'Open source components, experiments, and the code behind the projects you see here.',
+      slides:['#A874B8','#9864A8','#885498'] },
+    { title:'Send a Message', tags:['Email','Collab'], link:'mailto:hello@raks.design',
+      desc:'Have a project in mind? Want to collaborate? Let\'s chat about design, code, or anything creative.',
+      slides:['#D49CE0','#C48CD0','#B47CC0'] },
+  ],
+];
+
+let currentSection = 0, modalOpen = false, carouselIndex = 0, currentModalData = null;
+
+const clockFace = document.getElementById('clockFace');
+const handContainer = document.getElementById('handContainer');
+const modalOverlay = document.getElementById('modalOverlay');
+const modalCard = document.getElementById('modalCard');
+const pageContainer = document.getElementById('pageContainer');
+
+// ═══ CONTINUOUS ROTATION + MAGNETIC SNAP ═══
+// The hand follows scroll input directly, then snaps to nearest point when idle.
+
+// 20 snap points (angles in degrees)
+const SNAP_ANGLES = [];
+const SNAP_META = [];
+for (let q = 0; q < 4; q++) {
+  SNAP_ANGLES.push(q * 90);
+  SNAP_META.push({ type: 'major', section: q, thumbIndex: null });
+  [3, 6, 9, 12].forEach((tickPos, idx) => {
+    SNAP_ANGLES.push(q * 90 + tickPos * 6);
+    SNAP_META.push({ type: 'minor', section: q, thumbIndex: idx });
+  });
+}
+
+let rawAngle = 0;           // Continuous angle driven by scroll (unbounded, can exceed 360)
+let displayAngle = 0;       // What the hand actually shows
+let snapTimer = null;        // Timer to detect "scroll stopped"
+let isSnapping = false;      // True during spring animation to snap point
+let animFrame = null;
+
+const SCROLL_SENSITIVITY = 0.15; // Degrees per pixel of scroll delta
+const SNAP_DELAY = 120;          // ms of idle before snapping
+const SPRING_STIFFNESS = 0.2;    // Spring force (higher = snappier)
+const SPRING_DAMPING = 0.75;     // Damping (higher = less oscillation)
+
+let springVelocity = 0;
+let springTarget = 0;
+let useGentleSpring = false;
+
+// Convert rawAngle to a 0-360 range for snap matching
+function normAngle(a) { return ((a % 360) + 360) % 360; }
+
+// Find nearest snap angle to a given normalized angle
+function findNearestSnap(angle) {
+  const norm = normAngle(angle);
+  let bestIdx = 0, bestDist = 999;
+  for (let i = 0; i < SNAP_ANGLES.length; i++) {
+    let dist = Math.abs(norm - SNAP_ANGLES[i]);
+    if (dist > 180) dist = 360 - dist; // wrap-aware distance
+    if (dist < bestDist) { bestDist = dist; bestIdx = i; }
+  }
+  return bestIdx;
+}
+
+// Apply the current display angle to the DOM
+function applyAngle(angle) {
+  displayAngle = angle;
+  handContainer.style.transition = 'none';
+  handContainer.style.transform = `rotate(${angle}deg)`;
+
+  // Determine which snap point we're closest to
+  const snapIdx = findNearestSnap(angle);
+  const snap = SNAP_META[snapIdx];
+  const newSection = snap.section;
+
+  // Update section UI
+  if (newSection !== currentSection) {
+    currentSection = newSection;
+    document.querySelectorAll('.menu-label').forEach(l =>
+      l.classList.toggle('active', +l.dataset.section === newSection));
+    document.querySelectorAll('.thumbnail').forEach(t =>
+      t.classList.toggle('active-quadrant', +t.dataset.quadrant === newSection));
+
+    const titleEl = document.getElementById('activeSectionTitle');
+    const descEl = document.getElementById('activeSectionDesc');
+    titleEl.style.opacity = 0; descEl.style.opacity = 0;
+    setTimeout(() => {
+      titleEl.textContent = SECTIONS[newSection].name;
+      descEl.textContent = SECTIONS[newSection].desc;
+      titleEl.style.opacity = 1; descEl.style.opacity = 1;
+    }, 120);
+
+    document.querySelectorAll('.indicator-dot').forEach(d =>
+      d.classList.toggle('active', +d.dataset.section === newSection));
+  }
+
+  // Highlight focused thumbnail
+  document.querySelectorAll('.thumbnail').forEach(t => t.classList.remove('focused'));
+  if (snap.type === 'minor') {
+    const dist = Math.abs(normAngle(angle) - SNAP_ANGLES[snapIdx]);
+    // Only show focus when close enough to the snap point (within 5°)
+    if (dist < 5 || dist > 355) {
+      const ft = document.querySelector(
+        `.thumbnail[data-quadrant="${snap.section}"][data-index="${snap.thumbIndex}"]`
+      );
+      if (ft) ft.classList.add('focused');
+    }
+  }
+
+  document.getElementById('scrollHint').classList.add('hidden');
+}
+
+// Spring animation to snap point
+function animateSpring() {
+  const diff = springTarget - rawAngle;
+
+  if (Math.abs(diff) < 0.5 && Math.abs(springVelocity) < 0.5) {
+    rawAngle = springTarget;
+    applyAngle(rawAngle);
+    isSnapping = false;
+    useGentleSpring = false;
+    animFrame = null;
+    return;
+  }
+
+  if (useGentleSpring) {
+    // Smooth lerp — no overshoot, no bounce, just eases in
+    rawAngle += diff * 0.08;
+  } else {
+    // Spring physics for scroll snapping
+    const force = diff * SPRING_STIFFNESS;
+    springVelocity = (springVelocity + force) * SPRING_DAMPING;
+    rawAngle += springVelocity;
+  }
+
+  applyAngle(rawAngle);
+  animFrame = requestAnimationFrame(animateSpring);
+}
+
+function startSnap() {
+  const snapIdx = findNearestSnap(rawAngle);
+  const targetNorm = SNAP_ANGLES[snapIdx];
+  const currentNorm = normAngle(rawAngle);
+
+  // Calculate target in unbounded space (preserve full rotations)
+  let diff = targetNorm - currentNorm;
+  if (diff > 180) diff -= 360;
+  if (diff < -180) diff += 360;
+  springTarget = rawAngle + diff;
+
+  springVelocity = 0;
+  isSnapping = true;
+  if (animFrame) cancelAnimationFrame(animFrame);
+  animFrame = requestAnimationFrame(animateSpring);
+}
+
+function scheduleSnap() {
+  clearTimeout(snapTimer);
+  snapTimer = setTimeout(() => {
+    startSnap();
+  }, SNAP_DELAY);
+}
+
+// ═══ WHEEL INPUT ═══
+window.addEventListener('wheel', (e) => {
+  e.preventDefault();
+  if (modalOpen) return;
+
+  // If currently snapping, interrupt it
+  if (isSnapping) {
+    isSnapping = false;
+    if (animFrame) { cancelAnimationFrame(animFrame); animFrame = null; }
+  }
+
+  // Directly rotate the hand based on scroll delta
+  rawAngle += e.deltaY * SCROLL_SENSITIVITY;
+  applyAngle(rawAngle);
+
+  // Schedule snap when scrolling stops
+  scheduleSnap();
+}, { passive: false });
+
+// ═══ TOUCH INPUT ═══
+let touchLastY = 0, isTouching = false;
+window.addEventListener('touchstart', e => {
+  if (modalOpen) return;
+  touchLastY = e.touches[0].clientY;
+  isTouching = true;
+  // Interrupt any snap
+  if (isSnapping) {
+    isSnapping = false;
+    if (animFrame) { cancelAnimationFrame(animFrame); animFrame = null; }
+  }
+}, { passive: true });
+
+window.addEventListener('touchmove', e => {
+  if (!isTouching || modalOpen) return;
+  const y = e.touches[0].clientY;
+  const delta = touchLastY - y; // positive = scroll down = clockwise
+  touchLastY = y;
+  rawAngle += delta * 0.5; // Sensitivity for touch
+  applyAngle(rawAngle);
+}, { passive: true });
+
+window.addEventListener('touchend', () => {
+  isTouching = false;
+  if (!modalOpen) scheduleSnap();
+}, { passive: true });
+
+// Spring the hand to a specific normalized target angle (0-359)
+// gentle = true for click-triggered moves (no bounce, smooth ease)
+function springToAngle(targetNorm, gentle) {
+  const currentNorm = normAngle(rawAngle);
+  let diff = targetNorm - currentNorm;
+  if (diff > 180) diff -= 360;
+  if (diff < -180) diff += 360;
+  springTarget = rawAngle + diff;
+  springVelocity = 0;
+  isSnapping = true;
+  useGentleSpring = !!gentle;
+  if (animFrame) cancelAnimationFrame(animFrame);
+  animFrame = requestAnimationFrame(animateSpring);
+}
+
+// ═══ CLICK NAVIGATION (menu labels + dots) ═══
+function navigateTo(s) {
+  if (modalOpen) return;
+  springToAngle(s * 90, true);
+}
+
+// ═══ KEYBOARD ═══
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape' && modalOpen) { closeModal(); return; }
+  if (modalOpen && e.key === 'ArrowRight') { carouselNext(); return; }
+  if (modalOpen && e.key === 'ArrowLeft') { carouselPrev(); return; }
+  if (!modalOpen) {
+    if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
+      e.preventDefault();
+      // Jump to next snap point
+      const snapIdx = findNearestSnap(rawAngle);
+      const nextIdx = (snapIdx + 1) % SNAP_ANGLES.length;
+      const targetNorm = SNAP_ANGLES[nextIdx];
+      const currentNorm = normAngle(rawAngle);
+      let diff = targetNorm - currentNorm;
+      if (diff <= 0) diff += 360;
+      if (diff > 180 && nextIdx !== 0) diff -= 360;
+      springTarget = rawAngle + diff;
+      springVelocity = 0; isSnapping = true;
+      if (animFrame) cancelAnimationFrame(animFrame);
+      animFrame = requestAnimationFrame(animateSpring);
+    } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
+      e.preventDefault();
+      const snapIdx = findNearestSnap(rawAngle);
+      const prevIdx = (snapIdx - 1 + SNAP_ANGLES.length) % SNAP_ANGLES.length;
+      const targetNorm = SNAP_ANGLES[prevIdx];
+      const currentNorm = normAngle(rawAngle);
+      let diff = targetNorm - currentNorm;
+      if (diff >= 0) diff -= 360;
+      if (diff < -180 && prevIdx !== SNAP_ANGLES.length - 1) diff += 360;
+      springTarget = rawAngle + diff;
+      springVelocity = 0; isSnapping = true;
+      if (animFrame) cancelAnimationFrame(animFrame);
+      animFrame = requestAnimationFrame(animateSpring);
+    }
+  }
+});
+function renderTicks() {
+  const r = clockFace.getBoundingClientRect();
+  const cx = r.width/2, cy = r.height/2, outerR = cx*0.88, ml = cx*0.04;
+  for (let i = 0; i < 60; i++) {
+    if ([0,15,30,45].includes(i)) continue;
+    const piq = i%15;
+    if ([3,6,9,12].includes(piq)) continue;
+    const a = (i*6-90)*(Math.PI/180);
+    const x1=cx+outerR*Math.cos(a), y1=cy+outerR*Math.sin(a);
+    const x2=cx+(outerR-ml)*Math.cos(a), y2=cy+(outerR-ml)*Math.sin(a);
+    const t = document.createElement('div');
+    const len = Math.sqrt((x2-x1)**2+(y2-y1)**2);
+    t.style.cssText=`position:absolute;width:1px;height:${len}px;left:${(x1+x2)/2-0.5}px;top:${(y1+y2)/2-len/2}px;transform:rotate(${i*6}deg);background:rgba(200,197,189,${piq%5===0?0.6:0.35});border-radius:1px;`;
+    clockFace.appendChild(t);
+  }
+}
+
+// ═══ THUMBNAILS ═══
+function renderThumbnails() {
+  const r = clockFace.getBoundingClientRect();
+  const cx=r.width/2, cy=r.height/2, thumbR=cx*0.78;
+  const sz = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--thumbnail-size'));
+
+  for (let q = 0; q < 4; q++) {
+    [3,6,9,12].forEach((pos, idx) => {
+      const a = ((q*15+pos)*6-90)*(Math.PI/180);
+      const x=cx+thumbR*Math.cos(a), y=cy+thumbR*Math.sin(a);
+      const th = document.createElement('div');
+      th.className = 'thumbnail';
+      th.dataset.quadrant = q; th.dataset.index = idx;
+      th.style.cssText = `position:absolute;left:${x-sz/2}px;top:${y-sz/2}px;width:${sz}px;height:${sz}px;`;
+
+      const ph = document.createElement('div');
+      ph.className = 'thumbnail-placeholder';
+      ph.style.background = THUMB_COLORS[q][idx];
+      ph.textContent = PROJECTS[q][idx].title.substring(0,2).toUpperCase();
+      th.appendChild(ph);
+
+      th.addEventListener('click', () => {
+        // Open modal immediately + spring hand simultaneously in background
+        const thumbAngle = (q * 15 + [3,6,9,12][idx]) * 6;
+        springToAngle(thumbAngle, true);
+        openModal(q, idx, th);
+      });
+
+      clockFace.appendChild(th);
+    });
+  }
+}
+
+// ═══ MODAL ═══
+function openModal(q, idx, thumbEl) {
+  const project = PROJECTS[q][idx];
+  currentModalData = project;
+  carouselIndex = 0;
+  modalOpen = true;
+
+  // Calculate transform-origin from thumbnail position
+  const tr = thumbEl.getBoundingClientRect();
+  const originX = tr.left + tr.width/2;
+  const originY = tr.top + tr.height/2;
+
+  // We need to express this as % of the modal card's final position
+  // The modal card will be centered in viewport
+  const vpCX = window.innerWidth/2, vpCY = window.innerHeight/2;
+  const cardW = Math.min(560, window.innerWidth*0.9);
+  const cardH = Math.min(window.innerHeight*0.85, 520);
+  const cardLeft = vpCX - cardW/2, cardTop = vpCY - cardH/2;
+
+  const pctX = ((originX - cardLeft) / cardW) * 100;
+  const pctY = ((originY - cardTop) / cardH) * 100;
+  modalCard.style.transformOrigin = `${pctX}% ${pctY}%`;
+
+  // Fill carousel
+  const track = document.getElementById('carouselTrack');
+  track.innerHTML = project.slides.map((c, i) =>
+    `<div class="carousel-slide"><div class="carousel-slide-color" style="background:${c}">${i===0?project.title.substring(0,2).toUpperCase():'IMG '+(i+1)}</div></div>`
+  ).join('');
+  track.style.transform = 'translateX(0)';
+  document.getElementById('carouselCounter').textContent = `1 / ${project.slides.length}`;
+
+  // Fill content
+  document.getElementById('modalTitle').textContent = project.title;
+  const tagsEl = document.getElementById('modalTags');
+  tagsEl.innerHTML = project.tags.map(t => `<span class="modal-tag">${t}</span>`).join('');
+  if (project.link && project.link !== '#')
+    tagsEl.innerHTML += `<a class="modal-tag link" href="${project.link}" target="_blank">${project.link.replace('https://','').replace('mailto:','')} ↗</a>`;
+  document.getElementById('modalDesc').textContent = project.desc;
+
+  pageContainer.classList.add('dimmed');
+  modalOverlay.classList.add('open');
+}
+
+function closeModal() {
+  modalOpen = false;
+  modalOverlay.classList.remove('open');
+  pageContainer.classList.remove('dimmed');
+}
+
+function carouselNext() {
+  if (!currentModalData) return;
+  const t = currentModalData.slides.length;
+  carouselIndex = (carouselIndex+1)%t;
+  document.getElementById('carouselTrack').style.transform = `translateX(-${carouselIndex*100}%)`;
+  document.getElementById('carouselCounter').textContent = `${carouselIndex+1} / ${t}`;
+}
+
+function carouselPrev() {
+  if (!currentModalData) return;
+  const t = currentModalData.slides.length;
+  carouselIndex = (carouselIndex-1+t)%t;
+  document.getElementById('carouselTrack').style.transform = `translateX(-${carouselIndex*100}%)`;
+  document.getElementById('carouselCounter').textContent = `${carouselIndex+1} / ${t}`;
+}
+
+// ═══ INIT ═══
+function init() {
+  renderTicks(); renderThumbnails();
+  handContainer.style.transform = 'rotate(0deg)';
+  document.querySelectorAll('.thumbnail[data-quadrant="0"]').forEach(t => t.classList.add('active-quadrant'));
+}
+document.fonts.ready.then(() => init());
+
+let rt;
+window.addEventListener('resize', () => {
+  clearTimeout(rt);
+  rt = setTimeout(() => {
+    document.querySelectorAll('.tick-line,.thumbnail').forEach(el => el.remove());
+    renderTicks(); renderThumbnails();
+    document.querySelectorAll(`.thumbnail[data-quadrant="${currentSection}"]`).forEach(t => t.classList.add('active-quadrant'));
+  }, 200);
+});
+</script>
+</body>
+</html>
