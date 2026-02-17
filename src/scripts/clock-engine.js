@@ -839,9 +839,9 @@ function openClockPop(q,idx,thumbEl){
   const popWidth=200;
   const gap=8;
 
-  // Horizontal — center on thumb, clamp to face
+  // Horizontal — center on thumb, allow extending beyond clock face
   let left=thumbCX-popWidth/2;
-  left=Math.max(8,Math.min(left,faceRect.width-popWidth-8));
+  left=Math.max(-20,Math.min(left,faceRect.width-popWidth+20));
   clockPopWrap.style.left=left+'px';
   clockPopWrap.style.right='';
 
@@ -853,7 +853,8 @@ function openClockPop(q,idx,thumbEl){
   clockPopWrap.classList.remove('open');
   clockPopWrap.style.visibility='';
 
-  const spaceBelow=faceRect.height-thumbBottom-gap;
+  // Allow popover to extend below clock face (no longer clipped)
+  const spaceBelow=faceRect.height-thumbBottom-gap+40;
   if(spaceBelow>=popH){
     clockPopWrap.style.top=(thumbBottom+gap)+'px';
   }else{
