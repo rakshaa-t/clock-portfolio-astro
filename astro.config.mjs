@@ -6,7 +6,4 @@ export default defineConfig({
   site: 'https://raksha.design',
   output: 'static',
   adapter: vercel(),
-  redirects: {
-    '/portfolio': '/',
-  },
 });
