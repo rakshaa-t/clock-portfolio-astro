@@ -28,7 +28,7 @@ const THUMB_SVGS=[
 ];
 const PROJECTS=[
   [{title:'Twitter / X',tags:['Social'],link:'https://x.com/rakshaa_t',desc:'Design insights and vibe coding process.',slides:['#A080BC','#9070AC','#80609C']},{title:'GitHub',tags:['Code'],link:'https://github.com/rakshaa-t',desc:'Open source components and experiments.',slides:['#C4A4D8','#B494C8','#A484B8']},{title:'LinkedIn',tags:['Connect'],link:'https://www.linkedin.com/in/rakshatated/',desc:'Connect with me.',slides:['#B090C8','#A080B8','#9070A8']},{title:'Send a Message',tags:['Email'],link:'mailto:hey@raksha.design',desc:'Let\'s chat about design, code, or anything creative.',slides:['#9470B0','#8460A0','#745090']}],
-  [{title:'AI Usage Optimizer',tags:['React','Figma','2024'],link:'#',desc:'A dashboard tool with 3D tilt effects and metallic animations for tracking AI API usage.',slides:['#A699D4','#9488C8','#8278B8']},{title:'Component Marketplace',tags:['SwiftUI','Design System'],link:'#',desc:'Premium UI component marketplace with liquid animations and haptic micro-interactions.',slides:['#9488C8','#8478BC','#7468AC']},{title:'Tab Switcher Component',tags:['React','Animation'],link:'#',desc:'Buttery smooth tab switcher with liquid mercury transitions. Built with spring physics.',slides:['#B8ADDC','#A89DCC','#988DBC']},{title:'3D Dice App',tags:['SwiftUI','Three.js'],link:'#',desc:'Interactive 3D dice with realistic physics and satisfying roll animations.',slides:['#8278B8','#7268A8','#625898']}],
+  [{title:'Tickle',tags:['Mobile','MVP','2025'],link:'#',desc:'A self care pet app. Tickle your pet daily for mood care without calling it that.',slides:['#A699D4','#9488C8','#B8ADDC','#8278B8'],_puzzleIdx:0},{title:'Ova App',tags:['Health','0-1','Figma'],link:'#',desc:'A privacy-first period tracking app with a companion character called Ova.',slides:['#6C7EB8','#5C6EA8','#4C5E98'],_puzzleIdx:1},{title:'Greex DeFi',tags:['Fintech','Trading','2024'],link:'#',desc:'Decentralized options and futures trading. Strategy-based trading made accessible.',slides:['#9DB8D0','#8DA8C0','#7D98B0'],_puzzleIdx:2},{title:'DealDoc',tags:['SaaS','Dashboard','2025'],link:'#',desc:'A workspace for investment teams. Calm, navigable, sharp.',slides:['#8BA8C4','#7B98B4','#6B88A4'],_puzzleIdx:4}],
   [{title:'Process Breakdown: Building this portfolio',tags:['design','process','portfolio'],link:'#',desc:'How a random Tuesday, a clock app, and an obsessive build process turned into this website...',slides:['#7E8EC8','#6E7EB8','#5E6EA8']},{title:'Code and canvas as methods of communication',tags:['design','code','thinking'],link:'#',desc:'All design is communication. Code just gave it more dimensions...',slides:['#6C7EB8','#5C6EA8','#4C5E98']},{title:'All Claude skills in my MD file',tags:['ai','workflow','tools'],link:'#',desc:'41 skills, 4 MCP servers, and 3 custom skills I\'ve built up working with Claude Code...',slides:['#90A0D4','#8090C4','#7080B4']},{title:'Coming Soon',tags:[],link:'#',desc:'New note coming soon.',slides:['#A4B2DC','#94A2CC','#8492BC']}],
   [{title:'Animation References',tags:['Bookmark'],link:'#',desc:'Curated animation patterns from iOS, Material, and indie apps.',slides:['#8BA8C4','#7B98B4','#6B88A4']},{title:'Design System Resources',tags:['Bookmark'],link:'#',desc:'Tokens and implementation guides from top design systems.',slides:['#7998B8','#6988A8','#597898']},{title:'Reading List 2024',tags:['Books'],link:'#',desc:'Notes from design engineering books, essays, and technical reads.',slides:['#9DB8D0','#8DA8C0','#7D98B0']},{title:'Creative Process Notes',tags:['Personal'],link:'#',desc:'Documenting flow states, creative rituals, and what makes the best work happen.',slides:['#6B88A8','#5B7898','#4B6888']}],
 ];
@@ -769,8 +769,18 @@ function openClockPop(q,idx,thumbEl){
   const project=PROJECTS[q][idx];
   let html='';
 
+  // Work section (q===1): preview + "View case study" button
+  if(q===1){
+    html+=`<div class="cpop-title">${project.title}</div>`;
+    if(project.tags?.length){
+      html+=`<div class="cpop-tags">${project.tags.map(t=>`<span class="cpop-tag">${t}</span>`).join('')}</div>`;
+    }
+    const desc=typeof project.desc==='string'?project.desc:project.desc;
+    html+=`<div class="cpop-desc">${desc}</div>`;
+    html+=`<button class="cpop-link cpop-view-case" data-pidx="${project._puzzleIdx}">View case study \u2192</button>`;
+  }
   // Notes section (q===2): preview with "View full note" button; 4th item = coming soon
-  if(q===2&&idx===3){
+  else if(q===2&&idx===3){
     html+=`<div class="cpop-title">${project.title}</div>`;
     html+=`<div class="cpop-desc" style="color:var(--accent);font-weight:500;">Coming soon</div>`;
   }else if(q===2){
@@ -798,13 +808,22 @@ function openClockPop(q,idx,thumbEl){
   }
   clockPop.innerHTML=html;
 
+  // Attach "View case study" click handler — open puzzle modal
+  const caseBtn=clockPop.querySelector('.cpop-view-case');
+  if(caseBtn){
+    caseBtn.addEventListener('click',()=>{
+      const pi=+caseBtn.dataset.pidx;
+      closeClockPop();
+      openPuzzleModal(PUZZLE_PROJECTS[pi]);
+    });
+  }
+
   // Attach "View full note" click handler — navigate to Notes section and open the note
   const noteBtn=clockPop.querySelector('.cpop-view-note');
   if(noteBtn){
     noteBtn.addEventListener('click',()=>{
       const ni=+noteBtn.dataset.idx;
       closeClockPop();
-      // Navigate to Notes section, then open the note after transition
       _navTarget=2;
       _pendingNoteIdx=ni;
       skipToContent();
