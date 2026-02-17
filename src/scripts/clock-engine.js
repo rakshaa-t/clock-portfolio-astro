@@ -347,6 +347,7 @@ window.addEventListener('wheel',(e)=>{
   // Browse mode: let native scroll handle everything
   if(phase==='browse') return;
 
+  if(clockPopOpen)closeClockPop();
   e.preventDefault();
 
   if(phase==='clock'){
@@ -528,6 +529,7 @@ window.addEventListener('touchstart',e=>{
 
 window.addEventListener('touchmove',e=>{
   if(!isTouching||modalOpen)return;
+  if(clockPopOpen)closeClockPop();
   const y=e.touches[0].clientY;
   const delta=touchLastY-y;touchLastY=y;
 
@@ -735,6 +737,7 @@ function renderThumbnails(){
       }
       th.appendChild(ph);
       th.addEventListener('click',()=>{
+        if(clockPopOpen)closeClockPop();
         const thumbAngle=(q*15+[3,6,9,12][idx])*6;
         springToAngle(thumbAngle,true);
         if(q===0){
