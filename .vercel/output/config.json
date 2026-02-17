@@ -2,6 +2,13 @@
 	"version": 3,
 	"routes": [
 		{
+			"src": "^/portfolio$",
+			"headers": {
+				"Location": "/"
+			},
+			"status": 301
+		},
+		{
 			"handle": "filesystem"
 		},
 		{
