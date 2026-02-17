@@ -607,7 +607,13 @@ window.addEventListener('touchend',()=>{
 // ═══ SKIP TO CONTENT ═══
 function skipToContent(){
   if(phase!=='clock')return;
-  rawAngle=Math.ceil(rawAngle/360)*360||360;
+  // Snap to target section angle if navigating, otherwise snap to next full rotation
+  if(_navTarget!==null){
+    rawAngle=Math.floor(rawAngle/360)*360+_navTarget*90;
+    if(rawAngle<=rawAngle-1)rawAngle+=360; // ensure forward
+  }else{
+    rawAngle=Math.ceil(rawAngle/360)*360||360;
+  }
   applyAngle(rawAngle);
   clearTimeout(snapTimer);
   if(animFrame){cancelAnimationFrame(animFrame);animFrame=null;isSnapping=false;}
