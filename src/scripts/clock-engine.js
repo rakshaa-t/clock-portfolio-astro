@@ -864,7 +864,10 @@ function _showModal(project,originEl){
 
   // Scale-in + tilt init
   tiltRX=0;tiltRY=0;tiltTargetRX=0;tiltTargetRY=0;tiltVelRX=0;tiltVelRY=0;
-  if(!prefersReducedMotion){
+  const isMobileModal=window.matchMedia('(max-width:480px)').matches;
+  if(isMobileModal){
+    // Mobile: let CSS slide-up transition handle everything — don't touch transform
+  }else if(!prefersReducedMotion){
     let scaleP=0;
     function scaleIn(){
       scaleP+=(1-scaleP)*0.15;
@@ -895,8 +898,9 @@ function closeModal(){
   modalOverlay.classList.remove('open');
   document.body.style.overflow='';
   clockScreen.style.filter='';
-  modalCard.style.transform='';
-  modalCard.style.willChange='';
+  const isMobileClose=window.matchMedia('(max-width:480px)').matches;
+  if(!isMobileClose){modalCard.style.transform='';modalCard.style.willChange='';}
+  else{modalCard.style.willChange='';} // Mobile: leave transform to CSS transition
   if(modalBody){modalBody.classList.remove('has-bottom-fade');modalBody.classList.remove('has-scroll-fade');}
   if(tiltRaf){cancelAnimationFrame(tiltRaf);tiltRaf=null;}
   if(dockProgress>0)applyDockProgress(dockProgress);else clockScreen.style.transform='';
@@ -1935,15 +1939,19 @@ function mmindOpenPopover(idx,cardEl){
   const spaceBelow=appHeight-cardBottom-gap;
   const spaceAbove=cardTop-gap;
 
+  let popTop;
   if(spaceBelow>=popHeight||spaceBelow>=spaceAbove){
-    mmindPopWrap.style.top=(cardBottom+gap)+'px';
+    popTop=cardBottom+gap;
     mmindPopover.style.setProperty('--pop-dir','8px');
     mmindPopover.style.transformOrigin=mmindPopover.style.transformOrigin.replace(/^bottom/,'top');
   }else{
-    mmindPopWrap.style.top=(cardTop-gap-popHeight)+'px';
+    popTop=cardTop-gap-popHeight;
     mmindPopover.style.setProperty('--pop-dir','-8px');
     mmindPopover.style.transformOrigin=mmindPopover.style.transformOrigin.replace(/^top/,'bottom');
   }
+  // Clamp within app bounds
+  popTop=Math.max(padding,Math.min(popTop,appHeight-popHeight-padding));
+  mmindPopWrap.style.top=popTop+'px';
 
   mmindGrid.querySelectorAll('.mm-card').forEach(c=>c.classList.remove('active'));
   cardEl.classList.add('active');
@@ -2047,9 +2055,13 @@ function aboutClickSound(type){
   src.start(t);src.stop(t+0.025);
 }
 const aboutPrimaryBtn=document.querySelector('.about-cta-primary');
-if(aboutPrimaryBtn)aboutPrimaryBtn.addEventListener('mousedown',()=>aboutClickSound('primary'));
+if(aboutPrimaryBtn){
+  aboutPrimaryBtn.addEventListener('mousedown',()=>aboutClickSound('primary'));
+  aboutPrimaryBtn.addEventListener('touchstart',()=>aboutClickSound('primary'),{passive:true});
+}
 document.querySelectorAll('.about-cta-strip .about-cta').forEach(btn=>{
   btn.addEventListener('mousedown',()=>aboutClickSound('secondary'));
+  btn.addEventListener('touchstart',()=>aboutClickSound('secondary'),{passive:true});
 });
 
 // Stack cards shuffle sound — synced to 250ms transition
@@ -2093,6 +2105,27 @@ const stackCardsEl=document.querySelector('.stack-cards');
 if(stackCardsEl){
   stackCardsEl.addEventListener('mouseenter',stackShuffleStart);
   stackCardsEl.addEventListener('mouseleave',stackShuffleStop);
+  // Touch: tap to toggle fan-out + sound
+  let stackTouched=false;
+  stackCardsEl.addEventListener('touchstart',(e)=>{
+    if(!stackTouched){
+      stackTouched=true;
+      stackCardsEl.classList.add('touched');
+      stackShuffleStart();
+    }else{
+      stackTouched=false;
+      stackCardsEl.classList.remove('touched');
+      stackShuffleStop();
+    }
+  },{passive:true});
+  // Close on tap outside
+  document.addEventListener('touchstart',(e)=>{
+    if(stackTouched&&!stackCardsEl.contains(e.target)){
+      stackTouched=false;
+      stackCardsEl.classList.remove('touched');
+      stackShuffleStop();
+    }
+  },{passive:true});
 }
 
 // Location toggle
@@ -2107,6 +2140,7 @@ if(locToggle){
     aboutClickSound('secondary');
   }
   locToggle.addEventListener('mousedown',toggleLocation);
+  locToggle.addEventListener('touchstart',(e)=>{e.preventDefault();toggleLocation();},{passive:false});
   locToggle.addEventListener('keydown',e=>{if(e.key===' '||e.key==='Enter'){e.preventDefault();toggleLocation();}});
 }
 

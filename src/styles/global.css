@@ -879,6 +879,8 @@ body{}
   text-shadow:0 0 1px rgba(0,0,0,0.3);
 }
 
+.cta-arrow{display:inline-block;vertical-align:middle;margin-left:6px;margin-top:-1px;}
+
 /* Secondary — 3D circle icon buttons */
 .about-cta-strip{display:inline-flex;gap:8px;align-items:center;}
 .about-cta{
@@ -970,6 +972,7 @@ body{}
   padding:8px 12px;border-radius:12px;
   font-family:'Geist Mono',monospace;font-size:12px;font-weight:600;
   letter-spacing:0.04em;text-transform:uppercase;color:var(--text-secondary);
+  white-space:nowrap;
   background:linear-gradient(180deg,#F0EDE8 0%,#E8E5E0 100%);
   border:1px solid rgba(255,255,255,0.6);
   box-shadow:0 1px 3px rgba(0,0,0,0.06),0 2px 0 0 #D4D0CA;
@@ -980,8 +983,10 @@ body{}
 .stack-card:nth-child(2){z-index:3;transform:rotate(2deg);}
 .stack-card:nth-child(3){z-index:2;transform:rotate(-1.5deg);}
 .stack-card:nth-child(4){z-index:1;transform:rotate(2.5deg);}
-.stack-cards:hover .stack-card{margin-left:4px;transform:rotate(0deg);}
-.stack-cards:hover .stack-card:first-child{margin-left:0;}
+.stack-cards:hover .stack-card,
+.stack-cards.touched .stack-card{margin-left:4px;transform:rotate(0deg);}
+.stack-cards:hover .stack-card:first-child,
+.stack-cards.touched .stack-card:first-child{margin-left:0;}
 
 /* Reduced motion */
 @media(prefers-reduced-motion:reduce){
@@ -1666,9 +1671,10 @@ body{}
   }
 
   /* Modal — full width bottom sheet style */
-  .modal-overlay{align-items:flex-end;}
+  .modal-overlay{align-items:flex-end;justify-content:stretch;}
   .modal-card{
-    width:100vw;max-height:90vh;
+    position:fixed;bottom:0;left:0;right:0;
+    width:100%;max-height:90dvh;
     border-radius:20px 20px 0 0;
     transform:translateY(100%);
     transition:transform 0.35s cubic-bezier(0.32,0.72,0,1), opacity 0.25s ease-out;
@@ -1676,11 +1682,16 @@ body{}
   .modal-overlay.open .modal-card{
     transform:translateY(0);
   }
+  .modal-card-inner{
+    height:auto;max-height:90dvh;
+    border-radius:20px 20px 0 0;
+    padding-bottom:env(safe-area-inset-bottom, 0px);
+  }
   .modal-carousel{height:220px;}
   .carousel-btn{width:30px;height:30px;font-size:14px;}
   .modal-body{padding:20px 20px 32px;}
   .modal-title{font-size:18px;}
-  .modal-close{top:10px;right:10px;width:28px;height:28px;font-size:12px;}
+  .modal-close{top:10px;right:10px;width:28px;height:28px;font-size:12px;opacity:1;}
 
   /* Browse sections */
   .browse-section{padding:36px 20px;}
@@ -1693,28 +1704,46 @@ body{}
     gap:10px;
   }
 
-  /* Kindle — full width + 2-col grid */
+  /* Kindle — full width + 2-col grid, scale height to viewport */
   .kindle-wrapper{max-width:100%;}
   .kindle-grid{columns:2;column-gap:10px;}
-  .kindle-detail-cover{width:65%;}
+  .kindle-library{height:min(calc(100% - 53px),55dvh);}
+  .kindle-detail{
+    height:calc(100% - 53px);overflow:hidden;
+    display:flex;flex-direction:column;padding:0 20px 12px;
+  }
+  .kindle-detail-cover{width:35%;margin:10px auto 10px;flex-shrink:1;min-height:0;}
+  .kindle-detail-meta{margin-bottom:8px;}
+  .kindle-detail-subtitle{font-size:12px;}
+  .kindle-detail-progress-wrap{margin-bottom:10px;}
+  .kindle-detail-notes-btn{flex-shrink:0;}
 
-  /* Apple Notes — full width */
-  .anotes-window{border-radius:12px;height:520px;}
+  /* Apple Notes — full width, scale height to viewport */
+  .anotes-window{border-radius:12px;height:min(520px,61dvh);}
   .reader-title{font-size:20px;}
   .reader-scroll{padding:24px 20px 28px;}
   .popover{width:180px;}
 
-  /* Mymind — 2 columns */
-  .mymind-app{border-radius:12px;}
+  /* Mymind — 2 columns, scale grid height to viewport */
+  .mymind-app{border-radius:12px;overflow:hidden;}
+  .mm-popover{max-height:60dvh;overflow-y:auto;}
   .mymind-grid{column-count:2;}
+  .mymind-grid-scroll{max-height:min(540px,63dvh);}
   .mymind-search{font-size:20px;}
 
-  /* About */
+  /* About — stack cards tighter on mobile */
+  .stack-card{padding:6px 8px;margin-left:-22px;}
+  .stack-card:first-child{margin-left:0;}
   .about-cta-row{flex-direction:column;}
   .about-cta{text-align:center;}
 
-  /* Mini clock bar */
-  .mini-clock-bar{padding:10px 16px;}
+  /* Mini clock bar — move to bottom-left, aligned with sound knob */
+  .mini-clock-bar{
+    top:auto;bottom:20px;left:16px;right:auto;
+    transform:scale(0.92);transform-origin:bottom left;
+    width:auto;padding:0;
+  }
+  .mini-clock-bar.visible{transform:scale(1);}
 
   /* Section indicator dots — bigger touch targets */
   .indicator-dot{width:10px;height:10px;padding:6px;}
