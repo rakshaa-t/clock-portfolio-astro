@@ -731,7 +731,11 @@ function renderThumbnails(){
       th.addEventListener('click',()=>{
         const thumbAngle=(q*15+[3,6,9,12][idx])*6;
         springToAngle(thumbAngle,true);
-        if(q===0){openModal(q,idx,th);}
+        if(q===0){
+          // About section: open social links directly
+          const link=PROJECTS[q][idx].link;
+          if(link&&link!=='#')window.open(link,'_blank','noopener,noreferrer');
+        }
         else{openClockPop(q,idx,th);}
       });
       clockFace.appendChild(th);
