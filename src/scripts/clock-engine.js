@@ -517,10 +517,12 @@ function animateSkipDock(){
 }
 
 // ═══ TOUCH ═══
-let touchLastY=0,isTouching=false;
+let touchLastY=0,isTouching=false,touchOnFace=false;
+const isMobileTouch=window.matchMedia('(max-width:480px)').matches;
 window.addEventListener('touchstart',e=>{
   if(modalOpen)return;
   touchLastY=e.touches[0].clientY;isTouching=true;
+  touchOnFace=clockFace.contains(e.target);
   if(phase==='clock'&&isSnapping){isSnapping=false;if(animFrame){cancelAnimationFrame(animFrame);animFrame=null;}}
 },{passive:true});
 
@@ -533,6 +535,16 @@ window.addEventListener('touchmove',e=>{
     if(undockGuard){
       if(delta>0) undockGuard=false;
       else return;
+    }
+
+    // Mobile: swipe up outside clock face → skip rotation, go straight to push
+    if(isMobileTouch&&!touchOnFace&&delta>0){
+      clearTimeout(snapTimer);
+      if(animFrame){cancelAnimationFrame(animFrame);animFrame=null;isSnapping=false;}
+      phase='pushing';browseContent.style.willChange='transform';computeContentStart();dockProgress=0;pushDeltas=[];pushHandAngle=0;
+      dockProgress=Math.min(1,delta/PUSH_DISTANCE);
+      applyDockProgress(dockProgress);
+      return;
     }
 
     let newAngle=rawAngle+delta*0.5;
