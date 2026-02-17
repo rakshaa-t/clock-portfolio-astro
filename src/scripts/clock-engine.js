@@ -751,20 +751,46 @@ let clockPopOpen=false;
 
 function openClockPop(q,idx,thumbEl){
   const project=PROJECTS[q][idx];
-  let html=`<div class="cpop-title">${project.title}</div>`;
-  if(typeof project.desc==='string'){
-    html+=`<div class="cpop-desc">${project.desc}</div>`;
-  }else if(Array.isArray(project.desc)){
-    html+=`<div class="cpop-desc">${project.desc[0]}</div>`;
-  }
-  if(project.tags?.length){
-    html+=`<div class="cpop-tags">${project.tags.map(t=>`<span class="cpop-tag">${t}</span>`).join('')}</div>`;
-  }
-  if(project.link&&project.link!=='#'){
-    const display=project.link.replace('https://','').replace('mailto:','');
-    html+=`<a class="cpop-link" href="${project.link}" target="_blank">${display} \u2197</a>`;
+  let html='';
+
+  // Notes section (q===2): preview with "View full note" button; 4th item = coming soon
+  if(q===2&&idx===3){
+    html+=`<div class="cpop-title">${project.title}</div>`;
+    html+=`<div class="cpop-desc" style="color:var(--accent);font-weight:500;">Coming soon</div>`;
+  }else if(q===2){
+    html+=`<div class="cpop-title">${project.title}</div>`;
+    if(project.tags?.length){
+      html+=`<div class="cpop-tags">${project.tags.map(t=>`<span class="cpop-tag">${t}</span>`).join('')}</div>`;
+    }
+    const desc=Array.isArray(project.desc)?project.desc[0]:project.desc;
+    html+=`<div class="cpop-desc">${desc}</div>`;
+    html+=`<button class="cpop-link cpop-view-note" data-q="${q}" data-idx="${idx}">View full note \u2192</button>`;
+  }else{
+    html+=`<div class="cpop-title">${project.title}</div>`;
+    if(typeof project.desc==='string'){
+      html+=`<div class="cpop-desc">${project.desc}</div>`;
+    }else if(Array.isArray(project.desc)){
+      html+=`<div class="cpop-desc">${project.desc[0]}</div>`;
+    }
+    if(project.tags?.length){
+      html+=`<div class="cpop-tags">${project.tags.map(t=>`<span class="cpop-tag">${t}</span>`).join('')}</div>`;
+    }
+    if(project.link&&project.link!=='#'){
+      const display=project.link.replace('https://','').replace('mailto:','');
+      html+=`<a class="cpop-link" href="${project.link}" target="_blank">${display} \u2197</a>`;
+    }
   }
   clockPop.innerHTML=html;
+
+  // Attach "View full note" click handler
+  const noteBtn=clockPop.querySelector('.cpop-view-note');
+  if(noteBtn){
+    noteBtn.addEventListener('click',()=>{
+      const nq=+noteBtn.dataset.q,ni=+noteBtn.dataset.idx;
+      closeClockPop();
+      openModal(nq,ni,thumbEl);
+    });
+  }
 
   // Position relative to clock face
   const faceRect=clockFace.getBoundingClientRect();
