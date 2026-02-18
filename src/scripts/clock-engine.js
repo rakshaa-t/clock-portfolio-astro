@@ -1835,3 +1835,33 @@ window.addEventListener('resize',()=>{
     }
   },200);
 });
+
+// Email link — copy to clipboard, toggle text
+const _emailLink=document.getElementById('aboutEmailLink');
+let _emailCopied=false;
+if(_emailLink){
+  // Lock width to prevent reflow when text changes
+  const _emailW=_emailLink.offsetWidth;
+  _emailLink.style.display='inline-block';
+  _emailLink.style.minWidth=_emailW+'px';
+  _emailLink.addEventListener('click',e=>{
+    e.preventDefault();
+    e.stopPropagation();
+    if(_emailCopied){
+      _emailLink.textContent='hey@raksha.design';
+      _emailCopied=false;
+      return;
+    }
+    // Try mailto via hidden iframe
+    const iframe=document.createElement('iframe');
+    iframe.style.display='none';
+    document.body.appendChild(iframe);
+    iframe.contentWindow.location.href='mailto:hey@raksha.design';
+    setTimeout(()=>document.body.removeChild(iframe),500);
+    // Copy to clipboard + swap text
+    navigator.clipboard.writeText('hey@raksha.design').then(()=>{
+      _emailLink.textContent='copied to clipboard';
+      _emailCopied=true;
+    });
+  });
+}
