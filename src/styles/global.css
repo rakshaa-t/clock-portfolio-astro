@@ -71,7 +71,7 @@ body{}
 /* ═══ CLOCK SCREEN ═══ */
 .clock-screen{
   position:fixed;top:0;left:0;width:100%;height:100%;
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  display:none;flex-direction:column;align-items:center;justify-content:center;
   z-index:100;gap:20px;will-change:transform,opacity;pointer-events:auto;
 }
 
@@ -278,7 +278,7 @@ button.cpop-view-note,button.cpop-view-case{background:none;border:none;padding:
 }
 .bottom-ui{
   position:fixed;bottom:20px;left:50%;transform:translateX(-50%);
-  display:flex;flex-direction:column;align-items:center;gap:8px;
+  display:none;flex-direction:column;align-items:center;gap:8px;
   z-index:110;
 }
 .skip-link{
@@ -1095,9 +1095,9 @@ a.about-dropdown-item:hover{opacity:0.7;}
 
 /* ═══ BROWSE CONTENT ═══ */
 .browse-content{
-  position:fixed;top:0;left:0;width:100%;
+  position:relative;top:0;left:0;width:100%;
   min-height:100vh;padding:80px 0 60px;
-  pointer-events:none;
+  pointer-events:auto;
   background:var(--bg);
 }
 .browse-inner{max-width:680px;margin:0 auto;}
@@ -1535,15 +1535,15 @@ a.about-dropdown-item:hover{opacity:0.7;}
 /* ═══ MINI CLOCK — recessed well + raised face ═══ */
 .mini-clock-bar{
   position:fixed;top:14px;left:50%;
-  transform:translateX(-50%) scale(0.92);
+  transform:translateX(-50%) scale(1);
   z-index:200;
   width:min(680px, calc(100% - 48px));
   display:flex;align-items:center;justify-content:flex-start;
-  opacity:0;pointer-events:none;
+  opacity:1;pointer-events:auto;
   transform-origin:center top;
   transition:opacity 0.25s ease-out,transform 0.25s ease-out;
 }
-.mini-clock-bar.visible{opacity:1;pointer-events:auto;transform:translateX(-50%) scale(1);}
+.mini-clock-bar.hidden{opacity:0;pointer-events:none;transform:translateX(-50%) scale(0.92);}
 .mini-clock{
   width:48px;height:48px;border-radius:22%;
   background:radial-gradient(circle, #D8D4CE 0%, #E0DDD8 60%, #E4E0DA 100%);

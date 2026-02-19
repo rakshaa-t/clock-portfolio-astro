@@ -299,7 +299,7 @@ function applyDockProgress(p){
   const bpe=p>0.85?'auto':'none';
   if(bpe!==_lastBPE){browseContent.style.pointerEvents=bpe;_lastBPE=bpe;}
   const mv=p>0.7;
-  if(mv!==_lastMini){miniClockBar.classList.toggle('visible',mv);_lastMini=mv;}
+  if(mv!==_lastMini){miniClockBar.classList.toggle('hidden',!mv);_lastMini=mv;}
 }
 
 // ═══ UNIFIED SCROLL HANDLER ═══
@@ -620,7 +620,7 @@ function reenterClockMode(){
   pageHeader.style.opacity='';sectionTitle.style.opacity='';
   bottomUI.style.display='';bottomUI.style.opacity='';
   skipLinkEl.classList.remove('hidden');
-  miniClockBar.classList.remove('visible');
+  miniClockBar.classList.add('hidden');
   const miniHand=document.getElementById('miniHand');
   if(miniHand) miniHand.setAttribute('transform','rotate(0 50 50)');
 
@@ -1021,10 +1021,11 @@ if(puzzleShowMore){
 document.querySelectorAll('.thumbnail[data-quadrant="0"]').forEach(t=>t.classList.add('active-quadrant'));
 applyDockProgress(0);
 
-// Default to browse mode on load — clock is accessible via mini dock icon
-enterBrowseMode();
-miniClockBar.classList.add('visible');
+// Browse mode is default via CSS — clock-screen:display:none, browse-content:position:relative
+// Just set JS state to match
+phase='browse';
 _lastMini=true;
+window.addEventListener('scroll',updateMiniClockHand);
 
 // Expose functions to global scope for onclick handlers in HTML
 window.navigateTo = navigateTo;
