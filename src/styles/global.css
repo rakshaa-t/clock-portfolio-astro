@@ -908,6 +908,40 @@ button.cpop-view-note,button.cpop-view-case{background:none;border:none;padding:
 .about-bio p:first-child{font-size:16px;color:var(--text-primary);line-height:1.7;}
 .about-bio em{font-style:italic;color:var(--text-primary);font-weight:500;}
 .about-bio strong{font-weight:600;color:var(--text-primary);}
+.about-bio-sub{color:var(--text-secondary);}
+.about-drop-trigger{
+  color:var(--text-primary);cursor:pointer;position:relative;
+  text-decoration:underline;text-underline-offset:2px;text-decoration-color:rgba(0,0,0,0.15);
+  transition:text-decoration-color 0.2s ease-out;
+}
+.about-drop-trigger:hover{text-decoration-color:rgba(0,0,0,0.4);}
+.about-drop-wrap{
+  position:absolute;left:0;top:calc(100% + 6px);z-index:50;
+  min-width:160px;border-radius:10px;
+  opacity:0;transform:translateY(-4px);pointer-events:none;
+  transition:opacity 0.15s ease-out,transform 0.15s ease-out;
+}
+.about-drop-wrap.open{opacity:1;transform:translateY(0);pointer-events:auto;}
+.about-dropdown{
+  padding:8px 0;border-radius:10px;
+  max-height:200px;overflow-y:auto;overscroll-behavior:none;-webkit-overflow-scrolling:auto;
+  background:var(--text-primary);
+  box-shadow:0 4px 16px rgba(0,0,0,0.15);
+}
+.about-drop-fade{
+  position:absolute;bottom:0;left:0;right:0;height:28px;pointer-events:none;
+  background:linear-gradient(transparent,var(--text-primary));border-radius:0 0 10px 10px;
+  transition:opacity 0.15s ease-out;
+}
+.about-drop-fade.hidden{opacity:0;}
+.about-dropdown-item{
+  display:block;padding:6px 14px;
+  font-family:'Geist Mono',monospace;font-size:12px;font-weight:500;
+  color:var(--bg);white-space:nowrap;text-decoration:none;
+  transition:opacity 0.15s ease-out;
+}
+a.about-dropdown-item:hover{opacity:0.7;}
+.about-dropdown-item:not(a){opacity:0.85;}
 .about-bio-link{color:var(--text-primary);text-decoration:underline;text-underline-offset:2px;text-decoration-color:rgba(0,0,0,0.15);transition:text-decoration-color 0.2s ease-out;}
 .about-bio-link:hover{text-decoration-color:rgba(0,0,0,0.4);}
 .about-ctas{margin-bottom:32px;max-width:520px;margin-left:auto;margin-right:auto;display:flex;flex-direction:column;align-items:flex-start;gap:16px;}
