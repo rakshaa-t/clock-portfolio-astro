@@ -65,7 +65,7 @@
 
 html,body{margin:0;padding:0;background:var(--bg);color:var(--text-primary);
   font-family:'Geist',-apple-system,BlinkMacSystemFont,sans-serif;
-  -webkit-font-smoothing:antialiased;overflow:hidden;height:100%;}
+  -webkit-font-smoothing:antialiased;overflow:auto;height:auto;}
 body{}
 
 /* ═══ CLOCK SCREEN ═══ */
