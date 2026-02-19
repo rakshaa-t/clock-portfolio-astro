@@ -1019,12 +1019,13 @@ if(puzzleShowMore){
   });
 }
 document.querySelectorAll('.thumbnail[data-quadrant="0"]').forEach(t=>t.classList.add('active-quadrant'));
-applyDockProgress(0);
 
-// Browse mode is default via CSS — clock-screen:display:none, browse-content:position:relative
-// Just set JS state to match
+// Browse mode is default via CSS — no applyDockProgress(0) which would push content off-screen
 phase='browse';
+dockProgress=1;
 _lastMini=true;
+_lastCPE='none';
+_lastBPE='auto';
 window.addEventListener('scroll',updateMiniClockHand);
 
 // Expose functions to global scope for onclick handlers in HTML
