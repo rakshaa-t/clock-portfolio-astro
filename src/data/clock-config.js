@@ -3,10 +3,14 @@
 // PROJECTS maps to the 4 clock quadrants (About, Work, Notes, Mymind).
 
 export const SECTIONS=[
-  {name:'About',desc:'Who I am & how to reach me',angle:0},
-  {name:'Work',desc:'Selected projects & case studies',angle:90},
-  {name:'Notes',desc:'Articles & reflections',angle:180},
-  {name:'Mymind',desc:'Saves & inspiration',angle:270},
+  {name:'Home',desc:'',angle:0},
+  {name:'Work',desc:'Selected projects & case studies',angle:45},
+  {name:'Clients',desc:'Companies & people I\'ve worked with',angle:90},
+  {name:'Writings',desc:'Articles & reflections',angle:135},
+  {name:'Archive',desc:'Saves & inspiration',angle:180},
+  {name:'Readings',desc:'Books & highlights',angle:225},
+  {name:'Concepts',desc:'Experiments & explorations',angle:270},
+  {name:'Book a call',desc:'',angle:315},
 ];
 
 export const THUMB_COLORS=[
