@@ -1,5 +1,5 @@
 // ═══ DATA (imported from src/data/) ═══
-import { SECTIONS } from '../data/clock-config.js';
+import { SECTIONS, THUMB_COLORS, THUMB_IMAGES, THUMB_SVGS, PROJECTS } from '../data/clock-config.js';
 import { PUZZLE_PROJECTS } from '../data/projects.js';
 import { esc, prefersReducedMotion } from './shared.js';
 
@@ -65,6 +65,7 @@ function clockTick(){
 function knobClick(){
   _ensureAudioCtx();
   const t=_actx.currentTime;
+  // Brass body resonance
   const ring=_actx.createOscillator();
   ring.type='triangle';
   ring.frequency.setValueAtTime(1800,t);
@@ -75,6 +76,7 @@ function knobClick(){
   ringG.gain.exponentialRampToValueAtTime(0.001,t+0.05);
   ring.connect(ringF);ringF.connect(ringG);ringG.connect(_actx.destination);
   ring.start(t);ring.stop(t+0.05);
+  // Friction grit
   const bs=_actx.sampleRate*0.025;
   const b=_actx.createBuffer(1,bs,_actx.sampleRate);
   const d=b.getChannelData(0);
@@ -89,6 +91,7 @@ function knobClick(){
   const ng=_actx.createGain();ng.gain.setValueAtTime(0.16,t);ng.gain.exponentialRampToValueAtTime(0.001,t+0.03);
   n.connect(hp);hp.connect(lp);lp.connect(ng);ng.connect(_actx.destination);
   n.start(t);n.stop(t+0.03);
+  // Detent click
   const det=_actx.createOscillator();
   det.type='sine';
   det.frequency.setValueAtTime(3200,t+0.02);
@@ -102,15 +105,15 @@ function knobClick(){
 }
 function checkTick(a){
   const n=((a%360)+360)%360,l=((_lastTick%360)+360)%360;
-  if(Math.floor(n/45)!==Math.floor(l/45))clockTick();
+  if(Math.floor(n/22.5)!==Math.floor(l/22.5))clockTick();
   _lastTick=a;
 }
 
-// Expose audio state for other modules (notes, about, etc.)
+// Expose audio context for other modules (about, notes click sounds)
 window.__clockAudio={
-  get on(){return _soundOn;},
-  ensureCtx:_ensureAudioCtx,
-  get ctx(){return _actx;}
+  ensure(){_ensureAudioCtx();return _actx;},
+  get ctx(){return _actx;},
+  get soundOn(){return _soundOn;}
 };
 
 const clockFace=document.getElementById('clockFace');
@@ -127,13 +130,16 @@ if(modalBody)modalBody.addEventListener('scroll',function(){
 const clockScreen=document.getElementById('clockScreen');
 const miniClockBar=document.getElementById('miniClockBar');
 const browseContent=document.getElementById('browseContent');
+const sectionIndicator=document.getElementById('sectionIndicator');
 const skipLinkEl=document.getElementById('skipLink');
 const bottomUI=document.getElementById('bottomUI');
 const pageHeader=document.getElementById('pageHeader');
 const sectionTitle=document.getElementById('sectionTitle');
 
 // Cache NodeLists for per-frame use
+const _allThumbnails=document.querySelectorAll('.thumbnail');
 const _allMenuLabels=document.querySelectorAll('.menu-label');
+const _allIndicatorDots=document.querySelectorAll('.indicator-dot');
 
 // Initialize browse content off screen
 browseContent.style.transform='translateY(100vh)';
@@ -141,9 +147,16 @@ browseContent.style.transform='translateY(100vh)';
 // Tracks how far anticipation has shifted the clock (vh)
 let _anticipationVh=0;
 
-// ═══ SNAP POINTS (8 menu items at 45° intervals) ═══
-const MENU_TARGETS=['top','sec-work','sec-about','sec-notes','sec-bookmarks','sec-books','sec-concepts','cal'];
-const SNAP_ANGLES=SECTIONS.map(s=>s.angle); // [0,45,90,135,180,225,270,315]
+// ═══ SNAP POINTS ═══
+const SNAP_ANGLES=[], SNAP_META=[];
+for(let q=0;q<4;q++){
+  SNAP_ANGLES.push(q*90);
+  SNAP_META.push({type:'major',section:q,thumbIndex:null});
+  [3,6,9,12].forEach((tp,idx)=>{
+    SNAP_ANGLES.push(q*90+tp*6);
+    SNAP_META.push({type:'minor',section:q,thumbIndex:idx});
+  });
+}
 
 let rawAngle=0, snapTimer=null, isSnapping=false, animFrame=null;
 let springVelocity=0, springTarget=0, useGentleSpring=false;
@@ -159,6 +172,7 @@ function findNearestSnap(angle){
   return best;
 }
 
+let _lastFocusedThumb=null;
 let _handTransitionCleared=false;
 
 function applyAngle(angle){
@@ -169,28 +183,39 @@ function applyAngle(angle){
   if(miniHand)miniHand.setAttribute('transform',`rotate(${normAngle(angle)} 50 50)`);
 
   const snapIdx=findNearestSnap(angle);
-  const newSection=snapIdx;
+  const snap=SNAP_META[snapIdx];
+  const newSection=snap.section;
 
   if(newSection!==currentSection){
     currentSection=newSection;
     _allMenuLabels.forEach(l=>l.classList.toggle('active',+l.dataset.section===newSection));
+    _allThumbnails.forEach(t=>t.classList.toggle('active-quadrant',+t.dataset.quadrant===newSection));
     const tEl=document.getElementById('activeSectionTitle'),dEl=document.getElementById('activeSectionDesc');
     tEl.style.opacity=0;dEl.style.opacity=0;
     setTimeout(()=>{tEl.textContent=SECTIONS[newSection].name;dEl.textContent=SECTIONS[newSection].desc;tEl.style.opacity=1;dEl.style.opacity=1;},120);
+    _allIndicatorDots.forEach(d=>d.classList.toggle('active',+d.dataset.section===newSection));
   }
 
+  if(_lastFocusedThumb){_lastFocusedThumb.classList.remove('focused');_lastFocusedThumb=null;}
+  if(snap.type==='minor'){
+    const dist=Math.abs(normAngle(angle)-SNAP_ANGLES[snapIdx]);
+    if(dist<5||dist>355){
+      const ft=document.querySelector(`.thumbnail[data-quadrant="${snap.section}"][data-index="${snap.thumbIndex}"]`);
+      if(ft){ft.classList.add('focused');_lastFocusedThumb=ft;}
+    }
+  }
   skipLinkEl.classList.add('hidden');
 
-  // ═══ ANTICIPATION — clock starts sliding as hand passes 315° ═══
+  // ═══ ANTICIPATION — clock starts sliding as hand passes 270° ═══
   const baseLoop=Math.floor(angle/360)*360;
   const progressInLoop=angle-baseLoop;
-  if(progressInLoop>315 && !returnedFromBrowse && phase==='clock'){
-    const p=Math.min(1,(progressInLoop-315)/45);
+  if(progressInLoop>270 && !returnedFromBrowse && phase==='clock'){
+    const p=Math.min(1,(progressInLoop-270)/90);
     const eased=p*p;
     _anticipationVh=eased*8;
     clockScreen.style.transform=`translateY(${-_anticipationVh}vh)`;
     bottomUI.style.opacity=Math.max(0,1-p*1.5);
-  } else if(phase==='clock' && progressInLoop>0 && progressInLoop<=315){
+  } else if(phase==='clock' && progressInLoop>0 && progressInLoop<=270){
     _anticipationVh=0;
     clockScreen.style.transform='';
     bottomUI.style.opacity='';
@@ -233,31 +258,42 @@ function springToAngle(targetNorm,gentle){
 }
 
 // ═══ DOCK TRANSITION (scroll-driven) ═══
+// How far below the viewport top the content should start (computed once per push)
 let contentStartVh=100;
 
 function computeContentStart(){
+  // Measure where the bottom of the clock UI is
   const bottomEl=document.getElementById('bottomUI');
   if(bottomEl){
     const rect=bottomEl.getBoundingClientRect();
+    // Content starts just below the bottom UI + small gap
+    // Add back any anticipation shift so we measure the natural position
     contentStartVh=(rect.bottom-4)/window.innerHeight*100+_anticipationVh;
   }else{
-    contentStartVh=85;
+    contentStartVh=85; // fallback
   }
 }
 
-// Cached threshold states
+// Cached threshold states — avoid redundant non-compositor DOM writes per frame
 let _lastCPE='auto',_lastBPE='none',_lastMini=false;
 
 function applyDockProgress(p){
   dockProgress=p;
+
+  // Blend from wherever anticipation left off (0 if none)
   const totalScrollVh=contentStartVh-_anticipationVh;
   const scrollVh=_anticipationVh+p*totalScrollVh;
+
+  // Compositor-only properties — safe every frame
   clockScreen.style.transform=`translateY(${-scrollVh}vh)`;
   browseContent.style.transform=`translateY(${100*(1-p)}vh)`;
+
   const fadeOut=Math.max(0,1-p*3);
   pageHeader.style.opacity=fadeOut;
   sectionTitle.style.opacity=fadeOut;
   bottomUI.style.opacity=0;
+
+  // Non-compositor properties — only write when threshold crossed
   const cpe=p>0.3?'none':'auto';
   if(cpe!==_lastCPE){clockScreen.style.pointerEvents=cpe;_lastCPE=cpe;}
   const bpe=p>0.85?'auto':'none';
@@ -267,11 +303,16 @@ function applyDockProgress(p){
 }
 
 // ═══ UNIFIED SCROLL HANDLER ═══
-const PUSH_DISTANCE=window.innerHeight*0.4;
+// How many px of scroll to fully push the clock off screen
+const PUSH_DISTANCE=window.innerHeight*0.4; // ~40vh — quick push like a door opening
 
 window.addEventListener('wheel',(e)=>{
   if(modalOpen)return;
+
+  // Browse mode: let native scroll handle everything
   if(phase==='browse') return;
+
+  if(clockPopOpen)closeClockPop();
   e.preventDefault();
 
   if(phase==='clock'){
@@ -279,20 +320,28 @@ window.addEventListener('wheel',(e)=>{
       if(e.deltaY>0) undockGuard=false;
       else return;
     }
+
     if(isSnapping){isSnapping=false;if(animFrame){cancelAnimationFrame(animFrame);animFrame=null;}}
+
     let newAngle=rawAngle+e.deltaY*SCROLL_SENSITIVITY;
+
     const baseLoop=Math.floor(rawAngle/360)*360;
     const target360=baseLoop+360;
+
+    // Track if hand has visited past 6 o'clock in this loop
     const normCurrent=((rawAngle%360)+360)%360;
     if(normCurrent>=180) visitedPast180=true;
-    if(normCurrent<10) visitedPast180=false;
+    if(normCurrent<10) visitedPast180=false; // reset when near 12
 
     if(e.deltaY>0 && newAngle>=target360){
+      // Skip this crossing only if returned from browse AND hand was deep in the clock
       const skipThisCrossing=returnedFromBrowse && visitedPast180;
+
       if(skipThisCrossing){
         returnedFromBrowse=false;
         visitedPast180=false;
       }else{
+        // Trigger push — anticipation already signaled the transition
         rawAngle=target360;
         applyAngle(rawAngle);
         clearTimeout(snapTimer);
@@ -316,12 +365,18 @@ window.addEventListener('wheel',(e)=>{
     if(e.deltaY>0)totalForwardScroll+=e.deltaY*SCROLL_SENSITIVITY;
 
   }else if(phase==='pushing'){
+    // Track velocity for momentum
     pushDeltas.push({d:e.deltaY,t:performance.now()});
     if(pushDeltas.length>5) pushDeltas.shift();
+
+    // Bidirectional during push
     dockProgress=Math.min(1,Math.max(0,dockProgress+e.deltaY/PUSH_DISTANCE));
+
+    // Hand drifts slowly during push — clock winding down
     pushHandAngle+=e.deltaY*0.03;
     handContainer.style.transform=`rotate(${rawAngle+pushHandAngle}deg)`;
     checkTick(rawAngle+pushHandAngle);
+
     applyDockProgress(dockProgress);
 
     if(dockProgress>=1){
@@ -339,14 +394,17 @@ window.addEventListener('wheel',(e)=>{
       applyDockProgress(0);
     }
 
+    // Reset momentum timer
     clearTimeout(pushMomentumTimer);
     pushMomentumTimer=setTimeout(()=>{
       if(phase!=='pushing') return;
+      // Average recent deltas for momentum
       const now=performance.now();
       const recent=pushDeltas.filter(d=>now-d.t<150);
       if(recent.length<2) return;
       let avgV=recent.reduce((s,d)=>s+d.d,0)/recent.length;
       if(Math.abs(avgV)<1) return;
+      // Decay loop
       function decayMomentum(){
         if(phase!=='pushing'||Math.abs(avgV)<0.5) return;
         avgV*=0.85;
@@ -383,15 +441,18 @@ function enterBrowseMode(){
   bottomUI.style.display='none';
   window.scrollTo(0,0);
   window.addEventListener('scroll',updateMiniClockHand);
+  // If navigated via label click, scroll to that section
   if(_navTarget!==null){
-    const t=MENU_TARGETS[_navTarget];
-    if(t==='top'){/* already at top */}
-    else if(t==='cal'){window.open('https://cal.com/raksha-tated-v2ee58/15min','_blank','noopener,noreferrer');}
-    else{
-      const el=document.getElementById(t);
-      if(el)requestAnimationFrame(()=>el.scrollIntoView({behavior:'smooth',block:'start'}));
-    }
+    const secId=['sec-about','sec-work','sec-notes','sec-bookmarks'][_navTarget];
+    const target=document.getElementById(secId);
+    if(target)requestAnimationFrame(()=>target.scrollIntoView({behavior:'smooth',block:'start'}));
     _navTarget=null;
+  }
+  // If a note was requested from the clock popover, open it after transition
+  if(_pendingNoteIdx!==null){
+    const ni=_pendingNoteIdx;
+    _pendingNoteIdx=null;
+    setTimeout(()=>document.dispatchEvent(new CustomEvent('open-note',{detail:{idx:ni}})),450);
   }
 }
 
@@ -399,11 +460,14 @@ function updateMiniClockHand(){
   if(phase!=='browse') return;
   const miniHand=document.getElementById('miniHand');
   if(!miniHand) return;
+
+  // Pure scroll-to-angle: 0% scroll = 0°, 100% scroll = 360°
   const scrollTop=window.scrollY;
   const docHeight=document.documentElement.scrollHeight-window.innerHeight;
   if(docHeight<=0) return;
   const scrollPct=Math.min(1,scrollTop/docHeight);
   const angle=scrollPct*360;
+
   miniHand.setAttribute('transform',`rotate(${angle} 50 50)`);
 }
 
@@ -436,6 +500,7 @@ window.addEventListener('touchstart',e=>{
 
 window.addEventListener('touchmove',e=>{
   if(!isTouching||modalOpen)return;
+  if(clockPopOpen)closeClockPop();
   const y=e.touches[0].clientY;
   const delta=touchLastY-y;touchLastY=y;
 
@@ -444,6 +509,8 @@ window.addEventListener('touchmove',e=>{
       if(delta>0) undockGuard=false;
       else return;
     }
+
+    // Mobile: swipe up outside clock face → skip rotation, go straight to push
     if(isMobileTouch&&!touchOnFace&&delta>0){
       clearTimeout(snapTimer);
       if(animFrame){cancelAnimationFrame(animFrame);animFrame=null;isSnapping=false;}
@@ -455,14 +522,17 @@ window.addEventListener('touchmove',e=>{
 
     let newAngle=rawAngle+delta*0.5;
     if(delta>0)totalForwardScroll+=delta*0.5;
+
     const baseLoop=Math.floor(rawAngle/360)*360;
     const target360=baseLoop+360;
+
     const normCurrent=((rawAngle%360)+360)%360;
     if(normCurrent>=180) visitedPast180=true;
     if(normCurrent<10) visitedPast180=false;
 
     if(delta>0 && newAngle>=target360){
       const skipThisCrossing=returnedFromBrowse && visitedPast180;
+
       if(skipThisCrossing){
         returnedFromBrowse=false;
         visitedPast180=false;
@@ -510,9 +580,10 @@ window.addEventListener('touchend',()=>{
 // ═══ SKIP TO CONTENT ═══
 function skipToContent(){
   if(phase!=='clock')return;
+  // Snap to target section angle if navigating, otherwise snap to next full rotation
   if(_navTarget!==null){
-    rawAngle=Math.floor(rawAngle/360)*360+_navTarget*45;
-    if(rawAngle<=rawAngle-1)rawAngle+=360;
+    rawAngle=Math.floor(rawAngle/360)*360+_navTarget*90;
+    if(rawAngle<=rawAngle-1)rawAngle+=360; // ensure forward
   }else{
     rawAngle=Math.ceil(rawAngle/360)*360||360;
   }
@@ -529,62 +600,59 @@ function skipToContent(){
 
 // ═══ RE-ENTER CLOCK MODE ═══
 function reenterClockMode(){
-  let returnSection=0;
-  const secIds=['sec-about','sec-work','sec-notes','sec-bookmarks','sec-books','sec-concepts'];
-  const menuMap={'sec-about':2,'sec-work':1,'sec-notes':3,'sec-bookmarks':4,'sec-books':5,'sec-concepts':6};
-  const scrollY=window.scrollY;
-  for(let i=secIds.length-1;i>=0;i--){
-    const el=document.getElementById(secIds[i]);
-    if(el&&el.offsetTop<=scrollY+window.innerHeight*0.4){returnSection=menuMap[secIds[i]];break;}
-  }
-  const returnAngle=returnSection*45;
-
   phase='clock';
   totalForwardScroll=0;dockProgress=0;_anticipationVh=0;_lastCPE='auto';_lastBPE='none';_lastMini=false;
   window.removeEventListener('scroll',updateMiniClockHand);
+
+  // Reset overflow
   document.documentElement.style.overflow='hidden';
   document.body.style.overflow='hidden';
   document.body.style.height='100%';
+
+  // Reset browse content
   browseContent.style.position='fixed';browseContent.style.top='0';
   browseContent.style.transform='translateY(100vh)';browseContent.style.opacity='1';browseContent.style.pointerEvents='none';
   browseContent.style.willChange='';
-  clockScreen.style.display='flex';
+
+  // Show clock
+  clockScreen.style.display='';
   clockScreen.style.transform='';clockScreen.style.opacity='';clockScreen.style.pointerEvents='';
   pageHeader.style.opacity='';sectionTitle.style.opacity='';
   bottomUI.style.display='';bottomUI.style.opacity='';
   skipLinkEl.classList.remove('hidden');
   miniClockBar.classList.remove('visible');
   const miniHand=document.getElementById('miniHand');
-  if(miniHand) miniHand.setAttribute('transform',`rotate(${returnAngle} 50 50)`);
-  rawAngle=returnAngle;springVelocity=0;springTarget=returnAngle;currentSection=returnSection;returnedFromBrowse=false;visitedPast180=false;
-  handContainer.style.transform=`rotate(${returnAngle}deg)`;
-  applyAngle(returnAngle);
-  document.querySelectorAll('.menu-label').forEach(l=>l.classList.toggle('active',+l.dataset.section===returnSection));
-  document.getElementById('activeSectionTitle').textContent=SECTIONS[returnSection].name;
-  document.getElementById('activeSectionDesc').textContent=SECTIONS[returnSection].desc;
+  if(miniHand) miniHand.setAttribute('transform','rotate(0 50 50)');
+
+  // Reset hand
+  rawAngle=0;springVelocity=0;springTarget=0;currentSection=0;returnedFromBrowse=false;visitedPast180=false;
+  handContainer.style.transform='rotate(0deg)';
+  applyAngle(0);
+  document.querySelectorAll('.menu-label').forEach(l=>l.classList.toggle('active',+l.dataset.section===0));
+  document.querySelectorAll('.thumbnail').forEach(t=>{t.classList.toggle('active-quadrant',+t.dataset.quadrant===0);t.classList.remove('focused');});
+  document.querySelectorAll('.indicator-dot').forEach(d=>d.classList.toggle('active',+d.dataset.section===0));
+  document.getElementById('activeSectionTitle').textContent='About';
+  document.getElementById('activeSectionDesc').textContent='Who I am & how to reach me';
 }
 
 // ═══ CLICK NAV ═══
 let _navTarget=null;
+let _pendingNoteIdx=null;
 function navigateTo(s){
   if(modalOpen)return;
-  const target=MENU_TARGETS[s];
-  if(target==='cal'){
-    window.open('https://cal.com/raksha-tated-v2ee58/15min','_blank','noopener,noreferrer');
-    return;
-  }
   if(phase==='browse'){
-    if(target==='top'){window.scrollTo({top:0,behavior:'smooth'});return;}
-    const el=document.getElementById(target);
-    if(el)el.scrollIntoView({behavior:'smooth',block:'start'});
+    const target=document.getElementById(['sec-about','sec-work','sec-notes','sec-bookmarks'][s]);
+    if(target)target.scrollIntoView({behavior:'smooth',block:'start'});
     return;
   }
+  // In clock mode: skip to browse and scroll to the section
   _navTarget=s;
   skipToContent();
 }
 
 // ═══ KEYBOARD ═══
 document.addEventListener('keydown',e=>{
+  if(e.key==='Escape'&&clockPopOpen){closeClockPop();return;}
   if(e.key==='Escape'&&modalOpen){closeModal();return;}
   if(modalOpen&&e.key==='ArrowRight'){carouselNext();return;}
   if(modalOpen&&e.key==='ArrowLeft'){carouselPrev();return;}
@@ -603,7 +671,181 @@ document.addEventListener('keydown',e=>{
   }
 });
 
+// ═══ THUMBNAILS ═══
+function renderThumbnails(){
+  const r=clockFace.getBoundingClientRect();
+  const cx=r.width/2,cy=r.height/2;
+  const isMobile=window.innerWidth<=480;
+  // On portrait mobile: elliptical orbit matching tall clock shape
+  const rx=cx*(isMobile?0.84:0.78);
+  const ry=cy*(isMobile?0.80:0.78);
+  const sz=parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--thumbnail-size'));
+  for(let q=0;q<4;q++){
+    [3,6,9,12].forEach((pos,idx)=>{
+      const a=((q*15+pos)*6-90)*(Math.PI/180);
+      const x=cx+rx*Math.cos(a),y=cy+ry*Math.sin(a);
+      const th=document.createElement('div');
+      th.className='thumbnail';th.dataset.quadrant=q;th.dataset.index=idx;
+      th.style.cssText=`position:absolute;left:${x-sz/2}px;top:${y-sz/2}px;width:${sz}px;height:${sz}px;`;
+      const ph=document.createElement('div');
+      ph.className='thumbnail-placeholder';
+      if(q===2){
+        ph.className='thumbnail-placeholder notes-icon';
+        ph.style.background='#fff';ph.style.padding='0';ph.style.overflow='hidden';
+        ph.innerHTML=`<div class="ni-yellow"></div><div class="ni-dots"></div><div class="ni-lines"><span></span><span></span></div>`;
+      }else if(THUMB_IMAGES[q]&&THUMB_IMAGES[q][idx]){
+        ph.style.background='none';ph.style.padding='0';ph.style.overflow='hidden';
+        ph.innerHTML=`<img src="${THUMB_IMAGES[q][idx]}" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:inherit;">`;
+      }else if(THUMB_SVGS[q]&&THUMB_SVGS[q][idx]){
+        ph.style.background=THUMB_COLORS[q]?THUMB_COLORS[q][idx]:'#E8E4E0';
+        ph.innerHTML=THUMB_SVGS[q][idx];
+        ph.style.display='flex';ph.style.alignItems='center';ph.style.justifyContent='center';
+        ph.style.color='rgba(0,0,0,0.4)';
+      }else{
+        ph.style.background=THUMB_COLORS[q]?THUMB_COLORS[q][idx]:'#ccc';
+        ph.textContent=PROJECTS[q][idx].title.substring(0,2).toUpperCase();
+      }
+      th.appendChild(ph);
+      th.addEventListener('click',()=>{
+        if(clockPopOpen)closeClockPop();
+        const thumbAngle=(q*15+[3,6,9,12][idx])*6;
+        springToAngle(thumbAngle,true);
+        if(q===0){
+          // About section: open social links directly
+          const link=PROJECTS[q][idx].link;
+          if(link&&link!=='#')window.open(link,'_blank','noopener,noreferrer');
+        }
+        else{openClockPop(q,idx,th);}
+      });
+      clockFace.appendChild(th);
+    });
+  }
+}
+
+// ═══ CLOCK THUMBNAIL POPOVER ═══
+const clockPopWrap=document.getElementById('clockPopWrap');
+const clockPop=document.getElementById('clockPop');
+const clockPopScrim=document.getElementById('clockPopScrim');
+let clockPopOpen=false;
+
+function openClockPop(q,idx,thumbEl){
+  const project=PROJECTS[q][idx];
+  let html='';
+
+  // Work section (q===1): preview + "View case study" button
+  if(q===1){
+    html+=`<div class="cpop-title">${project.title}</div>`;
+    if(project.tags?.length){
+      html+=`<div class="cpop-tags">${project.tags.map(t=>`<span class="cpop-tag">${t}</span>`).join('')}</div>`;
+    }
+    const desc=typeof project.desc==='string'?project.desc:project.desc;
+    html+=`<div class="cpop-desc">${desc}</div>`;
+    html+=`<button class="cpop-link cpop-view-case" data-pidx="${project._puzzleIdx}">View case study \u2192</button>`;
+  }
+  // Notes section (q===2): preview with "View full note" button; 4th item = coming soon
+  else if(q===2&&idx===3){
+    html+=`<div class="cpop-title">${project.title}</div>`;
+    html+=`<div class="cpop-desc" style="color:var(--accent);font-weight:500;">Coming soon</div>`;
+  }else if(q===2){
+    html+=`<div class="cpop-title">${project.title}</div>`;
+    if(project.tags?.length){
+      html+=`<div class="cpop-tags">${project.tags.map(t=>`<span class="cpop-tag">${t}</span>`).join('')}</div>`;
+    }
+    const desc=Array.isArray(project.desc)?project.desc[0]:project.desc;
+    html+=`<div class="cpop-desc">${desc}</div>`;
+    html+=`<button class="cpop-link cpop-view-note" data-q="${q}" data-idx="${idx}">View full note \u2192</button>`;
+  }else{
+    html+=`<div class="cpop-title">${project.title}</div>`;
+    if(typeof project.desc==='string'){
+      html+=`<div class="cpop-desc">${project.desc}</div>`;
+    }else if(Array.isArray(project.desc)){
+      html+=`<div class="cpop-desc">${project.desc[0]}</div>`;
+    }
+    if(project.tags?.length){
+      html+=`<div class="cpop-tags">${project.tags.map(t=>`<span class="cpop-tag">${t}</span>`).join('')}</div>`;
+    }
+    if(project.link&&project.link!=='#'){
+      const display=project.link.replace('https://','').replace('mailto:','');
+      html+=`<a class="cpop-link" href="${project.link}" target="_blank">${display} \u2197</a>`;
+    }
+  }
+  clockPop.innerHTML=html;
+
+  // Attach "View case study" click handler — open puzzle modal
+  const caseBtn=clockPop.querySelector('.cpop-view-case');
+  if(caseBtn){
+    caseBtn.addEventListener('click',()=>{
+      const pi=+caseBtn.dataset.pidx;
+      closeClockPop();
+      openPuzzleModal(PUZZLE_PROJECTS[pi]);
+    });
+  }
+
+  // Attach "View full note" click handler — navigate to Notes section and open the note
+  const noteBtn=clockPop.querySelector('.cpop-view-note');
+  if(noteBtn){
+    noteBtn.addEventListener('click',()=>{
+      const ni=+noteBtn.dataset.idx;
+      closeClockPop();
+      _navTarget=2;
+      _pendingNoteIdx=ni;
+      skipToContent();
+    });
+  }
+
+  // Position relative to clock face
+  const faceRect=clockFace.getBoundingClientRect();
+  const thumbRect=thumbEl.getBoundingClientRect();
+  const thumbCX=thumbRect.left+thumbRect.width/2-faceRect.left;
+  const thumbBottom=thumbRect.bottom-faceRect.top;
+  const thumbTop=thumbRect.top-faceRect.top;
+  const popWidth=200;
+  const gap=8;
+
+  // Horizontal — center on thumb, allow extending beyond clock face
+  let left=thumbCX-popWidth/2;
+  left=Math.max(-20,Math.min(left,faceRect.width-popWidth+20));
+  clockPopWrap.style.left=left+'px';
+  clockPopWrap.style.right='';
+
+  // Vertical — try below, flip above if needed
+  clockPopWrap.style.visibility='hidden';
+  clockPopWrap.style.top=(thumbBottom+gap)+'px';
+  clockPopWrap.classList.add('open');
+  const popH=clockPop.offsetHeight;
+  clockPopWrap.classList.remove('open');
+  clockPopWrap.style.visibility='';
+
+  // Allow popover to extend below clock face (no longer clipped)
+  const spaceBelow=faceRect.height-thumbBottom-gap+40;
+  if(spaceBelow>=popH){
+    clockPopWrap.style.top=(thumbBottom+gap)+'px';
+  }else{
+    clockPopWrap.style.top=(thumbTop-gap-popH)+'px';
+  }
+
+  // Highlight thumb
+  document.querySelectorAll('.thumbnail').forEach(t=>t.classList.remove('focused'));
+  thumbEl.classList.add('focused');
+
+  clockPopWrap.classList.remove('open');
+  clockPopWrap.offsetHeight;
+  clockPopWrap.classList.add('open');
+  clockPopScrim.classList.add('open');
+  clockPopOpen=true;
+}
+
+function closeClockPop(){
+  clockPopWrap.classList.remove('open');
+  clockPopScrim.classList.remove('open');
+  document.querySelectorAll('.thumbnail').forEach(t=>t.classList.remove('focused'));
+  clockPopOpen=false;
+}
+
+clockPopScrim.addEventListener('click',closeClockPop);
+
 // ═══ MODAL ═══
+// 3D tilt state
 const TILT_MAX=0.6;
 let tiltRX=0,tiltRY=0,tiltTargetRX=0,tiltTargetRY=0,tiltVelRX=0,tiltVelRY=0;
 let tiltCardCX=0,tiltCardCY=0,tiltCardW=0,tiltCardH=0;
@@ -667,18 +909,23 @@ function _showModal(project,originEl){
   tagsEl.innerHTML=project.tags.map(t=>`<span class="modal-tag">${t}</span>`).join('');
   if(project.link&&project.link!=='#')tagsEl.innerHTML+=`<a class="modal-tag link" href="${project.link}" target="_blank">${project.link.replace('https://','').replace('mailto:','')} ↗</a>`;
   renderModalDesc(project,0);
+  // Reset modal body scroll
   if(modalBody){modalBody.scrollTop=0;modalBody.classList.remove('has-scroll-fade');modalBody.classList.remove('has-bottom-fade');}
   modalOverlay.classList.add('open');
   modalCard.style.willChange='transform';
   document.body.style.overflow='hidden';
+  // Check overflow after layout settles
   requestAnimationFrame(()=>{if(modalBody){
     const hasOverflow=modalBody.scrollHeight>modalBody.clientHeight+4;
     modalBody.classList.toggle('has-bottom-fade',hasOverflow);
   }});
   updateCarouselButtons();
+
+  // Scale-in + tilt init
   tiltRX=0;tiltRY=0;tiltTargetRX=0;tiltTargetRY=0;tiltVelRX=0;tiltVelRY=0;
   const isMobileModal=window.matchMedia('(max-width:480px)').matches;
   if(isMobileModal){
+    // Mobile: let CSS slide-up transition handle everything — don't touch transform
   }else if(!prefersReducedMotion){
     let scaleP=0;
     function scaleIn(){
@@ -696,6 +943,7 @@ function _showModal(project,originEl){
     modalCard.style.transform='none';
   }
 }
+function openModal(q,idx,thumbEl){_showModal(PROJECTS[q][idx],thumbEl);}
 function openPuzzleModal(project){_showModal(project,null);}
 function recheckScrollLine(){
   requestAnimationFrame(()=>{if(modalBody){
@@ -711,7 +959,7 @@ function closeModal(){
   clockScreen.style.filter='';
   const isMobileClose=window.matchMedia('(max-width:480px)').matches;
   if(!isMobileClose){modalCard.style.transform='';modalCard.style.willChange='';}
-  else{modalCard.style.willChange='';}
+  else{modalCard.style.willChange='';} // Mobile: leave transform to CSS transition
   if(modalBody){modalBody.classList.remove('has-bottom-fade');modalBody.classList.remove('has-scroll-fade');}
   if(tiltRaf){cancelAnimationFrame(tiltRaf);tiltRaf=null;}
   if(dockProgress>0)applyDockProgress(dockProgress);else clockScreen.style.transform='';
@@ -741,6 +989,7 @@ function carouselPrev(){
 }
 
 // ═══ INIT ═══
+renderThumbnails();
 handContainer.style.transform='rotate(0deg)';
 
 // ═══ SHOW MORE PROJECTS ═══
@@ -769,44 +1018,21 @@ if(puzzleShowMore){
     }
   });
 }
+document.querySelectorAll('.thumbnail[data-quadrant="0"]').forEach(t=>t.classList.add('active-quadrant'));
 applyDockProgress(0);
 
-// Default to browse mode on load
+// Default to browse mode on load — clock is accessible via mini dock icon
 enterBrowseMode();
 miniClockBar.classList.add('visible');
 _lastMini=true;
 
-// ═══ CMS ═══
-async function loadPortfolioData(){
-  try{
-    const res=await fetch('/portfolio-data.json');
-    if(!res.ok)return;
-    const data=await res.json();
-  }catch(e){}
-}
-loadPortfolioData();
-
-// ═══ PUZZLE CARDS ═══
-document.querySelectorAll('.puzzle-card[data-project]').forEach(card=>{
-  card.addEventListener('click',()=>{
-    const idx=+card.dataset.project;
-    const project=PUZZLE_PROJECTS[idx];
-    if(!project) return;
-    openPuzzleModal(project);
-  });
-});
-
-// Expose to window for inline onclick handlers in HTML
+// Expose functions to global scope for onclick handlers in HTML
 window.navigateTo = navigateTo;
 window.closeModal = closeModal;
 window.carouselPrev = carouselPrev;
 window.carouselNext = carouselNext;
 window.reenterClockMode = reenterClockMode;
 window.skipToContent = skipToContent;
+window.openModal = openModal;
 window.openPuzzleModal = openPuzzleModal;
 
-// ═══ RESIZE ═══
-let rt;
-window.addEventListener('resize',()=>{
-  clearTimeout(rt);rt=setTimeout(()=>{},200);
-});

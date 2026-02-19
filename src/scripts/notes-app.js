@@ -380,3 +380,8 @@ renderList();
 document.addEventListener('keydown',e=>{
   if(e.key==='Escape'&&currentNote!==null){closeNote();}
 });
+
+// Listen for open-note events from clock popover
+document.addEventListener('open-note',e=>{
+  if(e.detail&&typeof e.detail.idx==='number')openNote(e.detail.idx);
+});

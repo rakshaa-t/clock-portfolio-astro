@@ -21,14 +21,10 @@ import '../styles/global.css';
   </div>
   <div class="clock-wrapper">
     <div class="clock-face" id="clockFace">
-      <div class="menu-label active" data-pos="12" data-section="0" onclick="navigateTo(0)">Home</div>
-      <div class="menu-label" data-pos="1:30" data-section="1" onclick="navigateTo(1)">Work</div>
-      <div class="menu-label" data-pos="3" data-section="2" onclick="navigateTo(2)">Clients</div>
-      <div class="menu-label" data-pos="4:30" data-section="3" onclick="navigateTo(3)">Writings</div>
-      <div class="menu-label" data-pos="6" data-section="4" onclick="navigateTo(4)">Archive</div>
-      <div class="menu-label" data-pos="7:30" data-section="5" onclick="navigateTo(5)">Readings</div>
-      <div class="menu-label" data-pos="9" data-section="6" onclick="navigateTo(6)">Concepts</div>
-      <div class="menu-label" data-pos="10:30" data-section="7" onclick="navigateTo(7)">Book a call</div>
+      <div class="menu-label active" data-pos="12" data-section="0" onclick="navigateTo(0)">About<span class="label-sub">Contact</span><span class="label-hover">Explore about me</span></div>
+      <div class="menu-label" data-pos="3" data-section="1" onclick="navigateTo(1)">Work<span class="label-sub">Projects</span><span class="label-hover">Explore all work</span></div>
+      <div class="menu-label" data-pos="6" data-section="2" onclick="navigateTo(2)">Notes<span class="label-sub">Articles</span><span class="label-hover">Explore all notes</span></div>
+      <div class="menu-label" data-pos="9" data-section="3" onclick="navigateTo(3)">Mymind<span class="label-sub">Saves</span><span class="label-hover">Explore all saves</span></div>
       <div class="hand-container" id="handContainer">
         <svg class="hand-svg" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet">
           <defs>
@@ -47,10 +43,12 @@ import '../styles/global.css';
         </svg>
       </div>
     </div>
+    <div class="clock-pop-wrap" id="clockPopWrap"><div class="clock-pop" id="clockPop"></div></div>
+    <div class="clock-pop-scrim" id="clockPopScrim"></div>
   </div>
   <div class="active-section-title" id="sectionTitle">
-    <h2 id="activeSectionTitle">Home</h2>
-    <p class="section-desc" id="activeSectionDesc"></p>
+    <h2 id="activeSectionTitle">About</h2>
+    <p class="section-desc" id="activeSectionDesc">Who I am & how to reach me</p>
   </div>
 </div>
 
@@ -92,6 +90,12 @@ import '../styles/global.css';
 
 <!-- ═══ BOTTOM UI ═══ -->
 <div class="bottom-ui" id="bottomUI">
+  <div class="section-indicator" id="sectionIndicator">
+    <div class="indicator-dot active" data-section="0" onclick="navigateTo(0)"></div>
+    <div class="indicator-dot" data-section="1" onclick="navigateTo(1)"></div>
+    <div class="indicator-dot" data-section="2" onclick="navigateTo(2)"></div>
+    <div class="indicator-dot" data-section="3" onclick="navigateTo(3)"></div>
+  </div>
   <span class="skip-link" id="skipLink" onclick="skipToContent()">skip to content <svg class="skip-chevron" width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="2 3 5 6 8 3"/></svg></span>
 </div>
 
@@ -106,8 +110,8 @@ import '../styles/global.css';
 
       <div class="about-bio">
         <p>I've spent five years designing products and about a year engineering them. I'm highly optimistic about the future of AI in product building.</p>
-        <p><span class="about-bio-sub">I've worked with <span class="about-drop-trigger" data-drop="agencies">agencies</span>, <span class="about-drop-trigger" data-drop="companies">product companies</span> and some <span class="about-drop-trigger" data-drop="leaders">amazing leaders</span> to bring their vision to life.</span> My personal favourite domains have been consumer iOS apps, healthcare platforms and AI softwares. My designs have reached a cumulative 2.9M+ users across all the platforms I've worked on, and the product companies I've worked with have cumulatively raised $250M+.</p>
-        <p>If you'd like to work with me, feel free to <a href="https://cal.com/raksha-tated-v2ee58/15min" class="about-bio-link" data-cal-link="raksha-tated-v2ee58/15min" data-cal-config='{"layout":"month_view"}' onclick="event.preventDefault()">book a call</a> or email <a href="mailto:hey@raksha.design" class="about-bio-link" id="aboutEmailLink">hey@raksha.design</a>. You can expect a response within 12 hours of sending an email.</p>
+        <p>My design work primarily focuses on tech, healthcare and consumer apps, creating bold and innovative products and websites. I also take on select client work, mainly monthly retainers.</p>
+        <p>To see if we're a good fit, feel free to <a href="https://cal.com/raksha-tated-v2ee58/15min" class="about-bio-link" data-cal-link="raksha-tated-v2ee58/15min" data-cal-config='{"layout":"month_view"}' onclick="event.preventDefault()">book a call</a> or email <a href="mailto:hey@raksha.design" class="about-bio-link" id="aboutEmailLink">hey@raksha.design</a>. You can expect a response within 12 hours of sending an email.</p>
         <p>If you'd like to say hello or ask a question, feel free to send me a <a href="https://x.com/rakshaa_t" class="about-bio-link" target="_blank" rel="noopener noreferrer">DM on X</a> where I'm most active.</p>
       </div>
 
@@ -130,7 +134,7 @@ import '../styles/global.css';
 
       <div class="about-details">
         <div class="about-detail">
-          <span class="about-detail-label">Timezones</span>
+          <span class="about-detail-label">Location</span>
           <span class="about-detail-value">
             <span class="toggle" id="locationToggle" role="switch" aria-checked="false" tabindex="0"><span class="toggle-knob"></span></span>
             <span id="locationText">IST and UTC+0</span>
@@ -138,7 +142,7 @@ import '../styles/global.css';
         </div>
         <div class="about-detail">
           <span class="about-detail-label">Status</span>
-          <span class="about-detail-value"><span class="led"></span>In the studio</span>
+          <span class="about-detail-value"><span class="led"></span>Available for select projects</span>
         </div>
         <div class="about-detail">
           <span class="about-detail-label">Stack</span>
@@ -381,33 +385,16 @@ import '../styles/global.css';
     </div>
 
 
-    <!-- ═══ CONCEPTS — Coming Soon ═══ -->
-    <div class="browse-section" id="sec-concepts">
-      <h2>Concepts</h2>
-      <p class="subtitle">Experiments & explorations.</p>
-      <div class="concepts-coming-soon">
-        <p>Coming soon</p>
-      </div>
-    </div>
-
   </div>
 </div>
 
 <script>
   import '../scripts/clock-engine.js';
 </script>
-<script>
-  import '../scripts/kindle-app.js';
-</script>
-<script>
-  import '../scripts/notes-app.js';
-</script>
-<script>
-  import '../scripts/mymind-app.js';
-</script>
-<script>
-  import '../scripts/about-section.js';
-</script>
+<script>import '../scripts/kindle-app.js';</script>
+<script>import '../scripts/notes-app.js';</script>
+<script>import '../scripts/mymind-app.js';</script>
+<script>import '../scripts/about-section.js';</script>
 
 <script is:inline>
   (function (C, A, L) { let p = function (a, ar) { a.q.push(ar); }; let d = C.document; C.Cal = C.Cal || function () { let cal = C.Cal; let ar = arguments; if (!cal.loaded) { cal.ns = {}; cal.q = cal.q || []; d.head.appendChild(d.createElement("script")).src = A; cal.loaded = true; } if (ar[0] === L) { const api = function () { p(api, arguments); }; const namespace = ar[1]; api.q = api.q || []; if(typeof namespace === "string"){cal.ns[namespace] = cal.ns[namespace] || api;p(cal.ns[namespace], ar);p(cal, ["initNamespace", namespace]);} else p(cal, ar); return;} p(cal, ar); }; })(window, "https://app.cal.com/embed/embed.js", "init");
