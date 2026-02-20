@@ -1850,9 +1850,25 @@ a.about-dropdown-item:hover{opacity:0.7;}
   }
   .kindle-detail-cover{width:35%;margin:10px auto 10px;flex-shrink:1;min-height:0;}
   .kindle-detail-meta{margin-bottom:8px;}
-  .kindle-detail-subtitle{font-size:12px;}
+  .kindle-detail-subtitle{font-size:14px;}
   .kindle-detail-progress-wrap{margin-bottom:10px;}
   .kindle-detail-notes-btn{flex-shrink:0;}
+
+  /* Kindle text — bump 12px → 14px for mobile readability */
+  .kindle-topbar-title{font-size:14px;}
+  .kindle-brand{font-size:14px;}
+  .kindle-detail-by{font-size:14px;}
+  .kindle-detail-fav{font-size:14px;}
+  .kindle-detail-progress-label{font-size:14px;}
+  .kindle-detail-progress-text{font-size:14px;}
+  .kindle-detail-progress-pct{font-size:14px;}
+  .kindle-detail-notes-btn{font-size:14px;}
+  .kindle-fav svg{width:14px;height:14px;}
+  .kindle-drawer-title{font-size:14px;}
+  .kindle-drawer-close{width:28px;height:28px;font-size:16px;}
+  .kindle-highlight-bar{font-size:14px;}
+  .kindle-highlight-note{font-size:14px;}
+  .kindle-no-notes{font-size:14px;}
 
   /* Highlights drawer — fill entire kindle screen on mobile */
   .kindle-drawer{max-height:100%;height:100%;border-radius:0;}
