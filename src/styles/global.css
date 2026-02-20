@@ -1816,8 +1816,11 @@ a.about-dropdown-item:hover{opacity:0.7;}
     border-radius:20px 20px 0 0;
     padding-bottom:env(safe-area-inset-bottom, 0px);
   }
+  .modal-card-inner.image-only{
+    height:min(75dvh,480px);
+  }
   .modal-carousel{height:220px;}
-  .modal-card-inner.image-only .modal-carousel{height:100%;}
+  .modal-card-inner.image-only .modal-carousel{height:100%;flex:1;}
   .modal-card-inner.image-only .modal-body{display:none;}
   .carousel-btn{width:30px;height:30px;font-size:14px;}
   .modal-body{padding:20px 20px 32px;}

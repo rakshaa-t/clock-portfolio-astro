@@ -22,7 +22,7 @@ let pushHandAngle=0;          // extra hand rotation during push (winding down)
 const _AC=window.AudioContext||window.webkitAudioContext;
 let _actx=null,_lastTick=0,_soundOn=true;
 
-// Mobile: AudioContext starts suspended — resume on first user gesture
+// Mobile: AudioContext starts suspended — resume on every user gesture
 function _ensureAudioCtx(){
   if(!_actx)_actx=new _AC();
   if(_actx.state==='suspended')_actx.resume();
@@ -30,12 +30,17 @@ function _ensureAudioCtx(){
 }
 let _audioUnlocked=false;
 function _unlockAudio(){
+  _ensureAudioCtx();
   if(_audioUnlocked)return;
   _audioUnlocked=true;
-  _ensureAudioCtx();
+  // Play silent buffer to fully unlock audio on iOS
+  const b=_actx.createBuffer(1,1,_actx.sampleRate);
+  const s=_actx.createBufferSource();s.buffer=b;
+  s.connect(_actx.destination);s.start(0);
 }
-document.addEventListener('touchstart',_unlockAudio,{once:true,passive:true});
-document.addEventListener('click',_unlockAudio,{once:true});
+document.addEventListener('touchstart',_unlockAudio,{passive:true});
+document.addEventListener('touchend',_unlockAudio,{passive:true});
+document.addEventListener('click',_unlockAudio);
 
 // Sound knob toggle
 const _knob=document.getElementById('soundKnob');
