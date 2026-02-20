@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://raksha.design/sitemap.xml

@@ -18,3 +18,4 @@ Thumbs.db
 
 # Session logs
 *.txt
+!public/robots.txt
