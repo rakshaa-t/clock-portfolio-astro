@@ -1,0 +1,84 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="Changelog — Raksha Tated" description="Version history and updates to raksha.design">
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500;600&display=swap');
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{
+    background:#E4E0DA;color:#3A3632;
+    font-family:'Geist',-apple-system,BlinkMacSystemFont,sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  .changelog{max-width:520px;margin:0 auto;padding:80px 24px 120px;}
+  .changelog-back{
+    display:inline-flex;align-items:center;gap:6px;
+    font-family:'Geist Mono',monospace;font-size:12px;font-weight:500;
+    letter-spacing:0.08em;text-transform:uppercase;color:#8A857D;
+    text-decoration:none;margin-bottom:48px;
+  }
+  .changelog-back:hover{color:#3A3632;}
+  .changelog-back svg{width:14px;height:14px;}
+  .changelog h1{
+    font-family:'Geist',sans-serif;font-size:28px;font-weight:600;
+    letter-spacing:-0.02em;margin-bottom:8px;color:#3A3632;
+  }
+  .changelog-subtitle{
+    font-size:14px;color:#8A857D;margin-bottom:48px;line-height:1.5;
+  }
+  .changelog-entry{margin-bottom:48px;}
+  .changelog-version{
+    display:inline-block;
+    font-family:'Geist Mono',monospace;font-size:12px;font-weight:600;
+    letter-spacing:0.08em;text-transform:uppercase;color:#8B7EC8;
+    margin-bottom:6px;
+  }
+  .changelog-date{
+    font-family:'Geist Mono',monospace;font-size:12px;color:#B0AAA2;
+    letter-spacing:0.04em;margin-bottom:12px;
+  }
+  .changelog-title{
+    font-size:16px;font-weight:600;color:#3A3632;margin-bottom:8px;
+  }
+  .changelog-list{
+    list-style:none;padding:0;
+  }
+  .changelog-list li{
+    position:relative;padding-left:16px;font-size:14px;line-height:1.7;color:#5A5550;
+  }
+  .changelog-list li::before{
+    content:'';position:absolute;left:0;top:10px;
+    width:4px;height:4px;border-radius:50%;background:#B0AAA2;
+  }
+</style>
+
+<div class="changelog">
+  <a href="/portfolio" class="changelog-back">
+    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10 12L6 8l4-4"/></svg>
+    Back
+  </a>
+
+  <h1>Changelog</h1>
+  <p class="changelog-subtitle">What's new and what's changed on this site.</p>
+
+  <div class="changelog-entry">
+    <div class="changelog-version">V1.0.0</div>
+    <div class="changelog-date">February 2025</div>
+    <div class="changelog-title">Initial launch</div>
+    <ul class="changelog-list">
+      <li>Clock-based navigation with 4-quadrant menu</li>
+      <li>Interactive project showcase with puzzle grid</li>
+      <li>Apple Notes-style writing section</li>
+      <li>Mymind bookmark board with masonry grid</li>
+      <li>Kindle e-reader with book highlights and star ratings</li>
+      <li>About section with company and leader dropdowns</li>
+      <li>Cal.com booking integration</li>
+      <li>Skeuomorphic design language throughout</li>
+      <li>Synthesized clock tick and UI sounds</li>
+    </ul>
+  </div>
+</div>
+
+</Layout>

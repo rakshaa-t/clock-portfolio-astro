@@ -1101,6 +1101,19 @@ a.about-dropdown-item:hover{opacity:0.7;}
   background:var(--bg);
 }
 .browse-inner{max-width:680px;margin:0 auto;}
+
+/* ═══ SITE FOOTER ═══ */
+.site-footer{
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  padding:40px 24px 48px;
+  border-top:1px solid rgba(0,0,0,0.06);
+  font-family:'Geist Mono',monospace;font-size:12px;font-weight:500;
+  letter-spacing:0.1em;text-transform:uppercase;color:var(--text-muted);
+}
+.footer-sep{opacity:0.4;}
+.footer-link{color:var(--text-muted);text-decoration:none;}
+.footer-link:hover{text-decoration:underline;color:var(--text-secondary);}
+
 .browse-section{padding:64px 24px;border-bottom:1px solid rgba(0,0,0,0.04);text-align:left;}
 .browse-section:last-child{border-bottom:none;}
 .browse-section-label{
