@@ -416,7 +416,7 @@ button.cpop-view-note,button.cpop-view-case{background:none;border:none;padding:
 .modal-case-study-link{
   position:absolute;bottom:14px;left:50%;transform:translateX(-50%);
   padding:6px 16px;border-radius:10px;
-  background:rgba(237,234,230,0.7);color:var(--accent);
+  background:rgba(237,234,230,0.7);color:var(--text-primary);
   font-family:'Geist',sans-serif;font-size:13px;font-weight:500;letter-spacing:0.01em;
   text-decoration:none;white-space:nowrap;
   backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
