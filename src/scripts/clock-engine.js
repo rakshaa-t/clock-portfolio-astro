@@ -137,7 +137,8 @@ const pageHeader=document.getElementById('pageHeader');
 const sectionTitle=document.getElementById('sectionTitle');
 
 // Cache NodeLists for per-frame use
-const _allThumbnails=document.querySelectorAll('.thumbnail');
+let _allThumbnails=document.querySelectorAll('.thumbnail');
+let _thumbsRendered=false;
 const _allMenuLabels=document.querySelectorAll('.menu-label');
 const _allIndicatorDots=document.querySelectorAll('.indicator-dot');
 
@@ -604,6 +605,13 @@ function reenterClockMode(){
   totalForwardScroll=0;dockProgress=0;_anticipationVh=0;_lastCPE='auto';_lastBPE='none';_lastMini=false;
   window.removeEventListener('scroll',updateMiniClockHand);
 
+  // Render thumbnails on first clock entry (deferred because clock starts display:none)
+  if(!_thumbsRendered){
+    renderThumbnails();
+    _allThumbnails=document.querySelectorAll('.thumbnail');
+    _thumbsRendered=true;
+  }
+
   // Reset overflow
   document.documentElement.style.overflow='hidden';
   document.body.style.overflow='hidden';
@@ -989,7 +997,6 @@ function carouselPrev(){
 }
 
 // ═══ INIT ═══
-renderThumbnails();
 handContainer.style.transform='rotate(0deg)';
 
 // ═══ SHOW MORE PROJECTS ═══
@@ -1018,7 +1025,6 @@ if(puzzleShowMore){
     }
   });
 }
-document.querySelectorAll('.thumbnail[data-quadrant="0"]').forEach(t=>t.classList.add('active-quadrant'));
 applyDockProgress(0);
 
 // Default to browse mode on load — clock is accessible via mini dock icon
