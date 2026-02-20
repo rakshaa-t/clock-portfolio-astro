@@ -922,9 +922,7 @@ function _showModal(project,originEl){
   tagsEl.innerHTML=project.tags.map(t=>`<span class="modal-tag">${t}</span>`).join('');
   if(project.link&&project.link!=='#')tagsEl.innerHTML+=`<a class="modal-tag link" href="${project.link}" target="_blank">${project.link.replace('https://','').replace('mailto:','')} ↗</a>`;
   const isImageOnly=!!project.images&&!project.desc;
-  document.getElementById('modalTitle').style.display=isImageOnly?'none':'';
-  tagsEl.style.display=isImageOnly?'none':'';
-  document.getElementById('modalDesc').style.display=isImageOnly?'none':'';
+  document.querySelector('.modal-card-inner').classList.toggle('image-only',isImageOnly);
   if(!isImageOnly) renderModalDesc(project,0);
   else document.getElementById('modalDesc').innerHTML='';
   const caseStudyLink=document.getElementById('modalCaseStudyLink');
