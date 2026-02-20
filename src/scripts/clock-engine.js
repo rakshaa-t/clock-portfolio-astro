@@ -922,7 +922,9 @@ function _showModal(project,originEl){
       return `<div class="carousel-slide"><div class="carousel-slide-color" style="background:${s}">${i===0?project.title.substring(0,2).toUpperCase():'IMG '+(i+1)}</div></div>`;
     }).join('');
   }
-  document.getElementById('carouselCounter').textContent=isComingSoon?'':`1 / ${slides.length}`;
+  const counterEl=document.getElementById('carouselCounter');
+  counterEl.textContent=(isComingSoon||slides.length===1)?'':`1 / ${slides.length}`;
+  counterEl.style.display=(isComingSoon||slides.length===1)?'none':'';
   document.getElementById('modalTitle').textContent=project.title;
   const tagsEl=document.getElementById('modalTags');
   tagsEl.innerHTML=project.tags.map(t=>`<span class="modal-tag">${t}</span>`).join('');
@@ -936,9 +938,10 @@ function _showModal(project,originEl){
   const caseStudyLink=document.getElementById('modalCaseStudyLink');
   if(isImageOnly&&project.link&&project.link!=='#'){caseStudyLink.href=project.link;caseStudyLink.style.display='';}
   else{caseStudyLink.style.display='none';}
-  // Hide carousel nav for coming soon
-  document.querySelector('.carousel-btn.prev').style.display=isComingSoon?'none':'';
-  document.querySelector('.carousel-btn.next').style.display=isComingSoon?'none':'';
+  // Hide carousel nav for single-slide or coming soon
+  const hideNav=isComingSoon||slides.length===1;
+  document.querySelector('.carousel-btn.prev').style.display=hideNav?'none':'';
+  document.querySelector('.carousel-btn.next').style.display=hideNav?'none':'';
   // Reset modal body scroll
   if(modalBody){modalBody.scrollTop=0;modalBody.classList.remove('has-scroll-fade');modalBody.classList.remove('has-bottom-fade');}
   modalOverlay.classList.add('open');
