@@ -916,9 +916,11 @@ function _showModal(project,originEl){
   if(isComingSoon){
     track.innerHTML=`<div class="carousel-slide"><div class="carousel-slide-color" style="background:${slides[0]}"><span class="coming-soon-label">Coming soon</span></div></div>`;
   }else{
+    const bg=project.slides?project.slides[0]:'#333';
+    const fitClass=project.images&&project.images.length===1?'single-media':'';
     track.innerHTML=slides.map((s,i)=>{
-      if(project.images&&s.endsWith('.mp4')) return `<div class="carousel-slide"><video src="${s}" autoplay loop muted playsinline></video></div>`;
-      if(project.images) return `<div class="carousel-slide"><img src="${s}" alt="${project.title} slide ${i+1}" loading="${i<2?'eager':'lazy'}" draggable="false"></div>`;
+      if(project.images&&s.endsWith('.mp4')) return `<div class="carousel-slide ${fitClass}" style="background:${bg}"><video src="${s}" autoplay muted playsinline preload="metadata"></video></div>`;
+      if(project.images) return `<div class="carousel-slide ${fitClass}" style="background:${bg}"><img src="${s}" alt="${project.title} slide ${i+1}" loading="${i<2?'eager':'lazy'}" draggable="false"></div>`;
       return `<div class="carousel-slide"><div class="carousel-slide-color" style="background:${s}">${i===0?project.title.substring(0,2).toUpperCase():'IMG '+(i+1)}</div></div>`;
     }).join('');
   }
@@ -942,6 +944,8 @@ function _showModal(project,originEl){
   const hideNav=isComingSoon||slides.length===1;
   document.querySelector('.carousel-btn.prev').style.display=hideNav?'none':'';
   document.querySelector('.carousel-btn.next').style.display=hideNav?'none':'';
+  // Pause card videos to free GPU/CPU
+  document.querySelectorAll('.puzzle-card video').forEach(v=>{try{v.pause();}catch(e){}});
   // Reset modal body scroll
   if(modalBody){modalBody.scrollTop=0;modalBody.classList.remove('has-scroll-fade');modalBody.classList.remove('has-bottom-fade');}
   modalOverlay.classList.add('open');
@@ -987,6 +991,8 @@ function recheckScrollLine(){
 }
 function closeModal(){
   modalOpen=false;
+  // Stop and release modal videos immediately
+  document.querySelectorAll('#carouselTrack video').forEach(v=>{try{v.pause();v.removeAttribute('src');v.load();}catch(e){}});
   modalOverlay.classList.remove('open');
   document.body.style.overflow='';
   clockScreen.style.filter='';
@@ -996,6 +1002,8 @@ function closeModal(){
   if(modalBody){modalBody.classList.remove('has-bottom-fade');modalBody.classList.remove('has-scroll-fade');}
   if(tiltRaf){cancelAnimationFrame(tiltRaf);tiltRaf=null;}
   if(dockProgress>0)applyDockProgress(dockProgress);else clockScreen.style.transform='';
+  // Resume card videos
+  document.querySelectorAll('.puzzle-card video').forEach(v=>{try{v.play();}catch(e){}});
 }
 function updateTitleTagsVisibility(){
   const isImageOnly=currentModalData&&!!currentModalData.images&&!currentModalData.desc;
