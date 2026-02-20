@@ -927,6 +927,9 @@ function _showModal(project,originEl){
   document.getElementById('modalDesc').style.display=isImageOnly?'none':'';
   if(!isImageOnly) renderModalDesc(project,0);
   else document.getElementById('modalDesc').innerHTML='';
+  const caseStudyLink=document.getElementById('modalCaseStudyLink');
+  if(isImageOnly&&project.link&&project.link!=='#'){caseStudyLink.href=project.link;caseStudyLink.style.display='';}
+  else{caseStudyLink.style.display='none';}
   // Reset modal body scroll
   if(modalBody){modalBody.scrollTop=0;modalBody.classList.remove('has-scroll-fade');modalBody.classList.remove('has-bottom-fade');}
   modalOverlay.classList.add('open');
