@@ -1,9 +1,7 @@
-import { prefersReducedMotion } from './shared.js';
-
 // ═══ ABOUT — click sounds + toggle ═══
 function _getCtx(){
   const audio=window.__clockAudio;
-  if(!audio||!audio.soundOn||prefersReducedMotion)return null;
+  if(!audio||!audio.soundOn)return null;
   return audio.ensure();
 }
 function aboutClickSound(type){
