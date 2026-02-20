@@ -1004,8 +1004,11 @@ function closeModal(){
   if(modalBody){modalBody.classList.remove('has-bottom-fade');modalBody.classList.remove('has-scroll-fade');}
   if(tiltRaf){cancelAnimationFrame(tiltRaf);tiltRaf=null;}
   if(dockProgress>0)applyDockProgress(dockProgress);else clockScreen.style.transform='';
-  // Resume card videos
-  document.querySelectorAll('.puzzle-card video').forEach(v=>{try{v.play();}catch(e){}});
+  // Resume visible card videos (observer handles play/pause based on visibility)
+  document.querySelectorAll('.puzzle-card video').forEach(v=>{
+    const r=v.getBoundingClientRect();
+    if(r.bottom>0&&r.top<window.innerHeight) v.play().catch(()=>{});
+  });
 }
 function updateTitleTagsVisibility(){
   const isImageOnly=currentModalData&&!!currentModalData.images&&!currentModalData.desc;
@@ -1080,6 +1083,18 @@ document.querySelectorAll('.puzzle-card[data-project]').forEach(card=>{
   }
   card.addEventListener('click',()=>openPuzzleModal(proj));
 });
+
+// ═══ LAZY VIDEO PLAYBACK — only play visible card videos ═══
+const _cardVideos=document.querySelectorAll('.puzzle-card video');
+if(_cardVideos.length){
+  const vidObs=new IntersectionObserver(entries=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting&&!modalOpen) e.target.play().catch(()=>{});
+      else e.target.pause();
+    });
+  },{threshold:0.25});
+  _cardVideos.forEach(v=>vidObs.observe(v));
+}
 
 applyDockProgress(0);
 
