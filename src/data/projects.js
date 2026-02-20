@@ -9,7 +9,7 @@ export const PUZZLE_PROJECTS=[
   {title:'IndianOil Dashboard',tags:['Dashboard','Enterprise'],link:'#',comingSoon:true,slides:['#7E8EC8']},
   {title:'DealDoc',tags:['SaaS','Dashboard','2025'],link:'#',comingSoon:true,slides:['#8BA8C4']},
   {title:'ADiagnosis',tags:['Medical','AI'],link:'#',comingSoon:true,slides:['#B090C8']},
-  {title:'Vault DeFi',tags:['DeFi','Web3'],link:'#',images:['/projects/vault-defi.jpg'],slides:['#8DA8C0']},
+  {title:'Vault DeFi',tags:['DeFi','Web3'],externalLink:'',slides:['#8DA8C0']},
   {title:'Cycling App',tags:['Mobile','Fitness'],externalLink:'',slides:['#7E9EB8']},
   {title:'Chain Landing',tags:['Web3','Landing'],externalLink:'',slides:['#9488C8']},
   {title:'Data Collection',tags:['Dashboard','Tool'],externalLink:'',slides:['#8BA8C4']},
