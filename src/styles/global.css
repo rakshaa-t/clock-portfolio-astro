@@ -342,7 +342,7 @@ button.cpop-view-note,button.cpop-view-case{background:none;border:none;padding:
 /* Carousel */
 .modal-carousel{
   position:relative;width:100%;height:320px;overflow:hidden;
-  background:var(--bg-inset);flex-shrink:0;
+  background:var(--bg);flex-shrink:0;
 }
 .modal-card-inner.image-only .modal-carousel{height:100%;flex:1;}
 .modal-card-inner.image-only .modal-body{display:none;}

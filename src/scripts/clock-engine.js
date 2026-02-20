@@ -921,11 +921,10 @@ function _showModal(project,originEl){
   if(isComingSoon){
     track.innerHTML=`<div class="carousel-slide"><div class="carousel-slide-color" style="background:${slides[0]}"><span class="coming-soon-label">Coming soon</span></div></div>`;
   }else{
-    const bg=project.slides?project.slides[0]:'#333';
     const fitClass=project.images&&project.images.length===1?'single-media':'';
     track.innerHTML=slides.map((s,i)=>{
-      if(project.images&&s.endsWith('.mp4')) return `<div class="carousel-slide ${fitClass}" style="background:${bg}"><video src="${s}" autoplay muted playsinline preload="metadata"></video></div>`;
-      if(project.images) return `<div class="carousel-slide ${fitClass}" style="background:${bg}"><img src="${s}" alt="${project.title} slide ${i+1}" loading="${i<2?'eager':'lazy'}" draggable="false"></div>`;
+      if(project.images&&s.endsWith('.mp4')) return `<div class="carousel-slide ${fitClass}"><video src="${s}" autoplay muted playsinline preload="metadata"></video></div>`;
+      if(project.images) return `<div class="carousel-slide ${fitClass}"><img src="${s}" alt="${project.title} slide ${i+1}" loading="${i<2?'eager':'lazy'}" draggable="false"></div>`;
       return `<div class="carousel-slide"><div class="carousel-slide-color" style="background:${s}">${i===0?project.title.substring(0,2).toUpperCase():'IMG '+(i+1)}</div></div>`;
     }).join('');
   }

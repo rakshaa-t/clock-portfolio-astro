@@ -354,16 +354,24 @@ document.getElementById('anotesFooterCopy').addEventListener('click',()=>{
 });
 
 // Magic Mouse click sound
-let _mouseClickBuf=null;
+let _mouseClickBuf=null,_mouseClickRaw=null;
 fetch('/magic-mouse-click.mp3')
   .then(r=>r.arrayBuffer())
-  .then(ab=>{
-    const ctx=new(_AC)();
-    return ctx.decodeAudioData(ab).then(buf=>{_mouseClickBuf=buf;ctx.close();});
-  }).catch(()=>{});
+  .then(ab=>{_mouseClickRaw=ab;})
+  .catch(()=>{});
+function _ensureClickBuf(){
+  if(_mouseClickBuf||!_mouseClickRaw)return;
+  const audio=window.__clockAudio;
+  if(!audio)return;
+  const ctx=audio.ensure();
+  if(!ctx)return;
+  ctx.decodeAudioData(_mouseClickRaw.slice(0)).then(buf=>{_mouseClickBuf=buf;_mouseClickRaw=null;}).catch(()=>{});
+}
 function noteClickSound(){
   const audio=window.__clockAudio;
-  if(!audio||!audio.soundOn||!_mouseClickBuf)return;
+  if(!audio||!audio.soundOn)return;
+  _ensureClickBuf();
+  if(!_mouseClickBuf)return;
   const ctx=audio.ensure();
   if(!ctx)return;
   const src=ctx.createBufferSource();

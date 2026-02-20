@@ -1,29 +1,26 @@
 import { prefersReducedMotion } from './shared.js';
 
 // ═══ ABOUT — click sounds + toggle ═══
-const AboutAudioCtx=window.AudioContext||window.webkitAudioContext;
-let aboutAudioCtx=null;
-function _ensureAboutCtx(){
-  if(!aboutAudioCtx)aboutAudioCtx=new AboutAudioCtx();
-  if(aboutAudioCtx.state==='suspended')aboutAudioCtx.resume();
-  return aboutAudioCtx;
+function _getCtx(){
+  const audio=window.__clockAudio;
+  if(!audio||!audio.soundOn||prefersReducedMotion)return null;
+  return audio.ensure();
 }
 function aboutClickSound(type){
-  const audio=window.__clockAudio;
-  if(!audio||!audio.soundOn||prefersReducedMotion)return;
-  _ensureAboutCtx();
-  const t=aboutAudioCtx.currentTime;
-  const bufLen=aboutAudioCtx.sampleRate*0.015;
-  const buf=aboutAudioCtx.createBuffer(1,bufLen,aboutAudioCtx.sampleRate);
+  const ctx=_getCtx();
+  if(!ctx)return;
+  const t=ctx.currentTime;
+  const bufLen=ctx.sampleRate*0.015;
+  const buf=ctx.createBuffer(1,bufLen,ctx.sampleRate);
   const d=buf.getChannelData(0);
   for(let i=0;i<bufLen;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/bufLen,3);
-  const src=aboutAudioCtx.createBufferSource();src.buffer=buf;
-  const bp=aboutAudioCtx.createBiquadFilter();
+  const src=ctx.createBufferSource();src.buffer=buf;
+  const bp=ctx.createBiquadFilter();
   bp.type='bandpass';bp.frequency.value=type==='primary'?2200:3400;bp.Q.value=type==='primary'?1.2:1.8;
-  const g=aboutAudioCtx.createGain();
+  const g=ctx.createGain();
   g.gain.setValueAtTime(type==='primary'?0.5:0.35,t);
   g.gain.exponentialRampToValueAtTime(0.001,t+0.025);
-  src.connect(bp);bp.connect(g);g.connect(aboutAudioCtx.destination);
+  src.connect(bp);bp.connect(g);g.connect(ctx.destination);
   src.start(t);src.stop(t+0.025);
 }
 const aboutPrimaryBtn=document.querySelector('.about-cta-primary');
@@ -37,41 +34,41 @@ document.querySelectorAll('.about-cta-strip .about-cta').forEach(btn=>{
 });
 
 // Stack cards shuffle sound
-let stackGain=null,stackSrc=null;
+let stackGain=null,stackSrc=null,_stackCtx=null;
 function stackShuffleStart(){
-  const audio=window.__clockAudio;
-  if(!audio||!audio.soundOn||prefersReducedMotion)return;
-  _ensureAboutCtx();
+  const ctx=_getCtx();
+  if(!ctx)return;
+  _stackCtx=ctx;
   stackShuffleStop();
-  const t=aboutAudioCtx.currentTime;
+  const t=ctx.currentTime;
   const dur=0.25;
-  const bufLen=Math.ceil(aboutAudioCtx.sampleRate*dur);
-  const buf=aboutAudioCtx.createBuffer(1,bufLen,aboutAudioCtx.sampleRate);
+  const bufLen=Math.ceil(ctx.sampleRate*dur);
+  const buf=ctx.createBuffer(1,bufLen,ctx.sampleRate);
   const d=buf.getChannelData(0);
   for(let i=0;i<bufLen;i++){
     const p=i/bufLen;
     const env=Math.sin(p*Math.PI)*Math.pow(1-p,0.6);
     d[i]=(Math.random()*2-1)*env;
   }
-  stackSrc=aboutAudioCtx.createBufferSource();stackSrc.buffer=buf;
-  const bp=aboutAudioCtx.createBiquadFilter();
+  stackSrc=ctx.createBufferSource();stackSrc.buffer=buf;
+  const bp=ctx.createBiquadFilter();
   bp.type='bandpass';bp.Q.value=0.7;
   bp.frequency.setValueAtTime(1000,t);
   bp.frequency.linearRampToValueAtTime(3200,t+dur);
-  stackGain=aboutAudioCtx.createGain();
+  stackGain=ctx.createGain();
   stackGain.gain.setValueAtTime(0.25,t);
   stackGain.gain.exponentialRampToValueAtTime(0.001,t+dur);
-  stackSrc.connect(bp);bp.connect(stackGain);stackGain.connect(aboutAudioCtx.destination);
+  stackSrc.connect(bp);bp.connect(stackGain);stackGain.connect(ctx.destination);
   stackSrc.start(t);stackSrc.stop(t+dur);
   stackSrc.onended=()=>{stackSrc=null;stackGain=null;};
 }
 function stackShuffleStop(){
-  if(stackGain&&aboutAudioCtx){
-    try{stackGain.gain.cancelScheduledValues(aboutAudioCtx.currentTime);
-    stackGain.gain.setValueAtTime(stackGain.gain.value,aboutAudioCtx.currentTime);
-    stackGain.gain.exponentialRampToValueAtTime(0.001,aboutAudioCtx.currentTime+0.03);}catch(e){}
+  if(stackGain&&_stackCtx){
+    try{stackGain.gain.cancelScheduledValues(_stackCtx.currentTime);
+    stackGain.gain.setValueAtTime(stackGain.gain.value,_stackCtx.currentTime);
+    stackGain.gain.exponentialRampToValueAtTime(0.001,_stackCtx.currentTime+0.03);}catch(e){}
   }
-  if(stackSrc){try{stackSrc.stop(aboutAudioCtx.currentTime+0.03);}catch(e){}}
+  if(stackSrc&&_stackCtx){try{stackSrc.stop(_stackCtx.currentTime+0.03);}catch(e){}}
   stackSrc=null;stackGain=null;
 }
 const stackCardsEl=document.querySelector('.stack-cards');
