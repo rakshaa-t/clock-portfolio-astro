@@ -304,8 +304,7 @@ function applyDockProgress(p){
   if(cpe!==_lastCPE){clockScreen.style.pointerEvents=cpe;_lastCPE=cpe;}
   const bpe=p>0.85?'auto':'none';
   if(bpe!==_lastBPE){browseContent.style.pointerEvents=bpe;_lastBPE=bpe;}
-  const mv=p>0.7;
-  if(mv!==_lastMini){miniClockBar.classList.toggle('hidden',!mv);_lastMini=mv;}
+  // Mini clock bar always visible — no toggling
 }
 
 // ═══ UNIFIED SCROLL HANDLER ═══
@@ -633,7 +632,6 @@ function reenterClockMode(){
   pageHeader.style.opacity='';sectionTitle.style.opacity='';
   bottomUI.style.display='flex';bottomUI.style.opacity='';
   skipLinkEl.classList.remove('hidden');
-  miniClockBar.classList.add('hidden');
   const miniHand=document.getElementById('miniHand');
   if(miniHand) miniHand.setAttribute('transform','rotate(0 50 50)');
 
@@ -758,7 +756,7 @@ function openClockPop(q,idx,thumbEl){
   // Notes section (q===2): preview with "View full note" button; 4th item = coming soon
   else if(q===2&&idx===3){
     html+=`<div class="cpop-title">${project.title}</div>`;
-    html+=`<div class="cpop-desc" style="color:var(--accent);font-weight:500;">Coming soon</div>`;
+    html+=`<div class="cpop-desc" style="color:var(--accent);font-weight:500;">I'm working on it</div>`;
   }else if(q===2){
     html+=`<div class="cpop-title">${project.title}</div>`;
     if(project.tags?.length){
@@ -919,7 +917,7 @@ function _showModal(project,originEl){
   const isComingSoon=!!project.comingSoon;
   const slides=project.images||project.slides;
   if(isComingSoon){
-    track.innerHTML=`<div class="carousel-slide"><div class="carousel-slide-color" style="background:${slides[0]}"><span class="coming-soon-label">Coming soon</span></div></div>`;
+    track.innerHTML=`<div class="carousel-slide"><div class="carousel-slide-color" style="background:${slides[0]}"><span class="coming-soon-label">I'm working on it</span></div></div>`;
   }else{
     const fitClass=project.images&&project.images.length===1?'single-media':'';
     track.innerHTML=slides.map((s,i)=>{
@@ -1081,11 +1079,23 @@ miniClockBar.classList.remove('hidden');
 _lastMini=true;
 
 // Expose functions to global scope for onclick handlers in HTML
+function toggleClockBrowse(){
+  if(phase==='browse') reenterClockMode();
+  else{
+    // Skip rotation, jump straight to browse
+    clearTimeout(snapTimer);
+    if(animFrame){cancelAnimationFrame(animFrame);animFrame=null;isSnapping=false;}
+    rawAngle=Math.ceil(rawAngle/360)*360||360;
+    applyAngle(rawAngle);
+    enterBrowseMode();
+  }
+}
 window.navigateTo = navigateTo;
 window.closeModal = closeModal;
 window.carouselPrev = carouselPrev;
 window.carouselNext = carouselNext;
 window.reenterClockMode = reenterClockMode;
+window.toggleClockBrowse = toggleClockBrowse;
 window.skipToContent = skipToContent;
 window.openModal = openModal;
 window.openPuzzleModal = openPuzzleModal;
