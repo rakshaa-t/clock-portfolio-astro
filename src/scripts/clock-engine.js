@@ -892,10 +892,11 @@ if(!prefersReducedMotion){
   modalCard.addEventListener('mouseleave',()=>{tiltTargetRX=0;tiltTargetRY=0;});
 }
 
+function _slideCount(p){return (p.images||p.slides).length;}
 function updateCarouselButtons(){
   if(!currentModalData)return;
   document.querySelector('.carousel-btn.prev').disabled=(carouselIndex===0);
-  document.querySelector('.carousel-btn.next').disabled=(carouselIndex===currentModalData.slides.length-1);
+  document.querySelector('.carousel-btn.next').disabled=(carouselIndex===_slideCount(currentModalData)-1);
 }
 
 function renderModalDesc(project,slideIdx){
@@ -910,13 +911,22 @@ function _showModal(project,originEl){
   track.style.transform='translateX(0)';
   track.offsetHeight;
   track.style.transition='';
-  track.innerHTML=project.slides.map((c,i)=>`<div class="carousel-slide"><div class="carousel-slide-color" style="background:${c}">${i===0?project.title.substring(0,2).toUpperCase():'IMG '+(i+1)}</div></div>`).join('');
-  document.getElementById('carouselCounter').textContent=`1 / ${project.slides.length}`;
+  const slides=project.images||project.slides;
+  track.innerHTML=slides.map((s,i)=>{
+    if(project.images) return `<div class="carousel-slide"><img src="${s}" alt="${project.title} slide ${i+1}" loading="${i<2?'eager':'lazy'}" draggable="false"></div>`;
+    return `<div class="carousel-slide"><div class="carousel-slide-color" style="background:${s}">${i===0?project.title.substring(0,2).toUpperCase():'IMG '+(i+1)}</div></div>`;
+  }).join('');
+  document.getElementById('carouselCounter').textContent=`1 / ${slides.length}`;
   document.getElementById('modalTitle').textContent=project.title;
   const tagsEl=document.getElementById('modalTags');
   tagsEl.innerHTML=project.tags.map(t=>`<span class="modal-tag">${t}</span>`).join('');
   if(project.link&&project.link!=='#')tagsEl.innerHTML+=`<a class="modal-tag link" href="${project.link}" target="_blank">${project.link.replace('https://','').replace('mailto:','')} ↗</a>`;
-  renderModalDesc(project,0);
+  const isImageOnly=!!project.images&&!project.desc;
+  document.getElementById('modalTitle').style.display=isImageOnly?'none':'';
+  tagsEl.style.display=isImageOnly?'none':'';
+  document.getElementById('modalDesc').style.display=isImageOnly?'none':'';
+  if(!isImageOnly) renderModalDesc(project,0);
+  else document.getElementById('modalDesc').innerHTML='';
   // Reset modal body scroll
   if(modalBody){modalBody.scrollTop=0;modalBody.classList.remove('has-scroll-fade');modalBody.classList.remove('has-bottom-fade');}
   modalOverlay.classList.add('open');
@@ -973,15 +983,17 @@ function closeModal(){
   if(dockProgress>0)applyDockProgress(dockProgress);else clockScreen.style.transform='';
 }
 function updateTitleTagsVisibility(){
+  const isImageOnly=currentModalData&&!!currentModalData.images&&!currentModalData.desc;
+  if(isImageOnly)return; // image-only modals never show title/tags
   const show=carouselIndex===0;
   document.getElementById('modalTitle').style.display=show?'':'none';
   document.getElementById('modalTags').style.display=show?'':'none';
 }
 function carouselNext(){
-  if(!currentModalData||carouselIndex>=currentModalData.slides.length-1)return;
+  if(!currentModalData||carouselIndex>=_slideCount(currentModalData)-1)return;
   carouselIndex++;
   document.getElementById('carouselTrack').style.transform=`translateX(-${carouselIndex*100}%)`;
-  document.getElementById('carouselCounter').textContent=`${carouselIndex+1} / ${currentModalData.slides.length}`;
+  document.getElementById('carouselCounter').textContent=`${carouselIndex+1} / ${_slideCount(currentModalData)}`;
   if(Array.isArray(currentModalData.desc)){renderModalDesc(currentModalData,carouselIndex);recheckScrollLine();}
   updateTitleTagsVisibility();
   updateCarouselButtons();
@@ -990,7 +1002,7 @@ function carouselPrev(){
   if(!currentModalData||carouselIndex<=0)return;
   carouselIndex--;
   document.getElementById('carouselTrack').style.transform=`translateX(-${carouselIndex*100}%)`;
-  document.getElementById('carouselCounter').textContent=`${carouselIndex+1} / ${currentModalData.slides.length}`;
+  document.getElementById('carouselCounter').textContent=`${carouselIndex+1} / ${_slideCount(currentModalData)}`;
   if(Array.isArray(currentModalData.desc)){renderModalDesc(currentModalData,carouselIndex);recheckScrollLine();}
   updateTitleTagsVisibility();
   updateCarouselButtons();
@@ -1025,6 +1037,15 @@ if(puzzleShowMore){
     }
   });
 }
+
+// ═══ PUZZLE CARD CLICK HANDLERS ═══
+document.querySelectorAll('.puzzle-card[data-project]').forEach(card=>{
+  card.addEventListener('click',()=>{
+    const idx=parseInt(card.dataset.project,10);
+    if(PUZZLE_PROJECTS[idx]) openPuzzleModal(PUZZLE_PROJECTS[idx]);
+  });
+});
+
 applyDockProgress(0);
 
 // Default to browse mode on load — clock is accessible via mini dock icon

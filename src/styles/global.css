@@ -351,6 +351,10 @@ button.cpop-view-note,button.cpop-view-case{background:none;border:none;padding:
   display:flex;align-items:center;justify-content:center;
   font-size:28px;font-weight:600;color:rgba(255,255,255,0.85);
 }
+.carousel-slide img{
+  width:100%;height:100%;object-fit:contain;background:#000;
+  -webkit-user-drag:none;user-select:none;
+}
 .carousel-counter{
   position:absolute;top:12px;left:12px;
   background:rgba(58,54,50,0.4);color:rgba(255,255,255,0.8);
