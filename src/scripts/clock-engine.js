@@ -911,24 +911,34 @@ function _showModal(project,originEl){
   track.style.transform='translateX(0)';
   track.offsetHeight;
   track.style.transition='';
+  const isComingSoon=!!project.comingSoon;
   const slides=project.images||project.slides;
-  track.innerHTML=slides.map((s,i)=>{
-    if(project.images&&s.endsWith('.mp4')) return `<div class="carousel-slide"><video src="${s}" autoplay loop muted playsinline></video></div>`;
-    if(project.images) return `<div class="carousel-slide"><img src="${s}" alt="${project.title} slide ${i+1}" loading="${i<2?'eager':'lazy'}" draggable="false"></div>`;
-    return `<div class="carousel-slide"><div class="carousel-slide-color" style="background:${s}">${i===0?project.title.substring(0,2).toUpperCase():'IMG '+(i+1)}</div></div>`;
-  }).join('');
-  document.getElementById('carouselCounter').textContent=`1 / ${slides.length}`;
+  if(isComingSoon){
+    track.innerHTML=`<div class="carousel-slide"><div class="carousel-slide-color" style="background:${slides[0]}"><span class="coming-soon-label">Coming soon</span></div></div>`;
+  }else{
+    track.innerHTML=slides.map((s,i)=>{
+      if(project.images&&s.endsWith('.mp4')) return `<div class="carousel-slide"><video src="${s}" autoplay loop muted playsinline></video></div>`;
+      if(project.images) return `<div class="carousel-slide"><img src="${s}" alt="${project.title} slide ${i+1}" loading="${i<2?'eager':'lazy'}" draggable="false"></div>`;
+      return `<div class="carousel-slide"><div class="carousel-slide-color" style="background:${s}">${i===0?project.title.substring(0,2).toUpperCase():'IMG '+(i+1)}</div></div>`;
+    }).join('');
+  }
+  document.getElementById('carouselCounter').textContent=isComingSoon?'':`1 / ${slides.length}`;
   document.getElementById('modalTitle').textContent=project.title;
   const tagsEl=document.getElementById('modalTags');
   tagsEl.innerHTML=project.tags.map(t=>`<span class="modal-tag">${t}</span>`).join('');
   if(project.link&&project.link!=='#')tagsEl.innerHTML+=`<a class="modal-tag link" href="${project.link}" target="_blank">${project.link.replace('https://','').replace('mailto:','')} <svg class="cta-arrow" width="11" height="11" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12L12 4"/><path d="M5 4h7v7"/></svg></a>`;
   const isImageOnly=!!project.images&&!project.desc;
-  document.querySelector('.modal-card-inner').classList.toggle('image-only',isImageOnly);
-  if(!isImageOnly) renderModalDesc(project,0);
+  const innerEl=document.querySelector('.modal-card-inner');
+  innerEl.classList.toggle('image-only',isImageOnly||isComingSoon);
+  innerEl.classList.toggle('coming-soon',isComingSoon);
+  if(!isImageOnly&&!isComingSoon) renderModalDesc(project,0);
   else document.getElementById('modalDesc').innerHTML='';
   const caseStudyLink=document.getElementById('modalCaseStudyLink');
   if(isImageOnly&&project.link&&project.link!=='#'){caseStudyLink.href=project.link;caseStudyLink.style.display='';}
   else{caseStudyLink.style.display='none';}
+  // Hide carousel nav for coming soon
+  document.querySelector('.carousel-btn.prev').style.display=isComingSoon?'none':'';
+  document.querySelector('.carousel-btn.next').style.display=isComingSoon?'none':'';
   // Reset modal body scroll
   if(modalBody){modalBody.scrollTop=0;modalBody.classList.remove('has-scroll-fade');modalBody.classList.remove('has-bottom-fade');}
   modalOverlay.classList.add('open');
