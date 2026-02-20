@@ -605,13 +605,6 @@ function reenterClockMode(){
   totalForwardScroll=0;dockProgress=0;_anticipationVh=0;_lastCPE='auto';_lastBPE='none';_lastMini=false;
   window.removeEventListener('scroll',updateMiniClockHand);
 
-  // Render thumbnails on first clock entry (deferred because clock starts display:none)
-  if(!_thumbsRendered){
-    renderThumbnails();
-    _allThumbnails=document.querySelectorAll('.thumbnail');
-    _thumbsRendered=true;
-  }
-
   // Reset overflow
   document.documentElement.style.overflow='hidden';
   document.body.style.overflow='hidden';
@@ -624,6 +617,13 @@ function reenterClockMode(){
 
   // Show clock
   clockScreen.style.display='flex';
+
+  // Render thumbnails on first clock entry (deferred because clock starts display:none)
+  if(!_thumbsRendered){
+    renderThumbnails();
+    _allThumbnails=document.querySelectorAll('.thumbnail');
+    _thumbsRendered=true;
+  }
   clockScreen.style.transform='';clockScreen.style.opacity='';clockScreen.style.pointerEvents='';
   pageHeader.style.opacity='';sectionTitle.style.opacity='';
   bottomUI.style.display='flex';bottomUI.style.opacity='';
