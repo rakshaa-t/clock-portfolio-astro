@@ -1839,10 +1839,10 @@ a.about-dropdown-item:hover{opacity:0.7;}
   /* Mini clock bar — move to bottom-left, aligned with sound knob */
   .mini-clock-bar{
     top:auto;bottom:20px;left:16px;right:auto;
-    transform:scale(0.92);transform-origin:bottom left;
+    transform:scale(1);transform-origin:bottom left;
     width:auto;padding:0;
   }
-  .mini-clock-bar.visible{transform:scale(1);}
+  .mini-clock-bar.hidden{transform:scale(0.92);}
 
   /* Section indicator dots — bigger touch targets */
   .indicator-dot{width:10px;height:10px;padding:6px;}

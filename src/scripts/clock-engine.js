@@ -275,7 +275,7 @@ function computeContentStart(){
 }
 
 // Cached threshold states — avoid redundant non-compositor DOM writes per frame
-let _lastCPE='auto',_lastBPE='none',_lastMini=false;
+let _lastCPE='auto',_lastBPE='none',_lastMini=true;
 
 function applyDockProgress(p){
   dockProgress=p;
@@ -615,10 +615,10 @@ function reenterClockMode(){
   browseContent.style.willChange='';
 
   // Show clock
-  clockScreen.style.display='';
+  clockScreen.style.display='flex';
   clockScreen.style.transform='';clockScreen.style.opacity='';clockScreen.style.pointerEvents='';
   pageHeader.style.opacity='';sectionTitle.style.opacity='';
-  bottomUI.style.display='';bottomUI.style.opacity='';
+  bottomUI.style.display='flex';bottomUI.style.opacity='';
   skipLinkEl.classList.remove('hidden');
   miniClockBar.classList.add('hidden');
   const miniHand=document.getElementById('miniHand');
@@ -1019,14 +1019,12 @@ if(puzzleShowMore){
   });
 }
 document.querySelectorAll('.thumbnail[data-quadrant="0"]').forEach(t=>t.classList.add('active-quadrant'));
+applyDockProgress(0);
 
-// Browse mode is default via CSS — no applyDockProgress(0) which would push content off-screen
-phase='browse';
-dockProgress=1;
+// Default to browse mode on load — clock is accessible via mini dock icon
+enterBrowseMode();
+miniClockBar.classList.remove('hidden');
 _lastMini=true;
-_lastCPE='none';
-_lastBPE='auto';
-window.addEventListener('scroll',updateMiniClockHand);
 
 // Expose functions to global scope for onclick handlers in HTML
 window.navigateTo = navigateTo;
