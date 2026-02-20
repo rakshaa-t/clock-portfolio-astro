@@ -1305,7 +1305,7 @@ a.about-dropdown-item:hover{opacity:0.7;}
 .note-link{color:#8B7EC8;text-decoration:none;font-weight:500;border-bottom:1px solid rgba(139,126,200,0.25);transition:border-color 0.15s ease;}
 .note-link:hover{border-color:#8B7EC8;}
 .note-link:active{opacity:0.7;}
-.note-link::after{content:' ↗';font-size:12px;opacity:0.5;}
+.note-link::after{content:'';display:inline-block;width:10px;height:10px;margin-left:3px;vertical-align:middle;opacity:0.5;background:currentColor;-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='none' stroke='%23fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 12L12 4'/%3E%3Cpath d='M5 4h7v7'/%3E%3C/svg%3E") no-repeat center/contain;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='none' stroke='%23fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 12L12 4'/%3E%3Cpath d='M5 4h7v7'/%3E%3C/svg%3E") no-repeat center/contain;}
 .note-img{width:100%;border-radius:12px;margin:8px 0 4px;box-shadow:0 2px 12px rgba(0,0,0,0.06);overflow:hidden;background:rgba(0,0,0,0.03);}
 .note-img img,.note-img canvas{width:100%;display:block;border-radius:12px;}
 .note-img-caption{font-size:12px;color:rgba(0,0,0,0.3);margin:6px 0 12px;font-style:italic;}

@@ -921,7 +921,7 @@ function _showModal(project,originEl){
   document.getElementById('modalTitle').textContent=project.title;
   const tagsEl=document.getElementById('modalTags');
   tagsEl.innerHTML=project.tags.map(t=>`<span class="modal-tag">${t}</span>`).join('');
-  if(project.link&&project.link!=='#')tagsEl.innerHTML+=`<a class="modal-tag link" href="${project.link}" target="_blank">${project.link.replace('https://','').replace('mailto:','')} ↗</a>`;
+  if(project.link&&project.link!=='#')tagsEl.innerHTML+=`<a class="modal-tag link" href="${project.link}" target="_blank">${project.link.replace('https://','').replace('mailto:','')} <svg class="cta-arrow" width="11" height="11" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12L12 4"/><path d="M5 4h7v7"/></svg></a>`;
   const isImageOnly=!!project.images&&!project.desc;
   document.querySelector('.modal-card-inner').classList.toggle('image-only',isImageOnly);
   if(!isImageOnly) renderModalDesc(project,0);
