@@ -38,7 +38,7 @@ export const MMIND_CARDS=[
   },
   {
     type:'image', img:'/mymind/aiverse.png', height:100,
-    caption:'Using AI as a Design Engineer',
+    caption:'Using AI as a Product Designer',
     title:'Aiverse \u2014 AI UX Interactions',
     source:'aiverse.design', url:'https://www.aiverse.design/browse',
     tldr:'Playbook for designing AI products \u2014 browsable interaction examples from real products.',
@@ -109,7 +109,7 @@ export const MMIND_CARDS=[
     caption:'Matt Rothenberg',
     title:'Matt Rothenberg \u2014 Portfolio',
     source:'mattrothenberg.com', url:'https://mattrothenberg.com/',
-    tldr:'Design engineer portfolio \u2014 clean, minimal, thoughtful craft.',
+    tldr:'Product designer portfolio \u2014 clean, minimal, thoughtful craft.',
     tags:['Inspiration'], category:'inspiration', date:'1 month ago'
   },
   {
