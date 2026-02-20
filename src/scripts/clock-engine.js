@@ -1065,10 +1065,20 @@ if(puzzleShowMore){
 
 // ═══ PUZZLE CARD CLICK HANDLERS ═══
 document.querySelectorAll('.puzzle-card[data-project]').forEach(card=>{
-  card.addEventListener('click',()=>{
-    const idx=parseInt(card.dataset.project,10);
-    if(PUZZLE_PROJECTS[idx]) openPuzzleModal(PUZZLE_PROJECTS[idx]);
-  });
+  const idx=parseInt(card.dataset.project,10);
+  const proj=PUZZLE_PROJECTS[idx];
+  if(!proj) return;
+  // externalLink projects: open URL in new tab when available, otherwise do nothing
+  if('externalLink' in proj){
+    if(proj.externalLink){
+      card.style.cursor='pointer';
+      card.addEventListener('click',()=>window.open(proj.externalLink,'_blank'));
+    } else {
+      card.style.cursor='default';
+    }
+    return;
+  }
+  card.addEventListener('click',()=>openPuzzleModal(proj));
 });
 
 applyDockProgress(0);
