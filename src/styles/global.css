@@ -1828,8 +1828,11 @@ a.about-dropdown-item:hover{opacity:0.7;}
   .modal-title{font-size:18px;}
   .modal-close{top:10px;right:10px;width:28px;height:28px;font-size:12px;opacity:1;}
 
-  /* Browse content — reduce top space on mobile */
+  /* Browse content — reduce top space, smoother scrolling on mobile */
   .browse-content{padding-top:52px;}
+
+  /* Strip specular highlights from puzzle cards on mobile */
+  .puzzle-card::after{display:none;}
   .browse-section{padding:36px 20px;}
   .browse-section h2{font-size:24px;}
 
@@ -1839,6 +1842,14 @@ a.about-dropdown-item:hover{opacity:0.7;}
     grid-auto-rows:140px;
     gap:10px;
   }
+
+  /* Kindle — kill expensive paint effects on mobile */
+  .kindle-device::before{display:none;}  /* SVG feTurbulence noise + mix-blend-mode */
+  .kindle-device::after{display:none;}   /* gradient overlay */
+  .kindle-screen::before{display:none;}  /* SVG feTurbulence noise + mix-blend-mode */
+  .kindle-screen::after{display:none;}   /* radial-gradient overlay */
+  .kindle-screen.eink-flash{animation:none !important;}  /* filter:brightness repaints */
+  .kindle-device{box-shadow:0 4px 16px rgba(0,0,0,0.25);} /* simplified shadow */
 
   /* Kindle — full width + 2-col grid, taller on mobile */
   .kindle-wrapper{max-width:100%;}
@@ -1874,8 +1885,8 @@ a.about-dropdown-item:hover{opacity:0.7;}
   .kindle-drawer{max-height:100%;height:100%;border-radius:0;}
   .kindle-drawer-handle{display:none;}
 
-  /* Apple Notes — full width, taller on mobile */
-  .anotes-window{border-radius:12px;height:min(580px,75dvh);}
+  /* Apple Notes — full width, taller on mobile, simplified shadow */
+  .anotes-window{border-radius:12px;height:min(580px,75dvh);box-shadow:0 4px 16px rgba(0,0,0,0.1);}
   .reader-title{font-size:20px;}
   .reader-scroll{padding:24px 20px 28px;}
   .popover{width:180px;}
