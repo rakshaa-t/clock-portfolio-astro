@@ -363,8 +363,8 @@ fetch('/magic-mouse-click.mp3')
   }).catch(()=>{});
 function noteClickSound(){
   const audio=window.__clockAudio;
-  if(!audio||!audio.on||!_mouseClickBuf)return;
-  const ctx=audio.ensureCtx();
+  if(!audio||!audio.soundOn||!_mouseClickBuf)return;
+  const ctx=audio.ensure();
   if(!ctx)return;
   const src=ctx.createBufferSource();
   src.buffer=_mouseClickBuf;

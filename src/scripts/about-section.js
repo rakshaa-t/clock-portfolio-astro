@@ -10,7 +10,7 @@ function _ensureAboutCtx(){
 }
 function aboutClickSound(type){
   const audio=window.__clockAudio;
-  if(!audio||!audio.on||prefersReducedMotion)return;
+  if(!audio||!audio.soundOn||prefersReducedMotion)return;
   _ensureAboutCtx();
   const t=aboutAudioCtx.currentTime;
   const bufLen=aboutAudioCtx.sampleRate*0.015;
@@ -40,7 +40,7 @@ document.querySelectorAll('.about-cta-strip .about-cta').forEach(btn=>{
 let stackGain=null,stackSrc=null;
 function stackShuffleStart(){
   const audio=window.__clockAudio;
-  if(!audio||!audio.on||prefersReducedMotion)return;
+  if(!audio||!audio.soundOn||prefersReducedMotion)return;
   _ensureAboutCtx();
   stackShuffleStop();
   const t=aboutAudioCtx.currentTime;
