@@ -1117,6 +1117,7 @@ a.about-dropdown-item:hover{opacity:0.7;}
   min-height:100vh;padding:80px 0 60px;
   pointer-events:auto;
   background:var(--bg);
+  -webkit-overflow-scrolling:touch;
 }
 .browse-inner{max-width:680px;margin:0 auto;}
 
@@ -1839,10 +1840,10 @@ a.about-dropdown-item:hover{opacity:0.7;}
     gap:10px;
   }
 
-  /* Kindle — full width + 2-col grid, scale height to viewport */
+  /* Kindle — full width + 2-col grid, taller on mobile */
   .kindle-wrapper{max-width:100%;}
   .kindle-grid{columns:2;column-gap:10px;}
-  .kindle-library{height:min(calc(100% - 53px),55dvh);}
+  .kindle-library{height:min(calc(100% - 53px),65dvh);}
   .kindle-detail{
     height:calc(100% - 53px);overflow:hidden;
     display:flex;flex-direction:column;padding:0 20px 12px;
@@ -1853,8 +1854,12 @@ a.about-dropdown-item:hover{opacity:0.7;}
   .kindle-detail-progress-wrap{margin-bottom:10px;}
   .kindle-detail-notes-btn{flex-shrink:0;}
 
-  /* Apple Notes — full width, scale height to viewport */
-  .anotes-window{border-radius:12px;height:min(520px,61dvh);}
+  /* Highlights drawer — fill entire kindle screen on mobile */
+  .kindle-drawer{max-height:100%;height:100%;border-radius:0;}
+  .kindle-drawer-handle{display:none;}
+
+  /* Apple Notes — full width, taller on mobile */
+  .anotes-window{border-radius:12px;height:min(580px,75dvh);}
   .reader-title{font-size:20px;}
   .reader-scroll{padding:24px 20px 28px;}
   .popover{width:180px;}

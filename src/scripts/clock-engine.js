@@ -219,7 +219,7 @@ function applyAngle(angle){
     const p=Math.min(1,(progressInLoop-270)/90);
     const eased=p*p;
     _anticipationVh=eased*8;
-    clockScreen.style.transform=`translateY(${-_anticipationVh}vh)`;
+    clockScreen.style.transform=`translate3d(0,${-_anticipationVh}vh,0)`;
     bottomUI.style.opacity=Math.max(0,1-p*1.5);
   } else if(phase==='clock' && progressInLoop>0 && progressInLoop<=270){
     _anticipationVh=0;
@@ -280,8 +280,8 @@ function computeContentStart(){
   }
 }
 
-// Cached threshold states — avoid redundant non-compositor DOM writes per frame
-let _lastCPE='auto',_lastBPE='none',_lastMini=true;
+// Cached threshold states — avoid redundant DOM writes per frame
+let _lastCPE='auto',_lastBPE='none',_lastMini=true,_lastFadeBucket=-1;
 
 function applyDockProgress(p){
   dockProgress=p;
@@ -290,21 +290,25 @@ function applyDockProgress(p){
   const totalScrollVh=contentStartVh-_anticipationVh;
   const scrollVh=_anticipationVh+p*totalScrollVh;
 
-  // Compositor-only properties — safe every frame
-  clockScreen.style.transform=`translateY(${-scrollVh}vh)`;
-  browseContent.style.transform=`translateY(${100*(1-p)}vh)`;
+  // Compositor-only properties — translate3d forces GPU layer
+  clockScreen.style.transform=`translate3d(0,${-scrollVh}vh,0)`;
+  browseContent.style.transform=`translate3d(0,${100*(1-p)}vh,0)`;
 
-  const fadeOut=Math.max(0,1-p*3);
-  pageHeader.style.opacity=fadeOut;
-  sectionTitle.style.opacity=fadeOut;
-  bottomUI.style.opacity=0;
+  // Gate opacity writes — only update when value changes meaningfully (10 steps)
+  const fadeBucket=Math.round(Math.max(0,1-p*3)*10);
+  if(fadeBucket!==_lastFadeBucket){
+    const fadeOut=fadeBucket/10;
+    pageHeader.style.opacity=fadeOut;
+    sectionTitle.style.opacity=fadeOut;
+    _lastFadeBucket=fadeBucket;
+  }
+  if(p>0) bottomUI.style.opacity=0;
 
   // Non-compositor properties — only write when threshold crossed
   const cpe=p>0.3?'none':'auto';
   if(cpe!==_lastCPE){clockScreen.style.pointerEvents=cpe;_lastCPE=cpe;}
   const bpe=p>0.85?'auto':'none';
   if(bpe!==_lastBPE){browseContent.style.pointerEvents=bpe;_lastBPE=bpe;}
-  // Mini clock bar always visible — no toggling
 }
 
 // ═══ UNIFIED SCROLL HANDLER ═══
@@ -443,6 +447,8 @@ function enterBrowseMode(){
   browseContent.style.opacity='1';
   browseContent.style.pointerEvents='auto';
   clockScreen.style.display='none';
+  clockScreen.style.willChange='';
+  browseContent.style.willChange='';
   bottomUI.style.display='none';
   window.scrollTo(0,0);
   window.addEventListener('scroll',updateMiniClockHand);
@@ -519,7 +525,7 @@ window.addEventListener('touchmove',e=>{
     if(isMobileTouch&&!touchOnFace&&delta>0){
       clearTimeout(snapTimer);
       if(animFrame){cancelAnimationFrame(animFrame);animFrame=null;isSnapping=false;}
-      phase='pushing';browseContent.style.willChange='transform';computeContentStart();dockProgress=0;pushDeltas=[];pushHandAngle=0;
+      phase='pushing';clockScreen.style.willChange='transform';browseContent.style.willChange='transform';computeContentStart();dockProgress=0;pushDeltas=[];pushHandAngle=0;
       dockProgress=Math.min(1,delta/PUSH_DISTANCE);
       applyDockProgress(dockProgress);
       return;
@@ -546,7 +552,7 @@ window.addEventListener('touchmove',e=>{
         applyAngle(rawAngle);
         clearTimeout(snapTimer);
         if(animFrame){cancelAnimationFrame(animFrame);animFrame=null;isSnapping=false;}
-        phase='pushing';browseContent.style.willChange='transform';computeContentStart();dockProgress=0;pushDeltas=[];pushHandAngle=0;
+        phase='pushing';clockScreen.style.willChange='transform';browseContent.style.willChange='transform';computeContentStart();dockProgress=0;pushDeltas=[];pushHandAngle=0;
         const overflowPx=(newAngle-target360)*2;
         dockProgress=Math.min(1,overflowPx/PUSH_DISTANCE);
         applyDockProgress(dockProgress);
@@ -616,7 +622,7 @@ function reenterClockMode(){
 
   // Reset browse content
   browseContent.style.position='fixed';browseContent.style.top='0';
-  browseContent.style.transform='translateY(100vh)';browseContent.style.opacity='1';browseContent.style.pointerEvents='none';
+  browseContent.style.transform='translate3d(0,100vh,0)';browseContent.style.opacity='1';browseContent.style.pointerEvents='none';
   browseContent.style.willChange='';
 
   // Show clock
