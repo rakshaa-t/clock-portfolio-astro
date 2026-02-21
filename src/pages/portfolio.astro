@@ -1,70 +1,17 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import '../styles/global.css';
+import { NOTES } from '../data/notes.js';
 ---
 
 <Layout title="Raksha Tated — Product Designer" description="Product Designer. Five years designing products, one year engineering them. Tech, healthcare and consumer apps. Select client work available.">
 
 <!-- ═══ SOUND KNOB ═══ -->
-<div class="sound-knob-wrap">
+<div class="sound-knob-wrap" transition:persist="sound-knob">
   <div class="sound-knob" id="soundKnob">
     <div class="knob-dot"></div>
   </div>
   <span class="knob-tooltip" id="knobTooltip">Sound on</span>
-</div>
-
-<!-- ═══ CLOCK MODE ═══ -->
-<div class="clock-screen" id="clockScreen">
-  <div class="page-header" id="pageHeader">
-    <h1>Raks</h1>
-    <p>Product Designer</p>
-  </div>
-  <div class="clock-wrapper">
-    <div class="clock-face" id="clockFace">
-      <div class="menu-label active" data-pos="12" data-section="0" onclick="navigateTo(0)">About<span class="label-sub">Contact</span><span class="label-hover">Explore about me</span></div>
-      <div class="menu-label" data-pos="3" data-section="1" onclick="navigateTo(1)">Work<span class="label-sub">Projects</span><span class="label-hover">Explore all work</span></div>
-      <div class="menu-label" data-pos="6" data-section="2" onclick="navigateTo(2)">Notes<span class="label-sub">Articles</span><span class="label-hover">Explore all notes</span></div>
-      <div class="menu-label" data-pos="9" data-section="3" onclick="navigateTo(3)">Mymind<span class="label-sub">Saves</span><span class="label-hover">Explore all saves</span></div>
-      <div class="hand-container" id="handContainer">
-        <svg class="hand-svg" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet">
-          <defs>
-            <linearGradient id="handGrad" x1="50" y1="16" x2="50" y2="50" gradientUnits="userSpaceOnUse">
-              <stop offset="0%" stop-color="#5A5550"/>
-              <stop offset="100%" stop-color="#3A3632"/>
-            </linearGradient>
-          </defs>
-          <polygon points="49,16 48.2,48 50,50 51.8,48 51,16" fill="url(#handGrad)"/>
-          <circle cx="50" cy="16" r="1.2" fill="#5A5550"/>
-          <polygon points="49.2,52 50,57 50.8,52" fill="#3A3632"/>
-          <line x1="50" y1="16" x2="50" y2="22" stroke="#8B7EC8" stroke-width="1.6" stroke-linecap="round"/>
-          <circle cx="50" cy="50" r="2.5" fill="#3A3632"/>
-          <circle cx="50" cy="50" r="1.2" fill="#EDEAE6"/>
-          <circle cx="50" cy="50" r="0.5" fill="#8B7EC8"/>
-        </svg>
-      </div>
-    </div>
-    <div class="clock-pop-wrap" id="clockPopWrap"><div class="clock-pop" id="clockPop"></div></div>
-    <div class="clock-pop-scrim" id="clockPopScrim"></div>
-  </div>
-  <div class="active-section-title" id="sectionTitle">
-    <h2 id="activeSectionTitle">About</h2>
-    <p class="section-desc" id="activeSectionDesc">Who I am & how to reach me</p>
-  </div>
-</div>
-
-<!-- ═══ DOCKED MINI CLOCK ═══ -->
-<div class="mini-clock-bar" id="miniClockBar">
-  <div class="mini-clock" id="miniClock" onclick="toggleClockBrowse()">
-    <div class="mini-clock-inner">
-      <svg viewBox="0 0 100 100">
-        <polygon id="miniHand" points="49,20 48.5,48 50,50 51.5,48 51,20" fill="#3A3632"/>
-        <circle cx="50" cy="50" r="3" fill="#3A3632"/>
-        <circle cx="50" cy="50" r="1.5" fill="#EDEAE6"/>
-        <circle cx="50" cy="50" r="0.6" fill="#8B7EC8"/>
-      </svg>
-    </div>
-    <span class="mini-clock-tooltip">Clock mode</span>
-  </div>
 </div>
 
 <!-- ═══ MODAL ═══ -->
@@ -89,20 +36,9 @@ import '../styles/global.css';
   </div>
 </div>
 
-<!-- ═══ BOTTOM UI ═══ -->
-<div class="bottom-ui" id="bottomUI">
-  <div class="section-indicator" id="sectionIndicator">
-    <div class="indicator-dot active" data-section="0" onclick="navigateTo(0)"></div>
-    <div class="indicator-dot" data-section="1" onclick="navigateTo(1)"></div>
-    <div class="indicator-dot" data-section="2" onclick="navigateTo(2)"></div>
-    <div class="indicator-dot" data-section="3" onclick="navigateTo(3)"></div>
-  </div>
-  <span class="skip-link" id="skipLink" onclick="skipToContent()">skip to content <svg class="skip-chevron" width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="2 3 5 6 8 3"/></svg></span>
-</div>
-
-<!-- ═══ BROWSE CONTENT ═══ -->
-<div class="browse-content" id="browseContent">
-  <div class="browse-inner">
+<!-- ═══ PAGE CONTENT ═══ -->
+<main class="page-content">
+  <div class="page-inner">
 
     <!-- ═══ ABOUT — Bio + CTAs ═══ -->
     <div class="browse-section" id="sec-about">
@@ -110,10 +46,8 @@ import '../styles/global.css';
       <p class="subtitle">Product Designer</p>
 
       <div class="about-bio">
-        <p>I've spent five years designing products and about a year engineering them. I'm highly optimistic about the future of AI in product building.</p>
-        <p><span class="about-bio-sub">I've worked with <span class="about-drop-trigger" data-drop="agencies">agencies</span>, <span class="about-drop-trigger" data-drop="companies">product companies</span> and some <span class="about-drop-trigger" data-drop="leaders">amazing leaders</span> to bring their vision to life.</span> My personal favourite domains have been consumer iOS apps, healthcare platforms and AI softwares. My designs have reached a cumulative 2.9M+ users across all the platforms I've worked on, and the product companies I've worked with have cumulatively raised $250M+.</p>
-        <p>If you'd like to work with me, feel free to <a href="https://cal.com/raksha-tated-v2ee58/15min" class="about-bio-link" data-cal-link="raksha-tated-v2ee58/15min" data-cal-config='{"layout":"month_view"}' onclick="event.preventDefault()">book a call</a> or email <a href="mailto:hey@raksha.design" class="about-bio-link" id="aboutEmailLink">hey@raksha.design</a>. You can expect a response within 12 hours of sending an email.</p>
-        <p>If you'd like to say hello or ask a question, feel free to send me a <a href="https://x.com/rakshaa_t" class="about-bio-link" target="_blank" rel="noopener noreferrer">DM on X</a> where I'm most active.</p>
+        <p>I work with <span class="about-drop-trigger" data-drop="agencies">agencies</span>, <span class="about-drop-trigger" data-drop="companies">companies</span> and <span class="about-drop-trigger" data-drop="leaders">founders</span> — mostly on consumer iOS apps, healthcare platforms and AI software. I care a lot about the space between design and code.</p>
+        <p>If you'd like to work together, <a href="https://cal.com/raksha-tated-v2ee58/15min" class="about-bio-link" data-cal-link="raksha-tated-v2ee58/15min" data-cal-config='{"layout":"month_view"}' onclick="event.preventDefault()">book a call</a> or email <a href="mailto:hey@raksha.design" class="about-bio-link" id="aboutEmailLink">hey@raksha.design</a>. I'll get back within 12 hours. For anything else, <a href="https://x.com/rakshaa_t" class="about-bio-link" target="_blank" rel="noopener noreferrer">DM me on X</a>.</p>
       </div>
 
       <div class="about-ctas">
@@ -235,172 +169,81 @@ import '../styles/global.css';
       <button class="puzzle-show-more" id="puzzleShowMore">Show more work</button>
     </div>
 
-    <!-- ═══ NOTES — Articles & writing ═══ -->
+    <!-- ═══ NOTES — Links to individual note pages ═══ -->
     <div class="browse-section" id="sec-notes">
       <h2>Things I'm writing about</h2>
-      <p class="subtitle">I draft everything in Apple Notes. Here's what's open right now.</p>
+      <p class="subtitle">Notes on design, code, and everything in between.</p>
 
-      <div class="anotes-window">
-        <div class="anotes-slider" id="anotesSlider">
-          <!-- LIST VIEW -->
-          <div class="anotes-list-view">
-            <div class="anotes-titlebar">
-              <span class="anotes-titlebar-label">Notes</span>
-              <div class="anotes-titlebar-spacer"></div>
-              <button class="anotes-sort" id="anotesSortBtn" title="Sort by date">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14"/><path d="M19 12l-7 7-7-7"/></svg>
-                <span>Newest</span>
-              </button>
+      <div class="note-cards">
+        {NOTES.map(note => (
+          <a href={`/notes/${note.slug}`} class="note-card">
+            <div class="note-card-date">{note.date}</div>
+            <div class="note-card-title">{note.title}</div>
+            <div class="note-card-preview">{note.preview}</div>
+            <div class="note-card-tags">
+              {(note.tags || []).map(t => <span class="note-card-tag">{t}</span>)}
             </div>
-            <div class="anotes-search-wrap">
-              <div class="anotes-search">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="7"/><line x1="16.5" y1="16.5" x2="21" y2="21"/></svg>
-                <input type="text" class="anotes-search-input" id="anotesSearchInput" placeholder="Search 3 notes" spellcheck="false" autocomplete="off">
-                <button class="anotes-search-clear" id="anotesSearchClear">&times;</button>
-              </div>
-              <div class="search-dropdown" id="anotesSearchDropdown">
-                <div class="search-dropdown-label">Filter by tag</div>
-                <div class="search-dropdown-tags" id="anotesDropdownTags"></div>
-              </div>
-            </div>
-            <div class="anotes-list" id="anotesList"></div>
-            <div class="anotes-no-results" id="anotesNoResults">No notes found</div>
-            <div class="anotes-list-footer" id="anotesListFooter">3 Notes</div>
-          </div>
-          <!-- READER VIEW -->
-          <div class="anotes-reader">
-            <div class="reader-toolbar">
-              <button class="reader-back" id="anotesReaderBack">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
-                Notes
-              </button>
-            </div>
-            <div class="reader-scroll" id="anotesReaderScroll">
-              <div class="reader-date" id="anotesReaderDate"></div>
-              <div class="reader-tags" id="anotesReaderTags"></div>
-              <h1 class="reader-title" id="anotesReaderTitle"></h1>
-              <div class="reader-body" id="anotesReaderBody"></div>
-            </div>
-            <div class="reader-footer">
-              <button class="reader-footer-action" id="anotesFooterCopy">Copy note</button>
-              <button class="reader-footer-action" id="anotesFooterShare">
-                Share on <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" style="margin-left:2px;"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-              </button>
-            </div>
-          </div>
-        </div>
+          </a>
+        ))}
       </div>
     </div>
 
-    <!-- ═══ MYMIND — Masonry grid styled like the real app ═══ -->
-    <div class="browse-section" id="sec-bookmarks">
-      <h2>Things I'm saving</h2>
-      <p class="subtitle">My bookmarks live in <a href="https://mymind.com" target="_blank" style="color:var(--accent);text-decoration:none;border-bottom:1px solid rgba(139,126,200,0.3);">Mymind</a>. Here's what's caught my eye lately.</p>
-
-      <div class="mymind-app">
-        <div class="mymind-header">
-          <input type="text" class="mymind-search" id="mmindSearchInput" placeholder="Search my mind..." autocomplete="off">
-        </div>
-        <div class="mymind-filters" id="mmindFilters">
-          <span class="mymind-pill active" data-filter="all">All</span>
-          <span class="mymind-pill" data-filter="animation">Animation</span>
-          <span class="mymind-pill" data-filter="ui design">UI Design</span>
-          <span class="mymind-pill" data-filter="tools">Tools</span>
-          <span class="mymind-pill" data-filter="inspiration">Inspiration</span>
-          <span class="mymind-pill" data-filter="notes">Notes</span>
-        </div>
-        <div class="mymind-grid-scroll">
-          <div class="mymind-grid" id="mmindGrid"></div>
-        </div>
-        <div class="mm-popover-wrap" id="mmindPopWrap">
-          <div class="mm-popover" id="mmindPopover"></div>
-        </div>
-      </div>
-      <div class="mm-scrim" id="mmindScrim"></div>
-    </div>
-
-    <!-- ═══ BOOKS — Kindle mockup ═══ -->
+    <!-- ═══ BOOKS — Cover grid + popover highlights ═══ -->
     <div class="browse-section" id="sec-books">
       <h2>Books I'm loving</h2>
       <p class="subtitle">My shelf and my learnings.</p>
 
-      <div class="kindle-wrapper">
-        <div class="kindle-device">
-          <div class="kindle-screen" id="kindleScreen">
-
-            <!-- LIBRARY VIEW -->
-            <div class="kindle-view" id="kindleLibraryView">
-              <div class="kindle-topbar">
-                <span class="kindle-topbar-title">Library</span>
-              </div>
-              <div class="kindle-library">
-                <div class="kindle-grid" id="kindleGrid"></div>
-              </div>
-            </div>
-
-            <!-- DETAIL VIEW -->
-            <div class="kindle-view hidden" id="kindleDetailView">
-              <div class="kindle-topbar">
-                <button class="kindle-back" id="kindleBack"><svg width="10" height="16" viewBox="0 0 10 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="8 2 2 8 8 14"/></svg></button>
-                <span class="kindle-topbar-title" id="kindleDetailTopTitle">Book</span>
-              </div>
-              <div class="kindle-detail">
-                <div class="kindle-detail-cover" id="kindleDetailCover"></div>
-                <div class="kindle-detail-meta">
-                  <div class="kindle-detail-subtitle" id="kindleDetailSubtitle"></div>
-                  <div class="kindle-detail-by" id="kindleDetailBy"></div>
-                  <div class="kindle-detail-fav hidden" id="kindleDetailFav"></div>
-                </div>
-                <div class="kindle-detail-progress-wrap">
-                  <div class="kindle-detail-progress-label">
-                    <span class="kindle-detail-progress-text">Reading Progress</span>
-                    <span class="kindle-detail-progress-pct" id="kindleDetailPct">0%</span>
-                  </div>
-                  <div class="kindle-detail-progress-bar">
-                    <div class="kindle-detail-progress-fill" id="kindleDetailFill" style="width:0%"></div>
-                  </div>
-                </div>
-                <button class="kindle-detail-notes-btn" id="kindleNotesBtn">
-                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1" y="2.5" width="12" height="2" rx="0.5" fill="currentColor" opacity="0.6"/><rect x="1" y="6" width="8" height="2" rx="0.5" fill="currentColor" opacity="0.4"/><rect x="1" y="9.5" width="5" height="2" rx="0.5" fill="currentColor" opacity="0.25"/></svg>
-                  My highlights
-                </button>
-              </div>
-            </div>
-
-            <!-- NOTES DRAWER -->
-            <div class="kindle-drawer-overlay" id="kindleDrawerOverlay"></div>
-            <div class="kindle-drawer" id="kindleDrawer">
-              <div class="kindle-drawer-handle"></div>
-              <div class="kindle-drawer-header">
-                <span class="kindle-drawer-title">My highlights</span>
-                <button class="kindle-drawer-close" id="kindleDrawerClose">✕</button>
-              </div>
-              <div class="kindle-drawer-content" id="kindleDrawerContent"></div>
-            </div>
-
-          </div>
-          <div class="kindle-power"></div>
-          <div class="kindle-brand">kindle</div>
-        </div>
+      <div class="book-filters" id="bookFilters">
+        <span class="mymind-pill active" data-filter="all">All</span>
+        <span class="mymind-pill" data-filter="excellent">Excellent</span>
+        <span class="mymind-pill" data-filter="great">Great</span>
+        <span class="mymind-pill" data-filter="reading">Reading</span>
       </div>
+      <div class="books-shelf" id="booksGrid"></div>
+      <button class="puzzle-show-more" id="booksShowMore">Show more books</button>
+      <div class="book-pop-wrap" id="bookPopWrap" style="position:fixed;z-index:50;">
+        <div class="book-pop" id="bookPopover"></div>
+      </div>
+      <div class="mm-scrim" id="bookScrim"></div>
     </div>
 
+    <!-- ═══ BOOKMARKS — Mymind masonry grid (no container) ═══ -->
+    <div class="browse-section" id="sec-bookmarks">
+      <h2>Things I'm saving</h2>
+      <p class="subtitle">My bookmarks live in <a href="https://mymind.com" target="_blank" style="color:var(--accent);text-decoration:none;border-bottom:1px solid rgba(139,126,200,0.3);">Mymind</a>. Here's what's caught my eye lately.</p>
+
+      <div class="mymind-header">
+        <input type="text" class="mymind-search" id="mmindSearchInput" placeholder="Search my mind..." autocomplete="off">
+      </div>
+      <div class="mymind-filters" id="mmindFilters">
+        <span class="mymind-pill active" data-filter="all">All</span>
+        <span class="mymind-pill" data-filter="animation">Animation</span>
+        <span class="mymind-pill" data-filter="ui design">UI Design</span>
+        <span class="mymind-pill" data-filter="tools">Tools</span>
+        <span class="mymind-pill" data-filter="inspiration">Inspiration</span>
+        <span class="mymind-pill" data-filter="notes">Notes</span>
+      </div>
+      <div class="mymind-grid" id="mmindGrid"></div>
+      <button class="puzzle-show-more" id="mmindShowMore">Show more bookmarks</button>
+      <div class="mm-popover-wrap" id="mmindPopWrap" style="position:fixed;z-index:50;">
+        <div class="mm-popover" id="mmindPopover"></div>
+      </div>
+      <div class="mm-scrim" id="mmindScrim"></div>
+    </div>
 
     <footer class="site-footer">
-      <span>&copy; Raksha T 2026. V1.0.0</span>
+      <span>&copy; Raksha T 2026. V2.0.0</span>
       <span class="footer-sep">&middot;</span>
       <a href="/changelog" class="footer-link">Changelog</a>
     </footer>
 
   </div>
-</div>
+</main>
 
-<script>
-  import '../scripts/clock-engine.js';
-</script>
-<script>import '../scripts/kindle-app.js';</script>
-<script>import '../scripts/notes-app.js';</script>
-<script>import '../scripts/mymind-app.js';</script>
+<script>import '../scripts/audio.js';</script>
+<script>import '../scripts/portfolio-core.js';</script>
+<script>import '../scripts/books-section.js';</script>
+<script>import '../scripts/mymind-flat.js';</script>
 <script>import '../scripts/about-section.js';</script>
 
 <script is:inline>

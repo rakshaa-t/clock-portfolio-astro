@@ -1,4 +1,6 @@
 ---
+import { ViewTransitions } from 'astro:transitions';
+
 interface Props {
   title: string;
   description: string;
@@ -17,6 +19,7 @@ const siteUrl = 'https://raksha.design';
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="canonical" href={siteUrl} />
     <title>{title}</title>
+    <ViewTransitions />
 
     <!-- Open Graph -->
     <meta property="og:title" content={title} />

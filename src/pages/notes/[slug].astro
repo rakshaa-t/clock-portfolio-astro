@@ -1,0 +1,68 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import '../../styles/global.css';
+import { NOTES } from '../../data/notes.js';
+
+export function getStaticPaths() {
+  return NOTES.map(note => ({
+    params: { slug: note.slug },
+    props: { note },
+  }));
+}
+
+const { note } = Astro.props;
+
+function renderBlock(block) {
+  if (block.type === 'text') return block.html;
+  if (block.type === 'code') return `<div style="position:relative"><div class="note-code">${block.html}</div></div>`;
+  if (block.type === 'image') {
+    let html = `<div class="note-img">`;
+    if (block.src) html += `<img src="${block.src}" alt="${block.caption || ''}" loading="lazy">`;
+    html += `</div>`;
+    if (block.caption) html += `<div class="note-img-caption">${block.caption}</div>`;
+    return html;
+  }
+  if (block.type === 'callout') return `<div class="note-callout">${block.html}</div>`;
+  if (block.type === 'demo') return `<div class="note-demo" data-demo-id="${block.id}"><div class="note-demo-label">Interactive</div><canvas width="460" height="${block.height || 140}"></canvas></div>`;
+  return '';
+}
+
+const bodyHtml = note.rich
+  ? note.body.map(renderBlock).join('')
+  : (typeof note.body === 'string' ? note.body : '');
+---
+
+<Layout title={`${note.title} — Raksha Tated`} description={note.preview}>
+
+<div class="note-page">
+  <div class="note-page-inner">
+    <button class="note-page-back" onclick="history.back()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+      Back
+    </button>
+    <div class="note-page-date">{note.date}</div>
+    <div class="note-page-tags">
+      {(note.tags || []).map(t => <span class="note-page-tag">{t}</span>)}
+    </div>
+    <h1 class="note-page-title">{note.title}</h1>
+    <div class="note-page-body" set:html={bodyHtml} />
+    <div class="note-page-footer">
+      <button class="note-page-share" id="shareOnX">
+        Share on <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" style="margin-left:2px;"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+  import '../../scripts/note-demos.js';
+  const shareBtn = document.getElementById('shareOnX');
+  if (shareBtn) {
+    shareBtn.addEventListener('click', () => {
+      const title = document.querySelector('.note-page-title')?.textContent || '';
+      window.open(`https://x.com/intent/tweet?text=${encodeURIComponent(`"${title}"\n\nhttps://raksha.design${window.location.pathname}`)}`, '_blank');
+    });
+  }
+</script>
+
+</Layout>
