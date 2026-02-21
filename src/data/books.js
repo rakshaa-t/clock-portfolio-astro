@@ -6,7 +6,7 @@
 
 export const KINDLE_BOOKS=[
   {title:'Siddhartha',author:'Hermann Hesse',cover:'/books/siddhartha.jpg',progress:100,subtitle:'A Novel',fav:true,notes:[
-    {note:'I saw a lot of me in the protagonist, I think every reader to some extent will. It\'s a good reminder that chasing frameworks, applying all of Dan Koe\'s principles or hopping from one ideology to another will only get me so far. <mark>I do think the best moments have come to me when I\'m fully immersed in the present moment regardless of what that moment actually entails.</mark> The book engulfed me and I read it in one day. <mark>May not read it again but would read once in every lifetime.</mark>'},
+    {note:'I saw a lot of me in the protagonist, I think every reader to some extent will. The book engulfed me and I read it in one day. <mark>May not read it again but would read once in every lifetime.</mark>'},
   ]},
   {title:'The War of Art',author:'Steven Pressfield',cover:'/books/war-of-art.jpg',progress:100,subtitle:'Creative Resistance',fav:true,notes:[
     {note:'<mark>Steven Pressfield sliced this down like a Nobu sushi chef.</mark> The resistance part was a bit drawn out but most of it hit every spot a creative, or honestly, even a non-creative could ever face. <mark>The muse and other concepts, although mystical, are profound because the muse could literally be whatever higher power you believe in.</mark> It\'s flexible. The book drove me to listen to his podcasts too.'}
@@ -28,7 +28,7 @@ export const KINDLE_BOOKS=[
     {note:'Was extremely excited to read this. About 13% in but <mark>it didn\'t stick. Too descriptive for my taste.</mark>'}
   ]},
   {title:'Reality Transurfing',author:'Vadim Zeland',cover:'/books/reality-transurfing.jpg',progress:40,subtitle:'Reality Transurfing',notes:[
-    {note:'Exciting and bold. Some principles if not all felt over-mystified where a simpler framework would land better. The excessive potential and balancing forces concepts felt limiting instead of expansive. <mark>The message is correct but the Gita\'s delivery wins on this.</mark> Some parts like the mirror and pendulums were refreshing. May revisit this later in life.'}
+    {note:'Exciting and bold. Some concepts felt over-mystified. <mark>The message is correct but the Gita\'s delivery wins on this.</mark> Some parts like the mirror and pendulums were refreshing. May revisit this later in life.'}
   ]},
   // In progress
   {title:'The 48 Laws of Power',author:'Robert Greene',cover:'/books/48-laws.jpg',progress:22,subtitle:'Strategy',notes:[
@@ -45,13 +45,13 @@ export const KINDLE_BOOKS=[
   ]},
   // Finished
   {title:'Becoming Supernatural',author:'Dr. Joe Dispenza',cover:'/books/becoming-supernatural.jpg',progress:100,subtitle:'Mind & Body',notes:[
-    {note:'Joe and his work are a classic, the book is a light of positivity. The borrowed principles from science, Indian spirituality and mindfulness come together beautifully. Mind movies and some other rituals seemed way beyond excessive to me. Apart from this and the minor repetition, <mark>I\'ve always been attracted to the blend of science and mysticism.</mark>'}
+    {note:'Joe and his work are a classic, the book is a light of positivity. The borrowed principles from science, Indian spirituality and mindfulness come together beautifully. Some rituals felt excessive but <mark>I\'ve always been attracted to the blend of science and mysticism.</mark>'}
   ]},
   {title:'Feeling is the Secret',author:'Neville Goddard',cover:'/books/feeling-secret.jpg',progress:100,subtitle:'Manifestation',notes:[
     {note:'Neville Goddard is someone whose work I spent a few months on back in the day. I was a newbie then, it helped me with a lot of short wins. <mark>Simple, clear and easy to comprehend.</mark> Misses a bit of nuance but maybe that\'s a good thing.'}
   ]},
   {title:'The Power of Now',author:'Eckhart Tolle',cover:'/books/power-of-now.jpg',progress:100,subtitle:'Presence',notes:[
-    {note:'An extension to what I took away from Siddhartha. Some patterns around form and duality underwhelmed me. I expected more about the mind and less about the form. Nevertheless, <mark>it challenged some of my beliefs which is usually what I hope to achieve from reading.</mark>'}
+    {note:'An extension to what I took away from Siddhartha. Expected more about the mind and less about the form but <mark>it challenged some of my beliefs which I appreciated.</mark>'}
   ]},
   {title:'Bhagavad Gita As It Is',author:'A.C. Bhaktivedanta Swami Prabhupada',cover:'/books/bhagavad-gita.jpg',progress:100,subtitle:'Ancient Wisdom',notes:[
     {note:'I\'ve read this one twice. <mark>The meaning somehow changes each time.</mark> Initially it felt straightforward yet a bit repetitive. The second time I grasped action driven by devotion more. Some parts I\'m still yet to understand. I don\'t fully get the detaching from outcome part without letting it affect my input yet. <mark>In theory it makes sense but in practice I lose its grip.</mark> I\'ll revisit this when I have a broader perspective on work and life.'},

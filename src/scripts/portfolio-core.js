@@ -1,24 +1,15 @@
 // ═══ PORTFOLIO CORE ═══
 // Modal system, puzzle card handlers, show more, lazy video observer.
-// Standalone module — no clock dependencies.
+// Re-initializes on every page load (ViewTransitions compatible).
 
 import { PUZZLE_PROJECTS } from '../data/projects.js';
-import { esc, prefersReducedMotion } from './shared.js';
+import { esc, prefersReducedMotion, easeScrollTo } from './shared.js';
 
 // ═══ STATE ═══
 let modalOpen=false, carouselIndex=0, currentModalData=null;
 
-// ═══ DOM REFS ═══
-const modalOverlay=document.getElementById('modalOverlay');
-const modalCard=document.getElementById('modalCard');
-const modalBody=document.querySelector('.modal-body');
-
-if(modalBody) modalBody.addEventListener('scroll',function(){
-  this.classList.toggle('has-scroll-fade',this.scrollTop>2);
-  const atBottom=this.scrollHeight-this.scrollTop-this.clientHeight<4;
-  const hasOverflow=this.scrollHeight>this.clientHeight+4;
-  this.classList.toggle('has-bottom-fade',hasOverflow&&!atBottom);
-});
+// ═══ MUTABLE DOM REFS (re-assigned on each page load) ═══
+let modalOverlay, modalCard, modalBody;
 
 // ═══ 3D TILT ═══
 const TILT_MAX=0.6;
@@ -44,19 +35,6 @@ function updateTiltRect(){
   modalCard.style.transform=saved;
   tiltCardCX=r.left+r.width/2;tiltCardCY=r.top+r.height/2;
   tiltCardW=r.width;tiltCardH=r.height;
-}
-
-if(!prefersReducedMotion){
-  modalCard.addEventListener('mouseenter',()=>{if(modalOpen)updateTiltRect();});
-  modalCard.addEventListener('mousemove',e=>{
-    if(!modalOpen)return;
-    if(!tiltCardW)updateTiltRect();
-    const nx=(e.clientX-tiltCardCX)/tiltCardW;
-    const ny=(e.clientY-tiltCardCY)/tiltCardH;
-    tiltTargetRY=nx*TILT_MAX*2;
-    tiltTargetRX=-ny*TILT_MAX*2;
-  });
-  modalCard.addEventListener('mouseleave',()=>{tiltTargetRX=0;tiltTargetRY=0;});
 }
 
 // ═══ CAROUSEL HELPERS ═══
@@ -118,29 +96,24 @@ function _showModal(project){
   const caseStudyLink=document.getElementById('modalCaseStudyLink');
   if(isImageOnly&&project.link&&project.link!=='#'){caseStudyLink.href=project.link;caseStudyLink.style.display='';}
   else{caseStudyLink.style.display='none';}
-  // Hide carousel nav for single-slide or coming soon
   const hideNav=isComingSoon||slides.length===1;
   document.querySelector('.carousel-btn.prev').style.display=hideNav?'none':'';
   document.querySelector('.carousel-btn.next').style.display=hideNav?'none':'';
-  // Pause card videos to free GPU/CPU
   document.querySelectorAll('.puzzle-card video').forEach(v=>{try{v.pause();}catch(e){}});
-  // Reset modal body scroll
   if(modalBody){modalBody.scrollTop=0;modalBody.classList.remove('has-scroll-fade');modalBody.classList.remove('has-bottom-fade');}
   modalOverlay.classList.add('open');
   modalCard.style.willChange='transform';
   document.body.style.overflow='hidden';
-  // Check overflow after layout settles
   requestAnimationFrame(()=>{if(modalBody){
     const hasOverflow=modalBody.scrollHeight>modalBody.clientHeight+4;
     modalBody.classList.toggle('has-bottom-fade',hasOverflow);
   }});
   updateCarouselButtons();
 
-  // Scale-in + tilt init
   tiltRX=0;tiltRY=0;tiltTargetRX=0;tiltTargetRY=0;tiltVelRX=0;tiltVelRY=0;
   const isMobileModal=window.matchMedia('(max-width:480px)').matches;
   if(isMobileModal){
-    // Mobile: let CSS slide-up transition handle everything
+    // Mobile: CSS slide-up
   }else if(!prefersReducedMotion){
     let scaleP=0;
     function scaleIn(){
@@ -163,7 +136,6 @@ function openPuzzleModal(project){_showModal(project);}
 
 function closeModal(){
   modalOpen=false;
-  // Stop and release modal videos immediately
   document.querySelectorAll('#carouselTrack video').forEach(v=>{try{v.pause();v.removeAttribute('src');v.load();}catch(e){}});
   modalOverlay.classList.remove('open');
   document.body.style.overflow='';
@@ -172,7 +144,6 @@ function closeModal(){
   else{modalCard.style.willChange='';}
   if(modalBody){modalBody.classList.remove('has-bottom-fade');modalBody.classList.remove('has-scroll-fade');}
   if(tiltRaf){cancelAnimationFrame(tiltRaf);tiltRaf=null;}
-  // Resume visible card videos
   document.querySelectorAll('.puzzle-card video').forEach(v=>{
     const r=v.getBoundingClientRect();
     if(r.bottom>0&&r.top<window.innerHeight) v.play().catch(()=>{});
@@ -207,71 +178,97 @@ function carouselPrev(){
   updateCarouselButtons();
 }
 
-// ═══ SHOW MORE PROJECTS ═══
-const puzzleShowMore=document.getElementById('puzzleShowMore');
-const puzzleGrid=document.querySelector('.puzzle-grid');
-let puzzleExpanded=false;
-if(puzzleShowMore){
-  puzzleShowMore.addEventListener('click',()=>{
-    if(!puzzleExpanded){
-      puzzleGrid.classList.remove('collapsing');
-      puzzleGrid.classList.add('expanded');
-      puzzleShowMore.textContent='Show less';
-      puzzleExpanded=true;
-      requestAnimationFrame(()=>{
-        const firstExtra=puzzleGrid.querySelector('.puzzle-extra');
-        if(firstExtra)firstExtra.scrollIntoView({behavior:'smooth',block:'center'});
-      });
-    }else{
-      puzzleGrid.classList.remove('expanded');
-      puzzleGrid.classList.add('collapsing');
-      puzzleShowMore.textContent='Show more work';
-      puzzleExpanded=false;
-      requestAnimationFrame(()=>{
-        puzzleShowMore.scrollIntoView({behavior:'smooth',block:'center'});
-      });
-    }
-  });
-}
-
-// ═══ PUZZLE CARD CLICK HANDLERS ═══
-document.querySelectorAll('.puzzle-card[data-project]').forEach(card=>{
-  const idx=parseInt(card.dataset.project,10);
-  const proj=PUZZLE_PROJECTS[idx];
-  if(!proj) return;
-  if('externalLink' in proj){
-    if(proj.externalLink){
-      card.style.cursor='pointer';
-      card.addEventListener('click',()=>window.open(proj.externalLink,'_blank'));
-    } else {
-      card.style.cursor='default';
-    }
-    return;
-  }
-  card.addEventListener('click',()=>openPuzzleModal(proj));
-});
-
-// ═══ LAZY VIDEO PLAYBACK — only play visible card videos ═══
-const _cardVideos=document.querySelectorAll('.puzzle-card video');
-if(_cardVideos.length){
-  const vidObs=new IntersectionObserver(entries=>{
-    entries.forEach(e=>{
-      if(e.isIntersecting&&!modalOpen) e.target.play().catch(()=>{});
-      else e.target.pause();
-    });
-  },{threshold:0.25});
-  _cardVideos.forEach(v=>vidObs.observe(v));
-}
-
-// ═══ KEYBOARD ═══
-document.addEventListener('keydown',e=>{
-  if(e.key==='Escape'&&modalOpen){closeModal();return;}
-  if(modalOpen&&e.key==='ArrowRight'){carouselNext();return;}
-  if(modalOpen&&e.key==='ArrowLeft'){carouselPrev();return;}
-});
-
 // ═══ EXPOSE TO GLOBAL SCOPE ═══
 window.closeModal=closeModal;
 window.carouselPrev=carouselPrev;
 window.carouselNext=carouselNext;
 window.openPuzzleModal=openPuzzleModal;
+
+// ═══ INIT — runs on every page load ═══
+function initPortfolioCore(){
+  modalOverlay=document.getElementById('modalOverlay');
+  modalCard=document.getElementById('modalCard');
+  modalBody=document.querySelector('.modal-body');
+  if(!modalOverlay||!modalCard) return;
+
+  if(modalBody) modalBody.addEventListener('scroll',function(){
+    this.classList.toggle('has-scroll-fade',this.scrollTop>2);
+    const atBottom=this.scrollHeight-this.scrollTop-this.clientHeight<4;
+    const hasOverflow=this.scrollHeight>this.clientHeight+4;
+    this.classList.toggle('has-bottom-fade',hasOverflow&&!atBottom);
+  });
+
+  if(!prefersReducedMotion){
+    modalCard.addEventListener('mouseenter',()=>{if(modalOpen)updateTiltRect();});
+    modalCard.addEventListener('mousemove',e=>{
+      if(!modalOpen)return;
+      if(!tiltCardW)updateTiltRect();
+      const nx=(e.clientX-tiltCardCX)/tiltCardW;
+      const ny=(e.clientY-tiltCardCY)/tiltCardH;
+      tiltTargetRY=nx*TILT_MAX*2;
+      tiltTargetRX=-ny*TILT_MAX*2;
+    });
+    modalCard.addEventListener('mouseleave',()=>{tiltTargetRX=0;tiltTargetRY=0;});
+  }
+
+  // Show more projects
+  const puzzleShowMore=document.getElementById('puzzleShowMore');
+  const puzzleGrid=document.querySelector('.puzzle-grid');
+  let puzzleExpanded=false;
+  if(puzzleShowMore){
+    puzzleShowMore.addEventListener('click',()=>{
+      if(!puzzleExpanded){
+        puzzleGrid.classList.remove('collapsing');
+        puzzleGrid.classList.add('expanded');
+        puzzleShowMore.textContent='Show less';
+        puzzleExpanded=true;
+        easeScrollTo(puzzleShowMore);
+      }else{
+        puzzleGrid.classList.remove('expanded');
+        puzzleGrid.classList.add('collapsing');
+        puzzleShowMore.textContent='Show more work';
+        puzzleExpanded=false;
+        easeScrollTo(puzzleShowMore);
+      }
+    });
+  }
+
+  // Puzzle card click handlers
+  document.querySelectorAll('.puzzle-card[data-project]').forEach(card=>{
+    const idx=parseInt(card.dataset.project,10);
+    const proj=PUZZLE_PROJECTS[idx];
+    if(!proj) return;
+    if('externalLink' in proj){
+      if(proj.externalLink){
+        card.style.cursor='pointer';
+        card.addEventListener('click',()=>window.open(proj.externalLink,'_blank'));
+      } else {
+        card.style.cursor='default';
+      }
+      return;
+    }
+    card.addEventListener('click',()=>openPuzzleModal(proj));
+  });
+
+  // Lazy video playback
+  const _cardVideos=document.querySelectorAll('.puzzle-card video');
+  if(_cardVideos.length){
+    const vidObs=new IntersectionObserver(entries=>{
+      entries.forEach(e=>{
+        if(e.isIntersecting&&!modalOpen) e.target.play().catch(()=>{});
+        else e.target.pause();
+      });
+    },{threshold:0.25});
+    _cardVideos.forEach(v=>vidObs.observe(v));
+  }
+
+  // Keyboard
+  document.addEventListener('keydown',e=>{
+    if(e.key==='Escape'&&modalOpen){closeModal();return;}
+    if(modalOpen&&e.key==='ArrowRight'){carouselNext();return;}
+    if(modalOpen&&e.key==='ArrowLeft'){carouselPrev();return;}
+  });
+}
+
+// Expose for data-astro-rerun inline script (sole init path)
+window.__initPortfolioCore=initPortfolioCore;

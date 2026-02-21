@@ -68,17 +68,27 @@ function knobClick(){
   det.start(t+0.02);det.stop(t+0.035);
 }
 
-// Sound knob toggle
+// Sound knob toggle — desktop (has ID) + mobile mirror (class-based)
 const _knob=document.getElementById('soundKnob');
 const _knobTip=document.getElementById('knobTooltip');
-if(_knob){
-  _knob.addEventListener('click',function(){
-    _soundOn=!_soundOn;
-    this.classList.toggle('off',!_soundOn);
+const _knobMirror=document.querySelector('.sound-knob-mirror');
+
+function _toggleSound(clickedKnob){
+  _soundOn=!_soundOn;
+  // Sync both knobs
+  if(_knob) _knob.classList.toggle('off',!_soundOn);
+  if(_knobMirror) _knobMirror.classList.toggle('off',!_soundOn);
+  if(_knobTip){
     _knobTip.textContent=_soundOn?'Sound on':'Sound off';
-    knobClick();
-  });
+    _knobTip.classList.add('show');
+    clearTimeout(_tipTimer);
+    _tipTimer=setTimeout(()=>_knobTip.classList.remove('show'),1500);
+  }
+  knobClick();
 }
+let _tipTimer=null;
+if(_knob) _knob.addEventListener('click',()=>_toggleSound(_knob));
+if(_knobMirror) _knobMirror.addEventListener('click',()=>_toggleSound(_knobMirror));
 
 // Expose audio context for other modules (about-section, books, etc.)
 window.__clockAudio={
