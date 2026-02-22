@@ -71,25 +71,42 @@ function knobClick(){
 // Sound knob toggle — re-binds on every init (ViewTransitions safe)
 let _tipTimer=null;
 
+// Lazy-create mobile toast element
+let _toast=null;
+function _getToast(){
+  if(_toast) return _toast;
+  _toast=document.createElement('div');
+  _toast.className='sound-toast';
+  document.body.appendChild(_toast);
+  return _toast;
+}
+
 function _initAudio(){
   const knob=document.getElementById('soundKnob');
   const knobTip=document.getElementById('knobTooltip');
   const knobMirror=document.querySelector('.sound-knob-mirror');
-  const knobTipMobile=document.querySelector('.knob-tooltip-mobile');
 
-  function showTip(tip){
-    if(!tip) return;
-    tip.textContent=_soundOn?'Sound on':'Sound off';
-    tip.classList.add('show');
+  function showDesktopTip(){
+    if(!knobTip) return;
+    knobTip.textContent=_soundOn?'Sound on':'Sound off';
+    knobTip.classList.add('show');
     clearTimeout(_tipTimer);
-    _tipTimer=setTimeout(()=>tip.classList.remove('show'),1500);
+    _tipTimer=setTimeout(()=>knobTip.classList.remove('show'),1500);
   }
 
-  function toggle(tip){
+  function showMobileToast(){
+    const t=_getToast();
+    t.textContent=_soundOn?'Sound on':'Sound off';
+    t.classList.add('show');
+    clearTimeout(_tipTimer);
+    _tipTimer=setTimeout(()=>t.classList.remove('show'),1500);
+  }
+
+  function toggle(isMobile){
     _soundOn=!_soundOn;
     if(knob) knob.classList.toggle('off',!_soundOn);
     if(knobMirror) knobMirror.classList.toggle('off',!_soundOn);
-    showTip(tip);
+    if(isMobile) showMobileToast(); else showDesktopTip();
     knobClick();
   }
 
@@ -97,8 +114,8 @@ function _initAudio(){
   if(knob) knob.classList.toggle('off',!_soundOn);
   if(knobMirror) knobMirror.classList.toggle('off',!_soundOn);
 
-  if(knob) knob.addEventListener('click',()=>toggle(knobTip));
-  if(knobMirror) knobMirror.addEventListener('click',()=>toggle(knobTipMobile));
+  if(knob) knob.addEventListener('click',()=>toggle(false));
+  if(knobMirror) knobMirror.addEventListener('click',()=>toggle(true));
 }
 
 // Expose for data-astro-rerun inline script (sole init path)
