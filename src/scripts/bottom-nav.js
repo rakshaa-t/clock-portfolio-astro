@@ -20,10 +20,9 @@ function initBottomNav(){
     .filter(Boolean);
   if(!sections.length||!pill||!highlight) return;
 
-  // ── Pre-calculate highlight offsets (no getBoundingClientRect on scroll) ──
+  // ── Pre-calculate highlight offsets ──
   let offsets=[];
   function measureOffsets(){
-    // items are children of pill (position:relative), so offsetLeft is already relative to pill
     offsets=items.map(item=>({
       left:item.offsetLeft,
       width:item.offsetWidth
@@ -32,10 +31,11 @@ function initBottomNav(){
   measureOffsets();
 
   let activeIdx=0;
+  let programmaticScroll=false;
   let ticking=false;
 
   function moveHighlight(idx){
-    if(idx<0||idx>=offsets.length) return;
+    if(idx<0||idx>=offsets.length||idx===activeIdx) return;
     activeIdx=idx;
     const o=offsets[idx];
     highlight.style.transform=`translateY(-50%) translateX(${o.left}px)`;
@@ -45,64 +45,64 @@ function initBottomNav(){
     });
   }
 
-  // Set initial state
-  moveHighlight(0);
+  // Force-set without the idx===activeIdx guard (for init + resize)
+  function forceHighlight(idx){
+    activeIdx=-1;
+    moveHighlight(idx);
+  }
+
+  // ── Scroll-based active tracking ──
+  // Finds which section's top is closest to viewport top.
+  // Much more reliable than IntersectionObserver for tall vs short sections.
+  const OFFSET=window.innerHeight*0.35; // detection line ~35% down viewport
+
+  function updateActiveFromScroll(){
+    if(programmaticScroll) return;
+    let bestIdx=0;
+    for(let i=sections.length-1;i>=0;i--){
+      const top=sections[i].getBoundingClientRect().top;
+      if(top<=OFFSET){
+        bestIdx=i;
+        break;
+      }
+    }
+    moveHighlight(bestIdx);
+  }
+
+  function onScroll(){
+    if(!ticking){
+      ticking=true;
+      requestAnimationFrame(()=>{
+        ticking=false;
+        updateActiveFromScroll();
+      });
+    }
+  }
+
+  const ac=new AbortController();
+  window.addEventListener('scroll',onScroll,{passive:true,signal:ac.signal});
+
+  // Set initial state from current scroll position
+  forceHighlight(0);
+  updateActiveFromScroll();
 
   // ── Tap to scroll ──
-  let programmaticScroll=false;
-  const ac=new AbortController();
-
   items.forEach((item,i)=>{
     item.addEventListener('click',e=>{
       e.preventDefault();
       const sec=sections[i];
       if(!sec) return;
       programmaticScroll=true;
+      activeIdx=-1; // force update
       moveHighlight(i);
       sec.scrollIntoView({behavior:'smooth',block:'start'});
-      // Clear programmatic flag after scroll settles
-      setTimeout(()=>{programmaticScroll=false;},600);
+      setTimeout(()=>{programmaticScroll=false;},800);
     },{signal:ac.signal});
   });
 
-  // ── Active state tracking via IntersectionObserver ──
-  // Minimal thresholds — just need to know which section is most visible
-  const visible=new Map();
-
-  const observer=new IntersectionObserver(entries=>{
-    entries.forEach(entry=>{
-      if(entry.isIntersecting) visible.set(entry.target.id,entry.intersectionRatio);
-      else visible.delete(entry.target.id);
-    });
-
-    if(programmaticScroll) return;
-
-    // Batch highlight update to next frame
-    if(!ticking){
-      ticking=true;
-      requestAnimationFrame(()=>{
-        ticking=false;
-        let bestId=null,bestRatio=0;
-        visible.forEach((ratio,id)=>{
-          if(ratio>bestRatio){bestRatio=ratio;bestId=id;}
-        });
-        if(bestId){
-          const idx=items.findIndex(item=>item.dataset.section===bestId);
-          if(idx!==-1&&idx!==activeIdx) moveHighlight(idx);
-        }
-      });
-    }
-  },{
-    threshold:[0,0.3,0.6],
-    rootMargin:'-10% 0px -10% 0px'
-  });
-
-  sections.forEach(sec=>observer.observe(sec));
-
-  // ── Re-measure on resize (orientation change, etc) ──
+  // ── Re-measure on resize ──
   const ro=new ResizeObserver(()=>{
     measureOffsets();
-    // Re-position highlight with fresh measurements
     const o=offsets[activeIdx];
     if(o){
       highlight.style.transform=`translateY(-50%) translateX(${o.left}px)`;
@@ -111,12 +111,10 @@ function initBottomNav(){
   });
   ro.observe(pill);
 
-  // ── Cleanup function for next re-init ──
+  // ── Cleanup ──
   _cleanup=()=>{
     ac.abort();
-    observer.disconnect();
     ro.disconnect();
-    visible.clear();
     _cleanup=null;
   };
 }
