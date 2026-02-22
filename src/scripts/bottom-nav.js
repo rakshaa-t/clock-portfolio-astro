@@ -52,18 +52,21 @@ function initBottomNav(){
   }
 
   // ── Scroll-based active tracking ──
-  // Finds which section's top is closest to viewport top.
-  // Much more reliable than IntersectionObserver for tall vs short sections.
-  const OFFSET=window.innerHeight*0.35; // detection line ~35% down viewport
-
+  // Picks whichever section covers the most viewport pixels.
+  // Stable: a tall section like Work won't lose to a short adjacent section
+  // until that section genuinely takes over the majority of the screen.
   function updateActiveFromScroll(){
     if(programmaticScroll) return;
-    let bestIdx=0;
-    for(let i=sections.length-1;i>=0;i--){
-      const top=sections[i].getBoundingClientRect().top;
-      if(top<=OFFSET){
+    const vh=window.innerHeight;
+    let bestIdx=0,bestCoverage=0;
+    for(let i=0;i<sections.length;i++){
+      const r=sections[i].getBoundingClientRect();
+      const visTop=Math.max(r.top,0);
+      const visBot=Math.min(r.bottom,vh);
+      const coverage=Math.max(0,visBot-visTop);
+      if(coverage>bestCoverage){
+        bestCoverage=coverage;
         bestIdx=i;
-        break;
       }
     }
     moveHighlight(bestIdx);
