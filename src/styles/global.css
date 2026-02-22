@@ -1830,18 +1830,18 @@ a.about-dropdown-item:hover{opacity:0.7;}
 .sound-knob-mobile .knob-dot{width:3.5px;height:3.5px;}
 /* Desktop tooltip show class (click-triggered) */
 .knob-tooltip.show{opacity:1;transform:translateY(-50%) translateX(0);}
-/* Mobile sound toast — origin: sound knob (bottom-left of nav) */
+/* Mobile sound toast — emerges from sound knob */
 .sound-toast{
   position:fixed;bottom:72px;left:20px;
-  transform:scale(0.9) translateY(4px);
-  transform-origin:bottom left;
+  transform:scale(0.5) translateY(12px);
+  transform-origin:0% 100%;
   padding:6px 14px;border-radius:100px;
   background:var(--text-primary);color:var(--bg);
   font-family:'Geist Mono',monospace;font-size:11px;font-weight:600;
   letter-spacing:0.04em;text-transform:uppercase;
   white-space:nowrap;
   opacity:0;pointer-events:none;
-  transition:opacity 0.2s cubic-bezier(0.32,0.72,0,1),transform 0.2s cubic-bezier(0.32,0.72,0,1);
+  transition:opacity 0.25s cubic-bezier(0.32,0.72,0,1),transform 0.25s cubic-bezier(0.34,1.56,0.64,1);
   z-index:999;
 }
 .sound-toast.show{opacity:1;transform:scale(1) translateY(0);}
