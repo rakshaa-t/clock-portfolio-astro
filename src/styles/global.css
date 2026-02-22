@@ -1825,10 +1825,10 @@ a.about-dropdown-item:hover{opacity:0.7;}
 .sound-knob-mobile .knob-dot{width:3.5px;height:3.5px;}
 /* Desktop tooltip show class (click-triggered) */
 .knob-tooltip.show{opacity:1;transform:translateY(-50%) translateX(0);}
-/* Mobile sound toast */
+/* Mobile sound toast — left-aligned above knob */
 .sound-toast{
-  position:fixed;bottom:72px;left:50%;
-  transform:translateX(-50%) translateY(8px);
+  position:fixed;bottom:72px;left:20px;
+  transform:translateY(8px);
   padding:6px 14px;border-radius:100px;
   background:var(--text-primary);color:var(--bg);
   font-family:'Geist Mono',monospace;font-size:11px;font-weight:600;
@@ -1838,7 +1838,7 @@ a.about-dropdown-item:hover{opacity:0.7;}
   transition:opacity 0.2s ease-out,transform 0.2s ease-out;
   z-index:999;
 }
-.sound-toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+.sound-toast.show{opacity:1;transform:translateY(0);}
 
 /* ═══ PAGE CONTENT (V2 flat layout) ═══ */
 .page-content{
