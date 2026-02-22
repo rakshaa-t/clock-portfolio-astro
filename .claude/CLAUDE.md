@@ -73,13 +73,70 @@ npm run build  # production build
 - Single CSS file — no CSS modules or preprocessor
 - Vanilla JS only — no React, no build-time JS frameworks
 - Respect `prefers-reduced-motion` for all animations
-- Scale buttons on press: `scale(0.97)`
-- Keep animations under 300ms
-- Only animate `transform` and `opacity` (GPU-accelerated)
-- Use `ease-out` for enter/exit transitions
 - Minimalism as core principle — uncommon taste and care, not excess
 - No text effects (no embossing, debossing, or letterpress on any text)
 - Don't implement plan phases without explicit user approval
+
+## Animation Rules (Emil Kowalski principles)
+
+Source: emilkowal.ski — "Building a Toast Component", "7 Practical Animation Tips", "Good vs Great Animations"
+
+### Easing
+
+- **Primary easing: `cubic-bezier(0.32, 0.72, 0, 1)`** — custom ease-out, more energetic than built-in `ease-out`
+- **Never use `ease-in`** for UI animations — it speeds up at the end, feels sluggish
+- **Never use `ease` or `ease-out` (built-in)** for polished work — they're too weak. Only acceptable for trivial hover background-color changes
+- **Use `ease-in-out` only** for natural physical motion (something starting and stopping, like a car)
+- **CSS custom properties for project-wide consistency:**
+  ```css
+  --ease-out: cubic-bezier(0.32, 0.72, 0, 1);       /* enters/exits, most UI */
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);    /* snappy feedback */
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);  /* overshoot, playful */
+  ```
+
+### Timing
+
+- **UI animations: under 300ms** — anything longer feels sluggish
+- **Responsiveness sweet spot: 180ms** — feels noticeably snappier than 300ms
+- **Tooltips: 125ms** (`0.125s`)
+- **Toasts: 400ms** entry with ease (exception to 300ms rule — toasts are passive, not blocking user action)
+- **Frequent actions: remove animation entirely** — if the user does it tens/hundreds of times a day, animation becomes annoying
+
+### Scale
+
+- **Button press: `scale(0.97)`**
+- **Never animate from `scale(0)`** — minimum entry scale is `0.9`. Objects don't appear from nothing
+- **Tooltip/popover entry: `scale(0.97)`**
+- **Modal entry: `scale(0.93)`**
+
+### Origin
+
+- **All animations must be origin-aware** — animate FROM the trigger element, not from center/edge of screen
+- **Set `transform-origin`** to match the anchor point (e.g. a dropdown from a button should scale from the button's position)
+- **Toasts originate from their trigger** — if the trigger is bottom-left, the toast scales in from bottom-left
+- In the aggregate, unseen details compound into perceived polish
+
+### Transitions vs Keyframes
+
+- **Prefer CSS transitions over keyframes** — transitions can be interrupted and retargeted mid-animation. Keyframes lock end positions
+- **Use keyframes only** for infinite/decorative loops (spinners, ambient motion)
+
+### Techniques
+
+- **Only animate `transform` and `opacity`** — GPU-composited, no layout/paint cost
+- **Use `filter: blur(2px)` as a bridge** when no easing/duration combination feels right — it blends old and new states so the eye perceives smooth motion
+- **Swipe-to-dismiss: use velocity, not just distance** — a fast short swipe should dismiss (threshold: velocity > 0.11)
+- **Pause timers when tab is hidden** — `document.visibilitychange`
+- **Test in slow motion** — play animations at 0.25x to catch timing mismatches invisible at full speed
+- **Don't animate multiple unrelated properties simultaneously** (e.g. position + color) without testing in slow-mo
+
+### Don'ts
+
+- No `transition: all` — always specify exact properties
+- No `ease-in` — ever
+- No `scale(0)` entry — minimum `0.9`
+- No delayed subsequent tooltips — if user is already hovering in a toolbar, show next tooltip instantly with `transition-duration: 0ms`
+- No animation on hyper-frequent actions
 
 ## Performance Guardrails
 
