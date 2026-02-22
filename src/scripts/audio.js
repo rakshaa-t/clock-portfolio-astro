@@ -89,6 +89,8 @@ function _initAudio(){
   function showDesktopTip(){
     if(!knobTip) return;
     knobTip.textContent=_soundOn?'Sound on':'Sound off';
+    knobTip.classList.remove('show');
+    knobTip.offsetHeight;
     knobTip.classList.add('show');
     clearTimeout(_tipTimer);
     _tipTimer=setTimeout(()=>knobTip.classList.remove('show'),1500);
@@ -97,6 +99,9 @@ function _initAudio(){
   function showMobileToast(){
     const t=_getToast();
     t.textContent=_soundOn?'Sound on':'Sound off';
+    // Reset animation: remove show, force reflow, re-add
+    t.classList.remove('show');
+    t.offsetHeight; // force reflow so transition restarts
     t.classList.add('show');
     clearTimeout(_tipTimer);
     _tipTimer=setTimeout(()=>t.classList.remove('show'),1500);
