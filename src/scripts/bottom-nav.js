@@ -1,79 +1,124 @@
 // ═══ BOTTOM NAV ═══
-// Mobile section navigation — sliding highlight, scroll-to-section, scroll-to-top.
+// Mobile section navigation — sliding highlight, scroll-to-section.
 // Re-initializes on every page load (ViewTransitions compatible).
 
+// Persistent state across re-inits
+let _cleanup=null;
+
 function initBottomNav(){
+  // Tear down previous instance (ViewTransitions)
+  if(_cleanup) _cleanup();
+
   const nav=document.getElementById('bottomNav');
   if(!nav) return;
 
   const highlight=document.getElementById('bottomNavHighlight');
   const items=[...nav.querySelectorAll('.bottom-nav-item')];
-  const sectionIds=items.map(item=>item.dataset.section);
-  const sections=sectionIds.map(id=>document.getElementById(id)).filter(Boolean);
-  if(!sections.length) return;
-
-  let programmaticScroll=false;
-
-  // ── Sliding highlight ──
   const pill=nav.querySelector('.bottom-nav-pill');
-  function moveHighlight(activeItem){
-    if(!highlight||!activeItem||!pill) return;
-    const pillRect=pill.getBoundingClientRect();
-    const itemRect=activeItem.getBoundingClientRect();
-    highlight.style.left=(itemRect.left-pillRect.left)+'px';
-    highlight.style.width=itemRect.width+'px';
+  const sections=items
+    .map(item=>document.getElementById(item.dataset.section))
+    .filter(Boolean);
+  if(!sections.length||!pill||!highlight) return;
+
+  // ── Pre-calculate highlight offsets (no getBoundingClientRect on scroll) ──
+  let offsets=[];
+  function measureOffsets(){
+    const pillLeft=pill.offsetLeft;
+    offsets=items.map(item=>({
+      left:item.offsetLeft-pillLeft,
+      width:item.offsetWidth
+    }));
+  }
+  measureOffsets();
+
+  let activeIdx=0;
+  let ticking=false;
+
+  function moveHighlight(idx){
+    if(idx<0||idx>=offsets.length) return;
+    activeIdx=idx;
+    const o=offsets[idx];
+    highlight.style.transform=`translateY(-50%) translateX(${o.left}px)`;
+    highlight.style.width=o.width+'px';
+    items.forEach((item,i)=>{
+      item.classList.toggle('active',i===idx);
+    });
   }
 
-  // Position highlight on the initial active item
-  const initialActive=nav.querySelector('.bottom-nav-item.active');
-  if(initialActive) requestAnimationFrame(()=>moveHighlight(initialActive));
-
-  function setActive(item){
-    items.forEach(i=>i.classList.remove('active'));
-    item.classList.add('active');
-    moveHighlight(item);
-  }
+  // Set initial state
+  moveHighlight(0);
 
   // ── Tap to scroll ──
-  items.forEach(item=>{
+  let programmaticScroll=false;
+  const ac=new AbortController();
+
+  items.forEach((item,i)=>{
     item.addEventListener('click',e=>{
       e.preventDefault();
-      const sec=document.getElementById(item.dataset.section);
+      const sec=sections[i];
       if(!sec) return;
       programmaticScroll=true;
-      setActive(item);
+      moveHighlight(i);
       sec.scrollIntoView({behavior:'smooth',block:'start'});
-      setTimeout(()=>{programmaticScroll=false;},800);
-    });
+      // Clear programmatic flag after scroll settles
+      setTimeout(()=>{programmaticScroll=false;},600);
+    },{signal:ac.signal});
   });
 
   // ── Active state tracking via IntersectionObserver ──
-  const visibleSections=new Map();
+  // Minimal thresholds — just need to know which section is most visible
+  const visible=new Map();
 
   const observer=new IntersectionObserver(entries=>{
     entries.forEach(entry=>{
-      if(entry.isIntersecting) visibleSections.set(entry.target.id,entry.intersectionRatio);
-      else visibleSections.delete(entry.target.id);
+      if(entry.isIntersecting) visible.set(entry.target.id,entry.intersectionRatio);
+      else visible.delete(entry.target.id);
     });
 
     if(programmaticScroll) return;
 
-    let bestId=null,bestRatio=0;
-    visibleSections.forEach((ratio,id)=>{
-      if(ratio>bestRatio){bestRatio=ratio;bestId=id;}
-    });
-
-    if(bestId){
-      const activeItem=items.find(i=>i.dataset.section===bestId);
-      if(activeItem&&!activeItem.classList.contains('active')) setActive(activeItem);
+    // Batch highlight update to next frame
+    if(!ticking){
+      ticking=true;
+      requestAnimationFrame(()=>{
+        ticking=false;
+        let bestId=null,bestRatio=0;
+        visible.forEach((ratio,id)=>{
+          if(ratio>bestRatio){bestRatio=ratio;bestId=id;}
+        });
+        if(bestId){
+          const idx=items.findIndex(item=>item.dataset.section===bestId);
+          if(idx!==-1&&idx!==activeIdx) moveHighlight(idx);
+        }
+      });
     }
   },{
-    threshold:[0,0.1,0.25,0.5,0.75,1],
+    threshold:[0,0.3,0.6],
     rootMargin:'-10% 0px -10% 0px'
   });
 
   sections.forEach(sec=>observer.observe(sec));
 
+  // ── Re-measure on resize (orientation change, etc) ──
+  const ro=new ResizeObserver(()=>{
+    measureOffsets();
+    // Re-position highlight with fresh measurements
+    const o=offsets[activeIdx];
+    if(o){
+      highlight.style.transform=`translateY(-50%) translateX(${o.left}px)`;
+      highlight.style.width=o.width+'px';
+    }
+  });
+  ro.observe(pill);
+
+  // ── Cleanup function for next re-init ──
+  _cleanup=()=>{
+    ac.abort();
+    observer.disconnect();
+    ro.disconnect();
+    visible.clear();
+    _cleanup=null;
+  };
 }
 
 // Expose for data-astro-rerun inline script (sole init path)
