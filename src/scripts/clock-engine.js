@@ -1,7 +1,7 @@
 // ═══ DATA (imported from src/data/) ═══
 import { SECTIONS, THUMB_COLORS, THUMB_IMAGES, THUMB_SVGS, PROJECTS } from '../data/clock-config.js';
 import { PUZZLE_PROJECTS } from '../data/projects.js';
-import { esc, prefersReducedMotion } from './shared.js';
+import { esc, prefersReducedMotion, smoothScrollToEl } from './shared.js';
 
 // ═══ STATE ═══
 let currentSection=0, modalOpen=false, carouselIndex=0, currentModalData=null;
@@ -456,7 +456,7 @@ function enterBrowseMode(){
   if(_navTarget!==null){
     const secId=['sec-about','sec-work','sec-notes','sec-bookmarks'][_navTarget];
     const target=document.getElementById(secId);
-    if(target)requestAnimationFrame(()=>target.scrollIntoView({behavior:'smooth',block:'start'}));
+    if(target)requestAnimationFrame(()=>smoothScrollToEl(target,'start'));
     _navTarget=null;
   }
   // If a note was requested from the clock popover, open it after transition
@@ -659,7 +659,7 @@ function navigateTo(s){
   if(modalOpen)return;
   if(phase==='browse'){
     const target=document.getElementById(['sec-about','sec-work','sec-notes','sec-bookmarks'][s]);
-    if(target)target.scrollIntoView({behavior:'smooth',block:'start'});
+    if(target)smoothScrollToEl(target,'start');
     return;
   }
   // In clock mode: skip to browse and scroll to the section
@@ -794,7 +794,7 @@ function openClockPop(q,idx,thumbEl){
     caseBtn.addEventListener('click',()=>{
       const pi=+caseBtn.dataset.pidx;
       closeClockPop();
-      openPuzzleModal(PUZZLE_PROJECTS[pi]);
+      openPuzzleModal(PUZZLE_PROJECTS[pi],caseBtn);
     });
   }
 
@@ -972,6 +972,16 @@ function _showModal(project,originEl){
   if(isMobileModal){
     // Mobile: let CSS slide-up transition handle everything — don't touch transform
   }else if(!prefersReducedMotion){
+    // Origin-aware: scale from trigger element's center
+    if(originEl){
+      const oR=originEl.getBoundingClientRect();
+      const mR=modalCard.getBoundingClientRect();
+      const ox=oR.left+oR.width/2-mR.left;
+      const oy=oR.top+oR.height/2-mR.top;
+      modalCard.style.transformOrigin=`${ox}px ${oy}px`;
+    }else{
+      modalCard.style.transformOrigin='';
+    }
     let scaleP=0;
     function scaleIn(){
       scaleP+=(1-scaleP)*0.15;
@@ -989,7 +999,7 @@ function _showModal(project,originEl){
   }
 }
 function openModal(q,idx,thumbEl){_showModal(PROJECTS[q][idx],thumbEl);}
-function openPuzzleModal(project){_showModal(project,null);}
+function openPuzzleModal(project,triggerEl){_showModal(project,triggerEl||null);}
 function recheckScrollLine(){
   requestAnimationFrame(()=>{if(modalBody){
     modalBody.scrollTop=0;modalBody.classList.remove('has-scroll-fade');
@@ -1005,7 +1015,7 @@ function closeModal(){
   document.body.style.overflow='';
   clockScreen.style.filter='';
   const isMobileClose=window.matchMedia('(max-width:480px)').matches;
-  if(!isMobileClose){modalCard.style.transform='';modalCard.style.willChange='';}
+  if(!isMobileClose){modalCard.style.transform='';modalCard.style.willChange='';modalCard.style.transformOrigin='';}
   else{modalCard.style.willChange='';} // Mobile: leave transform to CSS transition
   if(modalBody){modalBody.classList.remove('has-bottom-fade');modalBody.classList.remove('has-scroll-fade');}
   if(tiltRaf){cancelAnimationFrame(tiltRaf);tiltRaf=null;}
@@ -1058,7 +1068,8 @@ if(puzzleShowMore){
       puzzleExpanded=true;
       requestAnimationFrame(()=>{
         const firstExtra=puzzleGrid.querySelector('.puzzle-extra');
-        if(firstExtra)firstExtra.scrollIntoView({behavior:'smooth',block:'center'});
+        // Sync scroll with CSS stagger (max 0.4s delay + 0.3s animation = 700ms)
+        if(firstExtra)smoothScrollToEl(firstExtra,'center',0,700);
       });
     }else{
       puzzleGrid.classList.remove('expanded');
@@ -1066,7 +1077,7 @@ if(puzzleShowMore){
       puzzleShowMore.textContent='Show more work';
       puzzleExpanded=false;
       requestAnimationFrame(()=>{
-        puzzleShowMore.scrollIntoView({behavior:'smooth',block:'center'});
+        smoothScrollToEl(puzzleShowMore,'center');
       });
     }
   });
@@ -1087,7 +1098,7 @@ document.querySelectorAll('.puzzle-card[data-project]').forEach(card=>{
     }
     return;
   }
-  card.addEventListener('click',()=>openPuzzleModal(proj));
+  card.addEventListener('click',()=>openPuzzleModal(proj,card));
 });
 
 // ═══ LAZY VIDEO PLAYBACK — only play visible card videos ═══

@@ -79,11 +79,12 @@ npm run build  # production build
 
 ## Animation Rules (Emil Kowalski principles)
 
-Source: emilkowal.ski — "Building a Toast Component", "7 Practical Animation Tips", "Good vs Great Animations"
+Source: emilkowal.ski — all 11 articles (Toast, Drawer, 7 Tips, Good vs Great, Great Animations, You Don't Need Animations, Clip Path, CSS Transforms, Hold to Delete, Developing Taste, Animating in Public)
 
 ### Easing
 
 - **Primary easing: `cubic-bezier(0.32, 0.72, 0, 1)`** — custom ease-out, more energetic than built-in `ease-out`
+- **iOS sheet / drawer: same curve at 500ms** — matches Apple's native sheet animation feel
 - **Never use `ease-in`** for UI animations — it speeds up at the end, feels sluggish
 - **Never use `ease` or `ease-out` (built-in)** for polished work — they're too weak. Only acceptable for trivial hover background-color changes
 - **Use `ease-in-out` only** for natural physical motion (something starting and stopping, like a car)
@@ -98,23 +99,36 @@ Source: emilkowal.ski — "Building a Toast Component", "7 Practical Animation T
 
 - **UI animations: under 300ms** — anything longer feels sluggish
 - **Responsiveness sweet spot: 180ms** — feels noticeably snappier than 300ms
-- **Tooltips: 125ms** (`0.125s`)
+- **Tooltips: 125ms** (`0.125s`) with slight delay on first appearance (prevents accidental triggers)
+- **Subsequent tooltips: instant** — if user is already hovering in a toolbar, show next tooltip with `transition-duration: 0ms`
 - **Toasts: 400ms** entry with ease (exception to 300ms rule — toasts are passive, not blocking user action)
 - **Frequent actions: remove animation entirely** — if the user does it tens/hundreds of times a day, animation becomes annoying
+- **Press/release asymmetry:** slow confirmation (e.g. 2s linear hold-to-delete), fast dismissal (200ms ease-out on release)
 
 ### Scale
 
-- **Button press: `scale(0.97)`**
+- **Button press: `scale(0.97)`** — instant feedback, 160ms ease-out
 - **Never animate from `scale(0)`** — minimum entry scale is `0.9`. Objects don't appear from nothing
 - **Tooltip/popover entry: `scale(0.97)`**
 - **Modal entry: `scale(0.93)`**
+- **Combine scale with opacity** for subtle, polished enter/exit (e.g. `scale(0.5)` + `opacity:0`)
 
 ### Origin
 
 - **All animations must be origin-aware** — animate FROM the trigger element, not from center/edge of screen
 - **Set `transform-origin`** to match the anchor point (e.g. a dropdown from a button should scale from the button's position)
 - **Toasts originate from their trigger** — if the trigger is bottom-left, the toast scales in from bottom-left
+- **Use `%`-based translateY** for variable-height elements (Sonner pattern: toasts of unknown height use `translateY(100%)` not fixed px)
 - In the aggregate, unseen details compound into perceived polish
+
+### Scrolling
+
+- **Never use native `behavior:'smooth'`** — browser ease-in-out feels mechanical and is not interruptible
+- **Custom scroll easing:** use `smoothScrollTo()` from shared.js with ease-out cubic (≈ cubic-bezier(0.32,0.72,0,1))
+- **Scale duration with distance:** min 300ms, max 600ms — short scrolls are snappy, long scrolls stay controlled
+- **Always interruptible:** cancel programmatic scroll on user wheel/touch/key
+- **Damping on over-scroll:** the more you drag past a boundary, the less it moves (diminishing returns, not hard stop)
+- **Scroll momentum protection:** after scrolling past a boundary at high velocity, add a ~100ms timeout before allowing drag-to-dismiss (prevents accidental dismissal)
 
 ### Transitions vs Keyframes
 
@@ -124,19 +138,36 @@ Source: emilkowal.ski — "Building a Toast Component", "7 Practical Animation T
 ### Techniques
 
 - **Only animate `transform` and `opacity`** — GPU-composited, no layout/paint cost
+- **`clip-path` is hardware-accelerated** — use `inset()` for reveals instead of height/overflow transitions. No layout shift since element already occupies space
 - **Use `filter: blur(2px)` as a bridge** when no easing/duration combination feels right — it blends old and new states so the eye perceives smooth motion
 - **Swipe-to-dismiss: use velocity, not just distance** — a fast short swipe should dismiss (threshold: velocity > 0.11)
+- **Snap points with momentum:** users should be able to skip snap points or close completely with sufficient force
 - **Pause timers when tab is hidden** — `document.visibilitychange`
 - **Test in slow motion** — play animations at 0.25x to catch timing mismatches invisible at full speed
 - **Don't animate multiple unrelated properties simultaneously** (e.g. position + color) without testing in slow-mo
+- **Reverse-engineer great UI** — inspect animations you admire, study their curves and timing
+
+### Gestures & Drag
+
+- **CSS variables cause style recalc for all children** — when dragging, apply transforms directly to elements instead of updating CSS vars
+- **Multi-touch: ignore subsequent touches** after initial one until release (prevents position jumps when switching fingers)
+- **Virtual keyboard: use Visual Viewport API** to detect keyboard, not browser scroll heuristics
+
+### When NOT to Animate
+
+- **Never animate keyboard-initiated actions** — repeated hundreds of times daily, animation becomes friction
+- **Every animation must serve a purpose:** explain functionality, provide feedback, create spatial consistency, or delight (rarely)
+- **No animation on hyper-frequent actions** — if it happens tens/hundreds of times a day, skip it
+- **The best animation is sometimes no animation at all**
 
 ### Don'ts
 
 - No `transition: all` — always specify exact properties
 - No `ease-in` — ever
 - No `scale(0)` entry — minimum `0.9`
-- No delayed subsequent tooltips — if user is already hovering in a toolbar, show next tooltip instantly with `transition-duration: 0ms`
-- No animation on hyper-frequent actions
+- No native `scrollIntoView({behavior:'smooth'})` or `window.scrollTo({behavior:'smooth'})` — use custom scroll
+- No `requestAnimationFrame`-based animations when CSS transitions or WAAPI can do the job (rAF is OK for scroll since CSS can't drive scroll position)
+- No animating `padding`, `margin`, `height`, `width` — triggers layout. Use `transform` and `clip-path` instead
 
 ## Performance Guardrails
 

@@ -313,8 +313,12 @@ function renderBody(note){
       pop.style.visibility='hidden';pop.style.display='block';pop.style.left=left+'px';pop.style.top='0px';
       const popH=pop.offsetHeight;pop.style.visibility='';pop.style.display='';
       let top=termRect.top-popH-8;
-      if(top<winRect.top+8)top=termRect.bottom+8;
+      const below=top<winRect.top+8;
+      if(below)top=termRect.bottom+8;
       pop.style.left=left+'px';pop.style.top=top+'px';
+      // Origin-aware: scale from the trigger term's center
+      const originX=termRect.left+termRect.width/2-left;
+      pop.style.transformOrigin=`${originX}px ${below?'0':'100%'}`;
       requestAnimationFrame(()=>pop.classList.add('visible'));
     });
   });
@@ -328,7 +332,7 @@ function openNote(idx){
   currentNote=idx;const n=NOTES[idx];
   document.getElementById('anotesReaderDate').textContent=n.date;
   document.getElementById('anotesReaderTitle').textContent=n.title;
-  document.getElementById('anotesReaderTags').innerHTML=(n.tags||[]).map(t=>`<span class="reader-tag">${esc(t)}</span>`).join('');
+  document.getElementById('anotesReaderTags').innerHTML=(n.tags||[]).map(t=>`<span class="modal-tag">${esc(t)}</span>`).join('');
   renderBody(n);
   document.getElementById('anotesReaderScroll').scrollTop=0;
   anotesSlider.classList.add('show-reader');

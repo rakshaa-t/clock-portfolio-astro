@@ -132,7 +132,7 @@ function _showModal(project){
   }
 }
 
-function openPuzzleModal(project){_showModal(project);}
+function openPuzzleModal(project,triggerEl){_showModal(project);}
 
 function closeModal(){
   modalOpen=false;
@@ -222,7 +222,8 @@ function initPortfolioCore(){
         puzzleGrid.classList.add('expanded');
         puzzleShowMore.textContent='Show less';
         puzzleExpanded=true;
-        easeScrollTo(puzzleShowMore);
+        // Sync scroll with CSS stagger (max 0.4s delay + 0.3s animation = 700ms)
+        easeScrollTo(puzzleShowMore,700);
       }else{
         puzzleGrid.classList.remove('expanded');
         puzzleGrid.classList.add('collapsing');
@@ -247,7 +248,7 @@ function initPortfolioCore(){
       }
       return;
     }
-    card.addEventListener('click',()=>openPuzzleModal(proj));
+    card.addEventListener('click',()=>openPuzzleModal(proj,card));
   });
 
   // Lazy video playback

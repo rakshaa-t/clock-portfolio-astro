@@ -40,18 +40,12 @@ export const KINDLE_BOOKS=[
   {title:'Grid Systems',author:'Josef M\u00FCller-Brockmann',cover:'/books/grid-systems.jpg',progress:20,subtitle:'Graphic Design',notes:[
     {note:'I started as a product designer, most of what I read in 2020 was process and theory. <mark>This practicalisation of grids that feels like constraint but is actually liberation from it</mark> was a refreshing take. The book is massive so I can\'t carry it around like a kindle. 20% through.'}
   ]},
-  {title:'Psycho-Cybernetics',author:'Maxwell Maltz',cover:'/books/psycho-cybernetics.jpg',progress:60,subtitle:'Self-Image Psychology',notes:[
+  {title:'Psycho-Cybernetics',author:'Maxwell Maltz',cover:'/books/psycho-cybernetics.jpg',progress:100,subtitle:'Self-Image Psychology',notes:[
     {note:'A classic for self-concept. A plastic surgeon discovers how changing exterior parts helps people form completely new identities, and nothing changes for some. <mark>One of the best breakdowns I\'ve read on self-concept.</mark> It\'s a huge book. Some parts on kindle, some on audio.'}
   ]},
   // Finished
   {title:'Becoming Supernatural',author:'Dr. Joe Dispenza',cover:'/books/becoming-supernatural.jpg',progress:100,subtitle:'Mind & Body',notes:[
     {note:'Joe and his work are a classic, the book is a light of positivity. The borrowed principles from science, Indian spirituality and mindfulness come together beautifully. Some rituals felt excessive but <mark>I\'ve always been attracted to the blend of science and mysticism.</mark>'}
-  ]},
-  {title:'Feeling is the Secret',author:'Neville Goddard',cover:'/books/feeling-secret.jpg',progress:100,subtitle:'Manifestation',notes:[
-    {note:'Neville Goddard is someone whose work I spent a few months on back in the day. I was a newbie then, it helped me with a lot of short wins. <mark>Simple, clear and easy to comprehend.</mark> Misses a bit of nuance but maybe that\'s a good thing.'}
-  ]},
-  {title:'The Power of Now',author:'Eckhart Tolle',cover:'/books/power-of-now.jpg',progress:100,subtitle:'Presence',notes:[
-    {note:'An extension to what I took away from Siddhartha. Expected more about the mind and less about the form but <mark>it challenged some of my beliefs which I appreciated.</mark>'}
   ]},
   {title:'Bhagavad Gita As It Is',author:'A.C. Bhaktivedanta Swami Prabhupada',cover:'/books/bhagavad-gita.jpg',progress:100,subtitle:'Ancient Wisdom',notes:[
     {note:'I\'ve read this one twice. <mark>The meaning somehow changes each time.</mark> Initially it felt straightforward yet a bit repetitive. The second time I grasped action driven by devotion more. Some parts I\'m still yet to understand. I don\'t fully get the detaching from outcome part without letting it affect my input yet. <mark>In theory it makes sense but in practice I lose its grip.</mark> I\'ll revisit this when I have a broader perspective on work and life.'},

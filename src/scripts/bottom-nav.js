@@ -2,6 +2,8 @@
 // Mobile section navigation — sliding highlight, scroll-to-section.
 // Re-initializes on every page load (ViewTransitions compatible).
 
+import { smoothScrollToEl } from './shared.js';
+
 // Persistent state across re-inits
 let _cleanup=null;
 
@@ -98,7 +100,7 @@ function initBottomNav(){
       programmaticScroll=true;
       activeIdx=-1; // force update
       moveHighlight(i);
-      sec.scrollIntoView({behavior:'smooth',block:'start'});
+      smoothScrollToEl(sec,'start');
       setTimeout(()=>{programmaticScroll=false;},800);
     },{signal:ac.signal});
   });

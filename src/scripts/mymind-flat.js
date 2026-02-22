@@ -20,6 +20,7 @@ function initMymind(){
   let mmindActiveIdx=null;
   let mmindActiveFilter='all';
   let mmindSearchQuery='';
+  const mmindSection=mmindGrid.closest('.browse-section');
 
   function mmindBuildCard(card,i){
     const el=document.createElement('div');
@@ -71,11 +72,16 @@ function initMymind(){
       mmindPopWrap.classList.remove('open');
       mmindPopWrap.style.visibility='';
       const spaceBelow=viewH-cardRect.bottom-gap;
+      const below=spaceBelow>=popHeight;
       let top;
-      if(spaceBelow>=popHeight) top=cardRect.bottom+gap;
+      if(below) top=cardRect.bottom+gap;
       else top=cardRect.top-gap-popHeight;
       top=Math.max(16,Math.min(top,viewH-popHeight-16));
       mmindPopWrap.style.top=top+'px';
+      // Origin-aware: scale from the trigger card's center
+      const originX=cardRect.left+cardRect.width/2-left;
+      mmindPopover.style.transformOrigin=`${originX}px ${below?'0':'100%'}`;
+      mmindPopover.style.setProperty('--pop-dir',below?'6px':'-6px');
     }
 
     mmindGrid.querySelectorAll('.mm-card').forEach(c=>c.classList.remove('active'));
@@ -85,6 +91,11 @@ function initMymind(){
     mmindPopWrap.offsetHeight;
     mmindPopWrap.classList.add('open');
     mmindScrim.classList.add('open');
+    // Auto-close on any scroll
+    stopMmindScrollWatch();
+    function onMmindScroll(){ mmindClosePopover(); }
+    window.addEventListener('scroll',onMmindScroll,{passive:true,capture:true,once:true});
+    mmindSection._scrollClose=onMmindScroll;
 
     document.getElementById('mmindPopClose').addEventListener('click',(e)=>{
       e.stopPropagation();
@@ -106,7 +117,15 @@ function initMymind(){
     }
   }
 
+  function stopMmindScrollWatch(){
+    if(mmindSection._scrollClose){
+      window.removeEventListener('scroll',mmindSection._scrollClose,{passive:true,capture:true});
+      mmindSection._scrollClose=null;
+    }
+  }
+
   function mmindClosePopover(){
+    stopMmindScrollWatch();
     mmindPopWrap.classList.remove('open');
     mmindScrim.classList.remove('open');
     mmindGrid.querySelectorAll('.mm-card').forEach(c=>c.classList.remove('active'));
@@ -118,6 +137,7 @@ function initMymind(){
     mmindClosePopover();
     const isFiltered=mmindActiveFilter!=='all'||mmindSearchQuery;
     let visibleCount=0;
+    const vis=[],ext=[];
     MMIND_CARDS.forEach((card,i)=>{
       if(mmindActiveFilter!=='all'&&card.category!==mmindActiveFilter)return;
       if(mmindSearchQuery){
@@ -127,13 +147,21 @@ function initMymind(){
       }
       visibleCount++;
       const el=mmindBuildCard(card,i);
-      if(!isFiltered&&visibleCount>MMIND_INITIAL) el.classList.add('mm-extra');
       el.addEventListener('click',()=>{
         if(mmindActiveIdx===i)mmindClosePopover();
         else mmindOpenPopover(i,el);
       });
-      mmindGrid.appendChild(el);
+      if(!isFiltered&&visibleCount>MMIND_INITIAL){el.classList.add('mm-extra');ext.push(el);}
+      else vis.push(el);
     });
+    // Interleave extras among visible items in DOM so CSS columns
+    // distributes them across ALL columns when expanded.
+    // When collapsed, extras are display:none — only visible items flow (same order).
+    let vi=0,ei=0;
+    while(vi<vis.length||ei<ext.length){
+      if(vi<vis.length) mmindGrid.appendChild(vis[vi++]);
+      if(ei<ext.length) mmindGrid.appendChild(ext[ei++]);
+    }
     if(mmindShowMore){
       mmindShowMore.classList.toggle('hidden',isFiltered||visibleCount<=MMIND_INITIAL);
     }
@@ -146,11 +174,24 @@ function initMymind(){
     mmindFilters.querySelectorAll('.mymind-pill').forEach(p=>
       p.classList.toggle('active',p.dataset.filter===mmindActiveFilter)
     );
+    // Reset expanded state so extras don't occupy invisible layout space
+    mmindGrid.querySelectorAll('.mm-extra').forEach(el=>{
+      el.getAnimations().forEach(a=>a.cancel());
+      el.style.opacity='';el.style.transform='';
+    });
+    mmindGrid.classList.remove('expanded');
+    if(mmindShowMore) mmindShowMore.textContent='Show more bookmarks';
     mmindRenderGrid();
   });
 
   mmindSearchInput.addEventListener('input',()=>{
     mmindSearchQuery=mmindSearchInput.value.trim();
+    mmindGrid.querySelectorAll('.mm-extra').forEach(el=>{
+      el.getAnimations().forEach(a=>a.cancel());
+      el.style.opacity='';el.style.transform='';
+    });
+    mmindGrid.classList.remove('expanded');
+    if(mmindShowMore) mmindShowMore.textContent='Show more bookmarks';
     mmindRenderGrid();
   });
 
@@ -163,7 +204,32 @@ function initMymind(){
       const expanding=!mmindGrid.classList.contains('expanded');
       mmindGrid.classList.toggle('expanded');
       mmindShowMore.textContent=expanding?'Show fewer bookmarks':'Show more bookmarks';
-      easeScrollTo(mmindShowMore);
+      if(expanding){
+        // Items are now display:block; opacity:0 (CSS).
+        // Sort by visual position then reveal with WAAPI (compositor-thread, precise timing).
+        const extras=[...mmindGrid.querySelectorAll('.mm-extra')];
+        extras.sort((a,b)=>{
+          const ra=a.getBoundingClientRect(),rb=b.getBoundingClientRect();
+          return ra.top-rb.top||ra.left-rb.left;
+        });
+        const stagger=50;
+        extras.forEach((el,i)=>{
+          const anim=el.animate([
+            {opacity:0,transform:'translateY(12px)'},
+            {opacity:1,transform:'translateY(0)'}
+          ],{duration:300,delay:i*stagger,easing:'cubic-bezier(0.32,0.72,0,1)',fill:'forwards'});
+          anim.onfinish=()=>{el.style.opacity='1';el.style.transform='translateY(0)';};
+        });
+        const waveDuration=Math.max(400,extras.length*stagger+300);
+        easeScrollTo(mmindShowMore,waveDuration);
+      }else{
+        // Cancel any running animations, clear inline styles
+        mmindGrid.querySelectorAll('.mm-extra').forEach(el=>{
+          el.getAnimations().forEach(a=>a.cancel());
+          el.style.opacity='';el.style.transform='';
+        });
+        easeScrollTo(mmindShowMore);
+      }
     });
   }
 

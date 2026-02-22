@@ -23,6 +23,7 @@ function initBooks(){
   if(!booksGrid||!bookFilters) return;
 
   let bookActiveIdx=null;
+  const bookSection=booksGrid.closest('.browse-section');
   let bookActiveFilter='all';
 
   function buildCover(book,i){
@@ -32,7 +33,7 @@ function initBooks(){
     el.innerHTML=`
       <div class="book-cover-img">
         <img src="${esc(book.cover)}" alt="${esc(book.title)}" loading="lazy">
-        ${book.fav?'<div class="book-badge fav" title="Excellent"><svg viewBox="0 0 24 24" fill="#C0392B" stroke="none" width="12" height="12"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 22 12 18.56 5.82 22 7 14.14l-5-4.87 6.91-1.01z"/></svg></div>':book.progress===100?'<div class="book-badge done" title="Great"><svg viewBox="0 0 24 24" fill="#8B7EC8" stroke="none" width="12" height="12"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 22 12 18.56 5.82 22 7 14.14l-5-4.87 6.91-1.01z"/></svg></div>':''}
+        ${book.fav?'<div class="book-badge fav" data-tip="Excellent"><svg viewBox="0 0 24 24" fill="#C0392B" stroke="none" width="12" height="12"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 22 12 18.56 5.82 22 7 14.14l-5-4.87 6.91-1.01z"/></svg></div>':book.progress===100?'<div class="book-badge done" data-tip="Great"><svg viewBox="0 0 24 24" fill="#8B7EC8" stroke="none" width="12" height="12"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 22 12 18.56 5.82 22 7 14.14l-5-4.87 6.91-1.01z"/></svg></div>':''}
       </div>`;
     return el;
   }
@@ -40,7 +41,7 @@ function initBooks(){
   function openBookPopover(idx,cardEl){
     const book=KINDLE_BOOKS[idx];
     let html=`<div class="pop-header"><div class="pop-title">${esc(book.title)}</div><button class="pop-close" id="bookPopClose">&times;</button></div>`;
-    html+=`<div class="book-pop-meta">by ${esc(book.author)}</div>`;
+    html+=`<div class="book-pop-meta">by ${esc(book.author)}${book.fav?'<span class="book-pop-rating excellent">Excellent</span>':book.progress===100?'<span class="book-pop-rating great">Great</span>':''}</div>`;
     html+=`<div class="book-pop-progress"><div class="book-pop-progress-bar"><div class="book-pop-progress-fill" style="width:${book.progress}%"></div></div><span class="book-pop-pct">${book.progress}%</span></div>`;
     if(book.notes&&book.notes.length>0){
       html+=`<div class="book-pop-highlights">`;
@@ -67,11 +68,16 @@ function initBooks(){
       bookPopWrap.classList.remove('open');
       bookPopWrap.style.visibility='';
       const spaceBelow=viewH-cardRect.bottom-gap;
+      const below=spaceBelow>=popHeight;
       let top;
-      if(spaceBelow>=popHeight) top=cardRect.bottom+gap;
+      if(below) top=cardRect.bottom+gap;
       else top=cardRect.top-gap-popHeight;
       top=Math.max(16,Math.min(top,viewH-popHeight-16));
       bookPopWrap.style.top=top+'px';
+      // Origin-aware: scale from the trigger card's center
+      const originX=cardRect.left+cardRect.width/2-left;
+      bookPopover.style.transformOrigin=`${originX}px ${below?'0':'100%'}`;
+      bookPopover.style.setProperty('--pop-dir',below?'8px':'-8px');
     }
 
     booksGrid.querySelectorAll('.book-cover-item').forEach(c=>c.classList.remove('active'));
@@ -81,13 +87,26 @@ function initBooks(){
     bookPopWrap.offsetHeight;
     bookPopWrap.classList.add('open');
     bookScrim.classList.add('open');
+    // Auto-close on any scroll
+    stopBookScrollWatch();
+    function onBookScroll(){ closeBookPopover(); }
+    window.addEventListener('scroll',onBookScroll,{passive:true,capture:true,once:true});
+    bookSection._scrollClose=onBookScroll;
     document.getElementById('bookPopClose').addEventListener('click',(e)=>{
       e.stopPropagation();
       closeBookPopover();
     });
   }
 
+  function stopBookScrollWatch(){
+    if(bookSection._scrollClose){
+      window.removeEventListener('scroll',bookSection._scrollClose,{passive:true,capture:true});
+      bookSection._scrollClose=null;
+    }
+  }
+
   function closeBookPopover(){
+    stopBookScrollWatch();
     bookPopWrap.classList.remove('open');
     bookScrim.classList.remove('open');
     booksGrid.querySelectorAll('.book-cover-item').forEach(c=>c.classList.remove('active'));
@@ -143,7 +162,18 @@ function initBooks(){
       const expanding=!booksGrid.classList.contains('expanded');
       booksGrid.classList.toggle('expanded');
       booksShowMore.textContent=expanding?'Show fewer books':'Show more books';
-      easeScrollTo(booksShowMore);
+      if(expanding){
+        // Stagger reveal: 50ms between each item (wave top→bottom)
+        const extras=[...booksGrid.querySelectorAll('.book-extra')];
+        const stagger=0.05;
+        extras.forEach((el,i)=>{el.style.animationDelay=`${i*stagger}s`;});
+        // Sync scroll duration with wave so page follows the reveals
+        const waveDuration=Math.max(400,(extras.length*stagger+0.3)*1000);
+        easeScrollTo(booksShowMore,waveDuration);
+      }else{
+        booksGrid.querySelectorAll('.book-extra').forEach(el=>{el.style.animationDelay='';});
+        easeScrollTo(booksShowMore);
+      }
     });
   }
 
