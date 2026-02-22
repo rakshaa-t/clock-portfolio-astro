@@ -1823,7 +1823,18 @@ a.about-dropdown-item:hover{opacity:0.7;}
 }
 .sound-knob-mobile .sound-knob{width:24px;height:24px;}
 .sound-knob-mobile .knob-dot{width:3.5px;height:3.5px;}
-/* Tooltip show class (click-triggered) */
+/* Mobile tooltip — appears above the nav */
+.knob-tooltip-mobile{
+  right:auto;left:50%;top:auto;bottom:calc(100% + 8px);
+  transform:translateX(-50%) translateY(4px);
+}
+.knob-tooltip-mobile::after{
+  right:auto;left:50%;top:auto;bottom:-7px;
+  transform:translateX(-50%);
+  border:4px solid transparent;border-top-color:var(--text-primary);border-left-color:transparent;
+}
+.knob-tooltip-mobile.show{opacity:1;transform:translateX(-50%) translateY(0);}
+/* Desktop tooltip show class (click-triggered) */
 .knob-tooltip.show{opacity:1;transform:translateY(-50%) translateX(0);}
 
 /* ═══ PAGE CONTENT (V2 flat layout) ═══ */

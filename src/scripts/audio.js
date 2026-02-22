@@ -75,17 +75,21 @@ function _initAudio(){
   const knob=document.getElementById('soundKnob');
   const knobTip=document.getElementById('knobTooltip');
   const knobMirror=document.querySelector('.sound-knob-mirror');
+  const knobTipMobile=document.querySelector('.knob-tooltip-mobile');
 
-  function toggle(){
+  function showTip(tip){
+    if(!tip) return;
+    tip.textContent=_soundOn?'Sound on':'Sound off';
+    tip.classList.add('show');
+    clearTimeout(_tipTimer);
+    _tipTimer=setTimeout(()=>tip.classList.remove('show'),1500);
+  }
+
+  function toggle(tip){
     _soundOn=!_soundOn;
     if(knob) knob.classList.toggle('off',!_soundOn);
     if(knobMirror) knobMirror.classList.toggle('off',!_soundOn);
-    if(knobTip){
-      knobTip.textContent=_soundOn?'Sound on':'Sound off';
-      knobTip.classList.add('show');
-      clearTimeout(_tipTimer);
-      _tipTimer=setTimeout(()=>knobTip.classList.remove('show'),1500);
-    }
+    showTip(tip);
     knobClick();
   }
 
@@ -93,8 +97,8 @@ function _initAudio(){
   if(knob) knob.classList.toggle('off',!_soundOn);
   if(knobMirror) knobMirror.classList.toggle('off',!_soundOn);
 
-  if(knob) knob.addEventListener('click',toggle);
-  if(knobMirror) knobMirror.addEventListener('click',toggle);
+  if(knob) knob.addEventListener('click',()=>toggle(knobTip));
+  if(knobMirror) knobMirror.addEventListener('click',()=>toggle(knobTipMobile));
 }
 
 // Expose for data-astro-rerun inline script (sole init path)
