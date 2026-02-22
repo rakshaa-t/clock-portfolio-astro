@@ -23,9 +23,9 @@ function initBottomNav(){
   // ── Pre-calculate highlight offsets (no getBoundingClientRect on scroll) ──
   let offsets=[];
   function measureOffsets(){
-    const pillLeft=pill.offsetLeft;
+    // items are children of pill (position:relative), so offsetLeft is already relative to pill
     offsets=items.map(item=>({
-      left:item.offsetLeft-pillLeft,
+      left:item.offsetLeft,
       width:item.offsetWidth
     }));
   }
