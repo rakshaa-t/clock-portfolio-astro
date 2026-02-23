@@ -6,17 +6,17 @@
 export const NOTES=[
   {
     slug:"building-my-personal-website",
-    title:"Process Breakdown: Building my personal website",
+    title:"V1: Building my personal website — first draft",
     date:"Feb 16, 2026",sortDate:20260216,
     tags:["design","process","personal website"],
-    preview:"How a random Tuesday, a clock app, and an obsessive build process turned into this website...",
+    preview:"How a random Tuesday, a clock app, and an obsessive build process turned into the first version of this website...",
     rich:true,
     body:[
       {type:"text",html:`<p>The whole thing started with me looking at the iPhone clock app on a random Tuesday. Beautiful interface. I'd never seen a webpage with circular navigation like a clock. So naturally I had to fiddle with the idea.</p>`},
       {type:"text",html:`<p>The initial idea was actually the entire webpage as a clock component. Rotate through sections, everything lives inside the clock face. Looked cool but the UX was genuinely bad. So the clock became a preview and navigation system instead. You can hop between sections or glance at primary content in each category right from the clock face.</p>`},
       {type:"image",src:"/article/clock-overview.png",caption:"The clock navigation system"},
       {type:"image",src:"/article/work-modal.jpg",caption:"Each section is its own interactable object"},
-      {type:"text",html:`<p>Once the clock was the muse, the next step was looking at familiar objects. Kindle, Notes app, <a class="note-link" href="https://mymind.com" target="_blank">Mymind</a>. These products are already widely used. People more or less know their UX. No need to reinvent the wheel. So they're built into my personal website as they are, or as close as possible. The navigation is rotation but the experience feels linear.</p>`},
+      {type:"text",html:`<p>Once the clock was the muse, the next step was looking at familiar objects. Kindle, Notes app, <a class="note-link" href="https://mymind.com" target="_blank">Mymind</a>. These products are already widely used. People more or less know their UX. No need to reinvent the wheel. So they were built into my personal website as they were, or as close as possible. The navigation was rotation but the experience felt linear.</p>`},
       {type:"image",src:"/article/notes-list.png",caption:"The Notes app"},
       {type:"image",src:"/article/mymind-masonry.jpg",caption:"The Mymind board"},
       {type:"text",html:`<p><strong>The facets</strong></p>`},
@@ -24,7 +24,7 @@ export const NOTES=[
       {type:"text",html:`<p><em>Discoverability</em> / Users can discover more about me but only if they wish to. Want to see what I think about a book I read? Glance through my Kindle highlights. Share my notes on X? Visit my bookmarks? Copy the links to your clipboard? All available but nothing shown by default. Every section has its own navigation. Only what's necessary is on screen, and if the viewer's curiosity persists they can go deeper.</p>`},
       {type:"text",html:`<p><em>Nostalgia</em> / Each section connects to something the viewer already knows. A Kindle, a notes app, <a class="note-link" href="https://mymind.com" target="_blank">Mymind</a>. My approach might be a bit biased towards iOS users but the interfaces are easy to pick up even if not familiar. I also added sound to interactions. Rotating the clock, clicking through notes, shuffling the stack cards. Each one has its own sound. That part took me a while to get right honestly.</p>`},
       {type:"text",html:`<p><em>Compartmentalisation</em> / The website works in compartments (the clock quadrants) and each one gives its own experience. Each compartment holds the power to expand as more of my data comes. Maybe someday the Kindle becomes a full reading experience, or the bookmarks board becomes an extension of my entire <a class="note-link" href="https://mymind.com" target="_blank">Mymind</a>. That kind of expansion may never be needed but the architecture allows for it.</p>`},
-      {type:"text",html:`<p><em>Continuous refinement</em> / This website is how I work. You can see in real time what I'm drawing inspiration from, what I'm reading, what I'm writing about, what designs I'm experimenting with. A living space.</p>`},
+      {type:"text",html:`<p><em>Continuous refinement</em> / This website was how I worked. You could see in real time what I was drawing inspiration from, what I was reading, what I was writing about, what designs I was experimenting with. A living space, at least that was the idea.</p>`},
       {type:"image",src:"/article/about-section.jpg",caption:"The about section"},
       {type:"text",html:`<p><strong>The build</strong></p>`},
       {type:"text",html:`<p>All started with a rough sketch and Claude Code's CLI. Instead of building the whole website at once the build process was compartmentalised too. Clock component first. Get that working, get the rotation feeling right, get the hand snapping to sections. Once that felt solid, objectify the rest of the content one section at a time. Clock, then Kindle, then Notes, then <a class="note-link" href="https://mymind.com" target="_blank">Mymind</a>. Each one its own mini project within the project.</p>`},
@@ -32,7 +32,7 @@ export const NOTES=[
       {type:"text",html:`<p>Quick prototypes in vanilla HTML first, to see if the interaction patterns actually worked, then Astro as the build framework. The design keeps things simple on the framework side. Static pages with JS doing the heavy lifting. Astro was the right fit.</p>`},
       {type:"text",html:`<p>Sounds use the Web Audio API. Took a bit of back and forth to find the right tone for each interaction. Everything is synthesised in real-time through code so each sound responds to exactly how you interact with it. That was a fun rabbit hole.</p>`},
       {type:"text",html:`<p>The whole stack is vanilla JS and one CSS file. These components took about three weeks and close to 100 iterations.</p>`},
-      {type:"text",html:`<p>Thats all for now, cheers!</p>`},
+      {type:"text",html:`<p>This was V1. It didn't ship. The clock idea was solid but too many interactions to get to basic content. People were confused by the rotation more than they enjoyed it. The skeuomorphic stuff looked cool for a week then felt heavy. I scrapped it and started V2 with a different structure. Same philosophy, less friction.</p>`},
     ]
   },
   {

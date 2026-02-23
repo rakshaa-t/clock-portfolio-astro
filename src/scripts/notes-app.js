@@ -332,8 +332,19 @@ function openNote(idx){
   currentNote=idx;const n=NOTES[idx];
   document.getElementById('anotesReaderDate').textContent=n.date;
   document.getElementById('anotesReaderTitle').textContent=n.title;
-  document.getElementById('anotesReaderTags').innerHTML=(n.tags||[]).map(t=>`<span class="modal-tag">${esc(t)}</span>`).join('');
+  document.getElementById('anotesReaderTags').innerHTML='';
   renderBody(n);
+  // Up Next
+  const body=document.getElementById('anotesReaderBody');
+  if(body&&NOTES.length>1){
+    const nextIdx=(idx+1)%NOTES.length;
+    const next=NOTES[nextIdx];
+    const upNext=document.createElement('div');
+    upNext.className='note-upnext';
+    upNext.innerHTML=`<div class="note-upnext-label">Up next</div><div class="note-upnext-card"><div class="note-card-date">${esc(next.date)}</div><div class="note-card-title">${esc(next.title)}</div><div class="note-card-preview">${esc(next.preview)}</div></div>`;
+    upNext.querySelector('.note-upnext-card').addEventListener('click',()=>openNote(nextIdx));
+    body.appendChild(upNext);
+  }
   document.getElementById('anotesReaderScroll').scrollTop=0;
   anotesSlider.classList.add('show-reader');
 }

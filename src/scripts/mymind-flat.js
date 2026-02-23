@@ -3,7 +3,7 @@
 // Re-initializes on every page load (ViewTransitions compatible).
 
 import { MMIND_CARDS } from '../data/mymind.js';
-import { esc, easeScrollTo } from './shared.js';
+import { esc } from './shared.js';
 
 const MMIND_INITIAL=9;
 
@@ -220,15 +220,12 @@ function initMymind(){
           ],{duration:300,delay:i*stagger,easing:'cubic-bezier(0.32,0.72,0,1)',fill:'forwards'});
           anim.onfinish=()=>{el.style.opacity='1';el.style.transform='translateY(0)';};
         });
-        const waveDuration=Math.max(400,extras.length*stagger+300);
-        easeScrollTo(mmindShowMore,waveDuration);
       }else{
         // Cancel any running animations, clear inline styles
         mmindGrid.querySelectorAll('.mm-extra').forEach(el=>{
           el.getAnimations().forEach(a=>a.cancel());
           el.style.opacity='';el.style.transform='';
         });
-        easeScrollTo(mmindShowMore);
       }
     });
   }

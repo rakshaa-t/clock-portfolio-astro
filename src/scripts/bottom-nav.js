@@ -105,6 +105,19 @@ function initBottomNav(){
     },{signal:ac.signal});
   });
 
+  // ── Scroll-to-top chevron (desktop only) ──
+  const scrollTopBtn=document.getElementById('navScrollTop');
+  if(scrollTopBtn){
+    function updateChevronVisibility(){
+      scrollTopBtn.classList.toggle('visible',window.scrollY>50);
+    }
+    window.addEventListener('scroll',updateChevronVisibility,{passive:true,signal:ac.signal});
+    scrollTopBtn.addEventListener('click',()=>{
+      smoothScrollToEl(document.body,'start');
+    },{signal:ac.signal});
+    updateChevronVisibility();
+  }
+
   // ── Re-measure on resize ──
   const ro=new ResizeObserver(()=>{
     measureOffsets();

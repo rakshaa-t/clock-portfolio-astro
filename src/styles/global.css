@@ -1148,6 +1148,26 @@ a.about-dropdown-item:hover{opacity:0.7;}
 .footer-link{color:var(--text-muted);text-decoration:none;}
 .footer-link:hover{text-decoration:underline;color:var(--text-secondary);}
 
+/* ═══ SCROLL REVEAL — staggered fade-in with blur ═══ */
+.reveal-item{
+  opacity:0;
+  filter:blur(4px);
+  transform:translateY(10px);
+  transition:opacity 0.45s cubic-bezier(0.32,0.72,0,1),
+             filter 0.45s cubic-bezier(0.32,0.72,0,1),
+             transform 0.45s cubic-bezier(0.32,0.72,0,1);
+}
+.reveal-item.revealed{
+  opacity:1;
+  filter:blur(0);
+  transform:translateY(0);
+}
+/* 3D card tilt — subtle perspective rotation on hover (desktop) */
+.tilt-card{
+  transform-style:preserve-3d;
+  transition:transform 0.2s cubic-bezier(0.32,0.72,0,1),box-shadow 0.2s cubic-bezier(0.32,0.72,0,1);
+}
+
 .browse-section{padding:64px 24px;border-bottom:1px solid rgba(0,0,0,0.04);text-align:left;}
 .browse-section:last-child{border-bottom:none;}
 .browse-section-label{
@@ -1682,6 +1702,8 @@ a.about-dropdown-item:hover{opacity:0.7;}
   .book-pop{transition:opacity 0s,transform 0s!important;}
   .clock-wrapper.settle{animation:none!important;}
   .kindle-screen.eink-flash{animation:none!important;}
+  .reveal-item{opacity:1!important;filter:none!important;transform:none!important;}
+  .tilt-card{transform:none!important;}
   .puzzle-card:hover{transform:none;}
   .puzzle-card:active{transform:none;}
   .puzzle-card:hover .puzzle-img{transform:none;}
@@ -1819,6 +1841,22 @@ a.about-dropdown-item:hover{opacity:0.7;}
 }
 .bottom-nav-item.active{color:var(--text-primary);}
 .bottom-nav-item:active{transform:scale(0.97);}
+/* Scroll-to-top chevron — desktop only, adjacent to nav pill */
+.nav-scroll-top{
+  position:absolute;top:50%;right:0;
+  transform:translateY(-50%);
+  width:32px;height:32px;border-radius:50%;
+  background:#DDD9D3;border:1px solid rgba(255,255,255,0.3);
+  box-shadow:0 2px 6px rgba(0,0,0,0.08);
+  cursor:pointer;
+  display:none;align-items:center;justify-content:center;
+  color:rgba(58,54,50,0.5);
+  opacity:0;pointer-events:none;
+  transition:opacity 0.3s cubic-bezier(0.32,0.72,0,1),right 0.3s cubic-bezier(0.32,0.72,0,1),color 0.15s cubic-bezier(0.32,0.72,0,1);
+}
+.nav-scroll-top.visible{opacity:1;pointer-events:auto;right:-40px;}
+.nav-scroll-top:hover{color:var(--accent);}
+.nav-scroll-top:active{transform:translateY(-50%) scale(0.93);}
 /* Desktop knob — standalone, hidden on mobile */
 .sound-knob-desktop{display:flex;}
 /* Mobile knob — inside nav, hidden on desktop */
@@ -2148,6 +2186,26 @@ a.about-dropdown-item:hover{opacity:0.7;}
 .note-page-share:hover{background:rgba(0,0,0,0.04);color:var(--text-primary);}
 .note-page-share:active{transform:scale(0.97);}
 
+/* Up Next (shared between reader & standalone page) */
+.note-upnext,.note-page-upnext{margin-top:40px;padding-top:24px;border-top:1px solid rgba(0,0,0,0.06);}
+.note-upnext-label,.note-page-upnext-label{
+  font-family:'Geist Mono',monospace;font-size:12px;font-weight:600;
+  letter-spacing:0.04em;text-transform:uppercase;
+  color:var(--text-muted);margin-bottom:12px;
+}
+.note-upnext-card{
+  cursor:pointer;padding:16px;border-radius:var(--radius-md);
+  background:rgba(255,255,255,0.4);border:1px solid rgba(0,0,0,0.06);
+  transition:transform 0.2s cubic-bezier(0.32,0.72,0,1),box-shadow 0.2s cubic-bezier(0.32,0.72,0,1),border-color 0.2s cubic-bezier(0.32,0.72,0,1);
+}
+.note-upnext-card:hover{
+  transform:translateY(-2px);
+  box-shadow:0 6px 20px rgba(0,0,0,0.06),0 2px 6px rgba(0,0,0,0.04);
+  border-color:rgba(139,126,200,0.2);
+}
+.note-upnext-card:active{transform:scale(0.97);}
+.note-page-upnext .note-card{margin-top:0;}
+
 /* ═══ RESPONSIVE ═══ */
 /* ═══ MOBILE (≤480px) ═══ */
 @media(max-width:480px){
@@ -2376,6 +2434,7 @@ a.about-dropdown-item:hover{opacity:0.7;}
   }
   /* Hide mobile knob in nav on desktop — standalone knob handles it */
   .sound-knob-mobile{display:none;}
+  .nav-scroll-top{display:flex;}
   .bottom-nav-item{flex:none;padding:8px 12px;}
 }
 @media(min-width:1200px){:root{--clock-size:560px;--thumbnail-size:36px;}.menu-label{font-size:14px;}}

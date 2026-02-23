@@ -3,7 +3,7 @@
 // Re-initializes on every page load (ViewTransitions compatible).
 
 import { PUZZLE_PROJECTS } from '../data/projects.js';
-import { esc, prefersReducedMotion, easeScrollTo } from './shared.js';
+import { esc, prefersReducedMotion } from './shared.js';
 
 // ═══ STATE ═══
 let modalOpen=false, carouselIndex=0, currentModalData=null;
@@ -222,14 +222,11 @@ function initPortfolioCore(){
         puzzleGrid.classList.add('expanded');
         puzzleShowMore.textContent='Show less';
         puzzleExpanded=true;
-        // Sync scroll with CSS stagger (max 0.4s delay + 0.3s animation = 700ms)
-        easeScrollTo(puzzleShowMore,700);
       }else{
         puzzleGrid.classList.remove('expanded');
         puzzleGrid.classList.add('collapsing');
         puzzleShowMore.textContent='Show more work';
         puzzleExpanded=false;
-        easeScrollTo(puzzleShowMore);
       }
     });
   }

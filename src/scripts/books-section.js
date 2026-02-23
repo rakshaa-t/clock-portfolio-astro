@@ -3,7 +3,7 @@
 // Re-initializes on every page load (ViewTransitions compatible).
 
 import { KINDLE_BOOKS } from '../data/books.js';
-import { esc, easeScrollTo } from './shared.js';
+import { esc } from './shared.js';
 
 const BOOKS_INITIAL=8;
 
@@ -167,12 +167,8 @@ function initBooks(){
         const extras=[...booksGrid.querySelectorAll('.book-extra')];
         const stagger=0.05;
         extras.forEach((el,i)=>{el.style.animationDelay=`${i*stagger}s`;});
-        // Sync scroll duration with wave so page follows the reveals
-        const waveDuration=Math.max(400,(extras.length*stagger+0.3)*1000);
-        easeScrollTo(booksShowMore,waveDuration);
       }else{
         booksGrid.querySelectorAll('.book-extra').forEach(el=>{el.style.animationDelay='';});
-        easeScrollTo(booksShowMore);
       }
     });
   }

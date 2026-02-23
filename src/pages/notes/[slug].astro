@@ -30,6 +30,9 @@ function renderBlock(block) {
 const bodyHtml = note.rich
   ? note.body.map(renderBlock).join('')
   : (typeof note.body === 'string' ? note.body : '');
+
+const currentIdx = NOTES.findIndex(n => n.slug === note.slug);
+const nextNote = NOTES[(currentIdx + 1) % NOTES.length];
 ---
 
 <Layout title={`${note.title} — Raksha Tated`} description={note.preview}>
@@ -41,9 +44,6 @@ const bodyHtml = note.rich
       Back
     </button>
     <div class="note-page-date">{note.date}</div>
-    <div class="note-page-tags">
-      {(note.tags || []).map(t => <span class="note-page-tag">{t}</span>)}
-    </div>
     <h1 class="note-page-title">{note.title}</h1>
     <div class="note-page-body" set:html={bodyHtml} />
     <div class="note-page-footer">
@@ -51,6 +51,16 @@ const bodyHtml = note.rich
         Share on <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" style="margin-left:2px;"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
       </button>
     </div>
+    {nextNote && nextNote.slug !== note.slug && (
+      <div class="note-page-upnext">
+        <div class="note-page-upnext-label">Up next</div>
+        <a href={`/notes/${nextNote.slug}`} class="note-card">
+          <div class="note-card-date">{nextNote.date}</div>
+          <div class="note-card-title">{nextNote.title}</div>
+          <div class="note-card-preview">{nextNote.preview}</div>
+        </a>
+      </div>
+    )}
   </div>
 </div>
 
