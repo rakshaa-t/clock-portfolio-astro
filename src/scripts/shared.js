@@ -50,6 +50,25 @@ export function smoothScrollToEl(el,block='start',offset=0,duration,easing){
   smoothScrollTo(targetY,duration,easing);
 }
 
+// Custom horizontal smooth scroll for an element (e.g. carousel).
+// Replaces native behavior:'smooth' (ease-in-out, not interruptible).
+export function smoothScrollElH(container,targetLeft,duration){
+  if(!container) return;
+  if(prefersReducedMotion){container.scrollLeft=targetLeft;return;}
+  const startLeft=container.scrollLeft;
+  const diff=targetLeft-startLeft;
+  if(Math.abs(diff)<2) return;
+  if(!duration) duration=Math.min(400,Math.max(200,Math.abs(diff)*0.4));
+  const startTime=performance.now();
+  let raf=null;
+  function step(now){
+    const progress=Math.min((now-startTime)/duration,1);
+    container.scrollLeft=startLeft+diff*_easeOut(progress);
+    if(progress<1) raf=requestAnimationFrame(step);
+  }
+  raf=requestAnimationFrame(step);
+}
+
 // Scroll `el` to the bottom edge of the viewport + 24px padding.
 // Optional duration syncs scroll speed with reveal animations.
 export function easeScrollTo(el,duration){

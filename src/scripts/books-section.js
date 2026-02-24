@@ -42,7 +42,7 @@ function initBooks(){
     const book=KINDLE_BOOKS[idx];
     let html=`<div class="pop-header"><div class="pop-title">${esc(book.title)}</div><button class="pop-close" id="bookPopClose">&times;</button></div>`;
     html+=`<div class="book-pop-meta">by ${esc(book.author)}${book.fav?'<span class="book-pop-rating excellent">Excellent</span>':book.progress===100?'<span class="book-pop-rating great">Great</span>':''}</div>`;
-    html+=`<div class="book-pop-progress"><div class="book-pop-progress-bar"><div class="book-pop-progress-fill" style="width:${book.progress}%"></div></div><span class="book-pop-pct">${book.progress}%</span></div>`;
+    html+=`<div class="book-pop-progress"><div class="book-pop-progress-bar"><div class="book-pop-progress-fill" style="width:100%;transform:scaleX(${book.progress/100})"></div></div><span class="book-pop-pct">${book.progress}%</span></div>`;
     if(book.notes&&book.notes.length>0){
       html+=`<div class="book-pop-highlights">`;
       html+=book.notes.map(n=>`<div class="book-pop-highlight">${n.note}</div>`).join('');
@@ -87,10 +87,13 @@ function initBooks(){
     bookPopWrap.offsetHeight;
     bookPopWrap.classList.add('open');
     bookScrim.classList.add('open');
-    // Auto-close on any scroll
+    // Auto-close on scroll outside popover
     stopBookScrollWatch();
-    function onBookScroll(){ closeBookPopover(); }
-    window.addEventListener('scroll',onBookScroll,{passive:true,capture:true,once:true});
+    function onBookScroll(e){
+      if(bookPopWrap.contains(e.target)) return;
+      closeBookPopover();
+    }
+    window.addEventListener('scroll',onBookScroll,{passive:true,capture:true});
     bookSection._scrollClose=onBookScroll;
     document.getElementById('bookPopClose').addEventListener('click',(e)=>{
       e.stopPropagation();
