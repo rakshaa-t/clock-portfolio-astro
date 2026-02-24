@@ -72,6 +72,12 @@ const nextNote = NOTES[(currentIdx + 1) % NOTES.length];
       window.open(`https://x.com/intent/tweet?text=${encodeURIComponent(`"${title}"\n\nhttps://raksha.design${window.location.pathname}`)}`, '_blank');
     });
   }
+  // Note card click sound (Up Next card)
+  document.querySelectorAll('.note-card').forEach(card => {
+    card.addEventListener('click', () => {
+      if (window.__clockAudio) window.__clockAudio.noteClick();
+    });
+  });
 </script>
 
 </Layout>

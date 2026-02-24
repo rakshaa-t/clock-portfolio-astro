@@ -3,13 +3,17 @@
 // Re-initializes on every page load (ViewTransitions compatible).
 
 import { PUZZLE_PROJECTS } from '../data/projects.js';
-import { esc, prefersReducedMotion } from './shared.js';
+import { esc, prefersReducedMotion, smoothScrollToEl } from './shared.js';
 
 // ═══ STATE ═══
 let modalOpen=false, carouselIndex=0, currentModalData=null;
 
 // ═══ MUTABLE DOM REFS (re-assigned on each page load) ═══
-let modalOverlay, modalCard, modalBody;
+let modalOverlay, modalCard, modalBody, modalDescWrap, carouselScroll;
+let slideObserver=null;
+
+// ═══ PLACEHOLDER TEXT ═══
+const PLACEHOLDER_DESC='A detailed case study for this project is coming soon. Check back for an in-depth look at the design process, challenges, and outcomes.';
 
 // ═══ 3D TILT ═══
 const TILT_MAX=0.6;
@@ -40,6 +44,13 @@ function updateTiltRect(){
 // ═══ CAROUSEL HELPERS ═══
 function _slideCount(p){return (p.images||p.slides).length;}
 
+function updateCounter(){
+  if(!currentModalData)return;
+  const total=_slideCount(currentModalData);
+  const counterEl=document.getElementById('carouselCounter');
+  counterEl.textContent=total<=1?'':`${carouselIndex+1} / ${total}`;
+}
+
 function updateCarouselButtons(){
   if(!currentModalData)return;
   document.querySelector('.carousel-btn.prev').disabled=(carouselIndex===0);
@@ -48,35 +59,64 @@ function updateCarouselButtons(){
 
 function renderModalDesc(project,slideIdx){
   const descEl=document.getElementById('modalDesc');
+  if(!project.desc){
+    descEl.innerHTML=`<p>${esc(PLACEHOLDER_DESC)}</p>`;
+    return;
+  }
   const d=Array.isArray(project.desc)?project.desc[slideIdx]||project.desc[0]:project.desc;
   descEl.innerHTML=d.split('\n\n').map(p=>`<p>${esc(p)}</p>`).join('');
 }
 
-function recheckScrollLine(){
-  requestAnimationFrame(()=>{if(modalBody){
-    modalBody.scrollTop=0;modalBody.classList.remove('has-scroll-fade');
-    const hasOverflow=modalBody.scrollHeight>modalBody.clientHeight+4;
-    modalBody.classList.toggle('has-bottom-fade',hasOverflow);
+function recheckDescScroll(){
+  requestAnimationFrame(()=>{if(modalDescWrap){
+    modalDescWrap.scrollTop=0;modalDescWrap.classList.remove('has-scroll-fade');
+    const hasOverflow=modalDescWrap.scrollHeight>modalDescWrap.clientHeight+4;
+    modalDescWrap.classList.toggle('has-bottom-fade',hasOverflow);
   }});
+}
+
+// ═══ SNAP-SCROLL OBSERVER ═══
+function setupSlideObserver(){
+  if(slideObserver) slideObserver.disconnect();
+  if(!carouselScroll) return;
+  const slides=carouselScroll.querySelectorAll('.carousel-slide');
+  if(!slides.length) return;
+  slideObserver=new IntersectionObserver((entries)=>{
+    for(const e of entries){
+      if(e.isIntersecting){
+        const idx=[...slides].indexOf(e.target);
+        if(idx>=0&&idx!==carouselIndex){
+          carouselIndex=idx;
+          updateCounter();
+          updateCarouselButtons();
+          if(Array.isArray(currentModalData?.desc)){renderModalDesc(currentModalData,carouselIndex);recheckDescScroll();}
+        }
+      }
+    }
+  },{root:carouselScroll,threshold:0.6});
+  slides.forEach(s=>slideObserver.observe(s));
+}
+
+function scrollToSlide(idx){
+  if(!carouselScroll) return;
+  const slide=carouselScroll.querySelectorAll('.carousel-slide')[idx];
+  if(!slide) return;
+  carouselScroll.scrollTo({left:slide.offsetLeft,behavior:'smooth'});
 }
 
 // ═══ SHOW MODAL ═══
 function _showModal(project){
   currentModalData=project;carouselIndex=0;modalOpen=true;
-  const track=document.getElementById('carouselTrack');
-  track.style.transition='none';
-  track.style.transform='translateX(0)';
-  track.offsetHeight;
-  track.style.transition='';
+  carouselScroll=document.getElementById('carouselScroll');
+  carouselScroll.scrollLeft=0;
   const isComingSoon=!!project.comingSoon;
   const slides=project.images||project.slides;
   if(isComingSoon){
-    track.innerHTML=`<div class="carousel-slide"><div class="carousel-slide-color" style="background:${slides[0]}"><span class="coming-soon-label">I'm working on it</span></div></div>`;
+    carouselScroll.innerHTML=`<div class="carousel-slide"><div class="carousel-slide-color" style="background:${slides[0]}"><span class="coming-soon-label">I'm working on it</span></div></div>`;
   }else{
-    const fitClass=project.images&&project.images.length===1?'single-media':'';
-    track.innerHTML=slides.map((s,i)=>{
-      if(project.images&&s.endsWith('.mp4')) return `<div class="carousel-slide ${fitClass}"><video src="${s}" autoplay muted playsinline preload="metadata"></video></div>`;
-      if(project.images) return `<div class="carousel-slide ${fitClass}"><img src="${s}" alt="${project.title} slide ${i+1}" loading="${i<2?'eager':'lazy'}" draggable="false"></div>`;
+    carouselScroll.innerHTML=slides.map((s,i)=>{
+      if(project.images&&s.endsWith('.mp4')) return `<div class="carousel-slide"><video src="${s}" autoplay muted playsinline preload="metadata"></video></div>`;
+      if(project.images) return `<div class="carousel-slide"><img src="${s}" alt="${project.title} slide ${i+1}" loading="${i<2?'eager':'lazy'}" draggable="false"></div>`;
       return `<div class="carousel-slide"><div class="carousel-slide-color" style="background:${s}">${i===0?project.title.substring(0,2).toUpperCase():'IMG '+(i+1)}</div></div>`;
     }).join('');
   }
@@ -85,48 +125,41 @@ function _showModal(project){
   counterEl.style.display=(isComingSoon||slides.length===1)?'none':'';
   document.getElementById('modalTitle').textContent=project.title;
   const tagsEl=document.getElementById('modalTags');
-  tagsEl.innerHTML=project.tags.map(t=>`<span class="modal-tag">${t}</span>`).join('');
-  if(project.link&&project.link!=='#')tagsEl.innerHTML+=`<a class="modal-tag link" href="${project.link}" target="_blank">${project.link.replace('https://','').replace('mailto:','')} <svg class="cta-arrow" width="11" height="11" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12L12 4"/><path d="M5 4h7v7"/></svg></a>`;
-  const isImageOnly=!!project.images&&!project.desc;
+  if(project.link&&project.link!=='#')tagsEl.innerHTML=`<a class="modal-tag link" href="${project.link}" target="_blank">View full case study <svg class="cta-arrow" width="11" height="11" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12L12 4"/><path d="M5 4h7v7"/></svg></a>`;
+  else tagsEl.innerHTML='';
   const innerEl=document.querySelector('.modal-card-inner');
-  innerEl.classList.toggle('image-only',isImageOnly||isComingSoon);
   innerEl.classList.toggle('coming-soon',isComingSoon);
-  if(!isImageOnly&&!isComingSoon) renderModalDesc(project,0);
-  else document.getElementById('modalDesc').innerHTML='';
-  const caseStudyLink=document.getElementById('modalCaseStudyLink');
-  if(isImageOnly&&project.link&&project.link!=='#'){caseStudyLink.href=project.link;caseStudyLink.style.display='';}
-  else{caseStudyLink.style.display='none';}
+  // Always show text area — render desc (or placeholder)
+  renderModalDesc(project,0);
   const hideNav=isComingSoon||slides.length===1;
   document.querySelector('.carousel-btn.prev').style.display=hideNav?'none':'';
   document.querySelector('.carousel-btn.next').style.display=hideNav?'none':'';
   document.querySelectorAll('.puzzle-card video').forEach(v=>{try{v.pause();}catch(e){}});
-  if(modalBody){modalBody.scrollTop=0;modalBody.classList.remove('has-scroll-fade');modalBody.classList.remove('has-bottom-fade');}
+  if(modalDescWrap){modalDescWrap.scrollTop=0;modalDescWrap.classList.remove('has-scroll-fade');modalDescWrap.classList.remove('has-bottom-fade');}
   modalOverlay.classList.add('open');
   modalCard.style.willChange='transform';
   document.body.style.overflow='hidden';
-  requestAnimationFrame(()=>{if(modalBody){
-    const hasOverflow=modalBody.scrollHeight>modalBody.clientHeight+4;
-    modalBody.classList.toggle('has-bottom-fade',hasOverflow);
+  requestAnimationFrame(()=>{if(modalDescWrap){
+    const hasOverflow=modalDescWrap.scrollHeight>modalDescWrap.clientHeight+4;
+    modalDescWrap.classList.toggle('has-bottom-fade',hasOverflow);
   }});
   updateCarouselButtons();
+
+  // Setup snap-scroll observer for slide tracking
+  setupSlideObserver();
 
   tiltRX=0;tiltRY=0;tiltTargetRX=0;tiltTargetRY=0;tiltVelRX=0;tiltVelRY=0;
   const isMobileModal=window.matchMedia('(max-width:480px)').matches;
   if(isMobileModal){
-    // Mobile: CSS slide-up
+    // Mobile: CSS scale handles animation, no tilt
   }else if(!prefersReducedMotion){
-    let scaleP=0;
-    function scaleIn(){
-      scaleP+=(1-scaleP)*0.15;
-      const s=0.95+scaleP*0.05;
-      modalCard.style.transform=`perspective(900px) scale(${s}) rotateX(0deg) rotateY(0deg)`;
-      if(scaleP<0.99)requestAnimationFrame(scaleIn);
-      else{
-        modalCard.style.transform='perspective(900px) rotateX(0deg) rotateY(0deg)';
-        if(!tiltRaf)tiltRaf=requestAnimationFrame(tiltLoop);
-      }
-    }
-    requestAnimationFrame(scaleIn);
+    // CSS transition handles scale(0.95)→scale(1), then start tilt
+    const onTransitionEnd=(e)=>{
+      if(e.target!==modalCard||e.propertyName!=='transform')return;
+      modalCard.removeEventListener('transitionend',onTransitionEnd);
+      if(modalOpen&&!tiltRaf) tiltRaf=requestAnimationFrame(tiltLoop);
+    };
+    modalCard.addEventListener('transitionend',onTransitionEnd);
   }else{
     modalCard.style.transform='none';
   }
@@ -136,13 +169,12 @@ function openPuzzleModal(project,triggerEl){_showModal(project);}
 
 function closeModal(){
   modalOpen=false;
-  document.querySelectorAll('#carouselTrack video').forEach(v=>{try{v.pause();v.removeAttribute('src');v.load();}catch(e){}});
+  if(carouselScroll) document.querySelectorAll('#carouselScroll video').forEach(v=>{try{v.pause();v.removeAttribute('src');v.load();}catch(e){}});
+  if(slideObserver){slideObserver.disconnect();slideObserver=null;}
   modalOverlay.classList.remove('open');
   document.body.style.overflow='';
-  const isMobileClose=window.matchMedia('(max-width:480px)').matches;
-  if(!isMobileClose){modalCard.style.transform='';modalCard.style.willChange='';}
-  else{modalCard.style.willChange='';}
-  if(modalBody){modalBody.classList.remove('has-bottom-fade');modalBody.classList.remove('has-scroll-fade');}
+  modalCard.style.transform='';modalCard.style.willChange='';
+  if(modalDescWrap){modalDescWrap.classList.remove('has-bottom-fade');modalDescWrap.classList.remove('has-scroll-fade');}
   if(tiltRaf){cancelAnimationFrame(tiltRaf);tiltRaf=null;}
   document.querySelectorAll('.puzzle-card video').forEach(v=>{
     const r=v.getBoundingClientRect();
@@ -150,31 +182,21 @@ function closeModal(){
   });
 }
 
-function updateTitleTagsVisibility(){
-  const isImageOnly=currentModalData&&!!currentModalData.images&&!currentModalData.desc;
-  if(isImageOnly)return;
-  const show=carouselIndex===0;
-  document.getElementById('modalTitle').style.display=show?'':'none';
-  document.getElementById('modalTags').style.display=show?'':'none';
-}
-
 function carouselNext(){
   if(!currentModalData||carouselIndex>=_slideCount(currentModalData)-1)return;
   carouselIndex++;
-  document.getElementById('carouselTrack').style.transform=`translateX(-${carouselIndex*100}%)`;
-  document.getElementById('carouselCounter').textContent=`${carouselIndex+1} / ${_slideCount(currentModalData)}`;
-  if(Array.isArray(currentModalData.desc)){renderModalDesc(currentModalData,carouselIndex);recheckScrollLine();}
-  updateTitleTagsVisibility();
+  scrollToSlide(carouselIndex);
+  updateCounter();
+  if(Array.isArray(currentModalData.desc)){renderModalDesc(currentModalData,carouselIndex);recheckDescScroll();}
   updateCarouselButtons();
 }
 
 function carouselPrev(){
   if(!currentModalData||carouselIndex<=0)return;
   carouselIndex--;
-  document.getElementById('carouselTrack').style.transform=`translateX(-${carouselIndex*100}%)`;
-  document.getElementById('carouselCounter').textContent=`${carouselIndex+1} / ${_slideCount(currentModalData)}`;
-  if(Array.isArray(currentModalData.desc)){renderModalDesc(currentModalData,carouselIndex);recheckScrollLine();}
-  updateTitleTagsVisibility();
+  scrollToSlide(carouselIndex);
+  updateCounter();
+  if(Array.isArray(currentModalData.desc)){renderModalDesc(currentModalData,carouselIndex);recheckDescScroll();}
   updateCarouselButtons();
 }
 
@@ -189,9 +211,12 @@ function initPortfolioCore(){
   modalOverlay=document.getElementById('modalOverlay');
   modalCard=document.getElementById('modalCard');
   modalBody=document.querySelector('.modal-body');
+  modalDescWrap=document.getElementById('modalDescWrap');
+  carouselScroll=document.getElementById('carouselScroll');
   if(!modalOverlay||!modalCard) return;
 
-  if(modalBody) modalBody.addEventListener('scroll',function(){
+  // Scroll fade on description area
+  if(modalDescWrap) modalDescWrap.addEventListener('scroll',function(){
     this.classList.toggle('has-scroll-fade',this.scrollTop>2);
     const atBottom=this.scrollHeight-this.scrollTop-this.clientHeight<4;
     const hasOverflow=this.scrollHeight>this.clientHeight+4;
@@ -227,15 +252,32 @@ function initPortfolioCore(){
         puzzleGrid.classList.add('collapsing');
         puzzleShowMore.textContent='Show more work';
         puzzleExpanded=false;
+        smoothScrollToEl(puzzleShowMore,'center',0,800);
       }
     });
   }
 
   // Puzzle card click handlers
+  const isMobileCards=window.matchMedia('(max-width:480px)').matches;
   document.querySelectorAll('.puzzle-card[data-project]').forEach(card=>{
     const idx=parseInt(card.dataset.project,10);
     const proj=PUZZLE_PROJECTS[idx];
     if(!proj) return;
+    if(isMobileCards){
+      // Mobile: open modal same as desktop
+      if('externalLink' in proj){
+        if(proj.externalLink){
+          card.style.cursor='pointer';
+          card.addEventListener('click',()=>window.open(proj.externalLink,'_blank'));
+        } else {
+          card.style.cursor='default';
+        }
+        return;
+      }
+      card.addEventListener('click',()=>openPuzzleModal(proj,card));
+      return;
+    }
+    // Desktop: existing behavior
     if('externalLink' in proj){
       if(proj.externalLink){
         card.style.cursor='pointer';
@@ -265,6 +307,13 @@ function initPortfolioCore(){
     if(e.key==='Escape'&&modalOpen){closeModal();return;}
     if(modalOpen&&e.key==='ArrowRight'){carouselNext();return;}
     if(modalOpen&&e.key==='ArrowLeft'){carouselPrev();return;}
+  });
+
+  // Note card click sound (Magic Mouse click)
+  document.querySelectorAll('.note-card').forEach(card=>{
+    card.addEventListener('click',()=>{
+      if(window.__clockAudio) window.__clockAudio.noteClick();
+    });
   });
 }
 

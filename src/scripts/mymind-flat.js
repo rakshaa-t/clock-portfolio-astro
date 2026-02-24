@@ -3,7 +3,7 @@
 // Re-initializes on every page load (ViewTransitions compatible).
 
 import { MMIND_CARDS } from '../data/mymind.js';
-import { esc } from './shared.js';
+import { esc, smoothScrollToEl } from './shared.js';
 
 const MMIND_INITIAL=9;
 
@@ -136,8 +136,17 @@ function initMymind(){
     mmindGrid.innerHTML='';
     mmindClosePopover();
     const isFiltered=mmindActiveFilter!=='all'||mmindSearchQuery;
+    const colCount=window.matchMedia('(max-width:480px)').matches?2:3;
+    // Create column containers
+    const cols=[];
+    for(let c=0;c<colCount;c++){
+      const col=document.createElement('div');
+      col.className='mm-col';
+      mmindGrid.appendChild(col);
+      cols.push(col);
+    }
+    const colHeights=new Array(colCount).fill(0);
     let visibleCount=0;
-    const vis=[],ext=[];
     MMIND_CARDS.forEach((card,i)=>{
       if(mmindActiveFilter!=='all'&&card.category!==mmindActiveFilter)return;
       if(mmindSearchQuery){
@@ -151,17 +160,21 @@ function initMymind(){
         if(mmindActiveIdx===i)mmindClosePopover();
         else mmindOpenPopover(i,el);
       });
-      if(!isFiltered&&visibleCount>MMIND_INITIAL){el.classList.add('mm-extra');ext.push(el);}
-      else vis.push(el);
+      const isExtra=!isFiltered&&visibleCount>MMIND_INITIAL;
+      if(isExtra) el.classList.add('mm-extra');
+      // Shortest-column-first using estimated heights (no DOM measurement)
+      let shortest=0;
+      for(let c=1;c<colCount;c++){
+        if(colHeights[c]<colHeights[shortest]) shortest=c;
+      }
+      cols[shortest].appendChild(el);
+      // Estimate card height from data
+      let h=80;
+      if(card.type==='image') h=(card.height||120)+32;
+      else if(card.type==='note') h=Math.max(80,Math.ceil((card.text||'').length/28)*18+40);
+      else if(card.type==='link') h=85;
+      colHeights[shortest]+=h+8;
     });
-    // Interleave extras among visible items in DOM so CSS columns
-    // distributes them across ALL columns when expanded.
-    // When collapsed, extras are display:none — only visible items flow (same order).
-    let vi=0,ei=0;
-    while(vi<vis.length||ei<ext.length){
-      if(vi<vis.length) mmindGrid.appendChild(vis[vi++]);
-      if(ei<ext.length) mmindGrid.appendChild(ext[ei++]);
-    }
     if(mmindShowMore){
       mmindShowMore.classList.toggle('hidden',isFiltered||visibleCount<=MMIND_INITIAL);
     }
@@ -226,6 +239,7 @@ function initMymind(){
           el.getAnimations().forEach(a=>a.cancel());
           el.style.opacity='';el.style.transform='';
         });
+        smoothScrollToEl(mmindShowMore,'center',0,800);
       }
     });
   }

@@ -3,7 +3,7 @@
 // Re-initializes on every page load (ViewTransitions compatible).
 
 import { KINDLE_BOOKS } from '../data/books.js';
-import { esc } from './shared.js';
+import { esc, smoothScrollToEl } from './shared.js';
 
 const BOOKS_INITIAL=8;
 
@@ -169,6 +169,7 @@ function initBooks(){
         extras.forEach((el,i)=>{el.style.animationDelay=`${i*stagger}s`;});
       }else{
         booksGrid.querySelectorAll('.book-extra').forEach(el=>{el.style.animationDelay='';});
+        smoothScrollToEl(booksShowMore,'center',0,800);
       }
     });
   }

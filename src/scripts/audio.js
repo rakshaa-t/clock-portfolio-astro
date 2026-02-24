@@ -71,34 +71,22 @@ function knobClick(){
 // Sound knob toggle — re-binds on every init (ViewTransitions safe)
 let _tipTimer=null;
 
-// Lazy-create mobile toast element
+// Lazy-create toast element — child of knob wrap for origin-aware positioning
 let _toast=null;
 function _getToast(){
   if(_toast) return _toast;
   _toast=document.createElement('div');
   _toast.className='sound-toast';
-  document.body.appendChild(_toast);
+  const wrap=document.querySelector('.sound-knob-wrap');
+  if(wrap) wrap.appendChild(_toast);
+  else document.body.appendChild(_toast);
   return _toast;
 }
 
 function _initAudio(){
-  const knob=document.getElementById('soundKnob');
-  const knobTip=document.getElementById('knobTooltip');
-  const knobMirror=document.querySelector('.sound-knob-mirror');
+  const knob=document.querySelector('.sound-knob-mirror');
 
-  function showDesktopTip(){
-    if(!knobTip) return;
-    knobTip.style.transition='none';
-    knobTip.classList.remove('show');
-    knobTip.offsetHeight;
-    knobTip.style.transition='';
-    knobTip.textContent=_soundOn?'Sound on':'Sound off';
-    knobTip.classList.add('show');
-    clearTimeout(_tipTimer);
-    _tipTimer=setTimeout(()=>knobTip.classList.remove('show'),1500);
-  }
-
-  function showMobileToast(){
+  function showToast(){
     const t=_getToast();
     // Snap closed instantly (kill transition), then replay origin animation
     t.style.transition='none';
@@ -111,28 +99,54 @@ function _initAudio(){
     _tipTimer=setTimeout(()=>t.classList.remove('show'),1500);
   }
 
-  function toggle(isMobile){
+  function toggle(){
     _soundOn=!_soundOn;
     if(knob) knob.classList.toggle('off',!_soundOn);
-    if(knobMirror) knobMirror.classList.toggle('off',!_soundOn);
-    if(isMobile) showMobileToast(); else showDesktopTip();
+    showToast();
     knobClick();
   }
 
   // Sync visual state with current _soundOn
   if(knob) knob.classList.toggle('off',!_soundOn);
-  if(knobMirror) knobMirror.classList.toggle('off',!_soundOn);
-
-  if(knob) knob.addEventListener('click',()=>toggle(false));
-  if(knobMirror) knobMirror.addEventListener('click',()=>toggle(true));
+  if(knob) knob.addEventListener('click',toggle);
 }
 
 // Expose for data-astro-rerun inline script (sole init path)
 window.__initAudio=_initAudio;
 
+// Magic Mouse click sound — lazy-loaded MP3, decoded on first play
+let _mouseClickBuf=null,_mouseClickRaw=null,_decoding=null;
+fetch('/magic-mouse-click.mp3')
+  .then(r=>r.arrayBuffer())
+  .then(ab=>{_mouseClickRaw=ab;})
+  .catch(()=>{});
+async function noteClick(){
+  if(!_soundOn)return;
+  // Decode on first play (fast — small MP3), cache for subsequent clicks
+  if(!_mouseClickBuf){
+    if(_decoding){_mouseClickBuf=await _decoding;}
+    else if(_mouseClickRaw){
+      const ctx=_ensureAudioCtx();
+      if(!ctx)return;
+      _decoding=ctx.decodeAudioData(_mouseClickRaw.slice(0));
+      _mouseClickBuf=await _decoding;
+      _mouseClickRaw=null;_decoding=null;
+    }else{return;}
+  }
+  const ctx=_ensureAudioCtx();
+  if(!ctx)return;
+  const src=ctx.createBufferSource();
+  src.buffer=_mouseClickBuf;
+  const vol=ctx.createGain();
+  vol.gain.value=0.18;
+  src.connect(vol);vol.connect(ctx.destination);
+  src.start();
+}
+
 // Expose audio context for other modules (about-section, books, etc.)
 window.__clockAudio={
   ensure(){_ensureAudioCtx();return _actx;},
   get ctx(){return _actx;},
-  get soundOn(){return _soundOn;}
+  get soundOn(){return _soundOn;},
+  noteClick,
 };
