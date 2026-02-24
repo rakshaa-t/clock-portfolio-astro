@@ -1298,7 +1298,10 @@ a.about-dropdown-item:hover{opacity:0.7;}
     border-radius:0;
     padding-bottom:env(safe-area-inset-bottom, 0px);
   }
-  .modal-carousel{aspect-ratio:5/4;}
+  .modal-carousel{aspect-ratio:unset;height:90vw;flex:0 0 auto;}
+  .carousel-scroll{scroll-snap-type:x mandatory;}
+  .carousel-slide{min-width:100vw;width:100vw;scroll-snap-align:center;}
+  .carousel-slide img,.carousel-slide video{object-position:center center;}
   .carousel-btn{width:30px;height:30px;font-size:14px;}
   .modal-body{padding:20px 20px 32px;flex:1;overflow-y:auto;}
   .modal-desc-wrap{max-height:none;}
