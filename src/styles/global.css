@@ -1412,11 +1412,8 @@ a.about-dropdown-item:hover{opacity:0.7;}
   .pop-close{width:36px;height:36px;font-size:var(--text-h4);}
   .mymind-pill{min-height:48px;display:inline-flex;align-items:center;padding:2px 12px;}
   .puzzle-show-more{min-height:48px;}
-  .bottom-nav-item{min-height:48px;display:flex;align-items:center;justify-content:center;}
-  .sound-knob{min-width:48px;min-height:48px;}
   .about-cta{min-width:48px;min-height:48px;display:inline-flex;align-items:center;justify-content:center;}
   .about-cta-primary{min-height:48px;display:inline-flex;align-items:center;}
-  .nav-scroll-top{width:48px;height:48px;}
 }
 
 /* ═══ TABLET (481–768px) ═══ */
