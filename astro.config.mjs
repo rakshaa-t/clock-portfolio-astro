@@ -7,6 +7,6 @@ export default defineConfig({
   output: 'static',
   adapter: vercel(),
   redirects: {
-    '/': '/portfolio',
+    '/portfolio': '/',
   },
 });
