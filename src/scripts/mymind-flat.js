@@ -56,9 +56,9 @@ function initMymind(){
     const isMobile=window.matchMedia('(max-width:480px)').matches;
     if(!isMobile){
       const gridRect=mmindGrid.getBoundingClientRect();
+      const sectionRect=mmindSection.getBoundingClientRect();
       const cardRect=cardEl.getBoundingClientRect();
       const gap=12;
-      const viewH=window.innerHeight;
       const popWidth=Math.min(280,gridRect.width);
       let left=cardRect.left+cardRect.width/2-popWidth/2;
       left=Math.max(gridRect.left,Math.min(left,gridRect.right-popWidth));
@@ -71,12 +71,12 @@ function initMymind(){
       const popHeight=mmindPopover.offsetHeight;
       mmindPopWrap.classList.remove('open');
       mmindPopWrap.style.visibility='';
-      const spaceBelow=viewH-cardRect.bottom-gap;
+      const spaceBelow=sectionRect.bottom-cardRect.bottom-gap;
       const below=spaceBelow>=popHeight;
       let top;
       if(below) top=cardRect.bottom+gap;
       else top=cardRect.top-gap-popHeight;
-      top=Math.max(16,Math.min(top,viewH-popHeight-16));
+      top=Math.max(sectionRect.top,Math.min(top,sectionRect.bottom-popHeight));
       mmindPopWrap.style.top=top+'px';
       // Origin-aware: scale from the trigger card's center
       const originX=cardRect.left+cardRect.width/2-left;
