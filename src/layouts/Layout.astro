@@ -1,5 +1,6 @@
 ---
 import { ViewTransitions } from 'astro:transitions';
+import Analytics from '@vercel/analytics/astro';
 
 interface Props {
   title: string;
@@ -20,6 +21,7 @@ const siteUrl = 'https://raksha.design';
     <link rel="canonical" href={siteUrl} />
     <title>{title}</title>
     <ViewTransitions />
+    <Analytics />
 
     <!-- Open Graph -->
     <meta property="og:title" content={title} />
@@ -46,9 +48,5 @@ const siteUrl = 'https://raksha.design';
   </head>
   <body>
     <slot />
-    <script>
-      import { inject } from '@vercel/analytics';
-      inject();
-    </script>
   </body>
 </html>
