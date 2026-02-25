@@ -6,7 +6,7 @@ import { PUZZLE_PROJECTS } from '../data/projects.js';
 import { esc, prefersReducedMotion, smoothScrollToEl, smoothScrollElH } from './shared.js';
 
 // ═══ STATE ═══
-let modalOpen=false, carouselIndex=0, currentModalData=null;
+let modalOpen=false, carouselIndex=0, currentModalData=null, _modalTrigger=null;
 
 // ═══ MUTABLE DOM REFS (re-assigned on each page load) ═══
 let modalOverlay, modalCard, modalBody, modalDescWrap, carouselScroll;
@@ -115,7 +115,7 @@ function _showModal(project){
     carouselScroll.innerHTML=`<div class="carousel-slide"><div class="carousel-slide-color" style="background:${slides[0]}"><span class="coming-soon-label">I'm working on it</span></div></div>`;
   }else{
     carouselScroll.innerHTML=slides.map((s,i)=>{
-      if(project.images&&s.endsWith('.mp4')) return `<div class="carousel-slide"><video src="${s}" autoplay muted playsinline preload="metadata"></video></div>`;
+      if(project.images&&s.endsWith('.mp4')) return `<div class="carousel-slide"><video src="${s}" autoplay muted playsinline preload="metadata" aria-label="${esc(project.title)} demo video"></video></div>`;
       if(project.images) return `<div class="carousel-slide"><img src="${s}" alt="${project.title} slide ${i+1}" loading="${i<2?'eager':'lazy'}" draggable="false"></div>`;
       return `<div class="carousel-slide"><div class="carousel-slide-color" style="background:${s}">${i===0?project.title.substring(0,2).toUpperCase():'IMG '+(i+1)}</div></div>`;
     }).join('');
@@ -139,6 +139,8 @@ function _showModal(project){
   modalOverlay.classList.add('open');
   modalCard.style.willChange='transform';
   document.body.style.overflow='hidden';
+  // Move focus into modal for keyboard users
+  requestAnimationFrame(()=>{const closeBtn=modalCard.querySelector('.modal-close');if(closeBtn)closeBtn.focus();});
   requestAnimationFrame(()=>{if(modalDescWrap){
     const hasOverflow=modalDescWrap.scrollHeight>modalDescWrap.clientHeight+4;
     modalDescWrap.classList.toggle('has-bottom-fade',hasOverflow);
@@ -165,10 +167,11 @@ function _showModal(project){
   }
 }
 
-function openPuzzleModal(project,triggerEl){_showModal(project);}
+function openPuzzleModal(project,triggerEl){_modalTrigger=triggerEl||null;_showModal(project);}
 
 function closeModal(){
   modalOpen=false;
+  const trigger=_modalTrigger;_modalTrigger=null;
   if(carouselScroll) document.querySelectorAll('#carouselScroll video').forEach(v=>{try{v.pause();v.removeAttribute('src');v.load();}catch(e){}});
   if(slideObserver){slideObserver.disconnect();slideObserver=null;}
   modalOverlay.classList.remove('open');
@@ -180,6 +183,8 @@ function closeModal(){
     const r=v.getBoundingClientRect();
     if(r.bottom>0&&r.top<window.innerHeight) v.play().catch(()=>{});
   });
+  // Restore focus to trigger element
+  if(trigger&&trigger.focus) trigger.focus();
 }
 
 function carouselNext(){
@@ -252,42 +257,31 @@ function initPortfolioCore(){
         puzzleGrid.classList.add('collapsing');
         puzzleShowMore.textContent='Show more work';
         puzzleExpanded=false;
-        smoothScrollToEl(puzzleShowMore,'center',0,800);
+        smoothScrollToEl(puzzleShowMore,'center',0,600);
       }
+      puzzleShowMore.setAttribute('aria-expanded',puzzleExpanded);
     });
   }
 
-  // Puzzle card click handlers
-  const isMobileCards=window.matchMedia('(max-width:480px)').matches;
+  // Puzzle card click handlers + keyboard access
   document.querySelectorAll('.puzzle-card[data-project]').forEach(card=>{
     const idx=parseInt(card.dataset.project,10);
     const proj=PUZZLE_PROJECTS[idx];
     if(!proj) return;
-    if(isMobileCards){
-      // Mobile: open modal same as desktop
+    card.setAttribute('tabindex','0');
+    card.setAttribute('role','button');
+    const overlaySpan=card.querySelector('.puzzle-overlay span');
+    if(overlaySpan) card.setAttribute('aria-label',overlaySpan.textContent);
+    function activate(){
       if('externalLink' in proj){
-        if(proj.externalLink){
-          card.style.cursor='pointer';
-          card.addEventListener('click',()=>window.open(proj.externalLink,'_blank'));
-        } else {
-          card.style.cursor='default';
-        }
+        if(proj.externalLink) window.open(proj.externalLink,'_blank');
         return;
       }
-      card.addEventListener('click',()=>openPuzzleModal(proj,card));
-      return;
+      openPuzzleModal(proj,card);
     }
-    // Desktop: existing behavior
-    if('externalLink' in proj){
-      if(proj.externalLink){
-        card.style.cursor='pointer';
-        card.addEventListener('click',()=>window.open(proj.externalLink,'_blank'));
-      } else {
-        card.style.cursor='default';
-      }
-      return;
-    }
-    card.addEventListener('click',()=>openPuzzleModal(proj,card));
+    if('externalLink' in proj&&!proj.externalLink){card.style.cursor='default';return;}
+    card.addEventListener('click',activate);
+    card.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();activate();}});
   });
 
   // Lazy video playback
@@ -302,11 +296,18 @@ function initPortfolioCore(){
     _cardVideos.forEach(v=>vidObs.observe(v));
   }
 
-  // Keyboard
+  // Keyboard + focus trap
   document.addEventListener('keydown',e=>{
     if(e.key==='Escape'&&modalOpen){closeModal();return;}
     if(modalOpen&&e.key==='ArrowRight'){carouselNext();return;}
     if(modalOpen&&e.key==='ArrowLeft'){carouselPrev();return;}
+    if(modalOpen&&e.key==='Tab'){
+      const focusable=modalCard.querySelectorAll('button,[href],input,[tabindex]:not([tabindex="-1"])');
+      if(!focusable.length) return;
+      const first=focusable[0],last=focusable[focusable.length-1];
+      if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus();}
+      else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus();}
+    }
   });
 
   // Note card click sound (Magic Mouse click)

@@ -77,6 +77,7 @@ function _getToast(){
   if(_toast) return _toast;
   _toast=document.createElement('div');
   _toast.className='sound-toast';
+  _toast.setAttribute('role','status');
   const wrap=document.querySelector('.sound-knob-wrap');
   if(wrap) wrap.appendChild(_toast);
   else document.body.appendChild(_toast);
@@ -84,6 +85,8 @@ function _getToast(){
 }
 
 function _initAudio(){
+  // Reset cached toast ref so ViewTransitions don't leave a detached DOM node
+  _toast=null;
   const knob=document.querySelector('.sound-knob-mirror');
 
   function showToast(){
@@ -101,14 +104,18 @@ function _initAudio(){
 
   function toggle(){
     _soundOn=!_soundOn;
-    if(knob) knob.classList.toggle('off',!_soundOn);
+    if(knob){knob.classList.toggle('off',!_soundOn);knob.setAttribute('aria-pressed',_soundOn);}
     showToast();
     knobClick();
   }
 
   // Sync visual state with current _soundOn
-  if(knob) knob.classList.toggle('off',!_soundOn);
-  if(knob) knob.addEventListener('click',toggle);
+  if(knob){
+    knob.classList.toggle('off',!_soundOn);
+    knob.setAttribute('aria-pressed',_soundOn);
+    knob.addEventListener('click',toggle);
+    knob.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();toggle();}});
+  }
 }
 
 // Expose for data-astro-rerun inline script (sole init path)

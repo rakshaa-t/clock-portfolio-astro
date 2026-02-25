@@ -30,6 +30,9 @@ function initBooks(){
     const el=document.createElement('div');
     el.className='book-cover-item';
     el.dataset.idx=i;
+    el.setAttribute('tabindex','0');
+    el.setAttribute('role','button');
+    el.setAttribute('aria-label',book.title);
     el.innerHTML=`
       <div class="book-cover-img">
         <img src="${esc(book.cover)}" alt="${esc(book.title)}" loading="lazy">
@@ -40,7 +43,7 @@ function initBooks(){
 
   function openBookPopover(idx,cardEl){
     const book=KINDLE_BOOKS[idx];
-    let html=`<div class="pop-header"><div class="pop-title">${esc(book.title)}</div><button class="pop-close" id="bookPopClose">&times;</button></div>`;
+    let html=`<div class="pop-header"><div class="pop-title">${esc(book.title)}</div><button class="pop-close" id="bookPopClose" aria-label="Close">\u2715</button></div>`;
     html+=`<div class="book-pop-meta">by ${esc(book.author)}${book.fav?'<span class="book-pop-rating excellent">Excellent</span>':book.progress===100?'<span class="book-pop-rating great">Great</span>':''}</div>`;
     html+=`<div class="book-pop-progress"><div class="book-pop-progress-bar"><div class="book-pop-progress-fill" style="width:100%;transform:scaleX(${book.progress/100})"></div></div><span class="book-pop-pct">${book.progress}%</span></div>`;
     if(book.notes&&book.notes.length>0){
@@ -95,10 +98,12 @@ function initBooks(){
     }
     window.addEventListener('scroll',onBookScroll,{passive:true,capture:true});
     bookSection._scrollClose=onBookScroll;
-    document.getElementById('bookPopClose').addEventListener('click',(e)=>{
+    const bookCloseBtn=document.getElementById('bookPopClose');
+    bookCloseBtn.addEventListener('click',(e)=>{
       e.stopPropagation();
       closeBookPopover();
     });
+    bookCloseBtn.focus();
   }
 
   function stopBookScrollWatch(){
@@ -126,7 +131,7 @@ function initBooks(){
       visibleCount++;
       const el=buildCover(book,i);
       if(!isFiltered&&visibleCount>BOOKS_INITIAL) el.classList.add('book-extra');
-      el.addEventListener('click',()=>{
+      function activateBook(){
         const audio=window.__clockAudio;
         if(audio&&audio.soundOn){
           const ctx=audio.ensure();
@@ -140,7 +145,9 @@ function initBooks(){
         }
         if(bookActiveIdx===i) closeBookPopover();
         else openBookPopover(i,el);
-      });
+      }
+      el.addEventListener('click',activateBook);
+      el.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();activateBook();}});
       booksGrid.appendChild(el);
     });
     if(booksShowMore){
@@ -165,6 +172,7 @@ function initBooks(){
       const expanding=!booksGrid.classList.contains('expanded');
       booksGrid.classList.toggle('expanded');
       booksShowMore.textContent=expanding?'Show fewer books':'Show more books';
+      booksShowMore.setAttribute('aria-expanded',expanding);
       if(expanding){
         // Stagger reveal: 50ms between each item (wave top→bottom)
         const extras=[...booksGrid.querySelectorAll('.book-extra')];
@@ -172,7 +180,7 @@ function initBooks(){
         extras.forEach((el,i)=>{el.style.animationDelay=`${i*stagger}s`;});
       }else{
         booksGrid.querySelectorAll('.book-extra').forEach(el=>{el.style.animationDelay='';});
-        smoothScrollToEl(booksShowMore,'center',0,800);
+        smoothScrollToEl(booksShowMore,'center',0,600);
       }
     });
   }

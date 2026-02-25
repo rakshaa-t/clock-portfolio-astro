@@ -109,12 +109,16 @@ function initAbout(){
   }
 
   // About dropdowns
-  let _openDrop=null;
+  let _openDrop=null,_openTrigger=null;
   document.querySelectorAll('.about-drop-trigger').forEach(trigger=>{
+    trigger.setAttribute('tabindex','0');
+    trigger.setAttribute('role','button');
+    trigger.setAttribute('aria-expanded','false');
+    trigger.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();trigger.click();}});
     trigger.addEventListener('click',e=>{
       e.stopPropagation();
       const key=trigger.dataset.drop;
-      if(_openDrop){_openDrop.classList.remove('open');if(_openDrop.parentElement===trigger){_openDrop=null;return;}_openDrop=null;}
+      if(_openDrop){_openDrop.classList.remove('open');if(_openTrigger)_openTrigger.setAttribute('aria-expanded','false');if(_openDrop.parentElement===trigger){_openDrop=null;_openTrigger=null;return;}_openDrop=null;_openTrigger=null;}
       let wrap=trigger.querySelector('.about-drop-wrap');
       if(!wrap){
         wrap=document.createElement('div');wrap.className='about-drop-wrap';
@@ -130,9 +134,11 @@ function initAbout(){
       }
       requestAnimationFrame(()=>wrap.classList.add('open'));
       _openDrop=wrap;
+      _openTrigger=trigger;
+      trigger.setAttribute('aria-expanded','true');
     });
   });
-  document.addEventListener('click',()=>{if(_openDrop){_openDrop.classList.remove('open');_openDrop=null;}});
+  document.addEventListener('click',()=>{if(_openDrop){_openDrop.classList.remove('open');if(_openTrigger)_openTrigger.setAttribute('aria-expanded','false');_openDrop=null;_openTrigger=null;}});
 
   // Email link
   const _emailLink=document.getElementById('aboutEmailLink');

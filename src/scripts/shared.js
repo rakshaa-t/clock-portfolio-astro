@@ -60,11 +60,17 @@ export function smoothScrollElH(container,targetLeft,duration){
   if(Math.abs(diff)<2) return;
   if(!duration) duration=Math.min(400,Math.max(200,Math.abs(diff)*0.4));
   const startTime=performance.now();
-  let raf=null;
+  let raf=null,cancelled=false;
+  function cancel(){cancelled=true;if(raf){cancelAnimationFrame(raf);raf=null;}cleanup();}
+  function cleanup(){container.removeEventListener('wheel',cancel);container.removeEventListener('touchstart',cancel);}
+  container.addEventListener('wheel',cancel,{once:true,passive:true});
+  container.addEventListener('touchstart',cancel,{once:true,passive:true});
   function step(now){
+    if(cancelled) return;
     const progress=Math.min((now-startTime)/duration,1);
     container.scrollLeft=startLeft+diff*_easeOut(progress);
     if(progress<1) raf=requestAnimationFrame(step);
+    else{raf=null;cleanup();}
   }
   raf=requestAnimationFrame(step);
 }

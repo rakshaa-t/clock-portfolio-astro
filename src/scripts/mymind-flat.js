@@ -46,7 +46,7 @@ function initMymind(){
   function mmindOpenPopover(idx,cardEl){
     const card=MMIND_CARDS[idx];
     const copyText=card.url&&card.url!=='#'?card.url:(card.text||card.title);
-    let html=`<div class="pop-header"><div class="pop-title">${card.title}</div><button class="pop-close" id="mmindPopClose">&times;</button></div>`;
+    let html=`<div class="pop-header"><div class="pop-title">${card.title}</div><button class="pop-close" id="mmindPopClose" aria-label="Close">\u2715</button></div>`;
     if(card.source)html+=`<a class="pop-source" href="${card.url||'#'}" target="_blank">${card.source} \u2197</a>`;
     if(card.tldr)html+=`<div class="pop-tldr">${card.tldr}</div>`;
     if(card.tags?.length)html+=`<div class="pop-tags">${card.tags.map(t=>`<span class="pop-tag">${t}</span>`).join('')}</div>`;
@@ -97,10 +97,12 @@ function initMymind(){
     window.addEventListener('scroll',onMmindScroll,{passive:true,capture:true,once:true});
     mmindSection._scrollClose=onMmindScroll;
 
-    document.getElementById('mmindPopClose').addEventListener('click',(e)=>{
+    const mmindCloseBtn=document.getElementById('mmindPopClose');
+    mmindCloseBtn.addEventListener('click',(e)=>{
       e.stopPropagation();
       mmindClosePopover();
     });
+    mmindCloseBtn.focus();
     const copyBtn=mmindPopover.querySelector('.pop-copy');
     if(copyBtn){
       copyBtn.addEventListener('click',(e)=>{
@@ -156,10 +158,15 @@ function initMymind(){
       }
       visibleCount++;
       const el=mmindBuildCard(card,i);
-      el.addEventListener('click',()=>{
+      el.setAttribute('tabindex','0');
+      el.setAttribute('role','button');
+      el.setAttribute('aria-label',card.title||card.caption||'Bookmark');
+      function activateCard(){
         if(mmindActiveIdx===i)mmindClosePopover();
         else mmindOpenPopover(i,el);
-      });
+      }
+      el.addEventListener('click',activateCard);
+      el.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();activateCard();}});
       const isExtra=!isFiltered&&visibleCount>MMIND_INITIAL;
       if(isExtra) el.classList.add('mm-extra');
       // Shortest-column-first using estimated heights (no DOM measurement)
@@ -217,6 +224,7 @@ function initMymind(){
       const expanding=!mmindGrid.classList.contains('expanded');
       mmindGrid.classList.toggle('expanded');
       mmindShowMore.textContent=expanding?'Show fewer bookmarks':'Show more bookmarks';
+      mmindShowMore.setAttribute('aria-expanded',expanding);
       if(expanding){
         // Items are now display:block; opacity:0 (CSS).
         // Sort by visual position then reveal with WAAPI (compositor-thread, precise timing).
@@ -239,7 +247,7 @@ function initMymind(){
           el.getAnimations().forEach(a=>a.cancel());
           el.style.opacity='';el.style.transform='';
         });
-        smoothScrollToEl(mmindShowMore,'center',0,800);
+        smoothScrollToEl(mmindShowMore,'center',0,600);
       }
     });
   }
