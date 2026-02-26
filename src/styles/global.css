@@ -901,8 +901,9 @@ a.about-dropdown-item:hover{opacity:0.7;}
 /* ═══ BOTTOM NAV ═══ */
 .bottom-nav{
   display:flex;align-items:center;gap:6px;
-  position:fixed;bottom:calc(12px + env(safe-area-inset-bottom, 0px));left:20px;right:20px;
-  z-index:998;
+  position:sticky;bottom:20px;
+  z-index:11;
+  margin:0 20px 20px;
   padding:4px;border-radius:100px;
   background:#DDD9D3;
   box-shadow:0 4px 12px rgba(0,0,0,0.1),0 1px 3px rgba(0,0,0,0.06);
@@ -930,9 +931,9 @@ a.about-dropdown-item:hover{opacity:0.7;}
 .bottom-nav-item{
   position:relative;z-index:1;
   flex:1;text-align:center;
-  font-family:'Geist Mono',monospace;font-size:var(--text-sm);font-weight:500;
+  font-family:'Geist Mono',monospace;font-size:14px;font-weight:500;
   letter-spacing:0.01em;
-  padding:8px 0;border-radius:100px;
+  padding:4px 16px;border-radius:100px;
   color:rgba(58,54,50,0.5);
   text-decoration:none;cursor:pointer;
   transition:color 0.2s cubic-bezier(0.32,0.72,0,1);
@@ -1422,21 +1423,22 @@ a.about-dropdown-item:hover{opacity:0.7;}
 /* ═══ TABLET (481–768px) ═══ */
 @media(min-width:481px) and (max-width:768px){
   .modal-card{width:min(640px,95vw);}
-  /* ═══ BOTTOM NAV — mobile overrides ═══ */
+  /* ═══ BOTTOM NAV — tablet overrides ═══ */
   .bottom-nav{
-    bottom:12px;
-    padding-bottom:env(safe-area-inset-bottom);
+    bottom:20px;
+    margin:0 auto 20px;
   }
-  .page-content{padding-bottom:72px;}
   .site-footer{margin-bottom:48px;}
 }
 
 /* ═══ DESKTOP ═══ */
 @media(min-width:769px){
-  /* Center nav, auto width instead of edge-to-edge */
+  /* Center nav, fixed on desktop */
   .bottom-nav{
+    position:fixed;
     left:50%;right:auto;transform:translateX(-50%);
-    bottom:16px;
+    bottom:32px;
+    margin:0;
   }
   /* Knob slightly larger on desktop nav */
   .sound-knob-wrap{width:34px;height:34px;}

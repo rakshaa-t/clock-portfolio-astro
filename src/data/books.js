@@ -28,7 +28,7 @@ export const KINDLE_BOOKS=[
     {note:'Was extremely excited to read this. About 13% in but <mark>it didn\'t stick. Too descriptive for my taste.</mark>'}
   ]},
   {title:'Reality Transurfing',author:'Vadim Zeland',cover:'/books/reality-transurfing.jpg',progress:40,subtitle:'Reality Transurfing',notes:[
-    {note:'Exciting and bold. Some concepts felt over-mystified. <mark>The message is correct but the Gita\'s delivery wins on this.</mark> Some parts like the mirror and pendulums were refreshing. May revisit this later in life.'}
+    {note:'<mark>Excellent and bold.</mark> 700 pages so it\'s huge but <mark>the nuances make it rare and worth the read.</mark>'}
   ]},
   // In progress
   {title:'The 48 Laws of Power',author:'Robert Greene',cover:'/books/48-laws.jpg',progress:22,subtitle:'Strategy',notes:[
