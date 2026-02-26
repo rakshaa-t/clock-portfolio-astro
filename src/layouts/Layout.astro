@@ -21,6 +21,15 @@ const siteUrl = 'https://raksha.design';
     <link rel="canonical" href={siteUrl} />
     <title>{title}</title>
     <ViewTransitions />
+    <script is:inline>
+      function webAnalyticsBeforeSend(event) {
+        try {
+          var url = new URL(event.url);
+          if (url.pathname === '/') { url.pathname = '/home'; event.url = url.toString(); }
+        } catch(e) {}
+        return event;
+      }
+    </script>
     <Analytics />
 
     <!-- Open Graph -->
@@ -45,6 +54,12 @@ const siteUrl = 'https://raksha.design';
     <!-- Additional SEO -->
     <meta name="author" content="Raksha Tated" />
     <meta name="theme-color" content="#EDEAE6" />
+
+    <!-- Microsoft Clarity -->
+    <script>
+      import Clarity from '@microsoft/clarity';
+      Clarity.init('vn9ys3q2cp');
+    </script>
   </head>
   <body>
     <slot />

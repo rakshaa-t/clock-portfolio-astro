@@ -1321,6 +1321,7 @@ a.about-dropdown-item:hover{opacity:0.7;}
   .carousel-btn{width:48px;height:48px;font-size:var(--text-body);}
   .modal-body{padding:20px 20px 32px;flex:1;overflow-y:auto;}
   .modal-desc-wrap{max-height:none;}
+  .modal-desc{font-size:14px;line-height:1.6;}
   .modal-title{font-size:var(--text-h4);}
   .modal-close{top:8px;right:8px;width:48px;height:48px;font-size:var(--text-body);opacity:1;}
 
@@ -1374,6 +1375,7 @@ a.about-dropdown-item:hover{opacity:0.7;}
   }
   .book-pop-wrap.open .book-pop{transform:none;}
   .book-pop-highlights{max-height:none;}
+  .book-pop-highlight{font-size:14px;line-height:1.6;}
   /* Mymind popover → full-screen modal */
   .mm-popover-wrap{
     position:fixed!important;inset:0!important;width:100%!important;min-width:0!important;
@@ -1392,6 +1394,7 @@ a.about-dropdown-item:hover{opacity:0.7;}
     background:#fff;
   }
   .mm-popover-wrap.open .mm-popover{transform:none;}
+  .pop-tldr{font-size:14px;line-height:1.6;}
   /* Scrim — visible dark backdrop on mobile */
   .mm-scrim.open{
     background:rgba(0,0,0,0.3);
