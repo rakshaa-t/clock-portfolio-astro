@@ -901,9 +901,8 @@ a.about-dropdown-item:hover{opacity:0.7;}
 /* ═══ BOTTOM NAV ═══ */
 .bottom-nav{
   display:flex;align-items:center;gap:6px;
-  position:sticky;bottom:20px;
-  z-index:11;
-  margin:0 20px 20px;
+  position:fixed;bottom:calc(12px + env(safe-area-inset-bottom, 0px));left:20px;right:20px;
+  z-index:998;
   padding:4px;border-radius:100px;
   background:#DDD9D3;
   box-shadow:0 4px 12px rgba(0,0,0,0.1),0 1px 3px rgba(0,0,0,0.06);
@@ -1425,20 +1424,19 @@ a.about-dropdown-item:hover{opacity:0.7;}
   .modal-card{width:min(640px,95vw);}
   /* ═══ BOTTOM NAV — tablet overrides ═══ */
   .bottom-nav{
-    bottom:20px;
-    margin:0 auto 20px;
+    bottom:12px;
+    padding-bottom:env(safe-area-inset-bottom);
   }
+  .page-content{padding-bottom:72px;}
   .site-footer{margin-bottom:48px;}
 }
 
 /* ═══ DESKTOP ═══ */
 @media(min-width:769px){
-  /* Center nav, fixed on desktop */
+  /* Center nav, auto width instead of edge-to-edge */
   .bottom-nav{
-    position:fixed;
     left:50%;right:auto;transform:translateX(-50%);
-    bottom:32px;
-    margin:0;
+    bottom:16px;
   }
   /* Knob slightly larger on desktop nav */
   .sound-knob-wrap{width:34px;height:34px;}
