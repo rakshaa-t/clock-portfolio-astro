@@ -7,7 +7,7 @@ export const NOTES=[
   {
     slug:"code-and-canvas",
     title:"Code and canvas as methods of communication",
-    date:"15 February 2026",sortDate:20260215,
+    date:"Today",sortDate:20260217,
     tags:["design","code","thinking"],
     preview:"All design is communication. Code just gave it more dimensions...",
     body:`<p>With the canvas the permutations of what you could do with a rectangle, ellipse or polygon felt endless. But ultimately all design is communication. If you communicate through visual shapes long enough you naturally develop taste.</p><p>I think code is also a form of communication. It just never got seen that way because of the technical barrier around it.</p><p>Canvas restricts you to a one dimensional output. With code you see design in a multi dimensional form. I don't just see a rectangle anymore, I see a plane. A plane on which I can add sound, depth, interaction, math and physics. Code in itself is a system. I like to call design with code systems design because that's what's happening. You're building systems and articulating ideas into words at the same time. It stimulates a lot of your expressive mechanisms all at once.</p><p>This doesn't mean the canvas is going anywhere. For people who truly love it their craft will only deepen. The canvas has existed for centuries and it will continue to exist for the creatives. All the noise around AI and code doesn't change someone's method of expression. If it's the canvas, staying true to it is a moat.</p><p>Code and canvas are closer than they appear. It's not duality as an output. It's duality as an input. A child who likes math may not like chemistry. Both are sciences of their own sort. The output is a good user experience but the input depends on what the creator has leverage in. Interest, passion, love. Different inputs don't mean the outputs should differ.</p><p>I'm not here to say which is superior. Canvas will always exist. Code just gave wings to people who were multi dimensional in their thought process and ideas.</p>`
@@ -15,7 +15,7 @@ export const NOTES=[
   {
     slug:"claude-skills",
     title:"All Claude skills in my MD file",
-    date:"15 February 2026",sortDate:20260215,
+    date:"Today",sortDate:20260217,
     tags:["ai","workflow","tools"],
     preview:"41 skills, 4 MCP servers, and 3 custom skills I've built up working with Claude Code...",
     rich:true,
