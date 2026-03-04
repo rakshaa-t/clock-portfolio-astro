@@ -54,7 +54,7 @@ export const KINDLE_BOOKS=[
   ]},
   // Finished
   {title:'The Almanack of Naval Ravikant',author:'Eric Jorgenson',cover:'/books/almanack-naval.jpg',progress:100,subtitle:'Wealth & Happiness',noTag:true,notes:[
-    {note:'A classic on Naval Ravikant\'s principles. <mark>A powerful mix of philosophy and realism.</mark>'}
+    {note:'A classic on Naval Ravikant\'s principles.'}
   ]},
   {title:'The Power of Now',author:'Eckhart Tolle',cover:'/books/power-of-now.jpg',progress:100,subtitle:'Spiritual Enlightenment',notes:[
     {note:'Another classic, I started this expecting it would be more scientific than spiritual but was left pleasantly surprised. <mark>A lot of borrowed principles from Indian ancient texts make all the dots connect</mark> if you\'re into this deep enough.'}
