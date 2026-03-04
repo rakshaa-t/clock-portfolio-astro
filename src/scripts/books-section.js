@@ -56,26 +56,52 @@ function initBooks(){
     const isMobile=window.matchMedia('(max-width:480px)').matches;
     if(!isMobile){
       const gridRect=booksGrid.getBoundingClientRect();
-      const sectionRect=bookSection.getBoundingClientRect();
       const cardRect=cardEl.getBoundingClientRect();
       const gap=12;
       const popWidth=Math.min(300,gridRect.width);
+      // Horizontal: align to card center, clamp within grid
       let left=cardRect.left+cardRect.width/2-popWidth/2;
       left=Math.max(gridRect.left,Math.min(left,gridRect.right-popWidth));
       bookPopWrap.style.left=left+'px';
       bookPopWrap.style.width=popWidth+'px';
+      // Reset any previous max-height cap
+      const highlightsEl=bookPopover.querySelector('.book-pop-highlights');
+      if(highlightsEl) highlightsEl.style.maxHeight='';
+      // Measure natural popover height
       bookPopWrap.style.visibility='hidden';
       bookPopWrap.style.top='0px';
       bookPopWrap.classList.add('open');
       const popHeight=bookPopover.offsetHeight;
       bookPopWrap.classList.remove('open');
       bookPopWrap.style.visibility='';
-      const spaceBelow=sectionRect.bottom-cardRect.bottom-gap;
-      const below=spaceBelow>=popHeight;
+      // Decide: below or above the card — never overlapping it
+      const spaceBelow=gridRect.bottom-cardRect.bottom-gap;
+      const spaceAbove=cardRect.top-gridRect.top-gap;
+      const below=spaceBelow>=spaceAbove;
       let top;
-      if(below) top=cardRect.bottom+gap;
-      else top=cardRect.top-gap-popHeight;
-      top=Math.max(sectionRect.top,Math.min(top,sectionRect.bottom-popHeight));
+      if(below){
+        top=cardRect.bottom+gap;
+        // If popover is taller than space, cap highlights to fit
+        if(popHeight>spaceBelow&&highlightsEl){
+          const nonHighlightsH=popHeight-highlightsEl.offsetHeight;
+          highlightsEl.style.maxHeight=Math.max(60,spaceBelow-nonHighlightsH-gap)+'px';
+        }
+      }else{
+        top=cardRect.top-gap-popHeight;
+        // If popover is taller than space, cap highlights to fit
+        if(popHeight>spaceAbove&&highlightsEl){
+          const nonHighlightsH=popHeight-highlightsEl.offsetHeight;
+          const cappedH=Math.max(60,spaceAbove-nonHighlightsH-gap);
+          highlightsEl.style.maxHeight=cappedH+'px';
+          // Re-measure after cap
+          bookPopWrap.style.visibility='hidden';
+          bookPopWrap.classList.add('open');
+          const newHeight=bookPopover.offsetHeight;
+          bookPopWrap.classList.remove('open');
+          bookPopWrap.style.visibility='';
+          top=cardRect.top-gap-newHeight;
+        }
+      }
       bookPopWrap.style.top=top+'px';
       // Origin-aware: scale from the trigger card's center
       const originX=cardRect.left+cardRect.width/2-left;

@@ -56,27 +56,52 @@ function initMymind(){
     const isMobile=window.matchMedia('(max-width:480px)').matches;
     if(!isMobile){
       const gridRect=mmindGrid.getBoundingClientRect();
-      const sectionRect=mmindSection.getBoundingClientRect();
       const cardRect=cardEl.getBoundingClientRect();
       const gap=12;
       const popWidth=Math.min(280,gridRect.width);
+      // Horizontal: align to card center, clamp within grid
       let left=cardRect.left+cardRect.width/2-popWidth/2;
       left=Math.max(gridRect.left,Math.min(left,gridRect.right-popWidth));
       mmindPopWrap.style.left=left+'px';
       mmindPopWrap.style.right='';
       mmindPopWrap.style.width=popWidth+'px';
+      // Reset any previous max-height cap
+      const tldrEl=mmindPopover.querySelector('.pop-tldr');
+      if(tldrEl) tldrEl.style.maxHeight='';
+      // Measure natural popover height
       mmindPopWrap.style.visibility='hidden';
       mmindPopWrap.style.top='0px';
       mmindPopWrap.classList.add('open');
       const popHeight=mmindPopover.offsetHeight;
       mmindPopWrap.classList.remove('open');
       mmindPopWrap.style.visibility='';
-      const spaceBelow=sectionRect.bottom-cardRect.bottom-gap;
-      const below=spaceBelow>=popHeight;
+      // Decide: below or above the card — never overlapping it
+      const spaceBelow=gridRect.bottom-cardRect.bottom-gap;
+      const spaceAbove=cardRect.top-gridRect.top-gap;
+      const below=spaceBelow>=spaceAbove;
       let top;
-      if(below) top=cardRect.bottom+gap;
-      else top=cardRect.top-gap-popHeight;
-      top=Math.max(sectionRect.top,Math.min(top,sectionRect.bottom-popHeight));
+      if(below){
+        top=cardRect.bottom+gap;
+        if(popHeight>spaceBelow&&tldrEl){
+          const nonTldrH=popHeight-tldrEl.offsetHeight;
+          tldrEl.style.maxHeight=Math.max(60,spaceBelow-nonTldrH-gap)+'px';
+          tldrEl.style.overflowY='auto';
+        }
+      }else{
+        top=cardRect.top-gap-popHeight;
+        if(popHeight>spaceAbove&&tldrEl){
+          const nonTldrH=popHeight-tldrEl.offsetHeight;
+          const cappedH=Math.max(60,spaceAbove-nonTldrH-gap);
+          tldrEl.style.maxHeight=cappedH+'px';
+          tldrEl.style.overflowY='auto';
+          mmindPopWrap.style.visibility='hidden';
+          mmindPopWrap.classList.add('open');
+          const newHeight=mmindPopover.offsetHeight;
+          mmindPopWrap.classList.remove('open');
+          mmindPopWrap.style.visibility='';
+          top=cardRect.top-gap-newHeight;
+        }
+      }
       mmindPopWrap.style.top=top+'px';
       // Origin-aware: scale from the trigger card's center
       const originX=cardRect.left+cardRect.width/2-left;
@@ -162,6 +187,17 @@ function initMymind(){
       el.setAttribute('role','button');
       el.setAttribute('aria-label',card.title||card.caption||'Bookmark');
       function activateCard(){
+        const audio=window.__clockAudio;
+        if(audio&&audio.soundOn){
+          const ctx=audio.ensure();
+          if(ctx){
+            const t=ctx.currentTime;
+            const o=ctx.createOscillator();o.type='sine';
+            o.frequency.setValueAtTime(1200,t);o.frequency.exponentialRampToValueAtTime(800,t+0.03);
+            const g=ctx.createGain();g.gain.setValueAtTime(0.08,t);g.gain.exponentialRampToValueAtTime(0.001,t+0.04);
+            o.connect(g);g.connect(ctx.destination);o.start(t);o.stop(t+0.04);
+          }
+        }
         if(mmindActiveIdx===i)mmindClosePopover();
         else mmindOpenPopover(i,el);
       }
