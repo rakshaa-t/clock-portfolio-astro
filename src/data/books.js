@@ -15,6 +15,12 @@ export const KINDLE_BOOKS=[
     {note:'Interesting, straightforward. Typography is an art best practiced but looking through the history behind type and <mark>knowing the jargon (finally) makes me feel closer to the one element I consistently use in my product design practice.</mark>'}
   ]},
   // Currently reading
+  {title:'Meditations',author:'Marcus Aurelius',cover:'/books/meditations.jpg',progress:1,subtitle:'Stoic Philosophy',notes:[
+    {note:'Just started this one.'}
+  ]},
+  {title:'Principles',author:'Ray Dalio',cover:'/books/principles.jpg',progress:1,subtitle:'Life and Work',notes:[
+    {note:'Just started this one.'}
+  ]},
   {title:'How to Cope',author:'Boethius (trans. Philip Freeman)',cover:'/books/how-to-cope.jpg',progress:1,subtitle:'Ancient Wisdom',notes:[
     {note:'Just started this one. Also <mark>my intro to stoicism.</mark>'}
   ]},
@@ -27,8 +33,11 @@ export const KINDLE_BOOKS=[
   {title:'Kafka on the Shore',author:'Haruki Murakami',cover:'/books/kafka-shore.jpg',progress:13,subtitle:'A Novel',notes:[
     {note:'Was extremely excited to read this. About 13% in but <mark>it didn\'t stick. Too descriptive for my taste.</mark>'}
   ]},
-  {title:'Reality Transurfing',author:'Vadim Zeland',cover:'/books/reality-transurfing.jpg',progress:40,subtitle:'Reality Transurfing',notes:[
+  {title:'Reality Transurfing',author:'Vadim Zeland',cover:'/books/reality-transurfing.jpg',progress:100,subtitle:'Reality Transurfing',fav:true,notes:[
     {note:'<mark>Excellent and bold.</mark> 700 pages so it\'s huge but <mark>the nuances make it rare and worth the read.</mark>'}
+  ]},
+  {title:'78 Days Practical Transurfing',author:'Vadim Zeland',cover:'/books/78-days-transurfing.jpg',progress:100,subtitle:'Practical Transurfing',notes:[
+    {note:'An extension of Reality Transurfing by Vadim. <mark>As usual the nuances hit the spot</mark> and can be used as a tool book for everyday life.'}
   ]},
   // In progress
   {title:'The 48 Laws of Power',author:'Robert Greene',cover:'/books/48-laws.jpg',progress:22,subtitle:'Strategy',notes:[

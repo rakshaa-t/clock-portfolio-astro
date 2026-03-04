@@ -1218,8 +1218,12 @@ a.about-dropdown-item:hover{opacity:0.7;}
 }
 
 /* ═══ SHOW MORE — books & mymind (mirrors .puzzle-extra pattern) ═══ */
-.book-extra{display:none;opacity:0;transform:translateY(12px);}
-.books-shelf.expanded .book-extra{display:block;animation:puzzleReveal 0.3s cubic-bezier(0.32,0.72,0,1) forwards;}
+@keyframes bookReveal{
+  from{opacity:0;transform:translateY(12px);}
+  to{opacity:1;transform:none;}
+}
+.book-extra{display:none;}
+.books-shelf.expanded .book-extra{display:block;animation:bookReveal 0.3s cubic-bezier(0.32,0.72,0,1) backwards;}
 .mm-extra{display:none;}
 .mymind-grid.expanded .mm-extra{display:block;opacity:0;transform:translateY(12px);}
 
