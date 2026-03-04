@@ -53,7 +53,7 @@ export const KINDLE_BOOKS=[
     {note:'A classic for self-concept. A plastic surgeon discovers how changing exterior parts helps people form completely new identities, and nothing changes for some. <mark>One of the best breakdowns I\'ve read on self-concept.</mark> It\'s a huge book. Some parts on kindle, some on audio.'}
   ]},
   // Finished
-  {title:'The Almanack of Naval Ravikant',author:'Eric Jorgenson',cover:'/books/almanack-naval.jpg',progress:100,subtitle:'Wealth & Happiness',notes:[
+  {title:'The Almanack of Naval Ravikant',author:'Eric Jorgenson',cover:'/books/almanack-naval.jpg',progress:100,subtitle:'Wealth & Happiness',noTag:true,notes:[
     {note:'A classic on Naval Ravikant\'s principles. <mark>A powerful mix of philosophy and realism.</mark>'}
   ]},
   {title:'The Power of Now',author:'Eckhart Tolle',cover:'/books/power-of-now.jpg',progress:100,subtitle:'Spiritual Enlightenment',notes:[

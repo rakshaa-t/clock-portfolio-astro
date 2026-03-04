@@ -36,7 +36,7 @@ function initBooks(){
     el.innerHTML=`
       <div class="book-cover-img">
         <img src="${esc(book.cover)}" alt="${esc(book.title)}" loading="lazy">
-        ${book.fav?'<div class="book-badge fav" data-tip="Excellent"><svg viewBox="0 0 24 24" fill="#C0392B" stroke="none" width="12" height="12"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 22 12 18.56 5.82 22 7 14.14l-5-4.87 6.91-1.01z"/></svg></div>':book.progress===100?'<div class="book-badge done" data-tip="Great"><svg viewBox="0 0 24 24" fill="#8B7EC8" stroke="none" width="12" height="12"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 22 12 18.56 5.82 22 7 14.14l-5-4.87 6.91-1.01z"/></svg></div>':''}
+        ${book.fav?'<div class="book-badge fav" data-tip="Excellent"><svg viewBox="0 0 24 24" fill="#C0392B" stroke="none" width="12" height="12"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 22 12 18.56 5.82 22 7 14.14l-5-4.87 6.91-1.01z"/></svg></div>':book.progress===100&&!book.noTag?'<div class="book-badge done" data-tip="Great"><svg viewBox="0 0 24 24" fill="#8B7EC8" stroke="none" width="12" height="12"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 22 12 18.56 5.82 22 7 14.14l-5-4.87 6.91-1.01z"/></svg></div>':''}
       </div>`;
     return el;
   }
@@ -44,7 +44,7 @@ function initBooks(){
   function openBookPopover(idx,cardEl){
     const book=KINDLE_BOOKS[idx];
     let html=`<div class="pop-header"><div class="pop-title">${esc(book.title)}</div><button class="pop-close" id="bookPopClose" aria-label="Close">\u2715</button></div>`;
-    html+=`<div class="book-pop-meta">by ${esc(book.author)}${book.fav?'<span class="book-pop-rating excellent">Excellent</span>':book.progress===100?'<span class="book-pop-rating great">Great</span>':''}</div>`;
+    html+=`<div class="book-pop-meta">by ${esc(book.author)}${book.fav?'<span class="book-pop-rating excellent">Excellent</span>':book.progress===100&&!book.noTag?'<span class="book-pop-rating great">Great</span>':''}</div>`;
     html+=`<div class="book-pop-progress"><div class="book-pop-progress-bar"><div class="book-pop-progress-fill" style="width:100%;transform:scaleX(${book.progress/100})"></div></div><span class="book-pop-pct">${book.progress}%</span></div>`;
     if(book.notes&&book.notes.length>0){
       html+=`<div class="book-pop-highlights">`;
