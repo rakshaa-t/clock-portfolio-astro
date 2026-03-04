@@ -53,6 +53,9 @@ export const KINDLE_BOOKS=[
     {note:'A classic for self-concept. A plastic surgeon discovers how changing exterior parts helps people form completely new identities, and nothing changes for some. <mark>One of the best breakdowns I\'ve read on self-concept.</mark> It\'s a huge book. Some parts on kindle, some on audio.'}
   ]},
   // Finished
+  {title:'The Power of Now',author:'Eckhart Tolle',cover:'/books/power-of-now.jpg',progress:100,subtitle:'Spiritual Enlightenment',notes:[
+    {note:'Another classic, I started this expecting it would be more scientific than spiritual but was left pleasantly surprised. <mark>A lot of borrowed principles from Indian ancient texts make all the dots connect</mark> if you\'re into this deep enough.'}
+  ]},
   {title:'Becoming Supernatural',author:'Dr. Joe Dispenza',cover:'/books/becoming-supernatural.jpg',progress:100,subtitle:'Mind & Body',notes:[
     {note:'Joe and his work are a classic, the book is a light of positivity. The borrowed principles from science, Indian spirituality and mindfulness come together beautifully. Some rituals felt excessive but <mark>I\'ve always been attracted to the blend of science and mysticism.</mark>'}
   ]},

@@ -90,10 +90,13 @@ function initBooks(){
     bookPopWrap.offsetHeight;
     bookPopWrap.classList.add('open');
     bookScrim.classList.add('open');
-    // Auto-close on scroll outside popover
+    // Auto-close on scroll only when cursor is outside popover
     stopBookScrollWatch();
-    function onBookScroll(e){
-      if(bookPopWrap.contains(e.target)) return;
+    let cursorInPop=false;
+    bookPopWrap.addEventListener('mouseenter',()=>{cursorInPop=true;});
+    bookPopWrap.addEventListener('mouseleave',()=>{cursorInPop=false;});
+    function onBookScroll(){
+      if(cursorInPop) return;
       closeBookPopover();
     }
     window.addEventListener('scroll',onBookScroll,{passive:true,capture:true});
