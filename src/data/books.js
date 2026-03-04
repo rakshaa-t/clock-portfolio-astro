@@ -56,10 +56,10 @@ export const KINDLE_BOOKS=[
   {title:'The Almanack of Naval Ravikant',author:'Eric Jorgenson',cover:'/books/almanack-naval.jpg',progress:100,subtitle:'Wealth & Happiness',noTag:true,notes:[
     {note:'A classic on Naval Ravikant\'s principles.'}
   ]},
-  {title:'The Power of Now',author:'Eckhart Tolle',cover:'/books/power-of-now.jpg',progress:100,subtitle:'Spiritual Enlightenment',notes:[
+  {title:'The Power of Now',author:'Eckhart Tolle',cover:'/books/power-of-now.jpg',progress:100,subtitle:'Spiritual Enlightenment',noTag:true,notes:[
     {note:'Another classic, I started this expecting it would be more scientific than spiritual but was left pleasantly surprised. <mark>A lot of borrowed principles from Indian ancient texts make all the dots connect</mark> if you\'re into this deep enough.'}
   ]},
-  {title:'Becoming Supernatural',author:'Dr. Joe Dispenza',cover:'/books/becoming-supernatural.jpg',progress:100,subtitle:'Mind & Body',notes:[
+  {title:'Becoming Supernatural',author:'Dr. Joe Dispenza',cover:'/books/becoming-supernatural.jpg',progress:100,subtitle:'Mind & Body',noTag:true,notes:[
     {note:'Joe and his work are a classic, the book is a light of positivity. The borrowed principles from science, Indian spirituality and mindfulness come together beautifully. Some rituals felt excessive but <mark>I\'ve always been attracted to the blend of science and mysticism.</mark>'}
   ]},
   {title:'Bhagavad Gita As It Is',author:'A.C. Bhaktivedanta Swami Prabhupada',cover:'/books/bhagavad-gita.jpg',progress:100,subtitle:'Ancient Wisdom',notes:[
