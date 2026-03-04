@@ -65,9 +65,6 @@ function initMymind(){
       mmindPopWrap.style.left=left+'px';
       mmindPopWrap.style.right='';
       mmindPopWrap.style.width=popWidth+'px';
-      // Reset any previous max-height cap
-      const tldrEl=mmindPopover.querySelector('.pop-tldr');
-      if(tldrEl) tldrEl.style.maxHeight='';
       // Measure natural popover height
       mmindPopWrap.style.visibility='hidden';
       mmindPopWrap.style.top='0px';
@@ -75,33 +72,11 @@ function initMymind(){
       const popHeight=mmindPopover.offsetHeight;
       mmindPopWrap.classList.remove('open');
       mmindPopWrap.style.visibility='';
-      // Decide: below or above the card — never overlapping it
+      // Place below or above the card — pick whichever has more room
       const spaceBelow=gridRect.bottom-cardRect.bottom-gap;
       const spaceAbove=cardRect.top-gridRect.top-gap;
       const below=spaceBelow>=spaceAbove;
-      let top;
-      if(below){
-        top=cardRect.bottom+gap;
-        if(popHeight>spaceBelow&&tldrEl){
-          const nonTldrH=popHeight-tldrEl.offsetHeight;
-          tldrEl.style.maxHeight=Math.max(60,spaceBelow-nonTldrH-gap)+'px';
-          tldrEl.style.overflowY='auto';
-        }
-      }else{
-        top=cardRect.top-gap-popHeight;
-        if(popHeight>spaceAbove&&tldrEl){
-          const nonTldrH=popHeight-tldrEl.offsetHeight;
-          const cappedH=Math.max(60,spaceAbove-nonTldrH-gap);
-          tldrEl.style.maxHeight=cappedH+'px';
-          tldrEl.style.overflowY='auto';
-          mmindPopWrap.style.visibility='hidden';
-          mmindPopWrap.classList.add('open');
-          const newHeight=mmindPopover.offsetHeight;
-          mmindPopWrap.classList.remove('open');
-          mmindPopWrap.style.visibility='';
-          top=cardRect.top-gap-newHeight;
-        }
-      }
+      const top=below?cardRect.bottom+gap:cardRect.top-gap-popHeight;
       mmindPopWrap.style.top=top+'px';
       // Origin-aware: scale from the trigger card's center
       const originX=cardRect.left+cardRect.width/2-left;

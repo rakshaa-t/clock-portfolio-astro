@@ -5,7 +5,7 @@
 import { KINDLE_BOOKS } from '../data/books.js';
 import { esc, smoothScrollToEl } from './shared.js';
 
-const BOOKS_INITIAL=8;
+const BOOKS_INITIAL=12;
 
 function getBookCategory(book){
   if(book.fav) return 'excellent';
@@ -64,9 +64,6 @@ function initBooks(){
       left=Math.max(gridRect.left,Math.min(left,gridRect.right-popWidth));
       bookPopWrap.style.left=left+'px';
       bookPopWrap.style.width=popWidth+'px';
-      // Reset any previous max-height cap
-      const highlightsEl=bookPopover.querySelector('.book-pop-highlights');
-      if(highlightsEl) highlightsEl.style.maxHeight='';
       // Measure natural popover height
       bookPopWrap.style.visibility='hidden';
       bookPopWrap.style.top='0px';
@@ -74,34 +71,11 @@ function initBooks(){
       const popHeight=bookPopover.offsetHeight;
       bookPopWrap.classList.remove('open');
       bookPopWrap.style.visibility='';
-      // Decide: below or above the card — never overlapping it
+      // Place below or above the card — pick whichever has more room
       const spaceBelow=gridRect.bottom-cardRect.bottom-gap;
       const spaceAbove=cardRect.top-gridRect.top-gap;
       const below=spaceBelow>=spaceAbove;
-      let top;
-      if(below){
-        top=cardRect.bottom+gap;
-        // If popover is taller than space, cap highlights to fit
-        if(popHeight>spaceBelow&&highlightsEl){
-          const nonHighlightsH=popHeight-highlightsEl.offsetHeight;
-          highlightsEl.style.maxHeight=Math.max(60,spaceBelow-nonHighlightsH-gap)+'px';
-        }
-      }else{
-        top=cardRect.top-gap-popHeight;
-        // If popover is taller than space, cap highlights to fit
-        if(popHeight>spaceAbove&&highlightsEl){
-          const nonHighlightsH=popHeight-highlightsEl.offsetHeight;
-          const cappedH=Math.max(60,spaceAbove-nonHighlightsH-gap);
-          highlightsEl.style.maxHeight=cappedH+'px';
-          // Re-measure after cap
-          bookPopWrap.style.visibility='hidden';
-          bookPopWrap.classList.add('open');
-          const newHeight=bookPopover.offsetHeight;
-          bookPopWrap.classList.remove('open');
-          bookPopWrap.style.visibility='';
-          top=cardRect.top-gap-newHeight;
-        }
-      }
+      const top=below?cardRect.bottom+gap:cardRect.top-gap-popHeight;
       bookPopWrap.style.top=top+'px';
       // Origin-aware: scale from the trigger card's center
       const originX=cardRect.left+cardRect.width/2-left;
