@@ -110,6 +110,7 @@ function initScrollEffects(){
       card.classList.add('tilt-card');
 
       card.addEventListener('mouseenter',()=>{
+        card.classList.add('is-hovered');
         // Suppress transition so tilt tracking is instant
         card.style.transition='none';
       },{signal:ac.signal});
@@ -130,6 +131,7 @@ function initScrollEffects(){
       },{signal:ac.signal});
 
       card.addEventListener('mouseleave',()=>{
+        card.classList.remove('is-hovered');
         // Restore transition for smooth return
         card.style.transition='';
         card.style.transform='';
