@@ -50,17 +50,17 @@ export const KINDLE_BOOKS=[
     {note:'I started as a product designer, most of what I read in 2020 was process and theory. <mark>This practicalisation of grids that feels like constraint but is actually liberation from it</mark> was a refreshing take. The book is massive so I can\'t carry it around like a kindle. 20% through.'}
   ]},
   {title:'Psycho-Cybernetics',author:'Maxwell Maltz',cover:'/books/psycho-cybernetics.jpg',progress:100,subtitle:'Self-Image Psychology',notes:[
-    {note:'A classic for self-concept. A plastic surgeon discovers how changing exterior parts helps people form completely new identities, and nothing changes for some. <mark>One of the best breakdowns I\'ve read on self-concept.</mark> It\'s a huge book. Some parts on kindle, some on audio.'}
+    {note:'A plastic surgeon discovers how changing exterior parts helps people form completely new identities, and nothing changes for some. <mark>One of the best breakdowns I\'ve read on self-concept.</mark> It\'s a huge book. Some parts on kindle, some on audio.'}
   ]},
   // Finished
   {title:'The Almanack of Naval Ravikant',author:'Eric Jorgenson',cover:'/books/almanack-naval.jpg',progress:100,subtitle:'Wealth & Happiness',noTag:true,notes:[
-    {note:'A classic on Naval Ravikant\'s principles.'}
+    {note:'Naval Ravikant\'s principles on wealth and happiness.'}
   ]},
   {title:'The Power of Now',author:'Eckhart Tolle',cover:'/books/power-of-now.jpg',progress:100,subtitle:'Spiritual Enlightenment',noTag:true,notes:[
-    {note:'Another classic, I started this expecting it would be more scientific than spiritual but was left pleasantly surprised. <mark>A lot of borrowed principles from Indian ancient texts make all the dots connect</mark> if you\'re into this deep enough.'}
+    {note:'I started this expecting it would be more scientific than spiritual but was left pleasantly surprised. <mark>A lot of borrowed principles from Indian ancient texts make all the dots connect</mark> if you\'re into this deep enough.'}
   ]},
   {title:'Becoming Supernatural',author:'Dr. Joe Dispenza',cover:'/books/becoming-supernatural.jpg',progress:100,subtitle:'Mind & Body',noTag:true,notes:[
-    {note:'Joe and his work are a classic, the book is a light of positivity. The borrowed principles from science, Indian spirituality and mindfulness come together beautifully. Some rituals felt excessive but <mark>I\'ve always been attracted to the blend of science and mysticism.</mark>'}
+    {note:'The borrowed principles from science, Indian spirituality and mindfulness come together beautifully. Some rituals felt excessive but <mark>I\'ve always been attracted to the blend of science and mysticism.</mark>'}
   ]},
   {title:'Bhagavad Gita As It Is',author:'A.C. Bhaktivedanta Swami Prabhupada',cover:'/books/bhagavad-gita.jpg',progress:100,subtitle:'Ancient Wisdom',notes:[
     {note:'I\'ve read this one twice. <mark>The meaning somehow changes each time.</mark> Initially it felt straightforward yet a bit repetitive. The second time I grasped action driven by devotion more. Some parts I\'m still yet to understand. I don\'t fully get the detaching from outcome part without letting it affect my input yet. <mark>In theory it makes sense but in practice I lose its grip.</mark> I\'ll revisit this when I have a broader perspective on work and life.'},
