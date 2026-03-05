@@ -44,12 +44,12 @@ import { NOTES } from '../data/notes.js';
 
       <div class="about-bio">
         <p>I work with <span class="about-drop-trigger" data-drop="agencies">agencies</span>, <span class="about-drop-trigger" data-drop="companies">companies</span> and <span class="about-drop-trigger" data-drop="leaders">leaders</span> — mostly on consumer iOS apps, healthcare platforms and AI software. I care a lot about the space between design and code.</p>
-        <p>If you'd like to work together, <a href="https://cal.com/raksha-tated-v2ee58/15min" class="about-bio-link" data-cal-link="raksha-tated-v2ee58/15min" data-cal-config='{"layout":"month_view"}' onclick="event.preventDefault()">book a call</a> or email <a href="mailto:hey@raksha.design" class="about-bio-link" id="aboutEmailLink">hey@raksha.design</a>. I'll get back within 12 hours. For anything else, <a href="https://x.com/rakshaa_t" class="about-bio-link" target="_blank" rel="noopener noreferrer">DM me on X</a>.</p>
+        <p>If you'd like to work together, <a href="https://cal.com/raksha-tated-v2ee58/15min" class="about-bio-link cal-trigger" onclick="event.preventDefault()">book a call</a> or email <a href="mailto:hey@raksha.design" class="about-bio-link" id="aboutEmailLink">hey@raksha.design</a>. I'll get back within 12 hours. For anything else, <a href="https://x.com/rakshaa_t" class="about-bio-link" target="_blank" rel="noopener noreferrer">DM me on X</a>.</p>
       </div>
 
       <div class="about-ctas">
         <div class="about-cta-primary-wrap">
-          <a href="https://cal.com/raksha-tated-v2ee58/15min?user=raksha-tated-v2ee58" class="about-cta-primary" data-cal-link="raksha-tated-v2ee58/15min" data-cal-config='{"layout":"month_view"}' onclick="event.preventDefault()">Reach out <svg class="cta-arrow" width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12L12 4"/><path d="M5 4h7v7"/></svg></a>
+          <a href="https://cal.com/raksha-tated-v2ee58/15min?user=raksha-tated-v2ee58" class="about-cta-primary cal-trigger" onclick="event.preventDefault()">Reach out <svg class="cta-arrow" width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12L12 4"/><path d="M5 4h7v7"/></svg></a>
         </div>
         <div class="about-cta-strip">
           <a href="https://x.com/rakshaa_t" class="about-cta" aria-label="Twitter" target="_blank" rel="noopener noreferrer">
@@ -293,6 +293,13 @@ import { NOTES } from '../data/notes.js';
   (function (C, A, L) { let p = function (a, ar) { a.q.push(ar); }; let d = C.document; C.Cal = C.Cal || function () { let cal = C.Cal; let ar = arguments; if (!cal.loaded) { cal.ns = {}; cal.q = cal.q || []; d.head.appendChild(d.createElement("script")).src = A; cal.loaded = true; } if (ar[0] === L) { const api = function () { p(api, arguments); }; const namespace = ar[1]; api.q = api.q || []; if(typeof namespace === "string"){cal.ns[namespace] = cal.ns[namespace] || api;p(cal.ns[namespace], ar);p(cal, ["initNamespace", namespace]);} else p(cal, ar); return;} p(cal, ar); }; })(window, "https://app.cal.com/embed/embed.js", "init");
   Cal("init", {origin:"https://app.cal.com"});
   Cal("ui", {"cssVarsPerTheme":{"light":{"cal-brand":"#3A3632"}},"hideEventTypeDetails":false,"layout":"month_view"});
+  // Open as popup modal on click — no data-cal-link in HTML to prevent inline embed
+  document.querySelectorAll('.cal-trigger').forEach(function(el){
+    el.addEventListener('click',function(e){
+      e.preventDefault();
+      Cal("modal",{calLink:"raksha-tated-v2ee58/15min",config:{layout:"month_view"}});
+    });
+  });
 </script>
 
 </Layout>
