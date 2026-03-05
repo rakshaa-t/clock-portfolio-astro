@@ -3,7 +3,7 @@
 // Re-initializes on every page load (ViewTransitions compatible).
 
 import { PUZZLE_PROJECTS } from '../data/projects.js';
-import { esc, prefersReducedMotion, smoothScrollToEl, smoothScrollElH } from './shared.js';
+import { esc, prefersReducedMotion, smoothScrollToEl } from './shared.js';
 
 // ═══ STATE ═══
 let modalOpen=false, carouselIndex=0, currentModalData=null, _modalTrigger=null;
@@ -99,9 +99,10 @@ function setupSlideObserver(){
 
 function scrollToSlide(idx){
   if(!carouselScroll) return;
-  const slide=carouselScroll.querySelectorAll('.carousel-slide')[idx];
-  if(!slide) return;
-  smoothScrollElH(carouselScroll,slide.offsetLeft);
+  carouselScroll.scroll({
+    left:carouselScroll.clientWidth*idx,
+    behavior:prefersReducedMotion?'auto':'smooth'
+  });
 }
 
 // ═══ SHOW MODAL ═══
