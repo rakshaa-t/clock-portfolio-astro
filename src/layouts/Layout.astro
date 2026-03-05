@@ -64,5 +64,11 @@ const siteUrl = 'https://raksha.design';
   </head>
   <body>
     <slot />
+    <script is:inline>
+      // Save scroll position before ViewTransitions navigates away
+      document.addEventListener('astro:before-preparation',function(){
+        sessionStorage.setItem('__scroll:'+location.pathname,String(window.scrollY));
+      });
+    </script>
   </body>
 </html>

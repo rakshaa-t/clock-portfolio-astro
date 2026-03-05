@@ -8,6 +8,9 @@
 }
 
 
+/* Instant page transitions — no fade/slide */
+::view-transition-old(root),::view-transition-new(root){animation:none!important;}
+
 *{margin:0;padding:0;box-sizing:border-box;}
 :root{
   --accent:#8B7EC8;

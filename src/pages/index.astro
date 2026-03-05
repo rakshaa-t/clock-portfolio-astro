@@ -279,6 +279,13 @@ import { NOTES } from '../data/notes.js';
     if(window.__initBottomNav) window.__initBottomNav();
     if(window.__initScrollEffects) window.__initScrollEffects();
     if(window.__initAudio) window.__initAudio();
+    // Restore scroll position after content is built
+    var saved=sessionStorage.getItem('__scroll:/');
+    if(saved){
+      requestAnimationFrame(function(){
+        window.scrollTo(0,parseInt(saved,10));
+      });
+    }
   })();
 </script>
 
