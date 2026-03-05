@@ -120,6 +120,11 @@ function _showModal(project){
       return `<div class="carousel-slide"><div class="carousel-slide-color" style="background:${s}">${i===0?project.title.substring(0,2).toUpperCase():'IMG '+(i+1)}</div></div>`;
     }).join('');
   }
+  // Blur-up: mark videos loaded once they have data
+  carouselScroll.querySelectorAll('video').forEach(v=>{
+    if(v.readyState>=2) v.classList.add('loaded');
+    else v.addEventListener('loadeddata',()=>v.classList.add('loaded'),{once:true});
+  });
   const counterEl=document.getElementById('carouselCounter');
   counterEl.textContent=(isComingSoon||slides.length===1)?'':`1 / ${slides.length}`;
   counterEl.style.display=(isComingSoon||slides.length===1)?'none':'';
@@ -284,9 +289,13 @@ function initPortfolioCore(){
     card.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();activate();}});
   });
 
-  // Lazy video playback
+  // Lazy video playback + blur-up loading
   const _cardVideos=document.querySelectorAll('.puzzle-card video');
   if(_cardVideos.length){
+    _cardVideos.forEach(v=>{
+      if(v.readyState>=2) v.classList.add('loaded');
+      else v.addEventListener('loadeddata',()=>v.classList.add('loaded'),{once:true});
+    });
     const vidObs=new IntersectionObserver(entries=>{
       entries.forEach(e=>{
         if(e.isIntersecting&&!modalOpen) e.target.play().catch(()=>{});

@@ -143,6 +143,13 @@ body{}
   width:100%;height:100%;object-fit:cover;object-position:center;
   -webkit-user-drag:none;user-select:none;
 }
+.carousel-slide video,.puzzle-img video{
+  filter:blur(12px);transform:scale(1.04);
+  transition:filter 0.5s cubic-bezier(0.32,0.72,0,1),transform 0.5s cubic-bezier(0.32,0.72,0,1);
+}
+.carousel-slide video.loaded,.puzzle-img video.loaded{
+  filter:blur(0);transform:scale(1);
+}
 .carousel-counter{
   position:absolute;top:12px;left:12px;
   background:rgba(58,54,50,0.4);color:rgba(255,255,255,0.8);

@@ -258,8 +258,20 @@ import { NOTES } from '../data/notes.js';
 
 <script is:inline data-astro-rerun>
   // Sole init path for all sections.
-  // Module scripts only execute once — this re-runs on every navigation.
-  function _reinit(){
+  // Module scripts only execute once — on ViewTransitions navigation
+  // they may not have loaded yet, so we await them before calling init.
+  (async function(){
+    function ready(){
+      return new Promise(function(r){
+        if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',r,{once:true});
+        else r();
+      });
+    }
+    await ready();
+    // If modules haven't set their globals yet, wait briefly for them
+    if(!window.__initPortfolioCore){
+      await new Promise(function(r){setTimeout(r,0);});
+    }
     if(window.__initPortfolioCore) window.__initPortfolioCore();
     if(window.__initBooks) window.__initBooks();
     if(window.__initMymind) window.__initMymind();
@@ -267,12 +279,7 @@ import { NOTES } from '../data/notes.js';
     if(window.__initBottomNav) window.__initBottomNav();
     if(window.__initScrollEffects) window.__initScrollEffects();
     if(window.__initAudio) window.__initAudio();
-  }
-  if(document.readyState==='loading'){
-    document.addEventListener('DOMContentLoaded',_reinit,{once:true});
-  } else {
-    _reinit();
-  }
+  })();
 </script>
 
 <script is:inline>
