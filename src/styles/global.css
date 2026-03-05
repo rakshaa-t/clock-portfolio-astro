@@ -283,6 +283,7 @@ body{}
 .puzzle-show-more.hidden{display:none;}
 .puzzle-img img,.puzzle-img video{
   width:100%;height:100%;object-fit:cover;display:block;
+  pointer-events:none;
 }
 .puzzle-overlay{
   position:absolute;bottom:0;left:0;right:0;
@@ -291,7 +292,7 @@ body{}
   background:rgba(0,0,0,0.04);
   transform:translateY(100%);
   transition:transform 0.3s cubic-bezier(0.32,0.72,0,1);
-  z-index:3;
+  z-index:3;pointer-events:none;
 }
 .puzzle-card.is-hovered .puzzle-overlay,.puzzle-card:focus-within .puzzle-overlay{transform:translateY(0);}
 .puzzle-overlay span{
