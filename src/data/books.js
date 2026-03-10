@@ -24,8 +24,8 @@ export const KINDLE_BOOKS=[
   {title:'How to Cope',author:'Boethius (trans. Philip Freeman)',cover:'/books/how-to-cope.jpg',progress:1,subtitle:'Ancient Wisdom',notes:[
     {note:'Just started this one. Also <mark>my intro to stoicism.</mark>'}
   ]},
-  {title:'Turning Pro',author:'Steven Pressfield',cover:'/books/turning-pro.jpg',progress:1,subtitle:'Turning Pro',notes:[
-    {note:'Back with Steven Pressfield, excited to read this one.'}
+  {title:'Turning Pro',author:'Steven Pressfield',cover:'/books/turning-pro.jpg',progress:100,subtitle:'Turning Pro',noTag:true,notes:[
+    {note:'Found myself somewhere between an amateur and pro. <mark>Spiritual tangent to professionality.</mark>'}
   ]},
   {title:'The Art of Doing Science and Engineering',author:'Richard Hamming',cover:'/books/hamming.jpg',progress:1,subtitle:'Learning to Learn',notes:[
     {note:'Getting started with this one.'}
