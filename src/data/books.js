@@ -37,7 +37,7 @@ export const KINDLE_BOOKS=[
     {note:'<mark>Excellent and bold.</mark> 700 pages so it\'s huge but <mark>the nuances make it rare and worth the read.</mark>'}
   ]},
   {title:'78 Days Practical Transurfing',author:'Vadim Zeland',cover:'/books/78-days-transurfing.jpg',progress:100,subtitle:'Practical Transurfing',notes:[
-    {note:'An extension of Reality Transurfing by Vadim. <mark>As usual the nuances hit the spot</mark> and can be used as a tool book for everyday life.'}
+    {note:'A quick read, a bit repetitive and sometimes contradictory but I have a lot of highlights in my Kindle from this book. <mark>Says something about it being a toolbook more than a philosophical one.</mark>'}
   ]},
   // In progress
   {title:'The 48 Laws of Power',author:'Robert Greene',cover:'/books/48-laws.jpg',progress:22,subtitle:'Strategy',notes:[
