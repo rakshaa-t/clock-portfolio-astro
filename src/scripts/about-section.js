@@ -51,9 +51,20 @@ function initAbout(){
   aboutPrimaryBtn.addEventListener('mousedown',()=>aboutClickSound('primary'));
   aboutPrimaryBtn.addEventListener('touchstart',()=>aboutClickSound('primary'),{passive:true});
 
+  // Subsequent tooltips instant — warm state on the strip
+  const ctaStrip=document.querySelector('.about-cta-strip');
+  let tipWarmTimer=null;
   document.querySelectorAll('.about-cta-strip .about-cta').forEach(btn=>{
     btn.addEventListener('mousedown',()=>aboutClickSound('secondary'));
     btn.addEventListener('touchstart',()=>aboutClickSound('secondary'),{passive:true});
+    btn.addEventListener('mouseenter',()=>{
+      if(tipWarmTimer) clearTimeout(tipWarmTimer);
+      if(ctaStrip) ctaStrip.classList.add('tip-warm');
+    });
+    btn.addEventListener('mouseleave',()=>{
+      if(tipWarmTimer) clearTimeout(tipWarmTimer);
+      tipWarmTimer=setTimeout(()=>{if(ctaStrip) ctaStrip.classList.remove('tip-warm');},300);
+    });
   });
 
   // Stack cards shuffle sound
