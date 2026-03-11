@@ -63,7 +63,7 @@ export const KINDLE_BOOKS=[
     {note:'The borrowed principles from science, Indian spirituality and mindfulness come together beautifully. Some rituals felt excessive but <mark>I\'ve always been attracted to the blend of science and mysticism.</mark>'}
   ]},
   {title:'Bhagavad Gita As It Is',author:'A.C. Bhaktivedanta Swami Prabhupada',cover:'/books/bhagavad-gita.jpg',progress:100,subtitle:'Ancient Wisdom',notes:[
-    {note:'I\'ve read this one twice. <mark>The meaning somehow changes each time.</mark> Initially it felt straightforward yet a bit repetitive. The second time I grasped action driven by devotion more. Some parts I\'m still yet to understand. I don\'t fully get the detaching from outcome part without letting it affect my input yet. <mark>In theory it makes sense but in practice I lose its grip.</mark> I\'ll revisit this when I have a broader perspective on work and life.'},
+    {note:'I have read this once twice so far. I find it less religious and more spiritual.'},
   ]},
   {title:'Ayurveda',author:'Dr. Vasant Lad',cover:'/books/ayurveda.jpg',progress:100,subtitle:'Science of Self-Healing',notes:[
     {note:'Division of every body into 3 primary forces. Recognising your force, surrendering to it and living aligned with it. Nature\'s way, with yoga and mindfulness. <mark>Seeing food as medicine,</mark> extremely personalised for each body type. Knowing how to read symptoms. Big fan of holistic sciences. When I visited Egypt they too had their own medicinal system from the Egyptian civilisation (one of the oldest), so does China (TCM). <mark>The body is extremely intriguing and these sciences seem profound for existing for over 2-4 thousand years.</mark>'}
