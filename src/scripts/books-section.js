@@ -9,7 +9,7 @@ const BOOKS_INITIAL=12;
 
 function getBookCategory(book){
   if(book.fav) return 'excellent';
-  if(book.progress===100) return 'great';
+  if(book.progress===100&&!book.noTag) return 'great';
   return 'reading';
 }
 

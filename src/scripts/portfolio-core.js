@@ -180,11 +180,13 @@ function closeModal(){
   const trigger=_modalTrigger;_modalTrigger=null;
   if(carouselScroll) document.querySelectorAll('#carouselScroll video').forEach(v=>{try{v.pause();v.removeAttribute('src');v.load();}catch(e){}});
   if(slideObserver){slideObserver.disconnect();slideObserver=null;}
+  // Stop tilt and clear inline transform before removing .open
+  // so CSS transitions cleanly from translateY(0) to translateY(100vh)
+  if(tiltRaf){cancelAnimationFrame(tiltRaf);tiltRaf=null;}
+  modalCard.style.transform='';modalCard.style.willChange='';
   modalOverlay.classList.remove('open');
   document.body.style.overflow='';
-  modalCard.style.transform='';modalCard.style.willChange='';
   if(modalDescWrap){modalDescWrap.classList.remove('has-bottom-fade');modalDescWrap.classList.remove('has-scroll-fade');}
-  if(tiltRaf){cancelAnimationFrame(tiltRaf);tiltRaf=null;}
   document.querySelectorAll('.puzzle-card video').forEach(v=>{
     const r=v.getBoundingClientRect();
     if(r.bottom>0&&r.top<window.innerHeight) v.play().catch(()=>{});
