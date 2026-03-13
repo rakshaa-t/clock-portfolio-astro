@@ -5,6 +5,30 @@
 
 export const MMIND_CARDS=[
   {
+    type:'image', img:'/mymind/web-haptics.png', height:95,
+    caption:'WebHaptics \u2014 Haptic feedback for the mobile web',
+    title:'WebHaptics',
+    source:'haptics.lochie.me', url:'https://haptics.lochie.me',
+    tldr:'Tiny library for adding native-feeling haptic feedback to mobile web apps \u2014 supports iOS and Android.',
+    tags:['Tools'], category:'tools', date:'today'
+  },
+  {
+    type:'image', img:'/mymind/swiftui-experiments.png', height:90,
+    caption:'SwiftUI Experiments',
+    title:'SwiftUI Experiments \u2014 mikelikesdesign',
+    source:'github.com', url:'https://github.com/mikelikesdesign/SwiftUI-experiments',
+    tldr:'Examples with SwiftUI and other Apple frameworks showcasing various interactions, animations and more.',
+    tags:['Inspiration','Animation'], category:'inspiration', date:'today'
+  },
+  {
+    type:'image', img:'/mymind/iamrobin.jpg', height:95,
+    caption:'iamrobin \u2014 Robin\'s personal site',
+    title:'iamrobin',
+    source:'iamrob.in', url:'https://iamrob.in',
+    tldr:'Robin\'s personal space \u2014 digital garden, bookmarks, projects. Great view transitions and hover interactions.',
+    tags:['Inspiration'], category:'inspiration', date:'today'
+  },
+  {
     type:'image', img:'/mymind/framer-layout.png', height:110,
     caption:'Everything about Framer Motion layout animations',
     title:'Framer Motion Layout Animations',
