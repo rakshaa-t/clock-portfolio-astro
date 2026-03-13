@@ -4,6 +4,7 @@
 
 import { KINDLE_BOOKS } from '../data/books.js';
 import { esc, smoothScrollToEl } from './shared.js';
+import { haptic } from './haptics.js';
 
 const BOOKS_INITIAL=12;
 
@@ -146,6 +147,7 @@ function initBooks(){
             o.connect(g);g.connect(ctx.destination);o.start(t);o.stop(t+0.04);
           }
         }
+        haptic('nudge');
         if(bookActiveIdx===i) closeBookPopover();
         else openBookPopover(i,el);
       }
@@ -161,6 +163,7 @@ function initBooks(){
   bookFilters.addEventListener('click',(e)=>{
     const pill=e.target.closest('.mymind-pill');
     if(!pill) return;
+    haptic(15);
     bookActiveFilter=pill.dataset.filter;
     bookFilters.querySelectorAll('.mymind-pill').forEach(p=>
       p.classList.toggle('active',p.dataset.filter===bookActiveFilter)
@@ -172,6 +175,7 @@ function initBooks(){
 
   if(booksShowMore){
     booksShowMore.addEventListener('click',()=>{
+      haptic('success');
       const expanding=!booksGrid.classList.contains('expanded');
       booksGrid.classList.toggle('expanded');
       booksShowMore.textContent=expanding?'Show fewer books':'Show more books';

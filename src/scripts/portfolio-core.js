@@ -4,6 +4,7 @@
 
 import { PUZZLE_PROJECTS } from '../data/projects.js';
 import { esc, prefersReducedMotion, smoothScrollToEl } from './shared.js';
+import { haptic, destroyHaptics } from './haptics.js';
 
 // ═══ STATE ═══
 let modalOpen=false, carouselIndex=0, currentModalData=null, _modalTrigger=null;
@@ -87,6 +88,7 @@ function setupSlideObserver(){
         const idx=[...slides].indexOf(e.target);
         if(idx>=0&&idx!==carouselIndex){
           carouselIndex=idx;
+          haptic(20);
           updateCounter();
           updateCarouselButtons();
           if(Array.isArray(currentModalData?.desc)){renderModalDesc(currentModalData,carouselIndex);recheckDescScroll();}
@@ -184,6 +186,7 @@ function closeModal(){
   // so CSS transitions cleanly from translateY(0) to translateY(100vh)
   if(tiltRaf){cancelAnimationFrame(tiltRaf);tiltRaf=null;}
   modalCard.style.transform='';modalCard.style.willChange='';
+  haptic(30);
   modalOverlay.classList.remove('open');
   document.body.style.overflow='';
   if(modalDescWrap){modalDescWrap.classList.remove('has-bottom-fade');modalDescWrap.classList.remove('has-scroll-fade');}
@@ -255,6 +258,7 @@ function initPortfolioCore(){
   let puzzleExpanded=false;
   if(puzzleShowMore){
     puzzleShowMore.addEventListener('click',()=>{
+      haptic('success');
       if(!puzzleExpanded){
         puzzleGrid.classList.remove('collapsing');
         puzzleGrid.classList.add('expanded');
@@ -285,6 +289,7 @@ function initPortfolioCore(){
         if(proj.externalLink) window.open(proj.externalLink,'_blank');
         return;
       }
+      haptic('nudge');
       openPuzzleModal(proj,card);
     }
     if('externalLink' in proj&&!proj.externalLink){card.style.cursor='default';return;}
@@ -329,6 +334,9 @@ function initPortfolioCore(){
     });
   });
 }
+
+// Clean up haptics on page transition
+document.addEventListener('astro:before-swap',destroyHaptics,{once:true});
 
 // Expose for data-astro-rerun inline script (sole init path)
 window.__initPortfolioCore=initPortfolioCore;

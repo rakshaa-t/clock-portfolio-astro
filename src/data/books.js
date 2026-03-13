@@ -5,6 +5,9 @@
 // Set fav:true on top-tier books (trophy). All 100% books get a star badge automatically.
 
 export const KINDLE_BOOKS=[
+  {title:'The Creative Act',author:'Rick Rubin',cover:'/books/the-creative-act.jpg',progress:1,subtitle:'A Way of Being',notes:[
+    {note:'Getting started with this one.'},
+  ]},
   {title:'Siddhartha',author:'Hermann Hesse',cover:'/books/siddhartha.jpg',progress:100,subtitle:'A Novel',fav:true,notes:[
     {note:'I saw a lot of me in the protagonist, I think every reader to some extent will. The book engulfed me and I read it in one day. <mark>May not read it again but would read once in every lifetime.</mark>'},
   ]},
@@ -67,5 +70,8 @@ export const KINDLE_BOOKS=[
   ]},
   {title:'Ayurveda',author:'Dr. Vasant Lad',cover:'/books/ayurveda.jpg',progress:100,subtitle:'Science of Self-Healing',notes:[
     {note:'Division of every body into 3 primary forces. Recognising your force, surrendering to it and living aligned with it. Nature\'s way, with yoga and mindfulness. <mark>Seeing food as medicine,</mark> extremely personalised for each body type. Knowing how to read symptoms. Big fan of holistic sciences. When I visited Egypt they too had their own medicinal system from the Egyptian civilisation (one of the oldest), so does China (TCM). <mark>The body is extremely intriguing and these sciences seem profound for existing for over 2-4 thousand years.</mark>'}
+  ]},
+  {title:'The Alchemist',author:'Paulo Coelho',cover:'/books/the-alchemist.jpg',progress:100,subtitle:'A Fable',noTag:true,notes:[
+    {note:'My intro to fictional writing, had to start with the classic here.'},
   ]},
 ];

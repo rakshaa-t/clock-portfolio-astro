@@ -1442,7 +1442,7 @@ a.about-dropdown-item:hover{opacity:0.7;}
 
   /* ═══ TOUCH TARGETS — 48px minimum per WCAG ═══ */
   .pop-close{width:36px;height:36px;font-size:var(--text-h4);}
-  .mymind-pill{min-height:48px;display:inline-flex;align-items:center;padding:2px 12px;}
+  .mymind-pill{min-height:48px;display:inline-flex;align-items:center;padding:2px 12px;border-radius:var(--radius-md);}
   .puzzle-show-more{min-height:48px;}
   .about-cta{min-width:48px;min-height:48px;display:inline-flex;align-items:center;justify-content:center;}
   .about-cta-primary{min-height:48px;display:inline-flex;align-items:center;}
