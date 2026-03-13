@@ -11,7 +11,8 @@ const BOOKS_INITIAL=12;
 function getBookCategory(book){
   if(book.fav) return 'excellent';
   if(book.progress===100&&!book.noTag) return 'great';
-  return 'reading';
+  if(book.progress<100) return 'reading';
+  return 'finished';
 }
 
 function initBooks(){
