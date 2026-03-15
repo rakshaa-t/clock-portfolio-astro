@@ -292,6 +292,7 @@ function initPortfolioCore(){
       haptic('nudge');
       openPuzzleModal(proj,card);
     }
+    if(proj.comingSoon){card.style.cursor='default';return;}
     if('externalLink' in proj&&!proj.externalLink){card.style.cursor='default';return;}
     card.addEventListener('click',activate);
     card.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();activate();}});

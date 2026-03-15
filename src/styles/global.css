@@ -254,17 +254,14 @@ body{}
 .puzzle-card.is-hovered .puzzle-img,.puzzle-card:focus-within .puzzle-img{transform:translateY(-28px);}
 .puzzle-extra{display:none;opacity:0;transform:translateY(12px);}
 .puzzle-grid.expanded .puzzle-extra{display:block;animation:puzzleReveal 0.3s cubic-bezier(0.32,0.72,0,1) forwards;}
-.puzzle-grid.expanded .puzzle-extra:nth-child(8){animation-delay:0s;}
-.puzzle-grid.expanded .puzzle-extra:nth-child(9){animation-delay:0.04s;}
-.puzzle-grid.expanded .puzzle-extra:nth-child(10){animation-delay:0.08s;}
-.puzzle-grid.expanded .puzzle-extra:nth-child(11){animation-delay:0.12s;}
-.puzzle-grid.expanded .puzzle-extra:nth-child(12){animation-delay:0.16s;}
-.puzzle-grid.expanded .puzzle-extra:nth-child(13){animation-delay:0.2s;}
-.puzzle-grid.expanded .puzzle-extra:nth-child(14){animation-delay:0.24s;}
-.puzzle-grid.expanded .puzzle-extra:nth-child(15){animation-delay:0.28s;}
-.puzzle-grid.expanded .puzzle-extra:nth-child(16){animation-delay:0.32s;}
-.puzzle-grid.expanded .puzzle-extra:nth-child(17){animation-delay:0.36s;}
-.puzzle-grid.expanded .puzzle-extra:nth-child(18){animation-delay:0.4s;}
+.puzzle-grid.expanded .puzzle-extra:nth-child(9){animation-delay:0s;}
+.puzzle-grid.expanded .puzzle-extra:nth-child(10){animation-delay:0.04s;}
+.puzzle-grid.expanded .puzzle-extra:nth-child(11){animation-delay:0.08s;}
+.puzzle-grid.expanded .puzzle-extra:nth-child(12){animation-delay:0.12s;}
+.puzzle-grid.expanded .puzzle-extra:nth-child(13){animation-delay:0.16s;}
+.puzzle-grid.expanded .puzzle-extra:nth-child(14){animation-delay:0.2s;}
+.puzzle-grid.expanded .puzzle-extra:nth-child(15){animation-delay:0.24s;}
+.puzzle-grid.expanded .puzzle-extra:nth-child(16){animation-delay:0.28s;}
 @keyframes puzzleReveal{
   to{opacity:1;transform:translateY(0);}
 }
@@ -299,6 +296,10 @@ body{}
   font-family:'Geist',sans-serif;font-size:var(--text-sm);font-weight:500;text-align:left;
   color:var(--text-primary);letter-spacing:-0.01em;
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.puzzle-subtitle{
+  font-family:'Geist Mono',monospace;font-size:12px!important;font-weight:400!important;
+  color:var(--text-secondary)!important;margin-left:auto;
 }
 
 /* ═══ ABOUT SECTION ═══ */
