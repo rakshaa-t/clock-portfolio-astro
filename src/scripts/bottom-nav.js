@@ -1,62 +1,38 @@
 // ═══ BOTTOM NAV ═══
-// Mobile section navigation — sliding highlight, scroll-to-section.
+// Section navigation — text color active indicator, scroll-to-section.
 // Re-initializes on every page load (ViewTransitions compatible).
 
 import { smoothScrollToEl } from './shared.js';
 
-// Persistent state across re-inits
 let _cleanup=null;
 
 function initBottomNav(){
-  // Tear down previous instance (ViewTransitions)
   if(_cleanup) _cleanup();
 
   const nav=document.getElementById('bottomNav');
   if(!nav) return;
 
-  const highlight=document.getElementById('bottomNavHighlight');
   const items=[...nav.querySelectorAll('.bottom-nav-item')];
-  const pill=nav.querySelector('.bottom-nav-pill');
   const sections=items
     .map(item=>document.getElementById(item.dataset.section))
     .filter(Boolean);
-  if(!sections.length||!pill||!highlight) return;
-
-  // ── Pre-calculate highlight offsets ──
-  let offsets=[];
-  function measureOffsets(){
-    offsets=items.map(item=>({
-      left:item.offsetLeft,
-      width:item.offsetWidth
-    }));
-  }
-  measureOffsets();
+  if(!sections.length) return;
 
   let activeIdx=0;
   let programmaticScroll=false;
   let ticking=false;
 
-  function moveHighlight(idx){
-    if(idx<0||idx>=offsets.length||idx===activeIdx) return;
+  function setActive(idx){
+    if(idx<0||idx>=sections.length||idx===activeIdx) return;
     activeIdx=idx;
-    const o=offsets[idx];
-    highlight.style.transform=`translateY(-50%) translateX(${o.left}px)`;
-    highlight.style.width=o.width+'px';
-    items.forEach((item,i)=>{
-      item.classList.toggle('active',i===idx);
-    });
+    items.forEach((item,i)=>item.classList.toggle('active',i===idx));
   }
 
-  // Force-set without the idx===activeIdx guard (for init + resize)
-  function forceHighlight(idx){
+  function forceActive(idx){
     activeIdx=-1;
-    moveHighlight(idx);
+    setActive(idx);
   }
 
-  // ── Scroll-based active tracking ──
-  // Picks whichever section covers the most viewport pixels.
-  // Stable: a tall section like Work won't lose to a short adjacent section
-  // until that section genuinely takes over the majority of the screen.
   function updateActiveFromScroll(){
     if(programmaticScroll) return;
     const vh=window.innerHeight;
@@ -71,7 +47,7 @@ function initBottomNav(){
         bestIdx=i;
       }
     }
-    moveHighlight(bestIdx);
+    setActive(bestIdx);
   }
 
   function onScroll(){
@@ -87,55 +63,26 @@ function initBottomNav(){
   const ac=new AbortController();
   window.addEventListener('scroll',onScroll,{passive:true,signal:ac.signal});
 
-  // Set initial state from current scroll position
-  forceHighlight(0);
+  forceActive(0);
   updateActiveFromScroll();
 
-  // ── Tap to scroll ──
   items.forEach((item,i)=>{
     item.addEventListener('click',e=>{
       e.preventDefault();
       const sec=sections[i];
       if(!sec) return;
       programmaticScroll=true;
-      activeIdx=-1; // force update
-      moveHighlight(i);
+      activeIdx=-1;
+      setActive(i);
       smoothScrollToEl(sec,'start');
       setTimeout(()=>{programmaticScroll=false;},800);
     },{signal:ac.signal});
   });
 
-  // ── Scroll-to-top chevron (desktop only) ──
-  const scrollTopBtn=document.getElementById('navScrollTop');
-  if(scrollTopBtn){
-    function updateChevronVisibility(){
-      scrollTopBtn.classList.toggle('visible',window.scrollY>50);
-    }
-    window.addEventListener('scroll',updateChevronVisibility,{passive:true,signal:ac.signal});
-    scrollTopBtn.addEventListener('click',()=>{
-      smoothScrollToEl(document.body,'start');
-    },{signal:ac.signal});
-    updateChevronVisibility();
-  }
-
-  // ── Re-measure on resize ──
-  const ro=new ResizeObserver(()=>{
-    measureOffsets();
-    const o=offsets[activeIdx];
-    if(o){
-      highlight.style.transform=`translateY(-50%) translateX(${o.left}px)`;
-      highlight.style.width=o.width+'px';
-    }
-  });
-  ro.observe(pill);
-
-  // ── Cleanup ──
   _cleanup=()=>{
     ac.abort();
-    ro.disconnect();
     _cleanup=null;
   };
 }
 
-// Expose for data-astro-rerun inline script (sole init path)
 window.__initBottomNav=initBottomNav;
