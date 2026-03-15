@@ -99,6 +99,22 @@ function setupSlideObserver(){
         if(idx>=0&&idx!==carouselIndex){
           carouselIndex=idx;
           haptic(20);
+          updateCounter();
+          if(Array.isArray(currentModalData?.desc)){renderModalDesc(currentModalData,carouselIndex);recheckDescScroll();}
+          updateCarouselButtons();
+        }
+      }
+    }
+  },{threshold:0.6});
+  slides.forEach(s=>slideObserver.observe(s));
+}
+
+function _showModal(project){
+  currentModalData=project;carouselIndex=0;modalOpen=true;
+  carouselScroll=document.getElementById('carouselScroll');
+  carouselScroll.scrollLeft=0;
+  // Set button state BEFORE async operations to prevent race condition
+  updateCarouselButtons();
   updateCounter();
 
   if(Array.isArray(currentModalData?.desc)){renderModalDesc(currentModalData,carouselIndex);recheckDescScroll();}
@@ -124,6 +140,10 @@ function setupSlideObserver(){
   }else{
     modalCard.style.transform='none';
   }
+  modalOverlay.classList.add('open');
+  document.body.style.overflow='hidden';
+  if(modalCard.scrollWidth>window.innerWidth){document.body.style.paddingRight=(window.innerWidth-modalCard.scrollWidth)+'px';}
+  modalDescWrap?.focus?.();
 }
 
 function openPuzzleModal(project,triggerEl){_modalTrigger=triggerEl||null;_showModal(project);}
