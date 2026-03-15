@@ -5,7 +5,9 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
-    "preview": "astro preview"
+    "preview": "astro preview",
+    "add:podcast": "node scripts/add-podcast.mjs",
+    "add:book": "node scripts/add-book.mjs"
   },
   "dependencies": {
     "@astrojs/vercel": "^9.0.4",

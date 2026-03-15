@@ -2,7 +2,7 @@
 // Cover grid with filter pills and popover highlights.
 // Re-initializes on every page load (ViewTransitions compatible).
 
-import { KINDLE_BOOKS } from '../data/books.js';
+import KINDLE_BOOKS from '../data/books.json';
 import { esc, smoothScrollToEl } from './shared.js';
 import { haptic } from './haptics.js';
 
@@ -89,8 +89,7 @@ function initBooks(){
     cardEl.classList.add('active');
     bookActiveIdx=idx;
     bookPopWrap.classList.remove('open');
-    bookPopWrap.offsetHeight;
-    bookPopWrap.classList.add('open');
+    requestAnimationFrame(()=>{bookPopWrap.classList.add('open');});
     bookScrim.classList.add('open');
     // Auto-close on scroll only when cursor is outside popover
     stopBookScrollWatch();
@@ -113,7 +112,7 @@ function initBooks(){
 
   function stopBookScrollWatch(){
     if(bookSection._scrollClose){
-      window.removeEventListener('scroll',bookSection._scrollClose,{passive:true,capture:true});
+      window.removeEventListener('scroll',bookSection._scrollClose,{capture:true});
       bookSection._scrollClose=null;
     }
   }

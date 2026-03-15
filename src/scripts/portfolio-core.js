@@ -2,7 +2,7 @@
 // Modal system, puzzle card handlers, show more, lazy video observer.
 // Re-initializes on every page load (ViewTransitions compatible).
 
-import { PUZZLE_PROJECTS } from '../data/projects.js';
+import PUZZLE_PROJECTS from '../data/projects.json';
 import { esc, prefersReducedMotion, smoothScrollToEl } from './shared.js';
 import { haptic, destroyHaptics } from './haptics.js';
 

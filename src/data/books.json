@@ -1,0 +1,299 @@
+[
+  {
+    "title": "The Creative Act",
+    "author": "Rick Rubin",
+    "cover": "/books/the-creative-act.jpg",
+    "progress": 1,
+    "subtitle": "A Way of Being",
+    "notes": [
+      {
+        "note": "Getting started with this one."
+      }
+    ]
+  },
+  {
+    "title": "Siddhartha",
+    "author": "Hermann Hesse",
+    "cover": "/books/siddhartha.jpg",
+    "progress": 100,
+    "subtitle": "A Novel",
+    "fav": true,
+    "notes": [
+      {
+        "note": "I saw a lot of me in the protagonist, I think every reader to some extent will. The book engulfed me and I read it in one day. <mark>May not read it again but would read once in every lifetime.</mark>"
+      }
+    ]
+  },
+  {
+    "title": "The War of Art",
+    "author": "Steven Pressfield",
+    "cover": "/books/war-of-art.jpg",
+    "progress": 100,
+    "subtitle": "Creative Resistance",
+    "fav": true,
+    "notes": [
+      {
+        "note": "<mark>Steven Pressfield sliced this down like a Nobu sushi chef.</mark> The resistance part was a bit drawn out but most of it hit every spot a creative, or honestly, even a non-creative could ever face. <mark>The muse and other concepts, although mystical, are profound because the muse could literally be whatever higher power you believe in.</mark> It's flexible. The book drove me to listen to his podcasts too."
+      }
+    ]
+  },
+  {
+    "title": "Thinking with Type",
+    "author": "Ellen Lupton",
+    "cover": "/books/thinking-with-type.jpg",
+    "progress": 15,
+    "subtitle": "Thinking with Type",
+    "notes": [
+      {
+        "note": "Interesting, straightforward. Typography is an art best practiced but looking through the history behind type and <mark>knowing the jargon (finally) makes me feel closer to the one element I consistently use in my product design practice.</mark>"
+      }
+    ]
+  },
+  {
+    "title": "Principles",
+    "author": "Ray Dalio",
+    "cover": "/books/principles.jpg",
+    "progress": 1,
+    "subtitle": "Life and Work",
+    "notes": [
+      {
+        "note": "Just started this one."
+      }
+    ]
+  },
+  {
+    "title": "How to Cope",
+    "author": "Boethius (trans. Philip Freeman)",
+    "cover": "/books/how-to-cope.jpg",
+    "progress": 1,
+    "subtitle": "Ancient Wisdom",
+    "notes": [
+      {
+        "note": "Just started this one. Also <mark>my intro to stoicism.</mark>"
+      }
+    ]
+  },
+  {
+    "title": "Turning Pro",
+    "author": "Steven Pressfield",
+    "cover": "/books/turning-pro.jpg",
+    "progress": 100,
+    "subtitle": "Turning Pro",
+    "noTag": true,
+    "notes": [
+      {
+        "note": "Found myself somewhere between an amateur and pro. <mark>Spiritual tangent to professionality.</mark>"
+      }
+    ]
+  },
+  {
+    "title": "The Art of Doing Science and Engineering",
+    "author": "Richard Hamming",
+    "cover": "/books/hamming.jpg",
+    "progress": 100,
+    "subtitle": "Learning to Learn",
+    "notes": [
+      {
+        "note": "\"I am preaching the message that, with apparently only one life to live on this earth, you ought to try to make significant contributions to humanity rather than just get along through life comfortably - that the life of trying to achieve excellence in some area is in itself a worthy goal of your life.\""
+      }
+    ]
+  },
+  {
+    "title": "Martyr!",
+    "author": "Kaveh Akbar",
+    "cover": "/books/martyr.jpg",
+    "progress": 1,
+    "subtitle": "A Novel",
+    "notes": [
+      {
+        "note": "Getting started with this one."
+      }
+    ]
+  },
+  {
+    "title": "Antifragile",
+    "author": "Nassim Nicholas Taleb",
+    "cover": "/books/antifragile.jpg",
+    "progress": 1,
+    "subtitle": "Things That Gain from Disorder",
+    "notes": [
+      {
+        "note": "Getting started with this one."
+      }
+    ]
+  },
+  {
+    "title": "Sync",
+    "author": "Steven Strogatz",
+    "cover": "/books/sync.jpg",
+    "progress": 1,
+    "subtitle": "How Order Emerges from Chaos",
+    "notes": [
+      {
+        "note": "Getting started with this one."
+      }
+    ]
+  },
+  {
+    "title": "Kafka on the Shore",
+    "author": "Haruki Murakami",
+    "cover": "/books/kafka-shore.jpg",
+    "progress": 13,
+    "subtitle": "A Novel",
+    "notes": [
+      {
+        "note": "Was extremely excited to read this. About 13% in but <mark>it didn't stick. Too descriptive for my taste.</mark>"
+      }
+    ]
+  },
+  {
+    "title": "Reality Transurfing",
+    "author": "Vadim Zeland",
+    "cover": "/books/reality-transurfing.jpg",
+    "progress": 100,
+    "subtitle": "Reality Transurfing",
+    "fav": true,
+    "notes": [
+      {
+        "note": "<mark>Excellent and bold.</mark> 700 pages so it's huge but <mark>the nuances make it rare and worth the read.</mark>"
+      }
+    ]
+  },
+  {
+    "title": "78 Days Practical Transurfing",
+    "author": "Vadim Zeland",
+    "cover": "/books/78-days-transurfing.jpg",
+    "progress": 100,
+    "subtitle": "Practical Transurfing",
+    "noTag": true,
+    "notes": [
+      {
+        "note": "A quick read, a bit repetitive and sometimes contradictory but I have a lot of highlights in my Kindle from this book. <mark>Says something about it being a toolbook more than a philosophical one.</mark>"
+      }
+    ]
+  },
+  {
+    "title": "The 48 Laws of Power",
+    "author": "Robert Greene",
+    "cover": "/books/48-laws.jpg",
+    "progress": 22,
+    "subtitle": "Strategy",
+    "notes": [
+      {
+        "note": "<mark>Biggest challenge to all that I stand for.</mark> Only a few laws in, started recently. Initially felt ruthless but the underlying psychology is interesting and <mark>helps me spot players even if I'm not the one participating.</mark> The historical aspect is a unique blend."
+      }
+    ]
+  },
+  {
+    "title": "The Gene",
+    "author": "Siddhartha Mukherjee",
+    "cover": "/books/the-gene.jpg",
+    "progress": 1,
+    "subtitle": "An Intimate History",
+    "notes": [
+      {
+        "note": "Just begun this."
+      }
+    ]
+  },
+  {
+    "title": "Grid Systems",
+    "author": "Josef Müller-Brockmann",
+    "cover": "/books/grid-systems.jpg",
+    "progress": 20,
+    "subtitle": "Graphic Design",
+    "notes": [
+      {
+        "note": "I started as a product designer, most of what I read in 2020 was process and theory. <mark>This practicalisation of grids that feels like constraint but is actually liberation from it</mark> was a refreshing take. The book is massive so I can't carry it around like a kindle. 20% through."
+      }
+    ]
+  },
+  {
+    "title": "Psycho-Cybernetics",
+    "author": "Maxwell Maltz",
+    "cover": "/books/psycho-cybernetics.jpg",
+    "progress": 100,
+    "subtitle": "Self-Image Psychology",
+    "notes": [
+      {
+        "note": "A plastic surgeon discovers how changing exterior parts helps people form completely new identities, and nothing changes for some. <mark>One of the best breakdowns I've read on self-concept.</mark> It's a huge book. Some parts on kindle, some on audio."
+      }
+    ]
+  },
+  {
+    "title": "The Almanack of Naval Ravikant",
+    "author": "Eric Jorgenson",
+    "cover": "/books/almanack-naval.jpg",
+    "progress": 100,
+    "subtitle": "Wealth & Happiness",
+    "noTag": true,
+    "notes": [
+      {
+        "note": "Naval Ravikant's principles on wealth and happiness."
+      }
+    ]
+  },
+  {
+    "title": "The Power of Now",
+    "author": "Eckhart Tolle",
+    "cover": "/books/power-of-now.jpg",
+    "progress": 100,
+    "subtitle": "Spiritual Enlightenment",
+    "noTag": true,
+    "notes": [
+      {
+        "note": "I started this expecting it would be more scientific than spiritual but was left pleasantly surprised. <mark>A lot of borrowed principles from Indian ancient texts make all the dots connect</mark> if you're into this deep enough."
+      }
+    ]
+  },
+  {
+    "title": "Becoming Supernatural",
+    "author": "Dr. Joe Dispenza",
+    "cover": "/books/becoming-supernatural.jpg",
+    "progress": 100,
+    "subtitle": "Mind & Body",
+    "noTag": true,
+    "notes": [
+      {
+        "note": "The borrowed principles from science, Indian spirituality and mindfulness come together beautifully. Some rituals felt excessive but <mark>I've always been attracted to the blend of science and mysticism.</mark>"
+      }
+    ]
+  },
+  {
+    "title": "Bhagavad Gita As It Is",
+    "author": "A.C. Bhaktivedanta Swami Prabhupada",
+    "cover": "/books/bhagavad-gita.jpg",
+    "progress": 100,
+    "subtitle": "Ancient Wisdom",
+    "notes": [
+      {
+        "note": "I have read this once twice so far. I find it less religious and more spiritual."
+      }
+    ]
+  },
+  {
+    "title": "Ayurveda",
+    "author": "Dr. Vasant Lad",
+    "cover": "/books/ayurveda.jpg",
+    "progress": 100,
+    "subtitle": "Science of Self-Healing",
+    "notes": [
+      {
+        "note": "Division of every body into 3 primary forces. Recognising your force, surrendering to it and living aligned with it. Nature's way, with yoga and mindfulness. <mark>Seeing food as medicine,</mark> extremely personalised for each body type. Knowing how to read symptoms. Big fan of holistic sciences. When I visited Egypt they too had their own medicinal system from the Egyptian civilisation (one of the oldest), so does China (TCM). <mark>The body is extremely intriguing and these sciences seem profound for existing for over 2-4 thousand years.</mark>"
+      }
+    ]
+  },
+  {
+    "title": "The Alchemist",
+    "author": "Paulo Coelho",
+    "cover": "/books/the-alchemist.jpg",
+    "progress": 100,
+    "subtitle": "A Fable",
+    "noTag": true,
+    "notes": [
+      {
+        "note": "My intro to fictional writing, had to start with the classic here."
+      }
+    ]
+  }
+]

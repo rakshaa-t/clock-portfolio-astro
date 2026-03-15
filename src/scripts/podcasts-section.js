@@ -2,7 +2,7 @@
 // Cover grid with skeuomorphic play button slide-out on hover.
 // Re-initializes on every page load (ViewTransitions compatible).
 
-import { PODCASTS } from '../data/podcasts.js';
+import PODCASTS from '../data/podcasts.json';
 import { esc } from './shared.js';
 import { haptic } from './haptics.js';
 

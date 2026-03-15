@@ -88,8 +88,7 @@ function initMymind(){
     cardEl.classList.add('active');
     mmindActiveIdx=idx;
     mmindPopWrap.classList.remove('open');
-    mmindPopWrap.offsetHeight;
-    mmindPopWrap.classList.add('open');
+    requestAnimationFrame(()=>{mmindPopWrap.classList.add('open');});
     mmindScrim.classList.add('open');
     // Auto-close on any scroll
     stopMmindScrollWatch();
@@ -121,7 +120,7 @@ function initMymind(){
 
   function stopMmindScrollWatch(){
     if(mmindSection._scrollClose){
-      window.removeEventListener('scroll',mmindSection._scrollClose,{passive:true,capture:true});
+      window.removeEventListener('scroll',mmindSection._scrollClose,{capture:true});
       mmindSection._scrollClose=null;
     }
   }
@@ -237,13 +236,8 @@ function initMymind(){
       mmindShowMore.textContent=expanding?'Show fewer bookmarks':'Show more bookmarks';
       mmindShowMore.setAttribute('aria-expanded',expanding);
       if(expanding){
-        // Items are now display:block; opacity:0 (CSS).
-        // Sort by visual position then reveal with WAAPI (compositor-thread, precise timing).
+        // Reveal extras with WAAPI stagger (compositor-thread, no layout reads).
         const extras=[...mmindGrid.querySelectorAll('.mm-extra')];
-        extras.sort((a,b)=>{
-          const ra=a.getBoundingClientRect(),rb=b.getBoundingClientRect();
-          return ra.top-rb.top||ra.left-rb.left;
-        });
         const stagger=50;
         extras.forEach((el,i)=>{
           const anim=el.animate([

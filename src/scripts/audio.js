@@ -121,15 +121,19 @@ function _initAudio(){
 // Expose for data-astro-rerun inline script (sole init path)
 window.__initAudio=_initAudio;
 
-// Magic Mouse click sound — lazy-loaded MP3, decoded on first play
-let _mouseClickBuf=null,_mouseClickRaw=null,_decoding=null;
-fetch('/magic-mouse-click.mp3')
-  .then(r=>r.arrayBuffer())
-  .then(ab=>{_mouseClickRaw=ab;})
-  .catch(()=>{});
+// Magic Mouse click sound — lazy-loaded MP3, fetched on first play
+let _mouseClickBuf=null,_mouseClickRaw=null,_decoding=null,_fetching=null;
+function _fetchClickSound(){
+  if(_fetching||_mouseClickRaw||_mouseClickBuf) return;
+  _fetching=fetch('/magic-mouse-click.mp3')
+    .then(r=>r.arrayBuffer())
+    .then(ab=>{_mouseClickRaw=ab;_fetching=null;})
+    .catch(()=>{_fetching=null;});
+}
 async function noteClick(){
   if(!_soundOn)return;
-  // Decode on first play (fast — small MP3), cache for subsequent clicks
+  // Fetch on first use, not on page load
+  if(!_mouseClickBuf&&!_mouseClickRaw) _fetchClickSound();
   if(!_mouseClickBuf){
     if(_decoding){_mouseClickBuf=await _decoding;}
     else if(_mouseClickRaw){

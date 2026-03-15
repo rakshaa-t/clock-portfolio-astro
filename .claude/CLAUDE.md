@@ -181,3 +181,73 @@ The push transition (clock → browse) transforms `.browse-content` as one compo
 - **No `backdrop-filter: blur()`** on large surfaces — OK on small elements (< 100px)
 - **`will-change` only where needed** — don't add it speculatively
 - **In `applyDockProgress()`** — only write compositor properties (transform, opacity) every frame; gate non-compositor writes (pointer-events, classList) behind threshold checks to avoid style recalc thrashing
+
+## Content Management
+
+All content data lives in `src/data/` as JSON files. Helper scripts automate adding new entries.
+
+### Data Files
+
+| File | Content | Used by |
+|------|---------|---------|
+| `src/data/books.json` | Book stack entries | `src/scripts/books-section.js` |
+| `src/data/podcasts.json` | Podcast grid entries | `src/scripts/podcasts-section.js` |
+| `src/data/projects.json` | Project puzzle cards | `src/scripts/portfolio-core.js` |
+| `src/data/mymind.js` | Mymind bookmark cards | `src/pages/index.astro` |
+| `src/data/notes.js` | Apple Notes entries | `src/pages/index.astro` |
+
+### Adding a Book
+
+```bash
+npm run add:book "Book Title" "Author Name"
+```
+
+This auto-downloads the cover from Open Library and adds an entry to `books.json`. After running:
+1. Check that the cover downloaded correctly at `public/books/<slug>.jpg`
+2. Edit `src/data/books.json` to fill in `subtitle` and update `notes`
+3. Set `progress` (1-100), add `fav: true` for favorites, `noTag: true` to hide the progress tag
+
+### Adding a Podcast
+
+```bash
+npm run add:podcast https://youtu.be/VIDEO_ID
+```
+
+This auto-downloads the YouTube thumbnail and extracts the title/channel. After running:
+1. Edit `src/data/podcasts.json` to fill in `guest` and `note` fields
+2. Check thumbnail at `public/podcasts/<video-id>.jpg`
+
+### Adding a Project
+
+Edit `src/data/projects.json` directly. Add a new object to the array:
+
+```json
+{
+  "title": "Project Name",
+  "tags": ["Category", "Year"],
+  "images": ["/projects/folder/image.jpg"],
+  "slides": ["#hexcolor"],
+  "desc": "Description text",
+  "link": "https://case-study-url"
+}
+```
+
+Then add the corresponding `<div class="puzzle-card" data-project="N">` in `src/pages/index.astro`. The `data-project` index must match the array position in `projects.json`.
+
+Special flags: `comingSoon: true` (non-clickable), `externalLink: "url"` (opens external link instead of modal).
+
+### Adding a Bookmark (Mymind)
+
+Edit `src/data/mymind.js` — add a new object to the array with `img`, `tag`, and optional `url`.
+
+### Adding a Note
+
+Edit `src/data/notes.js` — add a new object with `title`, `body` (HTML string), `date`, and `folder`. Then create a corresponding page at `src/pages/notes/<slug>.astro`.
+
+### Mobile Testing
+
+Astro's dev server (Vite HMR) breaks mobile touch scrolling. Always test mobile on production builds:
+
+```bash
+npm run build && npx http-server .vercel/output/static -p 4321 -a 0.0.0.0 -c-1
+```
