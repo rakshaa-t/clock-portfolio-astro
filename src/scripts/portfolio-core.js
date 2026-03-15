@@ -135,7 +135,7 @@ function _showModal(project){
       if(modalOpen&&!tiltRaf) tiltRaf=requestAnimationFrame(tiltLoop);
     };
     // Store reference for cleanup in closeModal()
-    closeModal._transitionHandler=onTransitionEnd;
+    _onModalTransitionEnd=onTransitionEnd;
     modalCard.addEventListener('transitionend',onTransitionEnd);
   }else{
     modalCard.style.transform='none';
@@ -148,6 +148,8 @@ function _showModal(project){
 
 function openPuzzleModal(project,triggerEl){_modalTrigger=triggerEl||null;_showModal(project);}
 
+let _onModalTransitionEnd=null;
+
 function closeModal(){
   modalOpen=false;
   const trigger=_modalTrigger;_modalTrigger=null;
@@ -158,7 +160,7 @@ function closeModal(){
   if(tiltRaf){cancelAnimationFrame(tiltRaf);tiltRaf=null;tiltLastTime=0;}
   modalCard.style.transform='';modalCard.style.willChange='';
   // Remove modal-specific event listeners to prevent memory leaks
-  modalCard.removeEventListener('transitionend',arguments.callee._transitionHandler);
+  if(_onModalTransitionEnd) modalCard.removeEventListener('transitionend',_onModalTransitionEnd);
   haptic(30);
   modalOverlay.classList.remove('open');
   document.body.style.overflow='';
@@ -169,6 +171,12 @@ function closeModal(){
   });
   // Restore focus to trigger element
   if(trigger&&trigger.focus) trigger.focus();
+}
+
+function scrollToSlide(idx){
+  if(!carouselScroll) return;
+  const slides=carouselScroll.querySelectorAll('.carousel-slide');
+  if(slides[idx]) slides[idx].scrollIntoView({behavior:'smooth',block:'nearest',inline:'nearest'});
 }
 
 function carouselNext(){
