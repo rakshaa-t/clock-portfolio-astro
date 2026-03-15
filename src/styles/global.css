@@ -517,6 +517,91 @@ a.about-dropdown-item:hover{opacity:0.7;}
 }
 .browse-inner{max-width:680px;margin:0 auto;}
 
+/* ═══ PODCASTS SECTION ═══ */
+.podcast-grid{
+  display:grid;grid-template-columns:repeat(2,1fr);gap:16px;
+  max-width:520px;margin-left:auto;margin-right:auto;
+}
+.podcast-card{
+  display:flex;flex-direction:column;gap:8px;
+  text-decoration:none;color:inherit;
+  border-radius:12px;
+  transition:transform 0.2s var(--ease);
+}
+.podcast-card:active{transform:scale(0.97);}
+.podcast-card-visual{
+  position:relative;overflow:hidden;
+  border-radius:12px;
+  aspect-ratio:16/9;
+  background:var(--bg);
+}
+/* Cover — fills container, slides left on hover (Robin's ease-in-out 0.35s) */
+.podcast-cover{
+  position:absolute;top:0;left:0;z-index:1;
+  width:100%;height:100%;
+  border-radius:12px;overflow:hidden;
+  transition:margin-left ease-in-out 0.35s;
+}
+.podcast-cover img{
+  width:100%;height:100%;object-fit:cover;display:block;
+}
+/* Play button — starts BEHIND cover near right edge, slides out on hover */
+.podcast-play-btn{
+  position:absolute;z-index:0;
+  width:44px;height:44px;
+  border-radius:50%;
+  left:calc(100% - 98px);top:50%;
+  margin-top:-22px;
+  display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(145deg,#f0ede8,#dcd8d2);
+  box-shadow:
+    0 2px 4px rgba(0,0,0,0.1),
+    0 4px 8px rgba(0,0,0,0.06),
+    inset 0 1px 0 rgba(255,255,255,0.9),
+    inset 0 -1px 2px rgba(0,0,0,0.04);
+  color:rgba(0,0,0,0.45);
+  transition:margin cubic-bezier(0.6,-0.28,0.735,0.045) 0.4s,
+             box-shadow 0.15s var(--ease);
+}
+.podcast-play-btn svg{margin-left:2px;}
+/* Hover: cover slides left, button slides right OUT from behind cover */
+.podcast-card:hover .podcast-cover,
+.podcast-card:focus-within .podcast-cover{
+  margin-left:-46px;
+}
+.podcast-card:hover .podcast-play-btn,
+.podcast-card:focus-within .podcast-play-btn{
+  margin-left:40px;
+  box-shadow:
+    0 3px 6px rgba(0,0,0,0.12),
+    0 5px 10px rgba(0,0,0,0.06),
+    inset 0 1px 0 rgba(255,255,255,0.95),
+    inset 0 -1px 2px rgba(0,0,0,0.04);
+}
+.podcast-card:active .podcast-play-btn{
+  transform:scale(0.93);
+  box-shadow:
+    0 1px 2px rgba(0,0,0,0.1),
+    0 2px 4px rgba(0,0,0,0.05),
+    inset 0 1px 0 rgba(255,255,255,0.7),
+    inset 0 -1px 2px rgba(0,0,0,0.04);
+}
+.podcast-extra{display:none;opacity:0;transform:translateY(12px);}
+.podcast-grid.expanded .podcast-extra{display:flex;animation:puzzleReveal 0.3s cubic-bezier(0.32,0.72,0,1) forwards;}
+.podcast-meta{
+  display:flex;flex-direction:column;gap:2px;padding:0 2px;
+}
+.podcast-title{
+  font-family:'Geist',sans-serif;font-size:var(--text-sm);font-weight:500;
+  color:var(--text-primary);letter-spacing:-0.01em;
+  line-height:1.3;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
+}
+.podcast-channel{
+  font-family:'Geist Mono',monospace;font-size:12px;
+  color:var(--text-secondary);letter-spacing:0.01em;
+}
+
 /* ═══ SITE FOOTER ═══ */
 .site-footer{
   display:flex;align-items:center;justify-content:center;gap:8px;
@@ -853,6 +938,8 @@ a.about-dropdown-item:hover{opacity:0.7;}
   .puzzle-card:active{transform:none;}
   .puzzle-card.is-hovered .puzzle-img{transform:none;}
   .puzzle-card.is-hovered .puzzle-overlay{transform:translateY(100%);}
+  .podcast-card:hover .podcast-cover{margin-left:0!important;}
+  .podcast-card:hover .podcast-play-btn{margin-left:0!important;}
 }
 
 /* ═══ ROTARY SOUND KNOB ═══ */
@@ -1446,6 +1533,11 @@ a.about-dropdown-item:hover{opacity:0.7;}
   .puzzle-show-more{min-height:48px;}
   .about-cta{min-width:48px;min-height:48px;display:inline-flex;align-items:center;justify-content:center;}
   .about-cta-primary{min-height:48px;display:inline-flex;align-items:center;}
+
+  /* Podcasts — no hover slide on mobile, keep tap-through */
+  .podcast-card:hover .podcast-cover{margin-left:0!important;}
+  .podcast-card:hover .podcast-play-btn{margin-left:0!important;}
+  .podcast-play-btn{display:none;}
 }
 
 /* ═══ TABLET (481–768px) ═══ */

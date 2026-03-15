@@ -30,7 +30,16 @@ export const KINDLE_BOOKS=[
   {title:'Turning Pro',author:'Steven Pressfield',cover:'/books/turning-pro.jpg',progress:100,subtitle:'Turning Pro',noTag:true,notes:[
     {note:'Found myself somewhere between an amateur and pro. <mark>Spiritual tangent to professionality.</mark>'}
   ]},
-  {title:'The Art of Doing Science and Engineering',author:'Richard Hamming',cover:'/books/hamming.jpg',progress:1,subtitle:'Learning to Learn',notes:[
+  {title:'The Art of Doing Science and Engineering',author:'Richard Hamming',cover:'/books/hamming.jpg',progress:100,subtitle:'Learning to Learn',notes:[
+    {note:'"I am preaching the message that, with apparently only one life to live on this earth, you ought to try to make significant contributions to humanity rather than just get along through life comfortably - that the life of trying to achieve excellence in some area is in itself a worthy goal of your life."'}
+  ]},
+  {title:'Martyr!',author:'Kaveh Akbar',cover:'/books/martyr.jpg',progress:1,subtitle:'A Novel',notes:[
+    {note:'Getting started with this one.'}
+  ]},
+  {title:'Antifragile',author:'Nassim Nicholas Taleb',cover:'/books/antifragile.jpg',progress:1,subtitle:'Things That Gain from Disorder',notes:[
+    {note:'Getting started with this one.'}
+  ]},
+  {title:'Sync',author:'Steven Strogatz',cover:'/books/sync.jpg',progress:1,subtitle:'How Order Emerges from Chaos',notes:[
     {note:'Getting started with this one.'}
   ]},
   {title:'Kafka on the Shore',author:'Haruki Murakami',cover:'/books/kafka-shore.jpg',progress:13,subtitle:'A Novel',notes:[

@@ -219,6 +219,15 @@ import { NOTES } from '../data/notes.js';
       <div class="mm-scrim" id="bookScrim"></div>
     </div>
 
+    <!-- ═══ MEDIA — Cover grid with slide-out play button ═══ -->
+    <div class="browse-section" id="sec-media">
+      <h2>Things I'm listening to</h2>
+      <p class="subtitle">Media that shapes my creations.</p>
+
+      <div class="podcast-grid" id="podcastGrid"></div>
+      <button class="puzzle-show-more" id="podcastShowMore" aria-expanded="false">Show more media</button>
+    </div>
+
     <footer class="site-footer">
       <span>&copy; Raksha T 2026. V2.0.0</span>
       <span class="footer-sep">&middot;</span>
@@ -242,6 +251,7 @@ import { NOTES } from '../data/notes.js';
     <a class="bottom-nav-item" data-section="sec-notes" role="button" tabindex="0">Notes</a>
     <a class="bottom-nav-item" data-section="sec-bookmarks" role="button" tabindex="0">Saves</a>
     <a class="bottom-nav-item" data-section="sec-books" role="button" tabindex="0">Books</a>
+    <a class="bottom-nav-item" data-section="sec-media" role="button" tabindex="0">Media</a>
   </div>
   <button class="nav-scroll-top" id="navScrollTop" aria-label="Scroll to top">
     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="18 15 12 9 6 15"/></svg>
@@ -254,6 +264,7 @@ import { NOTES } from '../data/notes.js';
 <script>import '../scripts/mymind-flat.js';</script>
 <script>import '../scripts/about-section.js';</script>
 <script>import '../scripts/bottom-nav.js';</script>
+<script>import '../scripts/podcasts-section.js';</script>
 <script>import '../scripts/scroll-effects.js';</script>
 
 <script is:inline data-astro-rerun>
@@ -275,6 +286,7 @@ import { NOTES } from '../data/notes.js';
     if(window.__initPortfolioCore) window.__initPortfolioCore();
     if(window.__initBooks) window.__initBooks();
     if(window.__initMymind) window.__initMymind();
+    if(window.__initPodcasts) window.__initPodcasts();
     if(window.__initAbout) window.__initAbout();
     if(window.__initBottomNav) window.__initBottomNav();
     if(window.__initScrollEffects) window.__initScrollEffects();
