@@ -55,13 +55,27 @@ import Layout from '../layouts/Layout.astro';
 </style>
 
 <div class="changelog">
-  <a href="/" class="changelog-back">
+  <a href="/" class="changelog-back" data-astro-reload>
     <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10 12L6 8l4-4"/></svg>
     Back
   </a>
 
   <h1>Changelog</h1>
   <p class="changelog-subtitle">What's new and what's changed on this site.</p>
+
+  <div class="changelog-entry">
+    <div class="changelog-version">V2.1.0</div>
+    <div class="changelog-date">March 2026</div>
+    <div class="changelog-title">Media section, new books, and nav cleanup</div>
+    <ul class="changelog-list">
+      <li>New Media section with podcast cover grid and skeuomorphic play button slide-out on hover</li>
+      <li>Added 3 new books: Martyr!, Antifragile, and Sync</li>
+      <li>Updated Hamming book to 100% with a new highlight quote</li>
+      <li>Simplified bottom navigation: removed sound knob, scroll-to-top arrow, and sliding highlight pill</li>
+      <li>Lightened nav bar for better visibility against the background</li>
+      <li>Active section now indicated by text color only</li>
+    </ul>
+  </div>
 
   <div class="changelog-entry">
     <div class="changelog-version">V2.0.0</div>
