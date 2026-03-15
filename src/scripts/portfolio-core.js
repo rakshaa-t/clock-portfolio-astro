@@ -21,9 +21,19 @@ const TILT_MAX=0.6;
 let tiltRX=0,tiltRY=0,tiltTargetRX=0,tiltTargetRY=0,tiltVelRX=0,tiltVelRY=0;
 let tiltCardCX=0,tiltCardCY=0,tiltCardW=0,tiltCardH=0;
 let tiltRaf=null;
+let tiltLastTime=0;
 
-function tiltLoop(){
-  if(!modalOpen){tiltRaf=null;return;}
+function tiltLoop(now){
+  if(!modalOpen){tiltRaf=null;tiltLastTime=0;return;}
+  // Frame-rate limit: target 30fps on lower-end devices (33.3ms per frame)
+  // Check if device prefers reduced motion or has slow hardware
+  const isMobileOrSlow=window.matchMedia('(max-width:480px)').matches||window.devicePixelRatio>2;
+  const frameInterval=isMobileOrSlow?33.3:16.67; // 30fps or 60fps
+  if(tiltLastTime&&now-tiltLastTime<frameInterval){
+    tiltRaf=requestAnimationFrame(tiltLoop);
+    return;
+  }
+  tiltLastTime=now;
   const fx=(tiltTargetRX-tiltRX)*0.06;
   const fy=(tiltTargetRY-tiltRY)*0.06;
   tiltVelRX=(tiltVelRX+fx)*0.75;
@@ -89,76 +99,15 @@ function setupSlideObserver(){
         if(idx>=0&&idx!==carouselIndex){
           carouselIndex=idx;
           haptic(20);
-          updateCounter();
-          updateCarouselButtons();
-          if(Array.isArray(currentModalData?.desc)){renderModalDesc(currentModalData,carouselIndex);recheckDescScroll();}
-        }
-      }
-    }
-  },{root:carouselScroll,threshold:0.6});
-  slides.forEach(s=>slideObserver.observe(s));
-}
+  updateCounter();
 
-function scrollToSlide(idx){
-  if(!carouselScroll) return;
-  carouselScroll.scroll({
-    left:carouselScroll.clientWidth*idx,
-    behavior:prefersReducedMotion?'auto':'smooth'
-  });
-}
-
-// ═══ SHOW MODAL ═══
-function _showModal(project){
-  currentModalData=project;carouselIndex=0;modalOpen=true;
-  carouselScroll=document.getElementById('carouselScroll');
-  carouselScroll.scrollLeft=0;
-  const isComingSoon=!!project.comingSoon;
-  const slides=project.images||project.slides;
-  if(isComingSoon){
-    carouselScroll.innerHTML=`<div class="carousel-slide"><div class="carousel-slide-color" style="background:${slides[0]}"><span class="coming-soon-label">I'm working on it</span></div></div>`;
-  }else{
-    carouselScroll.innerHTML=slides.map((s,i)=>{
-      if(project.images&&s.endsWith('.mp4')) return `<div class="carousel-slide"><video src="${s}" autoplay muted playsinline preload="metadata" aria-label="${esc(project.title)} demo video"></video></div>`;
-      if(project.images) return `<div class="carousel-slide"><img src="${s}" alt="${project.title} slide ${i+1}" loading="${i<2?'eager':'lazy'}" draggable="false"></div>`;
-      return `<div class="carousel-slide"><div class="carousel-slide-color" style="background:${s}">${i===0?project.title.substring(0,2).toUpperCase():'IMG '+(i+1)}</div></div>`;
-    }).join('');
-  }
-  // Blur-up: mark videos loaded once they have data
-  carouselScroll.querySelectorAll('video').forEach(v=>{
-    if(v.readyState>=2) v.classList.add('loaded');
-    else v.addEventListener('loadeddata',()=>v.classList.add('loaded'),{once:true});
-  });
-  const counterEl=document.getElementById('carouselCounter');
-  counterEl.textContent=(isComingSoon||slides.length===1)?'':`1 / ${slides.length}`;
-  counterEl.style.display=(isComingSoon||slides.length===1)?'none':'';
-  document.getElementById('modalTitle').textContent=project.title;
-  const tagsEl=document.getElementById('modalTags');
-  if(project.link&&project.link!=='#')tagsEl.innerHTML=`<a class="modal-tag link" href="${project.link}" target="_blank">View full case study <svg class="cta-arrow" width="11" height="11" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12L12 4"/><path d="M5 4h7v7"/></svg></a>`;
-  else tagsEl.innerHTML='';
-  const innerEl=document.querySelector('.modal-card-inner');
-  innerEl.classList.toggle('coming-soon',isComingSoon);
-  // Always show text area — render desc (or placeholder)
-  renderModalDesc(project,0);
-  const hideNav=isComingSoon||slides.length===1;
-  document.querySelector('.carousel-btn.prev').style.display=hideNav?'none':'';
-  document.querySelector('.carousel-btn.next').style.display=hideNav?'none':'';
-  document.querySelectorAll('.puzzle-card video').forEach(v=>{try{v.pause();}catch(e){}});
-  if(modalDescWrap){modalDescWrap.scrollTop=0;modalDescWrap.classList.remove('has-scroll-fade');modalDescWrap.classList.remove('has-bottom-fade');}
-  modalOverlay.classList.add('open');
-  modalCard.style.willChange='transform';
-  document.body.style.overflow='hidden';
-  // Move focus into modal for keyboard users
-  requestAnimationFrame(()=>{const closeBtn=modalCard.querySelector('.modal-close');if(closeBtn)closeBtn.focus();});
-  requestAnimationFrame(()=>{if(modalDescWrap){
-    const hasOverflow=modalDescWrap.scrollHeight>modalDescWrap.clientHeight+4;
-    modalDescWrap.classList.toggle('has-bottom-fade',hasOverflow);
-  }});
-  updateCarouselButtons();
+  if(Array.isArray(currentModalData?.desc)){renderModalDesc(currentModalData,carouselIndex);recheckDescScroll();}
+  // updateCarouselButtons() was already called above to prevent race condition
 
   // Setup snap-scroll observer for slide tracking
   setupSlideObserver();
 
-  tiltRX=0;tiltRY=0;tiltTargetRX=0;tiltTargetRY=0;tiltVelRX=0;tiltVelRY=0;
+  tiltRX=0;tiltRY=0;tiltTargetRX=0;tiltTargetRY=0;tiltVelRX=0;tiltVelRY=0;tiltLastTime=0;
   const isMobileModal=window.matchMedia('(max-width:480px)').matches;
   if(isMobileModal){
     // Mobile: CSS scale handles animation, no tilt
@@ -169,6 +118,8 @@ function _showModal(project){
       modalCard.removeEventListener('transitionend',onTransitionEnd);
       if(modalOpen&&!tiltRaf) tiltRaf=requestAnimationFrame(tiltLoop);
     };
+    // Store reference for cleanup in closeModal()
+    closeModal._transitionHandler=onTransitionEnd;
     modalCard.addEventListener('transitionend',onTransitionEnd);
   }else{
     modalCard.style.transform='none';
@@ -184,8 +135,10 @@ function closeModal(){
   if(slideObserver){slideObserver.disconnect();slideObserver=null;}
   // Stop tilt and clear inline transform before removing .open
   // so CSS transitions cleanly from translateY(0) to translateY(100vh)
-  if(tiltRaf){cancelAnimationFrame(tiltRaf);tiltRaf=null;}
+  if(tiltRaf){cancelAnimationFrame(tiltRaf);tiltRaf=null;tiltLastTime=0;}
   modalCard.style.transform='';modalCard.style.willChange='';
+  // Remove modal-specific event listeners to prevent memory leaks
+  modalCard.removeEventListener('transitionend',arguments.callee._transitionHandler);
   haptic(30);
   modalOverlay.classList.remove('open');
   document.body.style.overflow='';

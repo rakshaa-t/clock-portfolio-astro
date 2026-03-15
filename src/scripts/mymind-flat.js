@@ -135,6 +135,7 @@ function initMymind(){
   }
 
   function mmindRenderGrid(){
+    if(!mmindGrid) return; // Defensive check for early init race condition
     mmindGrid.innerHTML='';
     mmindClosePopover();
     const isFiltered=mmindActiveFilter!=='all'||mmindSearchQuery;

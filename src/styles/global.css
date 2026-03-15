@@ -1041,6 +1041,7 @@ a.about-dropdown-item:hover{opacity:0.7;}
 }
 .bottom-nav-item.active{color:var(--text-primary);}
 .bottom-nav-item:active{transform:scale(0.97);}
+.bottom-nav-item:focus-visible{outline:2px solid var(--accent);outline-offset:4px;border-radius:100px;}
 /* Desktop knob — standalone, hidden on mobile */
 /* Sound toast — origin-aware, emerges from knob */
 .sound-toast{

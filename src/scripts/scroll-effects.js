@@ -62,38 +62,27 @@ function initScrollEffects(){
     if(el.classList.contains('reveal-item')) revealObserver.observe(el);
   });
 
-  // Also reveal dynamically added mm-cards (Mymind loads async)
+  // Consolidated MutationObserver for both mm-cards and book-cover-items
+  // Watching both grids with single observer to reduce overhead
+  let multiMutObs=null;
   const mmGrid=document.getElementById('mmindGrid');
-  let mmMutObs=null;
-  if(mmGrid){
-    mmMutObs=new MutationObserver((mutations)=>{
-      mutations.forEach(m=>{
-        m.addedNodes.forEach(node=>{
-          if(node.nodeType===1 && node.classList.contains('mm-card')){
-            node.classList.add('reveal-item');
-            revealObserver.observe(node);
-          }
-        });
-      });
-    });
-    mmMutObs.observe(mmGrid,{childList:true});
-  }
-
-  // Also handle books grid (dynamic)
   const booksGrid=document.getElementById('booksGrid');
-  let booksMutObs=null;
-  if(booksGrid){
-    booksMutObs=new MutationObserver((mutations)=>{
+  if(mmGrid||booksGrid){
+    multiMutObs=new MutationObserver((mutations)=>{
+      // Batch process all mutations
       mutations.forEach(m=>{
         m.addedNodes.forEach(node=>{
-          if(node.nodeType===1 && node.classList.contains('book-cover-item')){
-            node.classList.add('reveal-item');
-            revealObserver.observe(node);
+          if(node.nodeType===1){
+            if(node.classList.contains('mm-card')||node.classList.contains('book-cover-item')){
+              node.classList.add('reveal-item');
+              revealObserver.observe(node);
+            }
           }
         });
       });
     });
-    booksMutObs.observe(booksGrid,{childList:true});
+    if(mmGrid) multiMutObs.observe(mmGrid,{childList:true});
+    if(booksGrid) multiMutObs.observe(booksGrid,{childList:true});
   }
 
   // ── 2. 3D card tilt on hover (desktop only) ──
@@ -143,8 +132,7 @@ function initScrollEffects(){
   _cleanup=()=>{
     ac.abort();
     revealObserver.disconnect();
-    if(mmMutObs) mmMutObs.disconnect();
-    if(booksMutObs) booksMutObs.disconnect();
+    if(multiMutObs) multiMutObs.disconnect();
     // Remove tilt transforms
     document.querySelectorAll('.tilt-card').forEach(el=>{
       el.style.transform='';
