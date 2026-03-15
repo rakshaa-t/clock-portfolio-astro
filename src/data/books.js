@@ -18,9 +18,6 @@ export const KINDLE_BOOKS=[
     {note:'Interesting, straightforward. Typography is an art best practiced but looking through the history behind type and <mark>knowing the jargon (finally) makes me feel closer to the one element I consistently use in my product design practice.</mark>'}
   ]},
   // Currently reading
-  {title:'Meditations',author:'Marcus Aurelius',cover:'/books/meditations.jpg',progress:1,subtitle:'Stoic Philosophy',notes:[
-    {note:'Just started this one.'}
-  ]},
   {title:'Principles',author:'Ray Dalio',cover:'/books/principles.jpg',progress:1,subtitle:'Life and Work',notes:[
     {note:'Just started this one.'}
   ]},
