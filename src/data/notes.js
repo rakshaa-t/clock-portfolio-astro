@@ -122,6 +122,54 @@ export const NOTES=[
       {type:"code",html:`context7`},
     ]
   },
+  // ═══ TEARDOWN ARTICLES ═══
+  // Set teardown:{} to use the two-column scrollytelling layout.
+  // mockups[].id maps to sections via data-mockup attribute.
+  {
+    slug:"sample-teardown",
+    title:"Redesigning a Mobile Web App, Part 1",
+    date:"16 March 2026",sortDate:20260316,
+    tags:["teardown","design-critique"],
+    preview:"A structured critique of where the current design falls short of industry standard...",
+    teardown:{
+      intro:"Let's examine where the current design falls well short of the industry standard. This part will focus on structured critique, and in Part 2 we'll start to fix it.",
+      // Each mockup state: id + array of frames (for side-by-side phone mockups)
+      mockups:[
+        {id:"overview",frames:[
+          {src:"/teardowns/sample/placeholder.png",alt:"App overview"},
+        ]},
+        {id:"color",frames:[
+          {src:"/teardowns/sample/placeholder.png",alt:"Color usage issues"},
+        ]},
+        {id:"shadows",frames:[
+          {src:"/teardowns/sample/placeholder.png",alt:"Shadow quality issues"},
+        ]},
+      ],
+      chapters:[
+        {
+          title:"Visual Design",
+          mockup:"overview",
+          sections:[
+            {
+              title:"Distracting color usage",
+              mockup:"color",
+              body:`<p>There's a lot of color being used as background elements, but not intentionally. Sometimes things are highlighted when completed, sometimes when it's a system action, and sometimes it's just the AI responding.</p><p>Everything has a background color, making the interface visually unbalanced and slightly childish and uncanny.</p>`,
+            },
+            {
+              title:"Muddy shadows",
+              mockup:"shadows",
+              body:`<p>There are many different card styles, and many of them have shadows that feel muddy and blurry against the background.</p>`,
+            },
+            {
+              title:"Default purple AI",
+              mockup:"overview",
+              body:`<p>The help button uses a generic purple that feels like default AI-generated styling. This betrays the fact that we're using a generated interface and doesn't engender trust. It makes me want to run away.</p>`,
+            },
+          ],
+        },
+      ],
+    },
+  },
 ];
 
 // ═══ Glossary (interactive term definitions in notes) ═══

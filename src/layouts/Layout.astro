@@ -69,6 +69,19 @@ const siteUrl = 'https://raksha.design';
       document.addEventListener('astro:before-preparation',function(){
         sessionStorage.setItem('__scroll:'+location.pathname,String(window.scrollY));
       });
+      // Prevent FOUC during ViewTransitions: hide body during swap,
+      // reveal once the new page's scripts have initialized.
+      document.addEventListener('astro:before-swap',function(){
+        document.documentElement.style.opacity='0';
+      });
+      document.addEventListener('astro:after-swap',function(){
+        // Small delay to let init scripts run before revealing
+        requestAnimationFrame(function(){
+          requestAnimationFrame(function(){
+            document.documentElement.style.opacity='';
+          });
+        });
+      });
     </script>
   </body>
 </html>

@@ -32,42 +32,112 @@ const bodyHtml = note.rich
 
 const currentIdx = NOTES.findIndex(n => n.slug === note.slug);
 const nextNote = NOTES[(currentIdx + 1) % NOTES.length];
+
+const isTeardown = !!note.teardown;
 ---
 
 <Layout title={`${note.title} — Raksha Tated`} description={note.preview}>
 
-<div class="note-page">
-  <div class="note-page-inner">
-    <button class="note-page-back" onclick="history.back()">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
-      Back
-    </button>
-    <div class="note-page-date">{note.date}</div>
-    <h1 class="note-page-title">{note.title}</h1>
-    <div class="note-page-body" set:html={bodyHtml} />
-    <div class="note-page-footer">
-      <button class="note-page-share" id="shareOnX">
-        Share on <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" style="margin-left:2px;"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+{isTeardown ? (
+  <!-- ═══ TEARDOWN LAYOUT ═══ -->
+  <div class="note-page teardown">
+    <!-- Left: scrollable prose -->
+    <div class="td-left">
+      <button class="note-page-back" onclick="history.back()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+        Back
       </button>
-    </div>
-    {nextNote && nextNote.slug !== note.slug && (
-      <div class="note-page-upnext">
-        <div class="note-page-upnext-label">Up next</div>
-        <a href={`/notes/${nextNote.slug}`} class="note-card">
-          <div class="note-card-date">{nextNote.date}</div>
-          <div class="note-card-title">{nextNote.title}</div>
-          <div class="note-card-preview">{nextNote.preview}</div>
-        </a>
+      <div class="td-date">{note.date}</div>
+      <h1 class="td-title">{note.title}</h1>
+      {note.teardown.intro && <p class="td-intro">{note.teardown.intro}</p>}
+
+      {note.teardown.chapters.map((chapter) => (
+        <div>
+          <h2 class="td-chapter">{chapter.title}</h2>
+          {chapter.sections.map((section) => (
+            <div class="td-section" data-mockup={section.mockup || chapter.mockup || 'default'}>
+              <div class="td-section-body">
+                <div class="td-section-title">{section.title}</div>
+                <div class="td-section-text" set:html={section.body} />
+              </div>
+            </div>
+          ))}
+        </div>
+      ))}
+      <div class="note-page-footer">
+        <button class="note-page-share" id="shareOnX">
+          Share on <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" style="margin-left:2px;"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+        </button>
       </div>
-    )}
+      {nextNote && nextNote.slug !== note.slug && (
+        <div class="note-page-upnext">
+          <div class="note-page-upnext-label">Up next</div>
+          <a href={`/notes/${nextNote.slug}`} class="note-card">
+            <div class="note-card-date">{nextNote.date}</div>
+            <div class="note-card-title">{nextNote.title}</div>
+            <div class="note-card-preview">{nextNote.preview}</div>
+          </a>
+        </div>
+      )}
+    </div>
+
+    <!-- Right: static mockup panel, full viewport height -->
+    <div class="td-preview">
+      <div class="td-preview-inner">
+        {note.teardown.mockups.map((mockup) => (
+          <div class={`td-mockup${mockup.id === note.teardown.mockups[0].id ? ' active' : ''}`} data-mockup-id={mockup.id}>
+            {mockup.frames.map((frame) => (
+              <div class="td-mockup-frame">
+                <img src={frame.src} alt={frame.alt || ''} loading="lazy" />
+              </div>
+            ))}
+          </div>
+        ))}
+      </div>
+    </div>
   </div>
-</div>
+
+  <script>
+    import '../../scripts/teardown-engine.js';
+  </script>
+  <script is:inline data-astro-rerun>
+    if(window.__initTeardown) window.__initTeardown();
+  </script>
+) : (
+  <!-- ═══ STANDARD NOTE LAYOUT ═══ -->
+  <div class="note-page">
+    <div class="note-page-inner">
+      <button class="note-page-back" onclick="history.back()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+        Back
+      </button>
+      <div class="note-page-date">{note.date}</div>
+      <h1 class="note-page-title">{note.title}</h1>
+      <div class="note-page-body" set:html={bodyHtml} />
+      <div class="note-page-footer">
+        <button class="note-page-share" id="shareOnX">
+          Share on <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" style="margin-left:2px;"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+        </button>
+      </div>
+      {nextNote && nextNote.slug !== note.slug && (
+        <div class="note-page-upnext">
+          <div class="note-page-upnext-label">Up next</div>
+          <a href={`/notes/${nextNote.slug}`} class="note-card">
+            <div class="note-card-date">{nextNote.date}</div>
+            <div class="note-card-title">{nextNote.title}</div>
+            <div class="note-card-preview">{nextNote.preview}</div>
+          </a>
+        </div>
+      )}
+    </div>
+  </div>
+)}
 
 <script>
   const shareBtn = document.getElementById('shareOnX');
   if (shareBtn) {
     shareBtn.addEventListener('click', () => {
-      const title = document.querySelector('.note-page-title')?.textContent || '';
+      const title = document.querySelector('.note-page-title, .td-title')?.textContent || '';
       window.open(`https://x.com/intent/tweet?text=${encodeURIComponent(`"${title}"\n\nhttps://raksha.design${window.location.pathname}`)}`, '_blank');
     });
   }

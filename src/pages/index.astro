@@ -286,11 +286,16 @@ import { NOTES } from '../data/notes.js';
     if(window.__initBottomNav) window.__initBottomNav();
     if(window.__initScrollEffects) window.__initScrollEffects();
     if(window.__initAudio) window.__initAudio();
-    // Restore scroll position after content is built
+    // Restore scroll position after content is built.
+    // Double-rAF ensures layout has been computed after init scripts
+    // built dynamic DOM (grids, cards, etc.)
     var saved=sessionStorage.getItem('__scroll:/');
     if(saved){
+      sessionStorage.removeItem('__scroll:/');
       requestAnimationFrame(function(){
-        window.scrollTo(0,parseInt(saved,10));
+        requestAnimationFrame(function(){
+          window.scrollTo(0,parseInt(saved,10));
+        });
       });
     }
   })();

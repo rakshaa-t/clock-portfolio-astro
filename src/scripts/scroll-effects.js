@@ -151,9 +151,10 @@ function initScrollEffects(){
       el.style.perspective='';
       el.classList.remove('tilt-card');
     });
-    // Remove reveal classes
+    // Strip reveal-item but keep revealed — prevents FOUC on
+    // ViewTransitions back-navigation where items flash hidden.
     document.querySelectorAll('.reveal-item').forEach(el=>{
-      el.classList.remove('reveal-item','revealed');
+      el.classList.remove('reveal-item');
       el.style.transitionDelay='';
     });
     _cleanup=null;
