@@ -492,7 +492,7 @@ a.about-dropdown-item:hover{opacity:0.7;}
   border:1px solid rgba(255,255,255,0.6);
   box-shadow:0 1px 3px rgba(0,0,0,0.06),0 2px 0 0 #D4D0CA;
   position:relative;margin-left:-18px;cursor:default;
-  transition:transform 0.25s cubic-bezier(0.32,0.72,0,1);
+  transition:transform 0.35s cubic-bezier(0.32,0.72,0,1);
 }
 .stack-card:first-child{margin-left:0;z-index:4;transform:rotate(-2.5deg);}
 .stack-card:nth-child(2){z-index:3;transform:rotate(2deg);}
@@ -543,7 +543,7 @@ a.about-dropdown-item:hover{opacity:0.7;}
   position:absolute;top:0;left:0;z-index:1;
   width:100%;height:100%;
   border-radius:12px;overflow:hidden;
-  transition:transform 0.3s var(--ease);
+  transition:transform 0.35s var(--ease);
 }
 .podcast-cover img{
   width:100%;height:100%;object-fit:cover;display:block;
@@ -563,7 +563,7 @@ a.about-dropdown-item:hover{opacity:0.7;}
     inset 0 1px 0 rgba(255,255,255,0.25),
     inset 0 -1px 2px rgba(0,0,0,0.1);
   color:#fff;
-  transition:transform 0.3s var(--ease),
+  transition:transform 0.35s var(--ease),
              box-shadow 0.15s var(--ease);
 }
 .podcast-play-btn svg{margin-left:2px;}
