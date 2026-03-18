@@ -103,7 +103,7 @@ body{}
   box-shadow:0 16px 16px rgba(0,0,0,0.12),0 4px 12px rgba(0,0,0,0.06);
   opacity:0;transform:translateY(100vh);
   isolation:isolate;
-  transition:opacity 0.25s var(--ease),transform 0.25s var(--ease),box-shadow 0.25s var(--ease);
+  transition:opacity 0.3s var(--ease),transform 0.3s var(--ease),box-shadow 0.3s var(--ease);
 }
 .modal-card-inner{
   border-radius:20px;overflow:hidden;height:min(85vh,800px);
@@ -150,7 +150,7 @@ body{}
 }
 .carousel-slide video,.puzzle-img video{
   opacity:0;transform:scale(1.02);
-  transition:opacity 0.25s var(--ease),transform 0.25s var(--ease);
+  transition:opacity 0.3s var(--ease),transform 0.3s var(--ease);
 }
 .carousel-slide video.loaded,.puzzle-img video.loaded{
   opacity:1;transform:scale(1);
@@ -543,7 +543,7 @@ a.about-dropdown-item:hover{opacity:0.7;}
   position:absolute;top:0;left:0;z-index:1;
   width:100%;height:100%;
   border-radius:12px;overflow:hidden;
-  transition:transform 0.25s var(--ease);
+  transition:transform 0.3s var(--ease);
 }
 .podcast-cover img{
   width:100%;height:100%;object-fit:cover;display:block;
@@ -563,7 +563,7 @@ a.about-dropdown-item:hover{opacity:0.7;}
     inset 0 1px 0 rgba(255,255,255,0.25),
     inset 0 -1px 2px rgba(0,0,0,0.1);
   color:#fff;
-  transition:transform 0.25s var(--ease),
+  transition:transform 0.3s var(--ease),
              box-shadow 0.15s var(--ease);
 }
 .podcast-play-btn svg{margin-left:2px;}
@@ -621,8 +621,8 @@ a.about-dropdown-item:hover{opacity:0.7;}
 .reveal-item{
   opacity:0;
   transform:translateY(10px);
-  transition:opacity 0.25s var(--ease),
-             transform 0.25s var(--ease);
+  transition:opacity 0.35s var(--ease),
+             transform 0.35s var(--ease);
 }
 .reveal-item.revealed{
   opacity:1;
@@ -985,7 +985,7 @@ a.about-dropdown-item:hover{opacity:0.7;}
     0 1px 0 rgba(255,255,255,0.4),
     inset 0 1px 0 rgba(255,255,255,0.9),
     inset 0 -1px 2px rgba(0,0,0,0.04);
-  transition:transform 0.25s var(--ease-spring);
+  transition:transform 0.3s var(--ease-spring);
   transform:rotate(0deg);
 }
 .sound-knob:hover{

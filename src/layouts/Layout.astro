@@ -67,25 +67,22 @@ const siteUrl = 'https://raksha.design';
   <body>
     <slot />
     <script is:inline>
+      // Reveal page — failsafe for dev mode where CSS loads async via JS.
+      // In production the render-blocking <link> applies html{opacity:1} before
+      // this runs, so it's a no-op. In dev mode this ensures the page appears.
+      document.documentElement.style.opacity='1';
+
       // Save scroll position before ViewTransitions navigates away.
-      // sessionStorage is our source of truth — Astro's history.state
-      // restore fires before JS-built content exists, so it fails.
       document.addEventListener('astro:before-preparation',function(){
         sessionStorage.setItem('__scroll:'+location.pathname,String(window.scrollY));
       });
-      // Prevent FOUC during ViewTransitions.
-      // Inline style overrides CSS; removing it falls back to global.css html{opacity:1}.
+      // Prevent FOUC during ViewTransitions swap.
       document.addEventListener('astro:before-swap',function(){
         document.documentElement.style.opacity='0';
       });
       document.addEventListener('astro:after-swap',function(){
-        // Wait for stylesheets to apply before revealing
         requestAnimationFrame(function(){
-          requestAnimationFrame(function(){
-            requestAnimationFrame(function(){
-              document.documentElement.style.opacity='';
-            });
-          });
+          document.documentElement.style.opacity='1';
         });
       });
     </script>
