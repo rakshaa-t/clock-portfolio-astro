@@ -65,7 +65,9 @@ const siteUrl = 'https://raksha.design';
   <body>
     <slot />
     <script is:inline>
-      // Save scroll position before ViewTransitions navigates away
+      // Save scroll position before ViewTransitions navigates away.
+      // sessionStorage is our source of truth — Astro's history.state
+      // restore fires before JS-built content exists, so it fails.
       document.addEventListener('astro:before-preparation',function(){
         sessionStorage.setItem('__scroll:'+location.pathname,String(window.scrollY));
       });
@@ -75,7 +77,6 @@ const siteUrl = 'https://raksha.design';
         document.documentElement.style.opacity='0';
       });
       document.addEventListener('astro:after-swap',function(){
-        // Small delay to let init scripts run before revealing
         requestAnimationFrame(function(){
           requestAnimationFrame(function(){
             document.documentElement.style.opacity='';

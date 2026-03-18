@@ -286,17 +286,24 @@ import { NOTES } from '../data/notes.js';
     if(window.__initBottomNav) window.__initBottomNav();
     if(window.__initScrollEffects) window.__initScrollEffects();
     if(window.__initAudio) window.__initAudio();
-    // Restore scroll position after content is built.
-    // Double-rAF ensures layout has been computed after init scripts
-    // built dynamic DOM (grids, cards, etc.)
+    // Restore scroll position after init scripts have built the DOM.
+    // Astro's built-in restore fires too early (before JS-generated grids).
     var saved=sessionStorage.getItem('__scroll:/');
     if(saved){
+      var pos=parseInt(saved,10);
       sessionStorage.removeItem('__scroll:/');
-      requestAnimationFrame(function(){
-        requestAnimationFrame(function(){
-          window.scrollTo(0,parseInt(saved,10));
-        });
-      });
+      // Wait until page is tall enough to scroll to saved position,
+      // or give up after 500ms and scroll to what we can.
+      var attempts=0;
+      function tryRestore(){
+        if(document.documentElement.scrollHeight>=pos+window.innerHeight||attempts>10){
+          window.scrollTo(0,pos);
+          return;
+        }
+        attempts++;
+        requestAnimationFrame(tryRestore);
+      }
+      requestAnimationFrame(tryRestore);
     }
   })();
 </script>
