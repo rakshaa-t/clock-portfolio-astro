@@ -15,6 +15,8 @@ const siteUrl = 'https://raksha.design';
 <!doctype html>
 <html lang="en">
   <head>
+    <!-- Hide page until CSS loads — prevents FOUC on every load -->
+    <style is:inline>html{opacity:0}</style>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content={description} />
@@ -71,15 +73,18 @@ const siteUrl = 'https://raksha.design';
       document.addEventListener('astro:before-preparation',function(){
         sessionStorage.setItem('__scroll:'+location.pathname,String(window.scrollY));
       });
-      // Prevent FOUC during ViewTransitions: hide body during swap,
-      // reveal once the new page's scripts have initialized.
+      // Prevent FOUC during ViewTransitions.
+      // Inline style overrides CSS; removing it falls back to global.css html{opacity:1}.
       document.addEventListener('astro:before-swap',function(){
         document.documentElement.style.opacity='0';
       });
       document.addEventListener('astro:after-swap',function(){
+        // Wait for stylesheets to apply before revealing
         requestAnimationFrame(function(){
           requestAnimationFrame(function(){
-            document.documentElement.style.opacity='';
+            requestAnimationFrame(function(){
+              document.documentElement.style.opacity='';
+            });
           });
         });
       });
