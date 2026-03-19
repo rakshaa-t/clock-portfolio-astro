@@ -169,7 +169,7 @@ import { NOTES } from '../data/notes.js';
 
       <div class="note-cards">
         {NOTES.map(note => (
-          <a href={`/notes/${note.slug}`} class="note-card">
+          <a href={`/notes/${note.slug}`} target="_blank" rel="noopener noreferrer" class="note-card">
             <div class="note-card-date">{note.date}</div>
             <div class="note-card-title">{note.title}</div>
             <div class="note-card-preview">{note.preview}</div>

@@ -5,6 +5,14 @@
 
 export const MMIND_CARDS=[
   {
+    type:'image', img:'/mymind/symbl-space.png', height:95,
+    caption:'Symbl.space \u2014 Copy & paste special characters',
+    title:'Symbl.space',
+    source:'symbl.space', url:'https://symbl.space/',
+    tldr:'Browse and copy Unicode symbols, special characters, emojis, and more.',
+    tags:['Tools'], category:'tools', date:'today'
+  },
+  {
     type:'image', img:'/mymind/web-haptics.png', height:95,
     caption:'WebHaptics \u2014 Haptic feedback for the mobile web',
     title:'WebHaptics',

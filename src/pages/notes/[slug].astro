@@ -72,7 +72,7 @@ const isTeardown = !!note.teardown;
       {nextNote && nextNote.slug !== note.slug && (
         <div class="note-page-upnext">
           <div class="note-page-upnext-label">Up next</div>
-          <a href={`/notes/${nextNote.slug}`} class="note-card">
+          <a href={`/notes/${nextNote.slug}`} target="_blank" rel="noopener noreferrer" class="note-card">
             <div class="note-card-date">{nextNote.date}</div>
             <div class="note-card-title">{nextNote.title}</div>
             <div class="note-card-preview">{nextNote.preview}</div>
@@ -122,7 +122,7 @@ const isTeardown = !!note.teardown;
       {nextNote && nextNote.slug !== note.slug && (
         <div class="note-page-upnext">
           <div class="note-page-upnext-label">Up next</div>
-          <a href={`/notes/${nextNote.slug}`} class="note-card">
+          <a href={`/notes/${nextNote.slug}`} target="_blank" rel="noopener noreferrer" class="note-card">
             <div class="note-card-date">{nextNote.date}</div>
             <div class="note-card-title">{nextNote.title}</div>
             <div class="note-card-preview">{nextNote.preview}</div>
