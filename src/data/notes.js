@@ -7,7 +7,7 @@ export const NOTES=[
   {
     slug:"code-and-canvas",
     title:"Code and canvas as methods of communication",
-    date:"20 March 2026",sortDate:20260320,
+    date:"16 February 2026",sortDate:20260216,
     tags:["design","code","thinking"],
     preview:"All design is communication. Code just gave it more dimensions...",
     body:`<p>With the canvas the permutations of what you could do with a rectangle, ellipse or polygon felt endless. But ultimately all design is communication. If you communicate through visual shapes long enough you naturally develop taste.</p><p>I think code is also a form of communication. It just never got seen that way because of the technical barrier around it.</p><p>Canvas restricts you to a one dimensional output. With code you see design in a multi dimensional form. I don't just see a rectangle anymore, I see a plane. A plane on which I can add sound, depth, interaction, math and physics. Code in itself is a system. I like to call design with code systems design because that's what's happening. You're building systems and articulating ideas into words at the same time. It stimulates a lot of your expressive mechanisms all at once.</p><p>This doesn't mean the canvas is going anywhere. For people who truly love it their craft will only deepen. The canvas has existed for centuries and it will continue to exist for the creatives. All the noise around AI and code doesn't change someone's method of expression. If it's the canvas, staying true to it is a moat.</p><p>Code and canvas are closer than they appear. It's not duality as an output. It's duality as an input. A child who likes math may not like chemistry. Both are sciences of their own sort. The output is a good user experience but the input depends on what the creator has leverage in. Interest, passion, love. Different inputs don't mean the outputs should differ.</p><p>I'm not here to say which is superior. Canvas will always exist. Code just gave wings to people who were multi dimensional in their thought process and ideas.</p>`
@@ -15,9 +15,9 @@ export const NOTES=[
   {
     slug:"claude-skills",
     title:"All Claude skills in my MD file",
-    date:"20 March 2026",sortDate:20260320,
+    date:"Last updated 20 March 2026",sortDate:20260320,
     tags:["ai","workflow","tools"],
-    preview:"43 skills, 4 MCP servers, and 5 custom skills I've built up working with Claude Code...",
+    preview:"43 skills, 5 MCP servers, and 5 custom skills I've built up working with Claude Code...",
     rich:true,
     body:[
       {type:"text",html:`<p><strong>43 installed skills</strong></p>`},
@@ -115,13 +115,15 @@ export const NOTES=[
       {type:"text",html:`<p style="margin-top:28px"><em>Platform Specific (1)</em></p>`},
       {type:"text",html:`<p style="margin-top:36px"><strong>SwiftUI UI Patterns</strong><br><span style="color:rgba(0,0,0,0.4)">SwiftUI views, TabView architecture, component-specific patterns</span></p>`},
       {type:"code",html:`npx ui-skills add swiftui-ui-patterns`},
-      {type:"text",html:`<p style="margin-top:28px"><strong>4 MCP servers</strong></p>`},
+      {type:"text",html:`<p style="margin-top:28px"><strong>5 MCP servers</strong></p>`},
       {type:"text",html:`<p style="margin-top:36px"><strong>Motion</strong><br><span style="color:rgba(0,0,0,0.4)">Motion.dev Studio — animation code generation</span></p>`},
       {type:"code",html:`motion`},
       {type:"text",html:`<p style="margin-top:36px"><strong>Pencil</strong><br><span style="color:rgba(0,0,0,0.4)">.pen design files</span></p>`},
       {type:"code",html:`pencil`},
       {type:"text",html:`<p style="margin-top:36px"><strong>Figma</strong><br><span style="color:rgba(0,0,0,0.4)">Figma design integration</span></p>`},
       {type:"code",html:`figma`},
+      {type:"text",html:`<p style="margin-top:36px"><strong>Vercel</strong><br><span style="color:rgba(0,0,0,0.4)">Deploy, manage projects, and fetch logs from Vercel</span></p>`},
+      {type:"code",html:`vercel`},
       {type:"text",html:`<p>Up-to-date library documentation</p>`},
       {type:"code",html:`context7`},
     ]
