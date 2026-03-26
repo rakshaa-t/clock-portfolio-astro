@@ -9,39 +9,39 @@ export const NOTES=[
     title:"Building prevue",
     date:"26 March 2026",sortDate:20260326,
     tags:["design","code","process"],
-    preview:"AI can write full interfaces now. But you can't see them without spinning up a project. That gap bothered me.",
+    preview:"A small build process of prevue — a mockup tool for code artefacts. I talk about the interactions I built, where I got stuck, and what dev tools I used. ~3 min read.",
     rich:true,
     body:[
       // ── Hero video ──
-      {type:"text",html:`<p style="margin-bottom:8px"><a href="https://prevue.raksha.design" target="_blank" rel="noopener" class="note-link"><strong>Prevue</strong></a> lets you paste the code of AI-generated artifacts and see it rendered inside real device mockups.</p>`},
+      {type:"text",html:`<p style="margin-bottom:8px"><a href="https://prevue.raksha.design" target="_blank" rel="noopener" class="note-link"><strong>Prevue</strong></a> lets you paste the code of AI-generated artifacts and see them rendered inside real device mockups.</p>`},
       {type:"text",html:`<video autoplay loop muted playsinline style="width:100%;border-radius:12px;margin:8px 0 16px;box-shadow:0 2px 12px rgba(0,0,0,0.06)"><source src="/notes/prevue/hero.mp4" type="video/mp4"></video>`},
 
       // ── Why ──
-      {type:"text",html:`<p>AI can generate beautiful interfaces now. Full components, entire pages. But you can't actually <em>see</em> them without setting up a whole project. I wanted to paste code and see it. That's the entire product.</p>`},
+      {type:"text",html:`<p>As we know, everyone's building with AI, and one thing that's common is UI design and previewing it. To do this you've gotta set up a project and run a dev server, or ask your agent to set up a preview for you, which a lot of times is ugly. We're all building to eventually post our work, hence why I built prevue. Paste your code and see a preview, change device sizes, and add beautiful backgrounds. Basically a mockup tool, but instead of Figma designs you inject your code.</p>`},
 
       // ── Device frames ──
       {type:"text",html:`<p style="margin-top:36px"><strong>Device frames</strong></p>`},
-      {type:"text",html:`<p>The frames are Apple device mockups which morph into mobile, tablet, or web sizes. They're drawn to match Apple's viewport dimensions.</p>`},
+      {type:"text",html:`<p>The frames are Apple device mockups that morph into mobile, tablet, or web sizes. They're drawn to match Apple's viewport dimensions.</p>`},
 
       // ── Device switching + rubber band ──
       {type:"text",html:`<p style="margin-top:36px"><strong>Device switching and rubber band resize</strong></p>`},
-      {type:"text",html:`<p>Each frame has corner handles you can drag to resize. The scaling locks to aspect ratio and has logarithmic resistance past the bounds. Pull too far and it springs back. The formula is simple but getting the feel right took a while. The <code>0.15</code> controls how much it gives. <code>over * 3</code> makes resistance grow the further you pull.</p>`},
+      {type:"text",html:`<p>Each frame has corner handles you can drag to resize. The scaling locks to aspect ratio and has logarithmic resistance past the bounds. Pull too far and it springs back. The formula is simple, but getting the feel right took a while. The <code>0.15</code> controls how much it gives. <code>over * 3</code> makes resistance grow the further you pull.</p>`},
       {type:"component",id:"ResizeDemo",hint:"Drag a corner bracket to resize"},
 
       // ── Things that broke ──
       {type:"text",html:`<p style="margin-top:36px"><strong>Things that broke</strong></p>`},
 
       {type:"text",html:`<p><em>Device morph</em></p>`},
-      {type:"text",html:`<p>Device switching initially blink-switched devices. I wanted to use a morph here for a smoother transition. Sounds simple, right? But when you actually preview code within it and the morph happens, the design inside breaks until it reaches the target device size. After lots of trial and error, I decided to add a frosted blur veil that slightly hides the swap, then dissolves when the morph settles.</p>`},
+      {type:"text",html:`<p>Device switching initially blink-switched between devices. I wanted to use a morph here for a smoother transition. Sounds simple, right? But when you actually preview code within it and the morph happens, the design inside breaks until it reaches the target device size. After lots of trial and error, I decided to add a frosted blur veil that slightly hides the swap, then dissolves when the morph settles.</p>`},
       {type:"component",id:"MorphDemo",hint:"Click to morph between devices"},
 
       {type:"text",html:`<p style="margin-top:24px"><em>Edge-hover flickering</em></p>`},
-      {type:"text",html:`<p>The dock scales up slightly on hover. The scale change moved the element boundary, pushing the cursor "outside," which triggered mouse leave, which scaled it back down, which moved the boundary back. Infinite loop. The whole dock was oscillating. Fix was a stable invisible hit-area wrapper so the hover zone never changes shape.</p>`},
+      {type:"text",html:`<p>The dock scales up slightly on hover. The scale change moved the element boundary, pushing the cursor "outside," which triggered mouseleave, which scaled it back down, which moved the boundary back. Infinite loop. The whole dock was oscillating. The fix was a stable invisible hit-area wrapper so the hover zone never changes shape.</p>`},
       {type:"component",id:"DockDemo",hint:"Hover the dock"},
 
       // ── DialKit ──
       {type:"text",html:`<p style="margin-top:36px"><strong>DialKit for live tuning</strong></p>`},
-      {type:"text",html:`<p>The dock has a hover interaction where everything breathes. Opacity, spacing, shadow depth. The differences are barely perceptible, which is the point. But getting "barely perceptible" right means tuning values by fractions.</p>`},
+      {type:"text",html:`<p>The dock has a hover interaction where everything breathes — opacity, spacing, shadow depth. The differences are barely perceptible, which is the point. But getting "barely perceptible" right means tuning values by fractions.</p>`},
 
       // ── Small details ──
       {type:"text",html:`<p style="margin-top:36px"><strong>Small details</strong></p>`},

@@ -63,7 +63,7 @@ const hasComponents = note.rich && note.body.some(b => b.type === 'component');
 const isDev = import.meta.env.DEV;
 ---
 
-<Layout title={`${note.title} — Raksha Tated`} description={note.preview}>
+<Layout title={`${note.title} — Raksha Tated`} description={note.preview} ogImage={note.og}>
 
 {isTeardown ? (
   <!-- ═══ TEARDOWN LAYOUT ═══ -->
