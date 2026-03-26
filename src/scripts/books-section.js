@@ -6,7 +6,8 @@ import KINDLE_BOOKS from '../data/books.json';
 import { esc, smoothScrollToEl } from './shared.js';
 import { haptic } from './haptics.js';
 
-const BOOKS_INITIAL=12;
+const BOOKS_INITIAL_DESKTOP=12;
+const BOOKS_INITIAL_MOBILE=9; // 3 rows × 3 columns on mobile
 
 function getBookCategory(book){
   if(book.fav) return 'excellent';
@@ -129,12 +130,14 @@ function initBooks(){
     booksGrid.innerHTML='';
     closeBookPopover();
     const isFiltered=bookActiveFilter!=='all';
+    const isMobile=window.matchMedia('(max-width:480px)').matches;
+    const initialCount=isMobile?BOOKS_INITIAL_MOBILE:BOOKS_INITIAL_DESKTOP;
     let visibleCount=0;
     KINDLE_BOOKS.forEach((book,i)=>{
       if(isFiltered&&getBookCategory(book)!==bookActiveFilter) return;
       visibleCount++;
       const el=buildCover(book,i);
-      if(!isFiltered&&visibleCount>BOOKS_INITIAL) el.classList.add('book-extra');
+      if(!isFiltered&&visibleCount>initialCount) el.classList.add('book-extra');
       function activateBook(){
         const audio=window.__clockAudio;
         if(audio&&audio.soundOn){
@@ -156,7 +159,7 @@ function initBooks(){
       booksGrid.appendChild(el);
     });
     if(booksShowMore){
-      booksShowMore.classList.toggle('hidden',isFiltered||visibleCount<=BOOKS_INITIAL);
+      booksShowMore.classList.toggle('hidden',isFiltered||visibleCount<=initialCount);
     }
   }
 

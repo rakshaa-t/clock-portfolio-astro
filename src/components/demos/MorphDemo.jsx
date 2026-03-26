@@ -1,6 +1,6 @@
 // MorphDemo — extracted from prevue.kit DeviceFrame.jsx + Dock.jsx
 // Frosted blur veil morph between device shapes with real DevicePill tabs
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useLayoutEffect } from "react";
 import { E, DEVICES } from "./easings.js";
 
 const MORPH_MS = 420;
@@ -95,6 +95,9 @@ function Chrome({ device, s }) {
 export default function MorphDemo() {
   const [device, setDevice] = useState("iphone");
   const veilRef = useRef(null);
+  const shellRef = useRef(null);
+  const bezelRef = useRef(null);
+  const prevDims = useRef(null);
   const prevDevice = useRef(device);
   const [reducedMotion, setReducedMotion] = useState(false);
 
@@ -106,7 +109,51 @@ export default function MorphDemo() {
     return () => mq.removeEventListener("change", h);
   }, []);
 
-  // Blur preview during device switch morph — driven via DOM ref
+  const v = DEVICES[device];
+  const s = DEMO_S;
+  const w = Math.round(v.w * s);
+  const h = Math.round(v.h * s);
+  const radius = 20;
+  const bezelR = 18;
+  const pad = Math.round(v.pad * s);
+  const ms = reducedMotion ? "150ms" : `${MORPH_MS}ms`;
+  const deviceAreaH = Math.round(DEVICES.iphone.h * s);
+  const bezelH = h - pad * 2;
+
+  // WAAPI morph — runs before browser paint so no flash.
+  // CSS transitions on width/height fail on mobile Safari inside flex containers;
+  // WAAPI explicitly drives the animation and works cross-browser.
+  useLayoutEffect(() => {
+    if (!prevDims.current) {
+      prevDims.current = { w, h, bezelH };
+      return;
+    }
+    const old = prevDims.current;
+    if (old.w === w && old.h === h) return;
+
+    const dur = reducedMotion ? 150 : MORPH_MS;
+    const shell = shellRef.current;
+    const bezel = bezelRef.current;
+
+    if (shell) {
+      shell.animate(
+        [{ width: old.w + "px", height: old.h + "px" },
+         { width: w + "px", height: h + "px" }],
+        { duration: dur, easing: MORPH_EASE }
+      );
+    }
+    if (bezel) {
+      bezel.animate(
+        [{ height: old.bezelH + "px" },
+         { height: bezelH + "px" }],
+        { duration: dur, easing: MORPH_EASE }
+      );
+    }
+
+    prevDims.current = { w, h, bezelH };
+  }, [w, h, bezelH, reducedMotion]);
+
+  // Frosted veil during morph
   useEffect(() => {
     if (prevDevice.current === device) return;
     prevDevice.current = device;
@@ -114,26 +161,13 @@ export default function MorphDemo() {
     if (!el || reducedMotion) return;
     el.style.transition = "none";
     el.style.opacity = "1";
-    el.getBoundingClientRect(); // force repaint so opacity:1 is committed
+    el.getBoundingClientRect();
     const t = setTimeout(() => {
       el.style.transition = "opacity 300ms ease-out";
       el.style.opacity = "0";
     }, MORPH_MS + 60);
     return () => clearTimeout(t);
   }, [device, reducedMotion]);
-
-  const v = DEVICES[device];
-  const s = DEMO_S;
-  const w = Math.round(v.w * s);
-  const h = Math.round(v.h * s);
-  const radius = 20; // fixed — stays rounded on all device shapes
-  const bezelR = 18;
-  const pad = Math.round(v.pad * s);
-  const ms = reducedMotion ? "150ms" : `${MORPH_MS}ms`;
-  // Fixed height = tallest device (iPhone) so pills never shift vertically
-  const deviceAreaH = Math.round(DEVICES.iphone.h * s);
-
-  const morphT = `width ${ms} ${MORPH_EASE}, height ${ms} ${MORPH_EASE}`;
 
   const dMuted = "rgba(0,0,0,0.5)";
   const dActive = "#0a0a0a";
@@ -143,20 +177,18 @@ export default function MorphDemo() {
     <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", minHeight: 420, padding: "30px 20px", gap: 24 }}>
       {/* Fixed-height device area — prevents pills from shifting on device switch */}
       <div style={{ height: deviceAreaH, display: "flex", alignItems: "center", justifyContent: "center" }}>
-        {/* Device shell — border-radius + box-shadow instead of filter: drop-shadow
-            (filter on parent blocks child transitions on mobile Safari) */}
-        <div style={{
+        {/* Device shell — WAAPI drives the morph, no CSS transition on width/height */}
+        <div ref={shellRef} style={{
           width: w, height: h,
           borderRadius: radius, overflow: "hidden",
           padding: pad, background: "#111",
-          position: "relative", transition: morphT,
+          position: "relative",
           boxShadow: "0 24px 48px rgba(0,0,0,0.18), 0 4px 12px rgba(0,0,0,0.1)",
         }}>
-          <div style={{
-            width: "100%", height: h - pad * 2,
+          <div ref={bezelRef} style={{
+            width: "100%", height: bezelH,
             borderRadius: bezelR, overflow: "hidden",
             position: "relative", background: "#0b0c10",
-            transition: `height ${ms} ${MORPH_EASE}`,
           }}>
             <Chrome device={device} s={s} />
 
