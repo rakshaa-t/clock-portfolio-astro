@@ -13,7 +13,7 @@ export const NOTES=[
     rich:true,
     body:[
       // ── Hero video ──
-      {type:"text",html:`<p style="margin-bottom:8px"><a href="https://prevue.raksha.design" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline;text-underline-offset:3px"><strong>Prevue</strong></a> lets you paste the code of AI-generated artifacts and see it rendered inside real device mockups.</p>`},
+      {type:"text",html:`<p style="margin-bottom:8px"><a href="https://prevue.raksha.design" target="_blank" rel="noopener" class="note-link"><strong>Prevue</strong></a> lets you paste the code of AI-generated artifacts and see it rendered inside real device mockups.</p>`},
       {type:"text",html:`<video autoplay loop muted playsinline style="width:100%;border-radius:12px;margin:8px 0 16px;box-shadow:0 2px 12px rgba(0,0,0,0.06)"><source src="/notes/prevue/hero.mp4" type="video/mp4"></video>`},
 
       // ── Why ──
@@ -42,18 +42,16 @@ export const NOTES=[
       // ── DialKit ──
       {type:"text",html:`<p style="margin-top:36px"><strong>DialKit for live tuning</strong></p>`},
       {type:"text",html:`<p>The dock has a hover interaction where everything breathes. Opacity, spacing, shadow depth. The differences are barely perceptible, which is the point. But getting "barely perceptible" right means tuning values by fractions.</p>`},
-      {type:"text",html:`<p>I used DialKit which gives you reactive sliders in the browser connected to your code values. Drag a slider, see the dock respond live. Rest opacity landed at 0.8, hover at 1. Scale change got removed entirely because even 0.5% felt like too much.</p>`},
-      {type:"text",html:`<p>The fact that most rest and hover values ended up identical says something. The dock hover is really just an opacity shift and a shadow change. Sometimes the best interaction is the one you can barely see.</p>`},
 
       // ── Small details ──
       {type:"text",html:`<p style="margin-top:36px"><strong>Small details</strong></p>`},
-      {type:"text",html:`<p>The device pills do a tiny spring bounce when you switch. 2% scale for 280ms. Most people won't see it. But it makes the switch feel physical instead of instant.</p>`},
+      {type:"text",html:`<p>The device pills do a tiny spring bounce when you switch. 2% scale for 280ms. I wanted to make the switch feel physical instead of instant.</p>`},
 
       // ── Takeaway ──
       {type:"text",html:`<p style="margin-top:36px"><strong>Takeaway</strong></p>`},
-      {type:"text",html:`<p>The functional stuff was maybe 30% of the effort. The other 70% is motion, feedback, and the thousand small decisions about how something should respond when you touch it. Sonner for toasts that dissolve instead of punish. DialKit sliders to tune opacity by hundredths. A 2% bounce nobody will consciously notice. That's where the time went.</p>`},
+      {type:"text",html:`<p>The functional stuff was maybe 30% of the effort. The other 70% is motion and feedback.</p>`},
 
-      {type:"text",html:`<p style="margin-top:28px"><a href="https://prevue.raksha.design" target="_blank" rel="noopener" style="color:inherit">prevue.raksha.design</a></p>`},
+      {type:"text",html:`<p style="margin-top:28px"><a href="https://prevue.raksha.design" target="_blank" rel="noopener" class="note-link">prevue.raksha.design</a></p>`},
     ]
   },
   {

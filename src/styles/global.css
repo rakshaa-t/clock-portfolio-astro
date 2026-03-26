@@ -695,6 +695,8 @@ a.about-dropdown-item:hover{opacity:0.7;}
 /* ── Interactive component demos ── */
 .note-component{width:100%;border-radius:12px;margin:20px 0;overflow:hidden;border:1px solid rgba(0,0,0,0.06);background:linear-gradient(145deg,#F5F3EF,#EDEAE6);position:relative;}
 .note-component-hint{text-align:center;padding:8px 12px;font-family:'Geist Mono',monospace;font-size:var(--text-sm);font-weight:500;letter-spacing:0.04em;color:rgba(0,0,0,0.2);border-top:1px solid rgba(0,0,0,0.04);}
+.note-component.hide-mobile{display:block;}
+@media(max-width:768px){.note-component.hide-mobile{display:none;}}
 
 /* ═══ NOTE TOC SIDEBAR ═══ */
 .note-toc{
@@ -1397,6 +1399,9 @@ a.about-dropdown-item:hover{opacity:0.7;}
   font-size:var(--text-body);color:rgba(0,0,0,0.55);line-height:1.75;
 }
 .note-page-body p{margin-bottom:16px;}
+.note-page-body a{text-decoration:none;}
+.note-link{color:var(--text-primary);text-decoration:underline;text-decoration-thickness:1.5px;text-underline-offset:3px;text-decoration-color:rgba(0,0,0,0.35);transition:text-decoration-color 0.2s cubic-bezier(0.32,0.72,0,1);}
+.note-link:hover{text-decoration-color:rgba(0,0,0,0.5);}
 .note-page-footer{
   margin-top:40px;padding-top:20px;
   border-top:1px solid rgba(0,0,0,0.06);

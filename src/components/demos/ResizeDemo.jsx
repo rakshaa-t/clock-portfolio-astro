@@ -80,7 +80,7 @@ export default function ResizeDemo() {
   const pad = Math.round(v.pad * sizeScale * DEMO_S);
 
   const br = {
-    size: 13, thickness: 2.5, offset: -16,
+    size: 13, thickness: 2.5, offset: -20,
     opacityRest: 0.15, opacityDevice: 1, opacityActive: 0.45,
   };
   const bracketColor = "rgba(0,0,0,0.35)";

@@ -148,7 +148,7 @@ const isDev = import.meta.env.DEV;
           note.body.map((block, i) => {
             if (block.type === 'component') {
               return (
-                <div class="note-component">
+                <div class={`note-component${block.id === 'DockDemo' ? ' hide-mobile' : ''}`}>
                   {block.id === 'DockDemo' && <DockDemo client:visible />}
                   {block.id === 'ResizeDemo' && <ResizeDemo client:visible />}
                   {block.id === 'MorphDemo' && <MorphDemo client:visible />}
