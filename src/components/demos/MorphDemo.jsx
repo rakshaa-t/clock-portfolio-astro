@@ -129,7 +129,7 @@ export default function MorphDemo() {
   const radius = 20; // fixed — stays rounded on all device shapes
   const bezelR = 18;
   const pad = Math.round(v.pad * s);
-  const ms = reducedMotion ? "0ms" : `${MORPH_MS}ms`;
+  const ms = reducedMotion ? "150ms" : `${MORPH_MS}ms`;
   // Fixed height = tallest device (iPhone) so pills never shift vertically
   const deviceAreaH = Math.round(DEVICES.iphone.h * s);
 
