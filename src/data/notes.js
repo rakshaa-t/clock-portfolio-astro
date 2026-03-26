@@ -9,7 +9,7 @@ export const NOTES=[
     title:"Building prevue",
     date:"26 March 2026",sortDate:20260326,
     tags:["design","code","process"],
-    preview:"A small build process of prevue, a mockup tool for code artefacts. I talk about the interactions I built, where I got stuck, and what dev tools I used.",
+    preview:"A small build process of prevue, a mockup tool for code artifacts. I talk about the interactions I built, where I got stuck, and what dev tools I used.",
     readTime:"3 min read",
     rich:true,
     body:[
@@ -42,7 +42,7 @@ export const NOTES=[
 
       // ── DialKit ──
       {type:"text",html:`<p style="margin-top:36px"><strong>DialKit for live tuning</strong></p>`},
-      {type:"text",html:`<p>The dock has a hover interaction where everything breathes: opacity, spacing, shadow depth. The differences are barely perceptible, which is the point. But getting "barely perceptible" right means tuning values by fractions.</p>`},
+      {type:"text",html:`<p>Josh Puckett's Dialkit came in handy here, small hover states, opacity changes and spacing was made seamless through live fine tuning.</p>`},
 
       // ── Small details ──
       {type:"text",html:`<p style="margin-top:36px"><strong>Small details</strong></p>`},

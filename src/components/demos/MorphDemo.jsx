@@ -143,17 +143,14 @@ export default function MorphDemo() {
     <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", minHeight: 420, padding: "30px 20px", gap: 24 }}>
       {/* Fixed-height device area — prevents pills from shifting on device switch */}
       <div style={{ height: deviceAreaH, display: "flex", alignItems: "center", justifyContent: "center" }}>
-      {/* drop-shadow wrapper — shadow follows clip-path shape */}
-      <div style={{
-        position: "relative",
-        filter: "drop-shadow(0 24px 48px rgba(0,0,0,0.18)) drop-shadow(0 4px 12px rgba(0,0,0,0.1))",
-      }}>
-        {/* Device shell — clip-path enforces rounded corners throughout transition */}
+        {/* Device shell — border-radius + box-shadow instead of filter: drop-shadow
+            (filter on parent blocks child transitions on mobile Safari) */}
         <div style={{
           width: w, height: h,
-          clipPath: `inset(0 round ${radius}px)`,
+          borderRadius: radius, overflow: "hidden",
           padding: pad, background: "#111",
           position: "relative", transition: morphT,
+          boxShadow: "0 24px 48px rgba(0,0,0,0.18), 0 4px 12px rgba(0,0,0,0.1)",
         }}>
           <div style={{
             width: "100%", height: h - pad * 2,
@@ -190,7 +187,6 @@ export default function MorphDemo() {
             }} />
           </div>
         </div>
-      </div>
       </div>
 
       {/* Device pills — matches Dock.jsx */}
