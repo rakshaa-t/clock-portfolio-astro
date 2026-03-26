@@ -192,6 +192,22 @@ function initMymind(){
       else if(card.type==='link') h=85;
       colHeights[shortest]+=h+8;
     });
+    // Post-layout rebalance: estimates drift from actual heights on mobile,
+    // so measure real column heights and move last card if it improves balance
+    if(colCount===2&&cols[0].children.length&&cols[1].children.length){
+      const h0=cols[0].scrollHeight,h1=cols[1].scrollHeight;
+      const diff=Math.abs(h0-h1);
+      if(diff>40){
+        const tallIdx=h0>h1?0:1;
+        const shortIdx=1-tallIdx;
+        const lastCard=cols[tallIdx].lastElementChild;
+        if(lastCard){
+          cols[shortIdx].appendChild(lastCard);
+          const newDiff=Math.abs(cols[0].scrollHeight-cols[1].scrollHeight);
+          if(newDiff>=diff) cols[tallIdx].appendChild(lastCard); // revert if worse
+        }
+      }
+    }
     if(mmindShowMore){
       mmindShowMore.classList.toggle('hidden',isFiltered||visibleCount<=MMIND_INITIAL);
     }
