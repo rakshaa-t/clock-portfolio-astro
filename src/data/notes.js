@@ -5,6 +5,58 @@
 
 export const NOTES=[
   {
+    slug:"building-prevue",
+    title:"Building prevue",
+    date:"26 March 2026",sortDate:20260326,
+    tags:["design","code","process"],
+    preview:"AI can write full interfaces now. But you can't see them without spinning up a project. That gap bothered me.",
+    rich:true,
+    body:[
+      // ── Hero video ──
+      {type:"text",html:`<p style="margin-bottom:8px"><a href="https://prevue.raksha.design" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline;text-underline-offset:3px"><strong>Prevue</strong></a> lets you paste the code of AI-generated artifacts and see it rendered inside real device mockups.</p>`},
+      {type:"text",html:`<video autoplay loop muted playsinline style="width:100%;border-radius:12px;margin:8px 0 16px;box-shadow:0 2px 12px rgba(0,0,0,0.06)"><source src="/notes/prevue/hero.mp4" type="video/mp4"></video>`},
+
+      // ── Why ──
+      {type:"text",html:`<p>AI can generate beautiful interfaces now. Full components, entire pages. But you can't actually <em>see</em> them without setting up a whole project. I wanted to paste code and see it. That's the entire product.</p>`},
+
+      // ── Device frames ──
+      {type:"text",html:`<p style="margin-top:36px"><strong>Device frames</strong></p>`},
+      {type:"text",html:`<p>The frames are Apple device mockups which morph into mobile, tablet, or web sizes. They're drawn to match Apple's viewport dimensions.</p>`},
+
+      // ── Device switching + rubber band ──
+      {type:"text",html:`<p style="margin-top:36px"><strong>Device switching and rubber band resize</strong></p>`},
+      {type:"text",html:`<p>Each frame has corner handles you can drag to resize. The scaling locks to aspect ratio and has logarithmic resistance past the bounds. Pull too far and it springs back. The formula is simple but getting the feel right took a while. The <code>0.15</code> controls how much it gives. <code>over * 3</code> makes resistance grow the further you pull.</p>`},
+      {type:"component",id:"ResizeDemo",hint:"Drag a corner bracket to resize"},
+
+      // ── Things that broke ──
+      {type:"text",html:`<p style="margin-top:36px"><strong>Things that broke</strong></p>`},
+
+      {type:"text",html:`<p><em>Device morph</em></p>`},
+      {type:"text",html:`<p>Device switching initially blink-switched devices. I wanted to use a morph here for a smoother transition. Sounds simple, right? But when you actually preview code within it and the morph happens, the design inside breaks until it reaches the target device size. After lots of trial and error, I decided to add a frosted blur veil that slightly hides the swap, then dissolves when the morph settles.</p>`},
+      {type:"component",id:"MorphDemo",hint:"Click to morph between devices"},
+
+      {type:"text",html:`<p style="margin-top:24px"><em>Edge-hover flickering</em></p>`},
+      {type:"text",html:`<p>The dock scales up slightly on hover. The scale change moved the element boundary, pushing the cursor "outside," which triggered mouse leave, which scaled it back down, which moved the boundary back. Infinite loop. The whole dock was oscillating. Fix was a stable invisible hit-area wrapper so the hover zone never changes shape.</p>`},
+      {type:"component",id:"DockDemo",hint:"Hover the dock"},
+
+      // ── DialKit ──
+      {type:"text",html:`<p style="margin-top:36px"><strong>DialKit for live tuning</strong></p>`},
+      {type:"text",html:`<p>The dock has a hover interaction where everything breathes. Opacity, spacing, shadow depth. The differences are barely perceptible, which is the point. But getting "barely perceptible" right means tuning values by fractions.</p>`},
+      {type:"text",html:`<p>I used DialKit which gives you reactive sliders in the browser connected to your code values. Drag a slider, see the dock respond live. Rest opacity landed at 0.8, hover at 1. Scale change got removed entirely because even 0.5% felt like too much.</p>`},
+      {type:"text",html:`<p>The fact that most rest and hover values ended up identical says something. The dock hover is really just an opacity shift and a shadow change. Sometimes the best interaction is the one you can barely see.</p>`},
+
+      // ── Small details ──
+      {type:"text",html:`<p style="margin-top:36px"><strong>Small details</strong></p>`},
+      {type:"text",html:`<p>The device pills do a tiny spring bounce when you switch. 2% scale for 280ms. Most people won't see it. But it makes the switch feel physical instead of instant.</p>`},
+
+      // ── Takeaway ──
+      {type:"text",html:`<p style="margin-top:36px"><strong>Takeaway</strong></p>`},
+      {type:"text",html:`<p>The functional stuff was maybe 30% of the effort. The other 70% is motion, feedback, and the thousand small decisions about how something should respond when you touch it. Sonner for toasts that dissolve instead of punish. DialKit sliders to tune opacity by hundredths. A 2% bounce nobody will consciously notice. That's where the time went.</p>`},
+
+      {type:"text",html:`<p style="margin-top:28px"><a href="https://prevue.raksha.design" target="_blank" rel="noopener" style="color:inherit">prevue.raksha.design</a></p>`},
+    ]
+  },
+  {
     slug:"code-and-canvas",
     title:"Code and canvas as methods of communication",
     date:"16 February 2026",sortDate:20260216,

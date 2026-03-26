@@ -2,11 +2,30 @@
 
 ## Architecture
 
-- **Framework:** Astro (static site)
+- **Framework:** Astro 5.x (static site) + `@astrojs/react` for islands
 - **Entry:** `src/pages/index.astro`
 - **Styles:** `src/styles/global.css` (single CSS file, no preprocessor)
 - **Scripts:** `src/scripts/clock-engine.js` (vanilla JS, no framework)
+- **React islands:** Note pages use React components via `client:visible` for interactive demos
 - **Fonts:** GeistPixel (local .ttf), Geist + Geist Mono (Google Fonts)
+
+## Dev Tools (dev-only, not shipped to production)
+
+- **InterfaceKit** (`interface-kit`) — Visual style editor. Paintbrush button in corner, click any element to tweak styles. `src/components/DevTools.jsx`
+- **Agentation** (`agentation`) — Click elements in the browser, leave visual annotations with comments. Annotations sent to Claude via MCP. Start server: `npx -y agentation-mcp server`
+- **DialKit** (`dialkit`) — Live sliders for tuning animation values. Use `useDialKit()` hook in React components
+- **bloom-menu** (`bloom-menu`) — Radial context menu component
+- **framer-motion** (`framer-motion`) — Animation library for React islands
+
+All dev tools load via `src/components/DevTools.jsx`, rendered with `client:only="react"` behind `import.meta.env.DEV` check. Zero bytes ship to production.
+
+## MCP Servers
+
+- **agentation** — Visual annotation feedback from browser to Claude. Config in `~/.claude.json`. Server: `npx -y agentation-mcp server` on port 4747
+- **motion** — Motion.dev Studio MCP for animation code generation
+- **pencil** — Pencil MCP for .pen design files
+- **figma** — Figma MCP for design integration
+- **context7** — Up-to-date library documentation
 
 ## Design Language
 

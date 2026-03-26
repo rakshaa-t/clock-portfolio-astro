@@ -10,7 +10,7 @@
 
 /* Instant page transitions — no fade/slide */
 ::view-transition-old(root),::view-transition-new(root){animation:none!important;}
-/* Reveal page once CSS is loaded (pairs with inline <style>html{opacity:0}</style> in head) */
+/* Reveal page once CSS is loaded (pairs with inline opacity:0 rule in head) */
 html{opacity:1;transition:opacity 0s!important;}
 
 *{margin:0;padding:0;box-sizing:border-box;}
@@ -642,8 +642,7 @@ a.about-dropdown-item:hover{opacity:0.7;}
   max-width:520px;margin-left:auto;margin-right:auto;
 }
 .browse-section h2{font-family:'GeistPixel',sans-serif;font-size:var(--text-h1);font-weight:400;letter-spacing:-0.02em;margin-bottom:8px;line-height:1.2;color:var(--text-primary);max-width:520px;margin-left:auto;margin-right:auto;}
-.browse-section .subtitle{font-size:var(--text-body);color:var(--text-secondary);margin-bottom:40px;line-height:1.5;max-width:520px;margin-left:auto;margin-right:auto;}
-.timeline-item{padding:24px 0;border-top:1px solid rgba(0,0,0,0.04);display:flex;gap:16px;}
+.browse-section .subtitle{font-size:var(--text-body);color:var(--text-secondary);margin-bottom:40px;line-height:1.5;max-width:520px;margin-left:auto;margin-right:auto;}.timeline-item{padding:24px 0;border-top:1px solid rgba(0,0,0,0.04);display:flex;gap:16px;}
 .timeline-year{font-family:'Geist Mono',monospace;font-size:var(--text-sm);font-weight:700;color:var(--accent);min-width:80px;padding-top:2px;flex-shrink:0;letter-spacing:0.02em;}
 .timeline-text{font-size:var(--text-body);line-height:1.65;color:var(--text-secondary);}
 .timeline-text strong{color:var(--text-primary);font-weight:500;}
@@ -692,6 +691,44 @@ a.about-dropdown-item:hover{opacity:0.7;}
 .note-embed-btn:active{transform:scale(0.97);}
 .note-embed iframe{width:100%;height:480px;border:none;display:block;}
 .note-embed-caption{font-size:var(--text-sm);color:rgba(0,0,0,0.3);margin:6px 0 12px;font-style:italic;}
+
+/* ── Interactive component demos ── */
+.note-component{width:100%;border-radius:12px;margin:20px 0;overflow:hidden;border:1px solid rgba(0,0,0,0.06);background:linear-gradient(145deg,#F5F3EF,#EDEAE6);position:relative;}
+.note-component-hint{text-align:center;padding:8px 12px;font-family:'Geist Mono',monospace;font-size:var(--text-sm);font-weight:500;letter-spacing:0.04em;color:rgba(0,0,0,0.2);border-top:1px solid rgba(0,0,0,0.04);}
+
+/* ═══ NOTE TOC SIDEBAR ═══ */
+.note-toc{
+  position:fixed;
+  top:50%;transform:translateY(-50%);
+  left:max(20px, calc((100vw - 600px) / 2 - 220px));
+  width:180px;
+  z-index:10;
+}
+.note-toc-header{
+  display:flex;align-items:center;gap:6px;
+  font-family:'Geist Mono',monospace;font-size:var(--text-sm);font-weight:600;
+  letter-spacing:0.06em;text-transform:uppercase;
+  color:rgba(0,0,0,0.25);
+  margin-bottom:12px;
+}
+.note-toc-list{list-style:none;padding:0;margin:0;}
+.note-toc-list li{margin-bottom:2px;}
+.note-toc-link{
+  display:block;padding:4px 0 4px 12px;
+  font-family:'Geist',sans-serif;font-size:var(--text-sm);font-weight:400;
+  color:rgba(0,0,0,0.25);text-decoration:none;
+  border-left:2px solid transparent;
+  transition:color 0.2s var(--ease),border-color 0.2s var(--ease);
+  line-height:1.5;
+}
+.note-toc-link:hover{color:rgba(0,0,0,0.45);}
+.note-toc-link.active{
+  color:var(--text-primary);font-weight:600;
+  border-left-color:var(--accent);
+}
+@media(max-width:1100px){
+  .note-toc{display:none;}
+}
 
 /* ═══ MYMIND ═══ */
 .mymind-header{padding:0 0 12px;max-width:520px;margin-left:auto;margin-right:auto;}

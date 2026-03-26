@@ -328,8 +328,10 @@ function initPortfolioCore(){
     }
   });
 
-  // Note card click sound (Magic Mouse click)
+  // Note card click sound (Magic Mouse click) — guard against duplicate listeners
   document.querySelectorAll('.note-card').forEach(card=>{
+    if(card._bound) return;
+    card._bound=true;
     card.addEventListener('click',()=>{
       if(window.__clockAudio) window.__clockAudio.noteClick();
     });

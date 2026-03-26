@@ -109,12 +109,15 @@ function _initAudio(){
     knobClick();
   }
 
-  // Sync visual state with current _soundOn
+  // Sync visual state with current _soundOn — guard against duplicate listeners on View Transition re-init
   if(knob){
     knob.classList.toggle('off',!_soundOn);
     knob.setAttribute('aria-pressed',_soundOn);
-    knob.addEventListener('click',toggle);
-    knob.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();toggle();}});
+    if(!knob._bound){
+      knob._bound=true;
+      knob.addEventListener('click',toggle);
+      knob.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();toggle();}});
+    }
   }
 }
 

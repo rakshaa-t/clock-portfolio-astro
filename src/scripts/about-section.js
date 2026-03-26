@@ -103,10 +103,11 @@ function initAbout(){
     },{passive:true});
   }
 
-  // Location toggle
+  // Location toggle — guard against duplicate listeners on View Transition re-init
   const locToggle=document.getElementById('locationToggle');
   const locText=document.getElementById('locationText');
-  if(locToggle){
+  if(locToggle&&!locToggle._bound){
+    locToggle._bound=true;
     function toggleLocation(){
       locToggle.classList.toggle('on');
       const isOn=locToggle.classList.contains('on');

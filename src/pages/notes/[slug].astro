@@ -1,6 +1,12 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import { NOTES } from '../../data/notes.js';
+import DockDemo from '../../components/demos/DockDemo.jsx';
+import ResizeDemo from '../../components/demos/ResizeDemo.jsx';
+import MorphDemo from '../../components/demos/MorphDemo.jsx';
+import DevTools from '../../components/DevTools.jsx';
+
+const DEMO_MAP = { DockDemo, ResizeDemo, MorphDemo };
 
 export function getStaticPaths() {
   return NOTES.map(note => ({
@@ -11,8 +17,11 @@ export function getStaticPaths() {
 
 const { note } = Astro.props;
 
-function renderBlock(block) {
-  if (block.type === 'text') return block.html;
+function renderBlock(block, sectionId) {
+  if (block.type === 'text') {
+    if (sectionId) return `<div id="section-${sectionId}">${block.html}</div>`;
+    return block.html;
+  }
   if (block.type === 'code') return `<div style="position:relative"><div class="note-code">${block.html}</div></div>`;
   if (block.type === 'image') {
     let html = `<div class="note-img">`;
@@ -26,6 +35,22 @@ function renderBlock(block) {
   return '';
 }
 
+// Extract TOC headings from rich note body
+const tocHeadings = [];
+if (note.rich && Array.isArray(note.body)) {
+  note.body.forEach((block, i) => {
+    if (block.type === 'text' && block.html) {
+      const match = block.html.match(/<strong>([^<]+)<\/strong>/);
+      // Only standalone <strong> blocks (section headings), not inline emphasis
+      if (match && block.html.includes('margin-top')) {
+        const text = match[1];
+        const id = text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/-+$/, '');
+        tocHeadings.push({ id, text, blockIndex: i });
+      }
+    }
+  });
+}
+
 const bodyHtml = note.rich
   ? note.body.map(renderBlock).join('')
   : (typeof note.body === 'string' ? note.body : '');
@@ -34,6 +59,8 @@ const currentIdx = NOTES.findIndex(n => n.slug === note.slug);
 const nextNote = NOTES[(currentIdx + 1) % NOTES.length];
 
 const isTeardown = !!note.teardown;
+const hasComponents = note.rich && note.body.some(b => b.type === 'component');
+const isDev = import.meta.env.DEV;
 ---
 
 <Layout title={`${note.title} — Raksha Tated`} description={note.preview}>
@@ -106,6 +133,7 @@ const isTeardown = !!note.teardown;
 ) : (
   <!-- ═══ STANDARD NOTE LAYOUT ═══ -->
   <div class="note-page">
+
     <div class="note-page-inner">
       <a href="/#sec-notes" class="note-page-back">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
@@ -113,7 +141,36 @@ const isTeardown = !!note.teardown;
       </a>
       <div class="note-page-date">{note.date}</div>
       <h1 class="note-page-title">{note.title}</h1>
-      <div class="note-page-body" set:html={bodyHtml} />
+
+      {/* ── Body: block-level rendering for React islands ── */}
+      <div class="note-page-body">
+        {hasComponents ? (
+          note.body.map((block, i) => {
+            if (block.type === 'component') {
+              return (
+                <div class="note-component">
+                  {block.id === 'DockDemo' && <DockDemo client:visible />}
+                  {block.id === 'ResizeDemo' && <ResizeDemo client:visible />}
+                  {block.id === 'MorphDemo' && <MorphDemo client:visible />}
+                  {block.hint && <div class="note-component-hint">{block.hint}</div>}
+                </div>
+              );
+            }
+            const heading = tocHeadings.find(h => h.blockIndex === i);
+            const sectionId = heading ? heading.id : null;
+            return <Fragment set:html={renderBlock(block, sectionId)} />;
+          })
+        ) : note.rich ? (
+          note.body.map((block, i) => {
+            const heading = tocHeadings.find(h => h.blockIndex === i);
+            const sectionId = heading ? heading.id : null;
+            return <Fragment set:html={renderBlock(block, sectionId)} />;
+          })
+        ) : (
+          <Fragment set:html={bodyHtml} />
+        )}
+      </div>
+
       <div class="note-page-footer">
         <button class="note-page-share" id="shareOnX">
           Share on <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" style="margin-left:2px;"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
@@ -148,5 +205,84 @@ const isTeardown = !!note.teardown;
     });
   });
 </script>
+
+<!-- ═══ TOC Scroll Tracking ═══ -->
+<script>
+  function initTOC() {
+    const links = document.querySelectorAll('.note-toc-link');
+    if (!links.length) return;
+
+    const targets = [];
+    links.forEach(link => {
+      const id = link.dataset.tocTarget;
+      const el = document.getElementById(id);
+      if (el) targets.push({ el, link });
+    });
+    if (!targets.length) return;
+
+    let activeLink = null;
+
+    const observer = new IntersectionObserver((entries) => {
+      let best = null;
+      entries.forEach(e => {
+        if (e.isIntersecting && (!best || e.boundingClientRect.top < best.boundingClientRect.top)) {
+          best = e;
+        }
+      });
+      if (best) {
+        const match = targets.find(t => t.el === best.target);
+        if (match && match.link !== activeLink) {
+          if (activeLink) activeLink.classList.remove('active');
+          match.link.classList.add('active');
+          activeLink = match.link;
+        }
+      }
+    }, {
+      root: null,
+      rootMargin: '-10% 0px -50% 0px',
+      threshold: [0, 0.25, 0.5, 0.75, 1]
+    });
+
+    targets.forEach(t => observer.observe(t.el));
+
+    // Activate first by default
+    if (targets[0]) {
+      targets[0].link.classList.add('active');
+      activeLink = targets[0].link;
+    }
+
+    // Click to smooth-scroll
+    links.forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const id = link.dataset.tocTarget;
+        const el = document.getElementById(id);
+        if (!el) return;
+        const rect = el.getBoundingClientRect();
+        const targetY = window.scrollY + rect.top - 80;
+        const startY = window.scrollY;
+        const diff = targetY - startY;
+        const duration = Math.min(600, Math.max(300, Math.abs(diff) * 0.5));
+        const startTime = performance.now();
+        function easeOut(t) { return 1 - Math.pow(1 - t, 3); }
+        function step(now) {
+          const progress = Math.min((now - startTime) / duration, 1);
+          window.scrollTo(0, startY + diff * easeOut(progress));
+          if (progress < 1) requestAnimationFrame(step);
+        }
+        requestAnimationFrame(step);
+      });
+    });
+
+    document.addEventListener('astro:before-swap', () => {
+      observer.disconnect();
+    }, { once: true });
+  }
+
+  initTOC();
+  document.addEventListener('astro:page-load', initTOC);
+</script>
+
+{isDev && <DevTools client:only="react" />}
 
 </Layout>
