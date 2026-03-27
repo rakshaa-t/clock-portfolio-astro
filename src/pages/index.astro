@@ -107,7 +107,7 @@ import { NOTES } from '../data/notes.js';
     <!-- ═══ WORK — Puzzle grid of project cards ═══ -->
     <div class="browse-section" id="sec-work">
       <h2>Design Work</h2>
-      <p class="subtitle">Tap to explore case studies</p>
+      <p class="subtitle">Select client and personal work</p>
 
       <div class="puzzle-grid">
         <div class="puzzle-card" data-project="0">
@@ -180,12 +180,12 @@ import { NOTES } from '../data/notes.js';
 
     <!-- ═══ NOTES — Links to individual note pages ═══ -->
     <div class="browse-section" id="sec-notes">
-      <h2>Things I'm writing about</h2>
+      <h2>Notes</h2>
       <p class="subtitle">Notes on design, code, and everything in between.</p>
 
       <div class="note-cards">
         {NOTES.map(note => (
-          <a href={`/notes/${note.slug}`} target="_blank" rel="noopener noreferrer" class="note-card">
+          <a href={`/notes/${note.slug}`} class="note-card">
             <div class="note-card-date">{note.date}{note.readTime && <span class="note-card-read-time">{note.readTime}</span>}</div>
             <div class="note-card-title">{note.title}</div>
             <div class="note-card-preview">{note.preview}</div>
@@ -196,7 +196,7 @@ import { NOTES } from '../data/notes.js';
 
     <!-- ═══ BOOKMARKS — Mymind masonry grid (no container) ═══ -->
     <div class="browse-section" id="sec-bookmarks">
-      <h2>Things I'm saving</h2>
+      <h2>Saves</h2>
       <p class="subtitle">My bookmarks live in <a href="https://mymind.com" target="_blank" style="color:var(--accent);text-decoration:none;border-bottom:1px solid rgba(139,126,200,0.3);">Mymind</a>. Here's what's caught my eye lately.</p>
 
       <div class="mymind-header">
@@ -221,8 +221,8 @@ import { NOTES } from '../data/notes.js';
 
     <!-- ═══ BOOKS — Cover grid + popover highlights ═══ -->
     <div class="browse-section" id="sec-books">
-      <h2>Books on my shelf</h2>
-      <p class="subtitle">My shelf and my learnings.</p>
+      <h2>Books</h2>
+      <p class="subtitle">What I'm reading and what stuck with me</p>
 
       <div class="book-filters" id="bookFilters">
         <span class="mymind-pill active" data-filter="all">All</span>
@@ -241,15 +241,15 @@ import { NOTES } from '../data/notes.js';
 
     <!-- ═══ MEDIA — Cover grid with slide-out play button ═══ -->
     <div class="browse-section" id="sec-media">
-      <h2>Things I'm listening to</h2>
-      <p class="subtitle">Recent content consumption</p>
+      <h2>Media</h2>
+      <p class="subtitle">Feeding my mind with</p>
 
       <div class="podcast-grid" id="podcastGrid"></div>
       <button class="puzzle-show-more" id="podcastShowMore" aria-expanded="false">Show more media</button>
     </div>
 
     <footer class="site-footer">
-      <span>&copy; Raksha T 2026. V2.0.0</span>
+      <span>&copy; Raksha T 2026. V2.2.0</span>
       <span class="footer-sep">&middot;</span>
       <a href="/changelog" class="footer-link">Changelog</a>
     </footer>
