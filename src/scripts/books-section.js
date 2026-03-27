@@ -6,8 +6,7 @@ import KINDLE_BOOKS from '../data/books.json';
 import { esc, smoothScrollToEl } from './shared.js';
 import { haptic } from './haptics.js';
 
-const BOOKS_INITIAL_DESKTOP=12;
-const BOOKS_INITIAL_MOBILE=9; // 3 rows × 3 columns on mobile
+const BOOKS_ROWS=3; // show 3 full rows initially
 
 function getBookCategory(book){
   if(book.fav) return 'excellent';
@@ -130,8 +129,9 @@ function initBooks(){
     booksGrid.innerHTML='';
     closeBookPopover();
     const isFiltered=bookActiveFilter!=='all';
-    const isMobile=window.matchMedia('(max-width:480px)').matches;
-    const initialCount=isMobile?BOOKS_INITIAL_MOBILE:BOOKS_INITIAL_DESKTOP;
+    // Detect actual column count from CSS grid
+    const cols=getComputedStyle(booksGrid).gridTemplateColumns.split(' ').length;
+    const initialCount=cols*BOOKS_ROWS;
     let visibleCount=0;
     KINDLE_BOOKS.forEach((book,i)=>{
       if(isFiltered&&getBookCategory(book)!==bookActiveFilter) return;
@@ -159,7 +159,9 @@ function initBooks(){
       booksGrid.appendChild(el);
     });
     if(booksShowMore){
+      const extraCount=booksGrid.querySelectorAll('.book-extra').length;
       booksShowMore.classList.toggle('hidden',isFiltered||visibleCount<=initialCount);
+      if(!booksGrid.classList.contains('expanded')) booksShowMore.textContent=`Show ${extraCount} more`;
     }
   }
 
@@ -172,7 +174,7 @@ function initBooks(){
       p.classList.toggle('active',p.dataset.filter===bookActiveFilter)
     );
     booksGrid.classList.remove('expanded');
-    if(booksShowMore) booksShowMore.textContent='Show more books';
+    if(booksShowMore){const n=booksGrid.querySelectorAll('.book-extra').length;booksShowMore.textContent=`Show ${n} more`;}
     renderBooks();
   });
 
@@ -181,7 +183,8 @@ function initBooks(){
       haptic('success');
       const expanding=!booksGrid.classList.contains('expanded');
       booksGrid.classList.toggle('expanded');
-      booksShowMore.textContent=expanding?'Show fewer books':'Show more books';
+      const n=booksGrid.querySelectorAll('.book-extra').length;
+      booksShowMore.textContent=expanding?'Show less':`Show ${n} more books`;
       booksShowMore.setAttribute('aria-expanded',expanding);
       if(expanding){
         // Stagger reveal: 50ms between each item (wave top→bottom)

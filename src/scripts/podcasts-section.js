@@ -34,13 +34,15 @@ function initPodcasts(){
 
   // Show more / less
   if(showMore){
-    showMore.classList.toggle('hidden',PODCASTS.length<=PODS_INITIAL);
+    const extraCount=PODCASTS.length-PODS_INITIAL;
+    showMore.classList.toggle('hidden',extraCount<=0);
+    if(extraCount>0) showMore.textContent=`Show ${extraCount} more`;
     let expanded=false;
     showMore.addEventListener('click',()=>{
       haptic('success');
       expanded=!expanded;
       grid.classList.toggle('expanded',expanded);
-      showMore.textContent=expanded?'Show fewer media':'Show more media';
+      showMore.textContent=expanded?'Show less':`Show ${extraCount} more`;
       showMore.setAttribute('aria-expanded',expanded);
     });
   }

@@ -5,7 +5,7 @@
 import { MMIND_CARDS } from '../data/mymind.js';
 import { esc, smoothScrollToEl } from './shared.js';
 
-const MMIND_INITIAL=9;
+const MMIND_ROWS=3; // show 3 full rows initially
 
 function initMymind(){
   const mmindGrid=document.getElementById('mmindGrid');
@@ -138,6 +138,7 @@ function initMymind(){
     mmindClosePopover();
     const isFiltered=mmindActiveFilter!=='all'||mmindSearchQuery;
     const colCount=window.matchMedia('(max-width:480px)').matches?2:3;
+    const mmindInitial=colCount*MMIND_ROWS;
     // Create column containers
     const cols=[];
     for(let c=0;c<colCount;c++){
@@ -177,7 +178,7 @@ function initMymind(){
       }
       el.addEventListener('click',activateCard);
       el.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();activateCard();}});
-      const isExtra=!isFiltered&&visibleCount>MMIND_INITIAL;
+      const isExtra=!isFiltered&&visibleCount>mmindInitial;
       if(isExtra) el.classList.add('mm-extra');
       // Shortest-column-first using estimated heights (no DOM measurement)
       let shortest=0;
@@ -209,7 +210,9 @@ function initMymind(){
       }
     }
     if(mmindShowMore){
-      mmindShowMore.classList.toggle('hidden',isFiltered||visibleCount<=MMIND_INITIAL);
+      const extraCount=mmindGrid.querySelectorAll('.mm-extra').length;
+      mmindShowMore.classList.toggle('hidden',isFiltered||visibleCount<=mmindInitial);
+      if(!mmindGrid.classList.contains('expanded')) mmindShowMore.textContent=`Show ${extraCount} more`;
     }
   }
 
@@ -226,7 +229,7 @@ function initMymind(){
       el.style.opacity='';el.style.transform='';
     });
     mmindGrid.classList.remove('expanded');
-    if(mmindShowMore) mmindShowMore.textContent='Show more bookmarks';
+    if(mmindShowMore){const n=mmindGrid.querySelectorAll('.mm-extra').length;mmindShowMore.textContent=`Show ${n} more`;}
     mmindRenderGrid();
   });
 
@@ -237,7 +240,7 @@ function initMymind(){
       el.style.opacity='';el.style.transform='';
     });
     mmindGrid.classList.remove('expanded');
-    if(mmindShowMore) mmindShowMore.textContent='Show more bookmarks';
+    if(mmindShowMore){const n=mmindGrid.querySelectorAll('.mm-extra').length;mmindShowMore.textContent=`Show ${n} more`;}
     mmindRenderGrid();
   });
 
@@ -249,7 +252,8 @@ function initMymind(){
     mmindShowMore.addEventListener('click',()=>{
       const expanding=!mmindGrid.classList.contains('expanded');
       mmindGrid.classList.toggle('expanded');
-      mmindShowMore.textContent=expanding?'Show fewer bookmarks':'Show more bookmarks';
+      const n=mmindGrid.querySelectorAll('.mm-extra').length;
+      mmindShowMore.textContent=expanding?'Show less':`Show ${n} more bookmarks`;
       mmindShowMore.setAttribute('aria-expanded',expanding);
       if(expanding){
         // Reveal extras with WAAPI stagger (compositor-thread, no layout reads).

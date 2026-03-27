@@ -1,11 +1,29 @@
 [
   {
+    "title": "Prevue",
+    "tags": [
+      "Dev Tool",
+      "React",
+      "2026"
+    ],
+    "category": "live",
+    "externalLink": "https://prevue.raksha.design",
+    "images": [
+      "/notes/prevue/hero.mp4"
+    ],
+    "slides": [
+      "#0b0c10"
+    ],
+    "desc": "Paste AI-generated code and preview it inside real device mockups. Built with React, ships as an open tool."
+  },
+  {
     "title": "StudyLoop App",
     "tags": [
       "Mobile",
       "EdTech",
       "2026"
     ],
+    "category": "client",
     "images": [
       "/projects/studyloop.png"
     ],
@@ -22,6 +40,7 @@
       "MVP",
       "2025"
     ],
+    "category": "client",
     "link": "https://medium.com/@rakshatated98/tickle-app-case-study-6a3e651b5418",
     "images": [
       "/projects/tickle/hero-mockup.jpg",
@@ -48,6 +67,7 @@
       "Figma",
       "Rive"
     ],
+    "category": "client",
     "link": "https://medium.com/@rakshatated98/ova-app-case-study-3a652f27fde8",
     "images": [
       "/projects/ova/ova-demo.mp4",
@@ -71,6 +91,7 @@
       "Trading",
       "2024"
     ],
+    "category": "client",
     "link": "https://medium.com/@rakshatated98/greex-case-study-a-defi-trading-platform-195d2bf52575",
     "images": [
       "/projects/greex/greex-trade.jpg",
@@ -93,6 +114,7 @@
       "Dashboard",
       "Enterprise"
     ],
+    "category": "client",
     "images": [
       "/projects/indianoil/indianoil-dashboard-1.png",
       "/projects/indianoil/indianoil-dashboard-2.png",
@@ -112,6 +134,7 @@
       "Dashboard",
       "2025"
     ],
+    "category": "client",
     "images": [
       "/projects/dealdoc/dealdoc-dashboard.png",
       "/projects/dealdoc/dealdoc-deal.png",
@@ -132,6 +155,7 @@
       "Medical",
       "AI"
     ],
+    "category": "client",
     "images": [
       "/projects/adiagnosis/adiagnosis-dashboard-1.png",
       "/projects/adiagnosis/adiagnosis-dashboard-2.png",
@@ -152,6 +176,7 @@
       "DeFi",
       "Web3"
     ],
+    "category": "personal",
     "externalLink": "",
     "slides": [
       "#8DA8C0"
@@ -163,6 +188,7 @@
       "Mobile",
       "Fitness"
     ],
+    "category": "personal",
     "externalLink": "",
     "slides": [
       "#7E9EB8"
@@ -174,6 +200,7 @@
       "Web3",
       "Landing"
     ],
+    "category": "personal",
     "externalLink": "",
     "slides": [
       "#9488C8"
@@ -185,6 +212,7 @@
       "UI",
       "Exploration"
     ],
+    "category": "personal",
     "externalLink": "",
     "slides": [
       "#A699D4"
@@ -197,13 +225,12 @@
       "SaaS",
       "Landing"
     ],
+    "category": "client",
     "images": [
-      "/projects/cognix/cognix-hero.png",
       "/projects/cognix/cognix-landing.png",
       "/projects/cognix/cognix-feature.png"
     ],
     "slides": [
-      "#6E8EB8",
       "#6E8EB8",
       "#6E8EB8"
     ],
@@ -215,6 +242,7 @@
       "Dashboard",
       "Concept"
     ],
+    "category": "personal",
     "externalLink": "",
     "slides": [
       "#6E7EB8"
@@ -226,6 +254,7 @@
       "Animation",
       "Experiment"
     ],
+    "category": "personal",
     "externalLink": "",
     "slides": [
       "#B090C8"
@@ -237,6 +266,7 @@
       "Interaction",
       "Experiment"
     ],
+    "category": "personal",
     "externalLink": "",
     "slides": [
       "#8278B8"
@@ -248,6 +278,7 @@
       "Animation",
       "Experiment"
     ],
+    "category": "personal",
     "externalLink": "",
     "slides": [
       "#A080B8"

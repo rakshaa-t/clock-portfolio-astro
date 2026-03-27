@@ -255,8 +255,20 @@ function initPortfolioCore(){
   // Show more projects
   const puzzleShowMore=document.getElementById('puzzleShowMore');
   const puzzleGrid=document.querySelector('.puzzle-grid');
+  const puzzleFilters=document.getElementById('puzzleFilters');
   let puzzleExpanded=false;
+  let puzzleActiveFilter='all';
+
+  function puzzleExtraCount(){
+    return puzzleGrid.querySelectorAll('.puzzle-extra:not(.filter-hidden)').length;
+  }
+  function puzzleMoreLabel(){
+    const n=puzzleExtraCount();
+    return `Show ${n} more`;
+  }
+
   if(puzzleShowMore){
+    puzzleShowMore.textContent=puzzleMoreLabel();
     puzzleShowMore.addEventListener('click',()=>{
       haptic('success');
       if(!puzzleExpanded){
@@ -267,11 +279,45 @@ function initPortfolioCore(){
       }else{
         puzzleGrid.classList.remove('expanded');
         puzzleGrid.classList.add('collapsing');
-        puzzleShowMore.textContent='Show more work';
+        puzzleShowMore.textContent=puzzleMoreLabel();
         puzzleExpanded=false;
         smoothScrollToEl(puzzleShowMore,'center',0,600);
       }
       puzzleShowMore.setAttribute('aria-expanded',puzzleExpanded);
+    });
+  }
+
+  // Category filter pills
+  if(puzzleFilters){
+    puzzleFilters.addEventListener('click',(e)=>{
+      const pill=e.target.closest('.mymind-pill');
+      if(!pill) return;
+      haptic(15);
+      puzzleActiveFilter=pill.dataset.filter;
+      puzzleFilters.querySelectorAll('.mymind-pill').forEach(p=>
+        p.classList.toggle('active',p.dataset.filter===puzzleActiveFilter)
+      );
+      // Reset expanded state
+      puzzleExpanded=false;
+      puzzleGrid.classList.remove('expanded','collapsing');
+      if(puzzleShowMore) puzzleShowMore.textContent=puzzleMoreLabel();
+
+      const isFiltered=puzzleActiveFilter!=='all';
+      const allCards=puzzleGrid.querySelectorAll('.puzzle-card');
+      allCards.forEach(card=>{
+        const cat=card.dataset.category;
+        const hidden=isFiltered&&cat!==puzzleActiveFilter;
+        card.classList.toggle('filter-hidden',hidden);
+      });
+      // When filtered, show all matching (override puzzle-extra hiding)
+      // When "all", restore default show-more behavior
+      if(isFiltered){
+        puzzleGrid.classList.add('expanded');
+        if(puzzleShowMore) puzzleShowMore.classList.add('hidden');
+      }else{
+        puzzleGrid.classList.remove('expanded');
+        if(puzzleShowMore) puzzleShowMore.classList.remove('hidden');
+      }
     });
   }
 
@@ -284,6 +330,13 @@ function initPortfolioCore(){
     card.setAttribute('role','button');
     const overlaySpan=card.querySelector('.puzzle-overlay span');
     if(overlaySpan) card.setAttribute('aria-label',overlaySpan.textContent);
+    // Live badge
+    if(proj.category==='live'){
+      const badge=document.createElement('div');
+      badge.className='puzzle-live-badge';
+      badge.innerHTML='<span class="puzzle-live-dot"></span>LIVE';
+      card.appendChild(badge);
+    }
     function activate(){
       if('externalLink' in proj){
         if(proj.externalLink) window.open(proj.externalLink,'_blank');
