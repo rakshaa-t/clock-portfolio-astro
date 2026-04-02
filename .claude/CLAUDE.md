@@ -88,7 +88,8 @@ npm run build  # production build
 
 ## Rules
 
-- **Minimum font-size: 12px** — no text smaller than 12px on any breakpoint (desktop or mobile)
+- **NEVER use em dashes (U+2014)** - not in copy, captions, descriptions, titles, or anywhere. Use hyphens or rephrase instead.
+- **Minimum font-size: 12px** - no text smaller than 12px on any breakpoint (desktop or mobile)
 - Single CSS file — no CSS modules or preprocessor
 - Vanilla JS only — no React, no build-time JS frameworks
 - Respect `prefers-reduced-motion` for all animations
