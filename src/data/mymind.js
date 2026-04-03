@@ -5,6 +5,22 @@
 
 export const MMIND_CARDS=[
   {
+    type:'image', img:'/mymind/power-of-beauty.jpg', height:90,
+    caption:'The Power of Beauty in Communicating Complex Ideas',
+    title:'The Power of Beauty',
+    source:'doc.cc', url:'https://www.doc.cc/articles/power-of-beauty',
+    tldr:'Beauty as a tool in visual communication - capturing attention and making complex ideas accessible.',
+    tags:['Inspiration'], category:'inspiration', date:'today'
+  },
+  {
+    type:'image', img:'/mymind/wind-map.png', height:95,
+    caption:'Wind Map - real-time wind visualization',
+    title:'Wind Map',
+    source:'hint.fm', url:'http://hint.fm/wind/',
+    tldr:'Real-time visualization of wind patterns across the US. A classic data art piece by Fernanda Viegas and Martin Wattenberg.',
+    tags:['Inspiration'], category:'inspiration', date:'today'
+  },
+  {
     type:'image', img:'/mymind/accurat-studio.png', height:95,
     caption:'Accurat Studio  - Data Landscape: Venice',
     title:'Accurat Studio',
