@@ -321,6 +321,74 @@ function initPortfolioCore(){
     });
   }
 
+  // ═══ NOTES — filter pills + show more ═══
+  const noteFilters=document.getElementById('noteFilters');
+  const noteCards=document.getElementById('noteCards');
+  const noteShowMore=document.getElementById('noteShowMore');
+  let noteExpanded=false;
+  let noteActiveFilter='all';
+
+  function noteExtraCount(){
+    return noteCards?noteCards.querySelectorAll('.note-extra:not(.filter-hidden)').length:0;
+  }
+  function noteMoreLabel(){
+    const n=noteExtraCount();
+    return `Show ${n} more`;
+  }
+
+  if(noteShowMore&&noteCards){
+    noteShowMore.textContent=noteMoreLabel();
+    if(noteExtraCount()===0) noteShowMore.classList.add('hidden');
+    noteShowMore.addEventListener('click',()=>{
+      haptic('success');
+      if(!noteExpanded){
+        noteCards.classList.remove('collapsing');
+        noteCards.classList.add('expanded');
+        noteShowMore.textContent='Show less';
+        noteExpanded=true;
+      }else{
+        noteCards.classList.remove('expanded');
+        noteCards.classList.add('collapsing');
+        noteShowMore.textContent=noteMoreLabel();
+        noteExpanded=false;
+        smoothScrollToEl(noteShowMore,'center',0,600);
+      }
+      noteShowMore.setAttribute('aria-expanded',noteExpanded);
+    });
+  }
+
+  if(noteFilters&&noteCards){
+    noteFilters.addEventListener('click',(e)=>{
+      const pill=e.target.closest('.mymind-pill');
+      if(!pill) return;
+      haptic(15);
+      noteActiveFilter=pill.dataset.filter;
+      noteFilters.querySelectorAll('.mymind-pill').forEach(p=>
+        p.classList.toggle('active',p.dataset.filter===noteActiveFilter)
+      );
+      noteExpanded=false;
+      noteCards.classList.remove('expanded','collapsing');
+
+      const isFiltered=noteActiveFilter!=='all';
+      noteCards.querySelectorAll('.note-card').forEach(card=>{
+        const tags=(card.dataset.tags||'').split(',');
+        const hidden=isFiltered&&!tags.includes(noteActiveFilter);
+        card.classList.toggle('filter-hidden',hidden);
+      });
+      if(isFiltered){
+        noteCards.classList.add('expanded');
+        if(noteShowMore) noteShowMore.classList.add('hidden');
+      }else{
+        noteCards.classList.remove('expanded');
+        if(noteShowMore){
+          noteShowMore.classList.remove('hidden');
+          noteShowMore.textContent=noteMoreLabel();
+          if(noteExtraCount()===0) noteShowMore.classList.add('hidden');
+        }
+      }
+    });
+  }
+
   // Puzzle card click handlers + keyboard access
   document.querySelectorAll('.puzzle-card[data-project]').forEach(card=>{
     const idx=parseInt(card.dataset.project,10);
