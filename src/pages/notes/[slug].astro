@@ -9,7 +9,7 @@ import DevTools from '../../components/DevTools.jsx';
 const DEMO_MAP = { DockDemo, ResizeDemo, MorphDemo };
 
 export function getStaticPaths() {
-  return NOTES.map(note => ({
+  return NOTES.filter(note => !note.mdx).map(note => ({
     params: { slug: note.slug },
     props: { note },
   }));

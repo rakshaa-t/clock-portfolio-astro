@@ -7,7 +7,7 @@ import { NOTES } from '../data/notes.js';
 
 <!-- ═══ MODAL ═══ -->
 <div class="modal-overlay" id="modalOverlay">
-  <div class="modal-backdrop" onclick="closeModal()"></div>
+  <div class="modal-backdrop" onclick="closeModal()" role="button" tabindex="-1" aria-label="Close modal"></div>
   <div class="modal-card" id="modalCard" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
     <div class="sheet-handle"></div>
     <div class="modal-card-inner">
@@ -94,10 +94,10 @@ import { NOTES } from '../data/notes.js';
       <p class="subtitle">Select client and personal work</p>
 
       <div class="puzzle-filters" id="puzzleFilters">
-        <span class="mymind-pill active" data-filter="all">All</span>
-        <span class="mymind-pill" data-filter="live">Live</span>
-        <span class="mymind-pill" data-filter="client">Client</span>
-        <span class="mymind-pill" data-filter="personal">Experiments</span>
+        <button class="mymind-pill active" data-filter="all">All</button>
+        <button class="mymind-pill" data-filter="live">Live</button>
+        <button class="mymind-pill" data-filter="client">Client</button>
+        <button class="mymind-pill" data-filter="personal">Experiments</button>
       </div>
 
       <div class="puzzle-grid">
@@ -198,12 +198,12 @@ import { NOTES } from '../data/notes.js';
         <input type="text" class="mymind-search" id="mmindSearchInput" placeholder="Search my mind..." autocomplete="off" aria-label="Search bookmarks">
       </div>
       <div class="mymind-filters" id="mmindFilters">
-        <span class="mymind-pill active" data-filter="all">All</span>
-        <span class="mymind-pill" data-filter="animation">Animation</span>
-        <span class="mymind-pill" data-filter="ui design">UI Design</span>
-        <span class="mymind-pill" data-filter="tools">Tools</span>
-        <span class="mymind-pill" data-filter="inspiration">Inspiration</span>
-        <span class="mymind-pill" data-filter="notes">Notes</span>
+        <button class="mymind-pill active" data-filter="all">All</button>
+        <button class="mymind-pill" data-filter="animation">Animation</button>
+        <button class="mymind-pill" data-filter="ui design">UI Design</button>
+        <button class="mymind-pill" data-filter="tools">Tools</button>
+        <button class="mymind-pill" data-filter="inspiration">Inspiration</button>
+        <button class="mymind-pill" data-filter="notes">Notes</button>
       </div>
       <div class="mymind-grid" id="mmindGrid"></div>
       <button class="puzzle-show-more" id="mmindShowMore" aria-expanded="false">Show more bookmarks</button>
@@ -220,10 +220,10 @@ import { NOTES } from '../data/notes.js';
       <p class="subtitle">What I'm reading and what stuck with me</p>
 
       <div class="book-filters" id="bookFilters">
-        <span class="mymind-pill active" data-filter="all">All</span>
-        <span class="mymind-pill" data-filter="excellent">Excellent</span>
-        <span class="mymind-pill" data-filter="great">Great</span>
-        <span class="mymind-pill" data-filter="reading">Reading</span>
+        <button class="mymind-pill active" data-filter="all">All</button>
+        <button class="mymind-pill" data-filter="excellent">Excellent</button>
+        <button class="mymind-pill" data-filter="great">Great</button>
+        <button class="mymind-pill" data-filter="reading">Reading</button>
       </div>
       <div class="books-shelf" id="booksGrid"></div>
       <button class="puzzle-show-more" id="booksShowMore" aria-expanded="false">Show more books</button>
@@ -255,12 +255,12 @@ import { NOTES } from '../data/notes.js';
 <!-- ═══ BOTTOM NAV ═══ -->
 <nav class="bottom-nav" id="bottomNav">
   <div class="bottom-nav-pill">
-    <a class="bottom-nav-item active" data-section="sec-about" role="button" tabindex="0">About</a>
-    <a class="bottom-nav-item" data-section="sec-work" role="button" tabindex="0">Work</a>
-    <a class="bottom-nav-item" data-section="sec-notes" role="button" tabindex="0">Notes</a>
-    <a class="bottom-nav-item" data-section="sec-bookmarks" role="button" tabindex="0">Saves</a>
-    <a class="bottom-nav-item" data-section="sec-books" role="button" tabindex="0">Books</a>
-    <a class="bottom-nav-item" data-section="sec-media" role="button" tabindex="0">Media</a>
+    <button class="bottom-nav-item active" data-section="sec-about">About</button>
+    <button class="bottom-nav-item" data-section="sec-work">Work</button>
+    <button class="bottom-nav-item" data-section="sec-notes">Notes</button>
+    <button class="bottom-nav-item" data-section="sec-bookmarks">Saves</button>
+    <button class="bottom-nav-item" data-section="sec-books">Books</button>
+    <button class="bottom-nav-item" data-section="sec-media">Media</button>
   </div>
 </nav>
 

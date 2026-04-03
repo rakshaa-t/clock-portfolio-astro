@@ -1,0 +1,74 @@
+---
+import Layout from './Layout.astro';
+import { NOTES } from '../data/notes.js';
+interface Props {
+  frontmatter: {
+    title: string;
+    date: string;
+    preview: string;
+    tags?: string[];
+    readTime?: string;
+    og?: string;
+  };
+}
+
+const { frontmatter } = Astro.props;
+const slug = Astro.url.pathname.replace('/notes/', '').replace(/\/$/, '');
+const isDev = import.meta.env.DEV;
+
+// Find next note for "Up next" — check MDX notes first, then fall back to JS notes
+const allNotes = NOTES;
+const currentIdx = allNotes.findIndex(n => n.slug === slug);
+const nextNote = currentIdx >= 0 ? allNotes[(currentIdx + 1) % allNotes.length] : allNotes[0];
+---
+
+<Layout title={`${frontmatter.title} — Raksha Tated`} description={frontmatter.preview} ogImage={frontmatter.og}>
+
+<div class="note-page">
+  <div class="note-page-inner">
+    <a href="/#sec-notes" class="note-page-back">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+      Back
+    </a>
+    <div class="note-page-date">{frontmatter.date}</div>
+    <h1 class="note-page-title">{frontmatter.title}</h1>
+
+    <div class="note-page-body">
+      <slot />
+    </div>
+
+    <div class="note-page-footer">
+      <button class="note-page-share" id="shareOnX">
+        Share on <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" style="margin-left:2px;"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+      </button>
+    </div>
+    {nextNote && nextNote.slug !== slug && (
+      <div class="note-page-upnext">
+        <div class="note-page-upnext-label">Up next</div>
+        <a href={`/notes/${nextNote.slug}`} target="_blank" rel="noopener noreferrer" class="note-card">
+          <div class="note-card-date">{nextNote.date}</div>
+          <div class="note-card-title">{nextNote.title}</div>
+          <div class="note-card-preview">{nextNote.preview}</div>
+        </a>
+      </div>
+    )}
+  </div>
+</div>
+
+<script>
+  const shareBtn = document.getElementById('shareOnX');
+  if (shareBtn) {
+    shareBtn.addEventListener('click', () => {
+      const title = document.querySelector('.note-page-title')?.textContent || '';
+      window.open(`https://x.com/intent/tweet?text=${encodeURIComponent(`"${title}"\n\nhttps://raksha.design${window.location.pathname}`)}`, '_blank');
+    });
+  }
+  document.querySelectorAll('.note-card').forEach(card => {
+    card.addEventListener('click', () => {
+      if (window.__clockAudio) window.__clockAudio.noteClick();
+    });
+  });
+</script>
+
+
+</Layout>

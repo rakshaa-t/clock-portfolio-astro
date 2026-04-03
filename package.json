@@ -10,6 +10,7 @@
     "add:book": "node scripts/add-book.mjs"
   },
   "dependencies": {
+    "@astrojs/mdx": "^4.3.14",
     "@astrojs/react": "^5.0.1",
     "@astrojs/vercel": "^9.0.4",
     "@microsoft/clarity": "^1.0.2",

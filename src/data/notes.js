@@ -5,6 +5,16 @@
 
 export const NOTES=[
   {
+    slug:"one-clickness",
+    title:"The one-clickness of interfaces",
+    date:"3 April 2026",sortDate:20260403,
+    tags:["design","thinking","product"],
+    preview:"We're moving towards one-clickness of tasks. Apps, micro apps and software are now expected to perform tasks with the ease of a click.",
+    readTime:"2 min read",
+    mdx:true,
+    body:``
+  },
+  {
     slug:"building-prevue",
     title:"Building prevue",
     date:"26 March 2026",sortDate:20260326,
