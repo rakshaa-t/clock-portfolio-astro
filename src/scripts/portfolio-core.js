@@ -3,7 +3,7 @@
 // Re-initializes on every page load (ViewTransitions compatible).
 
 import PUZZLE_PROJECTS from '../data/projects.json';
-import { esc, prefersReducedMotion, smoothScrollToEl } from './shared.js';
+import { esc, prefersReducedMotion, smoothScrollToEl, swipeToDismiss } from './shared.js';
 import { haptic, destroyHaptics } from './haptics.js';
 
 // ═══ STATE ═══
@@ -238,6 +238,10 @@ function initPortfolioCore(){
     const hasOverflow=this.scrollHeight>this.clientHeight+4;
     this.classList.toggle('has-bottom-fade',hasOverflow&&!atBottom);
   });
+
+  // Sheet handle swipe/tap closes modal
+  const modalHandle=modalCard.querySelector('.sheet-handle');
+  swipeToDismiss(modalHandle,closeModal);
 
   if(!prefersReducedMotion){
     modalCard.addEventListener('mouseenter',()=>{if(modalOpen)updateTiltRect();});

@@ -3,7 +3,7 @@
 // Re-initializes on every page load (ViewTransitions compatible).
 
 import { MMIND_CARDS } from '../data/mymind.js';
-import { esc, smoothScrollToEl } from './shared.js';
+import { esc, smoothScrollToEl, swipeToDismiss } from './shared.js';
 
 const MMIND_ROWS=3; // show 3 full rows initially
 
@@ -245,6 +245,10 @@ function initMymind(){
   });
 
   mmindScrim.addEventListener('mousedown',mmindClosePopover);
+
+  // Sheet handle swipe/tap closes popover
+  const mmindHandle=mmindPopWrap.querySelector('.sheet-handle');
+  swipeToDismiss(mmindHandle,mmindClosePopover);
 
   mmindRenderGrid();
 

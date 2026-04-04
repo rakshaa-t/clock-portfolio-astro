@@ -3,7 +3,7 @@
 // Mobile: burger button opens full-screen menu overlay.
 // Re-initializes on every page load (ViewTransitions compatible).
 
-import { smoothScrollToEl } from './shared.js';
+import { smoothScrollToEl, swipeToDismiss } from './shared.js';
 import { haptic } from './haptics.js';
 
 let _cleanup=null;
@@ -131,6 +131,10 @@ function initBottomNav(){
     burgerBtn.addEventListener('click',toggleMenu,{signal:ac.signal});
   }
 
+  // Sheet handle swipe/tap closes menu
+  const menuHandle=menuWrap?menuWrap.querySelector('.sheet-handle'):null;
+  const cleanupSwipe=swipeToDismiss(menuHandle,closeMenu);
+
   // Escape key closes menu
   document.addEventListener('keydown',e=>{
     if(e.key==='Escape'&&menuOpen) closeMenu();
@@ -138,6 +142,7 @@ function initBottomNav(){
 
   _cleanup=()=>{
     ac.abort();
+    cleanupSwipe();
     if(menuOpen) closeMenu();
     _cleanup=null;
   };

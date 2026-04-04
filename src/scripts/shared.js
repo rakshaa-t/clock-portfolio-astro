@@ -75,6 +75,31 @@ export function smoothScrollElH(container,targetLeft,duration){
   raf=requestAnimationFrame(step);
 }
 
+// ── Swipe-to-dismiss on sheet handles ──
+// Attach to a popover's sheet-handle element. Calls `onClose` on downward swipe.
+// Returns cleanup function.
+export function swipeToDismiss(handle,onClose){
+  if(!handle) return ()=>{};
+  let startY=0;
+  function onTouchStart(e){
+    startY=e.touches[0].clientY;
+  }
+  function onTouchEnd(e){
+    const dy=e.changedTouches[0].clientY-startY;
+    if(dy>40) onClose();
+  }
+  // Tap also closes
+  function onClick(){onClose();}
+  handle.addEventListener('touchstart',onTouchStart,{passive:true});
+  handle.addEventListener('touchend',onTouchEnd,{passive:true});
+  handle.addEventListener('click',onClick);
+  return ()=>{
+    handle.removeEventListener('touchstart',onTouchStart);
+    handle.removeEventListener('touchend',onTouchEnd);
+    handle.removeEventListener('click',onClick);
+  };
+}
+
 // Scroll `el` to the bottom edge of the viewport + 24px padding.
 // Optional duration syncs scroll speed with reveal animations.
 export function easeScrollTo(el,duration){

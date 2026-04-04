@@ -3,7 +3,7 @@
 // Re-initializes on every page load (ViewTransitions compatible).
 
 import KINDLE_BOOKS from '../data/books.json';
-import { esc, smoothScrollToEl } from './shared.js';
+import { esc, smoothScrollToEl, swipeToDismiss } from './shared.js';
 import { haptic } from './haptics.js';
 
 const BOOKS_ROWS=3; // show 3 full rows initially
@@ -199,6 +199,10 @@ function initBooks(){
   }
 
   bookScrim.addEventListener('mousedown',closeBookPopover);
+
+  // Sheet handle swipe/tap closes popover
+  const bookHandle=bookPopWrap.querySelector('.sheet-handle');
+  swipeToDismiss(bookHandle,closeBookPopover);
 
   document.addEventListener('keydown',e=>{
     if(e.key==='Escape'&&bookActiveIdx!==null) closeBookPopover();
