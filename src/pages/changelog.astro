@@ -64,6 +64,22 @@ import Layout from '../layouts/Layout.astro';
   <p class="changelog-subtitle">What's new and what's changed on this site.</p>
 
   <div class="changelog-entry">
+    <div class="changelog-version">V2.3.0</div>
+    <div class="changelog-date">April 2026</div>
+    <div class="changelog-title">New navigation, mobile menu, and popover consistency</div>
+    <ul class="changelog-list">
+      <li>Replaced bottom navigation pill with vertical side nav lines on desktop (fixed left edge, scroll spy active states, hover-to-reveal labels)</li>
+      <li>Burger menu on mobile (top-right) opens full-screen overlay matching existing popover pattern</li>
+      <li>Unified mobile close buttons: consistent 36px circle, same position (top:16px right:16px) across all popovers and modals</li>
+      <li>Mobile popover backgrounds updated to var(--bg) for consistency</li>
+      <li>Burger z-index sits below other popovers so it hides when book/mymind/modal sheets open</li>
+      <li>Added Bret Victor "Inventing on Principle" to media section</li>
+      <li>Note filter pills (All, Breakdowns, Thoughts, Tools) and show-more for notes</li>
+      <li>MDX support for notes with first MDX note "The one-clickness of interfaces"</li>
+    </ul>
+  </div>
+
+  <div class="changelog-entry">
     <div class="changelog-version">V2.2.0</div>
     <div class="changelog-date">March 2026</div>
     <div class="changelog-title">Prevue case study, interactive demos, and mobile polish</div>

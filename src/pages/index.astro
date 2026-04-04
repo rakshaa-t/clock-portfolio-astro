@@ -257,7 +257,7 @@ import { NOTES } from '../data/notes.js';
     </div>
 
     <footer class="site-footer">
-      <span>&copy; Raksha T 2026. V2.2.0</span>
+      <span>&copy; Raksha T 2026. V2.3.0</span>
       <span class="footer-sep">&middot;</span>
       <a href="/changelog" class="footer-link">Changelog</a>
     </footer>
@@ -265,17 +265,33 @@ import { NOTES } from '../data/notes.js';
   </div>
 </main>
 
-<!-- ═══ BOTTOM NAV ═══ -->
-<nav class="bottom-nav" id="bottomNav">
-  <div class="bottom-nav-pill">
-    <button class="bottom-nav-item active" data-section="sec-about">About</button>
-    <button class="bottom-nav-item" data-section="sec-work">Work</button>
-    <button class="bottom-nav-item" data-section="sec-notes">Notes</button>
-    <button class="bottom-nav-item" data-section="sec-bookmarks">Saves</button>
-    <button class="bottom-nav-item" data-section="sec-books">Books</button>
-    <button class="bottom-nav-item" data-section="sec-media">Media</button>
-  </div>
+<!-- ═══ SIDE NAV (desktop: vertical lines, left edge) ═══ -->
+<nav class="side-nav" id="sideNav" aria-label="Section navigation">
+  <button class="side-nav-line active" data-section="sec-about" aria-label="About"><span class="side-nav-label">About</span></button>
+  <button class="side-nav-line" data-section="sec-work" aria-label="Work"><span class="side-nav-label">Work</span></button>
+  <button class="side-nav-line" data-section="sec-notes" aria-label="Notes"><span class="side-nav-label">Notes</span></button>
+  <button class="side-nav-line" data-section="sec-bookmarks" aria-label="Saves"><span class="side-nav-label">Saves</span></button>
+  <button class="side-nav-line" data-section="sec-books" aria-label="Books"><span class="side-nav-label">Books</span></button>
+  <button class="side-nav-line" data-section="sec-media" aria-label="Media"><span class="side-nav-label">Media</span></button>
 </nav>
+
+<!-- ═══ BURGER (mobile: top-left, opens full-screen menu) ═══ -->
+<button class="burger-btn" id="burgerBtn" aria-label="Open navigation menu" aria-expanded="false">
+  <span class="burger-line"></span>
+  <span class="burger-line"></span>
+  <span class="burger-line"></span>
+</button>
+<div class="mobile-menu-wrap" id="mobileMenuWrap">
+  <div class="sheet-handle"></div>
+  <div class="mobile-menu">
+    <button class="mobile-menu-item active" data-section="sec-about">About</button>
+    <button class="mobile-menu-item" data-section="sec-work">Work</button>
+    <button class="mobile-menu-item" data-section="sec-notes">Notes</button>
+    <button class="mobile-menu-item" data-section="sec-bookmarks">Saves</button>
+    <button class="mobile-menu-item" data-section="sec-books">Books</button>
+    <button class="mobile-menu-item" data-section="sec-media">Media</button>
+  </div>
+</div>
 
 <script>import '../scripts/audio.js';</script>
 <script>import '../scripts/portfolio-core.js';</script>
