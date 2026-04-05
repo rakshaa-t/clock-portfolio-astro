@@ -419,7 +419,21 @@ function initPortfolioCore(){
     }
     if(proj.comingSoon){card.style.cursor='default';return;}
     if('externalLink' in proj&&!proj.externalLink){card.style.cursor='default';return;}
-    card.addEventListener('click',activate);
+    // Track touch movement to suppress click-on-scroll misfires (iOS fires click on touchend
+    // even after the finger moved — which was opening externalLink cards mid-scroll).
+    let touchStartX=0,touchStartY=0,touchMoved=false;
+    card.addEventListener('touchstart',e=>{
+      const t=e.touches[0];
+      touchStartX=t.clientX;touchStartY=t.clientY;touchMoved=false;
+    },{passive:true});
+    card.addEventListener('touchmove',e=>{
+      const t=e.touches[0];
+      if(Math.abs(t.clientX-touchStartX)>10||Math.abs(t.clientY-touchStartY)>10) touchMoved=true;
+    },{passive:true});
+    card.addEventListener('click',e=>{
+      if(touchMoved){e.preventDefault();e.stopPropagation();return;}
+      activate();
+    });
     card.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();activate();}});
   });
 

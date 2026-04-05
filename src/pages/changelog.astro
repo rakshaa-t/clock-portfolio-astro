@@ -38,6 +38,18 @@ import Layout from '../layouts/Layout.astro';
   <p class="changelog-subtitle t-body-sm">What's new and what's changed on this site.</p>
 
   <div class="changelog-entry">
+    <div class="changelog-version t-tag">V2.3.1</div>
+    <div class="changelog-date t-tag">April 2026</div>
+    <div class="changelog-title t-heading-sm">Side nav bow, mobile scroll, and morph fixes</div>
+    <ul class="changelog-list">
+      <li class="t-body-sm">Side nav items bow into a semicircle arc on hover, fanning out from the viewport right edge for a softer, more tactile reveal</li>
+      <li class="t-body-sm">Fixed Prevue card auto-opening on mobile while scrolling from the top (iOS was firing click-on-touchend through scroll gestures; now tracks touch movement and suppresses misfires)</li>
+      <li class="t-body-sm">Hid iOS Safari's native play button overlay on puzzle card videos so the Prevue hero loop plays cleanly without a tap-to-play icon</li>
+      <li class="t-body-sm">Fixed device corner radius flickering to zero mid-morph on the Prevue note page (replaced overflow:hidden + border-radius with clip-path inset, sidestepping a Safari bug that dropped the rounded clip mask during WAAPI size animation)</li>
+    </ul>
+  </div>
+
+  <div class="changelog-entry">
     <div class="changelog-version t-tag">V2.3.0</div>
     <div class="changelog-date t-tag">April 2026</div>
     <div class="changelog-title t-heading-sm">New navigation, mobile menu, and popover consistency</div>

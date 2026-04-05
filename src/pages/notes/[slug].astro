@@ -149,9 +149,9 @@ const isDev = import.meta.env.DEV;
             if (block.type === 'component') {
               return (
                 <div class={`note-component${block.id === 'DockDemo' ? ' hide-mobile' : ''}`}>
-                  {block.id === 'DockDemo' && <DockDemo client:visible />}
-                  {block.id === 'ResizeDemo' && <ResizeDemo client:visible />}
-                  {block.id === 'MorphDemo' && <MorphDemo client:visible />}
+                  {block.id === 'DockDemo' && <DockDemo client:load />}
+                  {block.id === 'ResizeDemo' && <ResizeDemo client:load />}
+                  {block.id === 'MorphDemo' && <MorphDemo client:load />}
                   {block.hint && <div class="note-component-hint">{block.hint}</div>}
                 </div>
               );

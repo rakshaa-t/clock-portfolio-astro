@@ -424,6 +424,8 @@ body{}
   pointer-events:none;
   outline:1px solid rgba(0,0,0,0.08);outline-offset:-1px;
 }
+.puzzle-img video::-webkit-media-controls-start-playback-button,
+.puzzle-img video::-webkit-media-controls{display:none !important;-webkit-appearance:none;}
 .puzzle-overlay{
   position:absolute;bottom:0;left:0;right:0;
   display:flex;align-items:center;

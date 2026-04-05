@@ -177,17 +177,21 @@ export default function MorphDemo() {
     <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", minHeight: 420, padding: "30px 20px", gap: 24 }}>
       {/* Fixed-height device area — prevents pills from shifting on device switch */}
       <div style={{ height: deviceAreaH, display: "flex", alignItems: "center", justifyContent: "center" }}>
-        {/* Device shell — WAAPI drives the morph, no CSS transition on width/height */}
+        {/* Device shell — WAAPI drives the morph, no CSS transition on width/height.
+            clip-path instead of overflow:hidden+border-radius to avoid Safari bug where
+            the rounded clip mask briefly drops to square mid-animation. */}
         <div ref={shellRef} style={{
           width: w, height: h,
-          borderRadius: radius, overflow: "hidden",
+          clipPath: `inset(0 round ${radius}px)`,
+          WebkitClipPath: `inset(0 round ${radius}px)`,
           padding: pad, background: "#111",
           position: "relative",
           boxShadow: "0 24px 48px rgba(0,0,0,0.18), 0 4px 12px rgba(0,0,0,0.1)",
         }}>
           <div ref={bezelRef} style={{
             width: "100%", height: bezelH,
-            borderRadius: bezelR, overflow: "hidden",
+            clipPath: `inset(0 round ${bezelR}px)`,
+            WebkitClipPath: `inset(0 round ${bezelR}px)`,
             position: "relative", background: "#0b0c10",
           }}>
             <Chrome device={device} s={s} />
