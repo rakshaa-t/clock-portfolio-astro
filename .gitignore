@@ -19,3 +19,9 @@ Thumbs.db
 # Session logs
 *.txt
 !public/robots.txt
+
+# Skill tooling (local agent metadata, not code)
+.agents/
+.claude/skills/
+.windsurf/
+skills-lock.json
