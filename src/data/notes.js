@@ -82,7 +82,7 @@ export const NOTES=[
     preview:"49 skills, 5 MCP servers. Every skill I use with Claude Code...",
     rich:true,
     body:[
-      {type:"text",html:`<p><strong>49 installed skills</strong></p>`},
+      {type:"text",html:`<p><strong>49 skills</strong><br><span style="color:rgba(0,0,0,0.4)">38 installed from external sources, 11 custom in ~/.claude/skills/</span></p>`},
       {type:"text",html:`<p><em>Animation & Motion (14)</em></p>`},
       {type:"text",html:`<p style="margin-top:36px"><strong>12 Principles of Animation</strong><br><span style="color:rgba(0,0,0,0.4)">Audit animations against Disney's 12 principles adapted for web</span></p>`},
       {type:"code",html:`npx ui-skills add 12-principles-of-animation`},
