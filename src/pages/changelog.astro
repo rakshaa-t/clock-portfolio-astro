@@ -5,48 +5,22 @@ import Layout from '../layouts/Layout.astro';
 <Layout title="Changelog — Raksha Tated" description="Version history and updates to raksha.design">
 
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500;600&display=swap');
-  *{margin:0;padding:0;box-sizing:border-box;}
-  body{
-    background:#E4E0DA;color:#3A3632;
-    font-family:'Geist',-apple-system,BlinkMacSystemFont,sans-serif;
-    -webkit-font-smoothing:antialiased;
-  }
   .changelog{max-width:520px;margin:0 auto;padding:80px 24px 120px;}
   .changelog-back{
     display:inline-flex;align-items:center;gap:6px;
-    font-family:'Geist Mono',monospace;font-size:12px;font-weight:500;
-    letter-spacing:0.08em;text-transform:uppercase;color:#8A857D;
-    text-decoration:none;margin-bottom:48px;
+    color:#8A857D;text-decoration:none;margin-bottom:48px;
   }
   .changelog-back:hover{color:#3A3632;}
   .changelog-back svg{width:14px;height:14px;}
-  .changelog h1{
-    font-family:'Geist',sans-serif;font-size:28px;font-weight:600;
-    letter-spacing:-0.02em;margin-bottom:8px;color:#3A3632;
-  }
-  .changelog-subtitle{
-    font-size:14px;color:#8A857D;margin-bottom:48px;line-height:1.5;
-  }
+  .changelog h1{color:#3A3632;margin-bottom:8px;}
+  .changelog-subtitle{color:#8A857D;margin-bottom:48px;}
   .changelog-entry{margin-bottom:48px;}
-  .changelog-version{
-    display:inline-block;
-    font-family:'Geist Mono',monospace;font-size:12px;font-weight:600;
-    letter-spacing:0.08em;text-transform:uppercase;color:#8B7EC8;
-    margin-bottom:6px;
-  }
-  .changelog-date{
-    font-family:'Geist Mono',monospace;font-size:12px;color:#B0AAA2;
-    letter-spacing:0.04em;margin-bottom:12px;
-  }
-  .changelog-title{
-    font-size:16px;font-weight:600;color:#3A3632;margin-bottom:8px;
-  }
-  .changelog-list{
-    list-style:none;padding:0;
-  }
+  .changelog-version{display:inline-block;color:#8B7EC8;margin-bottom:6px;}
+  .changelog-date{color:#B0AAA2;margin-bottom:12px;}
+  .changelog-title{color:#3A3632;margin-bottom:8px;}
+  .changelog-list{list-style:none;padding:0;}
   .changelog-list li{
-    position:relative;padding-left:16px;font-size:14px;line-height:1.7;color:#5A5550;
+    position:relative;padding-left:16px;color:#5A5550;
   }
   .changelog-list li::before{
     content:'';position:absolute;left:0;top:10px;
@@ -55,92 +29,92 @@ import Layout from '../layouts/Layout.astro';
 </style>
 
 <div class="changelog">
-  <a href="/" class="changelog-back" data-astro-reload>
+  <a href="/" class="changelog-back t-tag" data-astro-reload>
     <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10 12L6 8l4-4"/></svg>
     Back
   </a>
 
-  <h1>Changelog</h1>
-  <p class="changelog-subtitle">What's new and what's changed on this site.</p>
+  <h1 class="t-heading">Changelog</h1>
+  <p class="changelog-subtitle t-body-sm">What's new and what's changed on this site.</p>
 
   <div class="changelog-entry">
-    <div class="changelog-version">V2.3.0</div>
-    <div class="changelog-date">April 2026</div>
-    <div class="changelog-title">New navigation, mobile menu, and popover consistency</div>
+    <div class="changelog-version t-tag">V2.3.0</div>
+    <div class="changelog-date t-tag">April 2026</div>
+    <div class="changelog-title t-heading-sm">New navigation, mobile menu, and popover consistency</div>
     <ul class="changelog-list">
-      <li>Replaced bottom navigation pill with vertical side nav lines on desktop (fixed left edge, scroll spy active states, hover-to-reveal labels)</li>
-      <li>Burger menu on mobile (top-right) opens full-screen overlay matching existing popover pattern</li>
-      <li>Unified mobile close buttons: consistent 36px circle, same position (top:16px right:16px) across all popovers and modals</li>
-      <li>Mobile popover backgrounds updated to var(--bg) for consistency</li>
-      <li>Burger z-index sits below other popovers so it hides when book/mymind/modal sheets open</li>
-      <li>Added Bret Victor "Inventing on Principle" to media section</li>
-      <li>Note filter pills (All, Breakdowns, Thoughts, Tools) and show-more for notes</li>
-      <li>MDX support for notes with first MDX note "The one-clickness of interfaces"</li>
+      <li class="t-body-sm">Replaced bottom navigation pill with vertical side nav lines on desktop (fixed left edge, scroll spy active states, hover-to-reveal labels)</li>
+      <li class="t-body-sm">Burger menu on mobile (top-right) opens full-screen overlay matching existing popover pattern</li>
+      <li class="t-body-sm">Unified mobile close buttons: consistent 36px circle, same position (top:16px right:16px) across all popovers and modals</li>
+      <li class="t-body-sm">Mobile popover backgrounds updated to var(--bg) for consistency</li>
+      <li class="t-body-sm">Burger z-index sits below other popovers so it hides when book/mymind/modal sheets open</li>
+      <li class="t-body-sm">Added Bret Victor "Inventing on Principle" to media section</li>
+      <li class="t-body-sm">Note filter pills (All, Breakdowns, Thoughts, Tools) and show-more for notes</li>
+      <li class="t-body-sm">MDX support for notes with first MDX note "The one-clickness of interfaces"</li>
     </ul>
   </div>
 
   <div class="changelog-entry">
-    <div class="changelog-version">V2.2.0</div>
-    <div class="changelog-date">March 2026</div>
-    <div class="changelog-title">Prevue case study, interactive demos, and mobile polish</div>
+    <div class="changelog-version t-tag">V2.2.0</div>
+    <div class="changelog-date t-tag">March 2026</div>
+    <div class="changelog-title t-heading-sm">Prevue case study, interactive demos, and mobile polish</div>
     <ul class="changelog-list">
-      <li>"Building Prevue" case study with 4 interactive React demos (dock hover, resize handles, device morph, toast comparison)</li>
-      <li>React island support via @astrojs/react for note pages</li>
-      <li>Live Projects section above Design Work with embedded prevue video</li>
-      <li>Read time tags on note cards</li>
-      <li>Per-note Open Graph image support for link previews</li>
-      <li>Mobile fixes: hide hover-only dock demo, balanced mymind masonry columns, 3-row book grid default</li>
-      <li>Device morph animation using Web Animations API for reliable mobile playback</li>
-      <li>Fixed View Transition duplicate listener bugs across timezone toggle, sounds, and note clicks</li>
+      <li class="t-body-sm">"Building Prevue" case study with 4 interactive React demos (dock hover, resize handles, device morph, toast comparison)</li>
+      <li class="t-body-sm">React island support via @astrojs/react for note pages</li>
+      <li class="t-body-sm">Live Projects section above Design Work with embedded prevue video</li>
+      <li class="t-body-sm">Read time tags on note cards</li>
+      <li class="t-body-sm">Per-note Open Graph image support for link previews</li>
+      <li class="t-body-sm">Mobile fixes: hide hover-only dock demo, balanced mymind masonry columns, 3-row book grid default</li>
+      <li class="t-body-sm">Device morph animation using Web Animations API for reliable mobile playback</li>
+      <li class="t-body-sm">Fixed View Transition duplicate listener bugs across timezone toggle, sounds, and note clicks</li>
     </ul>
   </div>
 
   <div class="changelog-entry">
-    <div class="changelog-version">V2.1.0</div>
-    <div class="changelog-date">March 2026</div>
-    <div class="changelog-title">Media section, new books, and nav cleanup</div>
+    <div class="changelog-version t-tag">V2.1.0</div>
+    <div class="changelog-date t-tag">March 2026</div>
+    <div class="changelog-title t-heading-sm">Media section, new books, and nav cleanup</div>
     <ul class="changelog-list">
-      <li>New Media section with podcast cover grid and skeuomorphic play button slide-out on hover</li>
-      <li>Added 3 new books: Martyr!, Antifragile, and Sync</li>
-      <li>Updated Hamming book to 100% with a new highlight quote</li>
-      <li>Simplified bottom navigation: removed sound knob, scroll-to-top arrow, and sliding highlight pill</li>
-      <li>Lightened nav bar for better visibility against the background</li>
-      <li>Active section now indicated by text color only</li>
+      <li class="t-body-sm">New Media section with podcast cover grid and skeuomorphic play button slide-out on hover</li>
+      <li class="t-body-sm">Added 3 new books: Martyr!, Antifragile, and Sync</li>
+      <li class="t-body-sm">Updated Hamming book to 100% with a new highlight quote</li>
+      <li class="t-body-sm">Simplified bottom navigation: removed sound knob, scroll-to-top arrow, and sliding highlight pill</li>
+      <li class="t-body-sm">Lightened nav bar for better visibility against the background</li>
+      <li class="t-body-sm">Active section now indicated by text color only</li>
     </ul>
   </div>
 
   <div class="changelog-entry">
-    <div class="changelog-version">V2.0.0</div>
-    <div class="changelog-date">February 2026</div>
-    <div class="changelog-title">Flat single-page layout</div>
+    <div class="changelog-version t-tag">V2.0.0</div>
+    <div class="changelog-date t-tag">February 2026</div>
+    <div class="changelog-title t-heading-sm">Flat single-page layout</div>
     <ul class="changelog-list">
-      <li>Replaced clock navigation with a flat scrollable page</li>
-      <li>About, Work, Notes, Books, and Bookmarks in one continuous flow</li>
-      <li>Notes now live on individual pages with rich content</li>
-      <li>Books section with cover grid and expandable highlights</li>
-      <li>Mymind bookmarks displayed in full-width masonry grid</li>
-      <li>Bottom sheet modals on mobile for all sections</li>
-      <li>Mobile bottom navigation bar for quick section jumping</li>
-      <li>Improved project card hover with sliding title</li>
-      <li>Retained sound knob, click sounds, and tactile design language</li>
-      <li>ViewTransitions for smooth page navigation</li>
+      <li class="t-body-sm">Replaced clock navigation with a flat scrollable page</li>
+      <li class="t-body-sm">About, Work, Notes, Books, and Bookmarks in one continuous flow</li>
+      <li class="t-body-sm">Notes now live on individual pages with rich content</li>
+      <li class="t-body-sm">Books section with cover grid and expandable highlights</li>
+      <li class="t-body-sm">Mymind bookmarks displayed in full-width masonry grid</li>
+      <li class="t-body-sm">Bottom sheet modals on mobile for all sections</li>
+      <li class="t-body-sm">Mobile bottom navigation bar for quick section jumping</li>
+      <li class="t-body-sm">Improved project card hover with sliding title</li>
+      <li class="t-body-sm">Retained sound knob, click sounds, and tactile design language</li>
+      <li class="t-body-sm">ViewTransitions for smooth page navigation</li>
     </ul>
   </div>
 
   <div class="changelog-entry">
-    <div class="changelog-version">V1.0.0</div>
-    <div class="changelog-date">February 2025</div>
-    <div class="changelog-title">Initial launch</div>
+    <div class="changelog-version t-tag">V1.0.0</div>
+    <div class="changelog-date t-tag">February 2025</div>
+    <div class="changelog-title t-heading-sm">Initial launch</div>
     <ul class="changelog-list">
-      <li>Clock-based navigation with 4-quadrant menu</li>
-      <li>Interactive project showcase with puzzle grid</li>
-      <li>Apple Notes-style writing section</li>
-      <li>Mymind bookmark board with masonry grid</li>
-      <li>Kindle e-reader with book highlights and star ratings</li>
-      <li>About section with company and leader dropdowns</li>
-      <li>Cal.com booking integration</li>
-      <li>Skeuomorphic design language throughout</li>
-      <li>Synthesized clock tick and UI sounds</li>
+      <li class="t-body-sm">Clock-based navigation with 4-quadrant menu</li>
+      <li class="t-body-sm">Interactive project showcase with puzzle grid</li>
+      <li class="t-body-sm">Apple Notes-style writing section</li>
+      <li class="t-body-sm">Mymind bookmark board with masonry grid</li>
+      <li class="t-body-sm">Kindle e-reader with book highlights and star ratings</li>
+      <li class="t-body-sm">About section with company and leader dropdowns</li>
+      <li class="t-body-sm">Cal.com booking integration</li>
+      <li class="t-body-sm">Skeuomorphic design language throughout</li>
+      <li class="t-body-sm">Synthesized clock tick and UI sounds</li>
     </ul>
   </div>
 </div>

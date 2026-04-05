@@ -22,11 +22,11 @@ import { NOTES } from '../data/notes.js';
       <!-- Metadata area -->
       <div class="modal-body" id="modalBody">
         <div class="modal-meta">
-          <h3 class="modal-title" id="modalTitle"></h3>
+          <h3 class="modal-title t-heading" id="modalTitle"></h3>
           <div class="modal-tags" id="modalTags"></div>
         </div>
         <div class="modal-desc-wrap" id="modalDescWrap">
-          <p class="modal-desc" id="modalDesc"></p>
+          <p class="modal-desc t-body" id="modalDesc"></p>
         </div>
       </div>
     </div>
@@ -39,12 +39,12 @@ import { NOTES } from '../data/notes.js';
 
     <!-- ═══ ABOUT — Bio + CTAs ═══ -->
     <div class="browse-section" id="sec-about">
-      <h2>Raksha Tated</h2>
-      <p class="subtitle">Product Designer</p>
+      <h2 class="t-display">Raksha Tated</h2>
+      <p class="subtitle t-subtitle">Product Designer</p>
 
       <div class="about-bio">
-        <p>I work with <span class="about-drop-trigger" data-drop="agencies">agencies</span> and <span class="about-drop-trigger" data-drop="companies">product companies</span>, mostly on consumer iOS apps, healthcare platforms and AI software. I care a lot about the space between design and code.</p>
-        <p>If you'd like to work together, <a href="https://cal.com/raksha-tated-v2ee58/15min" class="about-bio-link cal-trigger" onclick="event.preventDefault()">book a call</a> or email <a href="mailto:hey@raksha.design" class="about-bio-link" id="aboutEmailLink">hey@raksha.design</a>. I'll get back within 12 hours. For anything else, <a href="https://x.com/rakshaa_t" class="about-bio-link" target="_blank" rel="noopener noreferrer">DM me on X</a>.</p>
+        <p class="t-body">I work with <span class="about-drop-trigger" data-drop="agencies">agencies</span> and <span class="about-drop-trigger" data-drop="companies">product companies</span>, mostly on consumer iOS apps, healthcare platforms and AI software. I care a lot about the space between design and code.</p>
+        <p class="t-body">If you'd like to work together, <a href="https://cal.com/raksha-tated-v2ee58/15min" class="about-bio-link cal-trigger" onclick="event.preventDefault()">book a call</a> or email <a href="mailto:hey@raksha.design" class="about-bio-link" id="aboutEmailLink">hey@raksha.design</a>. I'll get back within 12 hours. For anything else, <a href="https://x.com/rakshaa_t" class="about-bio-link" target="_blank" rel="noopener noreferrer">DM me on X</a>.</p>
       </div>
 
       <div class="about-ctas">
@@ -66,23 +66,23 @@ import { NOTES } from '../data/notes.js';
 
       <div class="about-details">
         <div class="about-detail">
-          <span class="about-detail-label">Timezones</span>
-          <span class="about-detail-value">
+          <span class="about-detail-label t-tag">Timezones</span>
+          <span class="about-detail-value t-body-sm">
             <span class="toggle" id="locationToggle" role="switch" aria-checked="false" aria-label="Toggle timezone display" tabindex="0"><span class="toggle-knob"></span></span>
             <span id="locationText">IST, UTC+0 and AEDT</span>
           </span>
         </div>
         <div class="about-detail">
-          <span class="about-detail-label">Status</span>
-          <span class="about-detail-value"><span class="led"></span>In the studio</span>
+          <span class="about-detail-label t-tag">Status</span>
+          <span class="about-detail-value t-body-sm"><span class="led"></span>In the studio</span>
         </div>
         <div class="about-detail">
-          <span class="about-detail-label">Stack</span>
+          <span class="about-detail-label t-tag">Stack</span>
           <span class="stack-cards">
-            <span class="stack-card">Figma</span>
-            <span class="stack-card">React</span>
-            <span class="stack-card">SwiftUI</span>
-            <span class="stack-card">Claude Code</span>
+            <span class="stack-card t-tag">Figma</span>
+            <span class="stack-card t-tag">React</span>
+            <span class="stack-card t-tag">SwiftUI</span>
+            <span class="stack-card t-tag">Claude Code</span>
           </span>
         </div>
       </div>
@@ -90,14 +90,14 @@ import { NOTES } from '../data/notes.js';
 
     <!-- ═══ WORK — Puzzle grid with category filters ═══ -->
     <div class="browse-section" id="sec-work">
-      <h2>Work</h2>
-      <p class="subtitle">Select client and personal work</p>
+      <h2 class="t-display">Work</h2>
+      <p class="subtitle t-subtitle">Select client and personal work</p>
 
       <div class="puzzle-filters" id="puzzleFilters">
-        <button class="mymind-pill active" data-filter="all">All</button>
-        <button class="mymind-pill" data-filter="live">Live</button>
-        <button class="mymind-pill" data-filter="client">Client</button>
-        <button class="mymind-pill" data-filter="personal">Experiments</button>
+        <button class="mymind-pill t-tag active" data-filter="all">All</button>
+        <button class="mymind-pill t-tag" data-filter="live">Live</button>
+        <button class="mymind-pill t-tag" data-filter="client">Client</button>
+        <button class="mymind-pill t-tag" data-filter="personal">Experiments</button>
       </div>
 
       <div class="puzzle-grid">
@@ -170,56 +170,56 @@ import { NOTES } from '../data/notes.js';
           <div class="puzzle-overlay"><span>MagicPath Experiments</span></div>
         </div>
       </div>
-      <button class="puzzle-show-more" id="puzzleShowMore" aria-expanded="false">Show more work</button>
+      <button class="puzzle-show-more t-tag" id="puzzleShowMore" aria-expanded="false">Show more work</button>
     </div>
 
     <!-- ═══ NOTES — Links to individual note pages ═══ -->
     <div class="browse-section" id="sec-notes">
-      <h2>Notes</h2>
-      <p class="subtitle">Notes on design, code, and everything in between.</p>
+      <h2 class="t-display">Notes</h2>
+      <p class="subtitle t-subtitle">Notes on design, code, and everything in between.</p>
 
       <div class="note-filters" id="noteFilters">
-        <button class="mymind-pill active" data-filter="all">All</button>
-        <button class="mymind-pill" data-filter="breakdowns">Breakdowns</button>
-        <button class="mymind-pill" data-filter="thoughts">Thoughts</button>
-        <button class="mymind-pill" data-filter="tools">Tools</button>
+        <button class="mymind-pill t-tag active" data-filter="all">All</button>
+        <button class="mymind-pill t-tag" data-filter="breakdowns">Breakdowns</button>
+        <button class="mymind-pill t-tag" data-filter="thoughts">Thoughts</button>
+        <button class="mymind-pill t-tag" data-filter="tools">Tools</button>
       </div>
 
       <div class="note-cards" id="noteCards">
         {NOTES.map((note, i) => (
           <a href={`/notes/${note.slug}`} class={`note-card${i >= 3 ? ' note-extra' : ''}`} data-tags={note.tags.join(',')}>
-            <div class="note-card-date">{note.date}{note.readTime && <span class="note-card-read-time">{note.readTime}</span>}</div>
-            <div class="note-card-title">{note.title}</div>
-            <div class="note-card-preview">{note.preview}</div>
+            <div class="note-card-date t-tag">{note.date}{note.readTime && <span class="note-card-read-time">{note.readTime}</span>}</div>
+            <div class="note-card-title t-heading-sm">{note.title}</div>
+            <div class="note-card-preview t-body-sm">{note.preview}</div>
             <div class="note-card-tags">
               {note.tags.map(tag => (
-                <span class="note-card-tag">{tag}</span>
+                <span class="note-card-tag t-tag">{tag}</span>
               ))}
             </div>
           </a>
         ))}
       </div>
-      <button class="puzzle-show-more" id="noteShowMore" aria-expanded="false">Show more notes</button>
+      <button class="puzzle-show-more t-tag" id="noteShowMore" aria-expanded="false">Show more notes</button>
     </div>
 
     <!-- ═══ BOOKMARKS — Mymind masonry grid (no container) ═══ -->
     <div class="browse-section" id="sec-bookmarks">
-      <h2>Saves</h2>
-      <p class="subtitle">My bookmarks live in <a href="https://mymind.com" target="_blank" style="color:var(--accent);text-decoration:none;border-bottom:1px solid rgba(139,126,200,0.3);">Mymind</a>. Here's what's caught my eye lately.</p>
+      <h2 class="t-display">Saves</h2>
+      <p class="subtitle t-subtitle">My bookmarks live in <a href="https://mymind.com" target="_blank" style="color:var(--accent);text-decoration:none;border-bottom:1px solid rgba(139,126,200,0.3);">Mymind</a>. Here's what's caught my eye lately.</p>
 
       <div class="mymind-header">
-        <input type="text" class="mymind-search" id="mmindSearchInput" placeholder="Search my mind..." autocomplete="off" aria-label="Search bookmarks">
+        <input type="text" class="mymind-search t-heading" id="mmindSearchInput" placeholder="Search my mind..." autocomplete="off" aria-label="Search bookmarks">
       </div>
       <div class="mymind-filters" id="mmindFilters">
-        <button class="mymind-pill active" data-filter="all">All</button>
-        <button class="mymind-pill" data-filter="animation">Animation</button>
-        <button class="mymind-pill" data-filter="ui design">UI Design</button>
-        <button class="mymind-pill" data-filter="tools">Tools</button>
-        <button class="mymind-pill" data-filter="inspiration">Inspiration</button>
-        <button class="mymind-pill" data-filter="notes">Notes</button>
+        <button class="mymind-pill t-tag active" data-filter="all">All</button>
+        <button class="mymind-pill t-tag" data-filter="animation">Animation</button>
+        <button class="mymind-pill t-tag" data-filter="ui design">UI Design</button>
+        <button class="mymind-pill t-tag" data-filter="tools">Tools</button>
+        <button class="mymind-pill t-tag" data-filter="inspiration">Inspiration</button>
+        <button class="mymind-pill t-tag" data-filter="notes">Notes</button>
       </div>
       <div class="mymind-grid" id="mmindGrid"></div>
-      <button class="puzzle-show-more" id="mmindShowMore" aria-expanded="false">Show more bookmarks</button>
+      <button class="puzzle-show-more t-tag" id="mmindShowMore" aria-expanded="false">Show more bookmarks</button>
       <div class="mm-popover-wrap" id="mmindPopWrap" style="position:fixed;" role="dialog" aria-label="Bookmark details">
         <div class="sheet-handle"></div>
         <div class="mm-popover" id="mmindPopover"></div>
@@ -229,17 +229,17 @@ import { NOTES } from '../data/notes.js';
 
     <!-- ═══ BOOKS — Cover grid + popover highlights ═══ -->
     <div class="browse-section" id="sec-books">
-      <h2>Books</h2>
-      <p class="subtitle">What I'm reading and what stuck with me</p>
+      <h2 class="t-display">Books</h2>
+      <p class="subtitle t-subtitle">What I'm reading and what stuck with me</p>
 
       <div class="book-filters" id="bookFilters">
-        <button class="mymind-pill active" data-filter="all">All</button>
-        <button class="mymind-pill" data-filter="excellent">Excellent</button>
-        <button class="mymind-pill" data-filter="great">Great</button>
-        <button class="mymind-pill" data-filter="reading">Reading</button>
+        <button class="mymind-pill t-tag active" data-filter="all">All</button>
+        <button class="mymind-pill t-tag" data-filter="excellent">Excellent</button>
+        <button class="mymind-pill t-tag" data-filter="great">Great</button>
+        <button class="mymind-pill t-tag" data-filter="reading">Reading</button>
       </div>
       <div class="books-shelf" id="booksGrid"></div>
-      <button class="puzzle-show-more" id="booksShowMore" aria-expanded="false">Show more books</button>
+      <button class="puzzle-show-more t-tag" id="booksShowMore" aria-expanded="false">Show more books</button>
       <div class="book-pop-wrap" id="bookPopWrap" style="position:fixed;" role="dialog" aria-label="Book details">
         <div class="sheet-handle"></div>
         <div class="book-pop" id="bookPopover"></div>
@@ -249,14 +249,14 @@ import { NOTES } from '../data/notes.js';
 
     <!-- ═══ MEDIA — Cover grid with slide-out play button ═══ -->
     <div class="browse-section" id="sec-media">
-      <h2>Media</h2>
-      <p class="subtitle">Feeding my mind with</p>
+      <h2 class="t-display">Media</h2>
+      <p class="subtitle t-subtitle">Feeding my mind with</p>
 
       <div class="podcast-grid" id="podcastGrid"></div>
-      <button class="puzzle-show-more" id="podcastShowMore" aria-expanded="false">Show more media</button>
+      <button class="puzzle-show-more t-tag" id="podcastShowMore" aria-expanded="false">Show more media</button>
     </div>
 
-    <footer class="site-footer">
+    <footer class="site-footer t-tag">
       <span>&copy; Raksha T 2026. V2.3.0</span>
       <span class="footer-sep">&middot;</span>
       <a href="/changelog" class="footer-link">Changelog</a>
@@ -284,12 +284,12 @@ import { NOTES } from '../data/notes.js';
 <div class="mobile-menu-wrap" id="mobileMenuWrap">
   <div class="sheet-handle"></div>
   <div class="mobile-menu">
-    <button class="mobile-menu-item active" data-section="sec-about">About</button>
-    <button class="mobile-menu-item" data-section="sec-work">Work</button>
-    <button class="mobile-menu-item" data-section="sec-notes">Notes</button>
-    <button class="mobile-menu-item" data-section="sec-bookmarks">Saves</button>
-    <button class="mobile-menu-item" data-section="sec-books">Books</button>
-    <button class="mobile-menu-item" data-section="sec-media">Media</button>
+    <button class="mobile-menu-item t-heading-sm active" data-section="sec-about">About</button>
+    <button class="mobile-menu-item t-heading-sm" data-section="sec-work">Work</button>
+    <button class="mobile-menu-item t-heading-sm" data-section="sec-notes">Notes</button>
+    <button class="mobile-menu-item t-heading-sm" data-section="sec-bookmarks">Saves</button>
+    <button class="mobile-menu-item t-heading-sm" data-section="sec-books">Books</button>
+    <button class="mobile-menu-item t-heading-sm" data-section="sec-media">Media</button>
   </div>
 </div>
 

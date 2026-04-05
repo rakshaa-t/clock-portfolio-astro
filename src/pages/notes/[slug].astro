@@ -70,39 +70,39 @@ const isDev = import.meta.env.DEV;
   <div class="note-page teardown">
     <!-- Left: scrollable prose -->
     <div class="td-left">
-      <a href="/#sec-notes" class="note-page-back">
+      <a href="/#sec-notes" class="note-page-back t-tag">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
         Back
       </a>
-      <div class="td-date">{note.date}</div>
-      <h1 class="td-title">{note.title}</h1>
-      {note.teardown.intro && <p class="td-intro">{note.teardown.intro}</p>}
+      <div class="td-date t-tag">{note.date}</div>
+      <h1 class="td-title t-heading">{note.title}</h1>
+      {note.teardown.intro && <p class="td-intro t-body">{note.teardown.intro}</p>}
 
       {note.teardown.chapters.map((chapter) => (
         <div>
-          <h2 class="td-chapter">{chapter.title}</h2>
+          <h2 class="td-chapter t-heading-sm">{chapter.title}</h2>
           {chapter.sections.map((section) => (
             <div class="td-section" data-mockup={section.mockup || chapter.mockup || 'default'}>
               <div class="td-section-body">
-                <div class="td-section-title">{section.title}</div>
-                <div class="td-section-text" set:html={section.body} />
+                <div class="td-section-title t-heading-sm">{section.title}</div>
+                <div class="td-section-text t-body-sm" set:html={section.body} />
               </div>
             </div>
           ))}
         </div>
       ))}
       <div class="note-page-footer">
-        <button class="note-page-share" id="shareOnX">
+        <button class="note-page-share t-tag" id="shareOnX">
           Share on <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" style="margin-left:2px;"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
         </button>
       </div>
       {nextNote && nextNote.slug !== note.slug && (
         <div class="note-page-upnext">
-          <div class="note-page-upnext-label">Up next</div>
+          <div class="note-page-upnext-label t-tag">Up next</div>
           <a href={`/notes/${nextNote.slug}`} target="_blank" rel="noopener noreferrer" class="note-card">
-            <div class="note-card-date">{nextNote.date}</div>
-            <div class="note-card-title">{nextNote.title}</div>
-            <div class="note-card-preview">{nextNote.preview}</div>
+            <div class="note-card-date t-tag">{nextNote.date}</div>
+            <div class="note-card-title t-heading-sm">{nextNote.title}</div>
+            <div class="note-card-preview t-body-sm">{nextNote.preview}</div>
           </a>
         </div>
       )}
@@ -135,15 +135,15 @@ const isDev = import.meta.env.DEV;
   <div class="note-page">
 
     <div class="note-page-inner">
-      <a href="/#sec-notes" class="note-page-back">
+      <a href="/#sec-notes" class="note-page-back t-tag">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
         Back
       </a>
-      <div class="note-page-date">{note.date}</div>
-      <h1 class="note-page-title">{note.title}</h1>
+      <div class="note-page-date t-tag">{note.date}</div>
+      <h1 class="note-page-title t-heading">{note.title}</h1>
 
       {/* ── Body: block-level rendering for React islands ── */}
-      <div class="note-page-body">
+      <div class="note-page-body t-body">
         {hasComponents ? (
           note.body.map((block, i) => {
             if (block.type === 'component') {
@@ -172,17 +172,17 @@ const isDev = import.meta.env.DEV;
       </div>
 
       <div class="note-page-footer">
-        <button class="note-page-share" id="shareOnX">
+        <button class="note-page-share t-tag" id="shareOnX">
           Share on <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" style="margin-left:2px;"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
         </button>
       </div>
       {nextNote && nextNote.slug !== note.slug && (
         <div class="note-page-upnext">
-          <div class="note-page-upnext-label">Up next</div>
+          <div class="note-page-upnext-label t-tag">Up next</div>
           <a href={`/notes/${nextNote.slug}`} target="_blank" rel="noopener noreferrer" class="note-card">
-            <div class="note-card-date">{nextNote.date}</div>
-            <div class="note-card-title">{nextNote.title}</div>
-            <div class="note-card-preview">{nextNote.preview}</div>
+            <div class="note-card-date t-tag">{nextNote.date}</div>
+            <div class="note-card-title t-heading-sm">{nextNote.title}</div>
+            <div class="note-card-preview t-body-sm">{nextNote.preview}</div>
           </a>
         </div>
       )}
