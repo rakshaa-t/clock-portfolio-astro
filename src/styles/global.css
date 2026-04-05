@@ -1149,13 +1149,24 @@ a.about-dropdown-item:hover{opacity:0.7;}
   position:fixed;right:20px;top:50%;transform:translateY(-50%);
   z-index:998;
   display:none;flex-direction:column;align-items:flex-end;gap:0;
+  transition:gap 0.4s var(--ease);
 }
+.side-nav:hover{gap:4px;}
 .side-nav-line{
   display:flex;align-items:center;gap:10px;
   flex-direction:row-reverse;
   background:none;border:none;cursor:pointer;
   padding:4px 0;
+  transform-origin:right center;
+  transition:transform 0.4s var(--ease);
 }
+/* ── Arc hover: all items bow into a semicircle centered on right edge ── */
+.side-nav:hover .side-nav-line:nth-child(1){transform:translateX(0) rotate(14deg);}
+.side-nav:hover .side-nav-line:nth-child(2){transform:translateX(-15px) rotate(8.4deg);}
+.side-nav:hover .side-nav-line:nth-child(3){transform:translateX(-23px) rotate(2.8deg);}
+.side-nav:hover .side-nav-line:nth-child(4){transform:translateX(-23px) rotate(-2.8deg);}
+.side-nav:hover .side-nav-line:nth-child(5){transform:translateX(-15px) rotate(-8.4deg);}
+.side-nav:hover .side-nav-line:nth-child(6){transform:translateX(0) rotate(-14deg);}
 .side-nav-line::before{
   content:'';display:block;flex-shrink:0;
   width:6px;height:1.5px;border-radius:1px;
