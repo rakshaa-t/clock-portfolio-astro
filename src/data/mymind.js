@@ -5,6 +5,30 @@
 
 export const MMIND_CARDS=[
   {
+    type:'image', img:'/mymind/designengineer-tools.png', height:90,
+    caption:'Design Engineer Tools - curated directory',
+    title:'Design Engineer Tools',
+    source:'designengineer.tools', url:'https://designengineer.tools',
+    tldr:'A curated directory of 100+ tools for web-focused design engineers by James Warner.',
+    tags:['Tools','Inspiration'], category:'tools', date:'today'
+  },
+  {
+    type:'image', img:'/mymind/worrydream.png', height:100,
+    caption:'Bret Victor - Worry Dream',
+    title:'Bret Victor, human being',
+    source:'worrydream.com', url:'https://worrydream.com',
+    tldr:'Bret Victor\u2019s site. An offshore drilling platform in the sea of knowledge - essays, talks, and experiments on humane tools for thought.',
+    tags:['Inspiration'], category:'inspiration', date:'today'
+  },
+  {
+    type:'image', img:'/mymind/designengineer-course.png', height:70,
+    caption:'Design Engineer Course - Welcome',
+    title:'Design Engineer Course',
+    source:'designengineer.xyz', url:'https://www.designengineer.xyz/course/00-introduction/01-welcome',
+    tldr:'A course teaching the craft of design engineering - from intro fundamentals through building polished, animated interfaces.',
+    tags:['Tools','UI Design'], category:'tools', date:'today'
+  },
+  {
     type:'image', img:'/mymind/power-of-beauty.jpg', height:90,
     caption:'The Power of Beauty in Communicating Complex Ideas',
     title:'The Power of Beauty',

@@ -27,20 +27,12 @@ function aboutClickSound(type){
 const _aboutDropData={
   agencies:[{name:'Doodleblue'},{name:'Fullsite'}],
   companies:[
-    {name:'Adiagnosis'},{name:'Dealdoc'},{name:'Tickle'},{name:'Ova App'},
+    {name:'Study Loop'},{name:'Adiagnosis'},{name:'Dealdoc'},{name:'Tickle'},{name:'Ova App'},
     {name:'Cognix Health'},{name:'Bewakoof.com'},{name:'Meyraki'},
     {name:'Indian Oil Company'},{name:'Inaam'},{name:'ENA'},{name:'Kodo Card'},
     {name:'Euman Technologies'},{name:'KG International'},{name:'Tennishop UAE'},
     {name:'Nourish App'},{name:'Unidel'},{name:'Lido Learning'},
     {name:'Unifynd'},{name:'Reverce'},{name:'Nesto Group'}
-  ],
-  leaders:[
-    {name:'Tina Hua'},{name:'Angie Lee'},{name:'Aritra Senugupta'},
-    {name:'Sarthak Sharma'},{name:'Max McQuillan'},{name:'Hannah Wartooth'},
-    {name:'Neerav J'},{name:'Amrita Singh'},{name:'Rohit Biwas'},
-    {name:'Arash'},{name:'Sunny'},{name:'Raj Karan'},{name:'Deepti Singhi'},
-    {name:'Nyshita Jain'},{name:'Thomas Phua'},{name:'Rohit Goel'},
-    {name:'Sagar Sharma'},{name:'Maruthy Ramgandhi'}
   ]
 };
 
@@ -112,7 +104,7 @@ function initAbout(){
       locToggle.classList.toggle('on');
       const isOn=locToggle.classList.contains('on');
       locToggle.setAttribute('aria-checked',isOn);
-      locText.textContent=isOn?'Remote':'IST and UTC+0';
+      locText.textContent=isOn?'Remote':'IST, UTC+0 and AEDT';
       aboutClickSound('secondary');
     }
     locToggle.addEventListener('mousedown',toggleLocation);
