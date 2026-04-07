@@ -5,6 +5,22 @@
 
 export const NOTES=[
   {
+    slug:"courses",
+    title:"Courses I've bought",
+    date:"7 April 2026",sortDate:20260407,
+    tags:["learning"],
+    preview:"Design engineering courses I've invested in. Two so far, more to come.",
+    readTime:"1 min read",
+    rich:true,
+    body:[
+      {type:"text",html:`<p>A running list of courses I've bought.</p>`},
+
+      {type:"text",html:`<p style="margin-top:36px"><a href="https://www.designengineer.xyz" target="_blank" rel="noopener" class="note-link"><strong>Design Engineer - Engineering Track</strong></a></p>`},
+
+      {type:"text",html:`<p style="margin-top:36px"><a href="https://www.interfacecraft.dev" target="_blank" rel="noopener" class="note-link"><strong>Interface Craft</strong></a></p>`},
+    ]
+  },
+  {
     slug:"one-clickness",
     title:"The one-clickness of interfaces",
     date:"3 April 2026",sortDate:20260403,

@@ -229,31 +229,33 @@ function initPortfolioCore(){
   modalBody=document.querySelector('.modal-body');
   modalDescWrap=document.getElementById('modalDescWrap');
   carouselScroll=document.getElementById('carouselScroll');
-  if(!modalOverlay||!modalCard) return;
 
-  // Scroll fade on description area
-  if(modalDescWrap) modalDescWrap.addEventListener('scroll',function(){
-    this.classList.toggle('has-scroll-fade',this.scrollTop>2);
-    const atBottom=this.scrollHeight-this.scrollTop-this.clientHeight<4;
-    const hasOverflow=this.scrollHeight>this.clientHeight+4;
-    this.classList.toggle('has-bottom-fade',hasOverflow&&!atBottom);
-  });
-
-  // Sheet handle swipe/tap closes modal
-  const modalHandle=modalCard.querySelector('.sheet-handle');
-  swipeToDismiss(modalHandle,closeModal);
-
-  if(!prefersReducedMotion){
-    modalCard.addEventListener('mouseenter',()=>{if(modalOpen)updateTiltRect();});
-    modalCard.addEventListener('mousemove',e=>{
-      if(!modalOpen)return;
-      if(!tiltCardW)updateTiltRect();
-      const nx=(e.clientX-tiltCardCX)/tiltCardW;
-      const ny=(e.clientY-tiltCardCY)/tiltCardH;
-      tiltTargetRY=nx*TILT_MAX*2;
-      tiltTargetRX=-ny*TILT_MAX*2;
+  // Modal-dependent setup (only runs when modal elements exist, i.e. homepage)
+  if(modalOverlay&&modalCard){
+    // Scroll fade on description area
+    if(modalDescWrap) modalDescWrap.addEventListener('scroll',function(){
+      this.classList.toggle('has-scroll-fade',this.scrollTop>2);
+      const atBottom=this.scrollHeight-this.scrollTop-this.clientHeight<4;
+      const hasOverflow=this.scrollHeight>this.clientHeight+4;
+      this.classList.toggle('has-bottom-fade',hasOverflow&&!atBottom);
     });
-    modalCard.addEventListener('mouseleave',()=>{tiltTargetRX=0;tiltTargetRY=0;});
+
+    // Sheet handle swipe/tap closes modal
+    const modalHandle=modalCard.querySelector('.sheet-handle');
+    swipeToDismiss(modalHandle,closeModal);
+
+    if(!prefersReducedMotion){
+      modalCard.addEventListener('mouseenter',()=>{if(modalOpen)updateTiltRect();});
+      modalCard.addEventListener('mousemove',e=>{
+        if(!modalOpen)return;
+        if(!tiltCardW)updateTiltRect();
+        const nx=(e.clientX-tiltCardCX)/tiltCardW;
+        const ny=(e.clientY-tiltCardCY)/tiltCardH;
+        tiltTargetRY=nx*TILT_MAX*2;
+        tiltTargetRX=-ny*TILT_MAX*2;
+      });
+      modalCard.addEventListener('mouseleave',()=>{tiltTargetRX=0;tiltTargetRY=0;});
+    }
   }
 
   // Show more projects

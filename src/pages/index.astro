@@ -183,6 +183,7 @@ import { NOTES } from '../data/notes.js';
         <button class="mymind-pill t-tag" data-filter="breakdowns">Breakdowns</button>
         <button class="mymind-pill t-tag" data-filter="thoughts">Thoughts</button>
         <button class="mymind-pill t-tag" data-filter="tools">Tools</button>
+        <button class="mymind-pill t-tag" data-filter="learning">Learning</button>
       </div>
 
       <div class="note-cards" id="noteCards">
@@ -328,22 +329,40 @@ import { NOTES } from '../data/notes.js';
     if(window.__initAudio) window.__initAudio();
     // Restore scroll position after init scripts have built the DOM.
     // Astro's built-in restore fires too early (before JS-generated grids).
-    var saved=sessionStorage.getItem('__scroll:/');
-    if(saved){
-      var pos=parseInt(saved,10);
+    // Hash navigation (e.g. back from notes via /#sec-notes) takes priority
+    // over saved scroll position so the user lands on the right section.
+    var hash=location.hash&&location.hash.substring(1);
+    var hashEl=hash&&document.getElementById(hash);
+    if(hashEl){
       sessionStorage.removeItem('__scroll:/');
-      // Wait until page is tall enough to scroll to saved position,
-      // or give up after 500ms and scroll to what we can.
       var attempts=0;
-      function tryRestore(){
-        if(document.documentElement.scrollHeight>=pos+window.innerHeight||attempts>10){
-          window.scrollTo(0,pos);
+      function tryHash(){
+        var rect=hashEl.getBoundingClientRect();
+        var targetY=window.scrollY+rect.top-60;
+        if(document.documentElement.scrollHeight>=targetY+window.innerHeight||attempts>10){
+          window.scrollTo(0,targetY);
           return;
         }
         attempts++;
+        requestAnimationFrame(tryHash);
+      }
+      requestAnimationFrame(tryHash);
+    } else {
+      var saved=sessionStorage.getItem('__scroll:/');
+      if(saved){
+        var pos=parseInt(saved,10);
+        sessionStorage.removeItem('__scroll:/');
+        var attempts2=0;
+        function tryRestore(){
+          if(document.documentElement.scrollHeight>=pos+window.innerHeight||attempts2>10){
+            window.scrollTo(0,pos);
+            return;
+          }
+          attempts2++;
+          requestAnimationFrame(tryRestore);
+        }
         requestAnimationFrame(tryRestore);
       }
-      requestAnimationFrame(tryRestore);
     }
   })();
 </script>
