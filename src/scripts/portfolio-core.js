@@ -450,9 +450,11 @@ function initPortfolioCore(){
     _puzzleGrid.addEventListener('mouseover',(e)=>{
       const card=e.target.closest('.puzzle-card[data-tooltip]');
       if(!card) return;
-      bubble.textContent=card.dataset.tooltip;
       bubbleActive=true;
-      requestAnimationFrame(()=>{bubble.style.opacity='1';bubble.style.transform='translateY(0)';});
+      requestAnimationFrame(()=>{
+        bubble.textContent=card.dataset.tooltip;
+        bubble.style.opacity='1';bubble.style.transform='translateY(0)';
+      });
     });
     _puzzleGrid.addEventListener('mouseout',(e)=>{
       const card=e.target.closest('.puzzle-card[data-tooltip]');

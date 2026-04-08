@@ -64,9 +64,9 @@ function initPodcasts(){
   grid.addEventListener('mouseover',(e)=>{
     const card=e.target.closest('.podcast-card[data-tooltip]');
     if(!card) return;
-    bubble.textContent=card.dataset.tooltip;
     bubbleActive=true;
     requestAnimationFrame(()=>{
+      bubble.textContent=card.dataset.tooltip;
       bubble.style.opacity='1';
       bubble.style.transform='translateY(0)';
     });

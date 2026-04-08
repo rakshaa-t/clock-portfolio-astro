@@ -335,6 +335,8 @@ import { NOTES } from '../data/notes.js';
     var hashEl=hash&&document.getElementById(hash);
     if(hashEl){
       sessionStorage.removeItem('__scroll:/');
+      // Clear hash so reloads start at top, not at the section again
+      history.replaceState(null,'',location.pathname);
       var attempts=0;
       function tryHash(){
         var rect=hashEl.getBoundingClientRect();
@@ -364,6 +366,52 @@ import { NOTES } from '../data/notes.js';
         requestAnimationFrame(tryRestore);
       }
     }
+  })();
+</script>
+
+<script is:inline data-astro-rerun>
+  // Greeting cursor bubble — only on fresh load when page is at the top (first section visible)
+  (function(){
+    // Skip if page restored to a scroll position (user was mid-page before reload)
+    if(window.scrollY>200) return;
+    var bubble=document.querySelector('.cursor-bubble');
+    if(!bubble){bubble=document.createElement('div');bubble.className='cursor-bubble';document.body.appendChild(bubble);}
+    var greetingText="hi! nice to see you here :)";
+    var active=false,canDismiss=false,lastX=0,lastY=0;
+    function dismiss(){
+      if(!active) return;
+      active=false;
+      bubble.style.opacity='0';bubble.style.transform='translateY(2px)';
+      window.removeEventListener('scroll',onScroll);
+      document.removeEventListener('mousemove',onMove);
+    }
+    function onScroll(){if(canDismiss) dismiss();}
+    function onMove(e){
+      lastX=e.clientX;lastY=e.clientY;
+      bubble.style.left=lastX+14+'px';
+      bubble.style.top=lastY+14+'px';
+    }
+    document.addEventListener('mousemove',onMove);
+    // Show after 500ms delay, auto-dismiss after 2s OR when scrolled past first section
+    setTimeout(function(){
+      active=true;
+      bubble.style.left=lastX+14+'px';
+      bubble.style.top=lastY+14+'px';
+      bubble.textContent=greetingText;
+      bubble.style.opacity='1';bubble.style.transform='translateY(0)';
+      // Dismiss after 2s
+      setTimeout(function(){if(active) dismiss();},2000);
+      // Also dismiss when scrolled past first section
+      var firstSection=document.getElementById('sec-about');
+      if(firstSection){
+        function checkScroll(){
+          if(!active) return;
+          if(window.scrollY>firstSection.offsetTop+firstSection.offsetHeight) dismiss();
+          else requestAnimationFrame(checkScroll);
+        }
+        requestAnimationFrame(checkScroll);
+      }
+    },500);
   })();
 </script>
 
