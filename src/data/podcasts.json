@@ -1,5 +1,13 @@
 [
   {
+    "title": "Using Your Mind to Control Your Physical Health & Longevity",
+    "guest": "Dr. Ellen Langer",
+    "channel": "Andrew Huberman",
+    "cover": "/podcasts/QYAgf_lfio4.jpg",
+    "url": "https://youtu.be/QYAgf_lfio4",
+    "note": "Dr. Ellen Langer on how mindset directly shapes physical health, aging, and longevity."
+  },
+  {
     "title": "How to Control Your Inner Voice & Increase Your Resilience",
     "guest": "Dr. Ethan Kross",
     "channel": "Andrew Huberman",
@@ -21,7 +29,8 @@
     "channel": "Andrew Huberman",
     "cover": "/podcasts/9G2MRFs4vac.jpg",
     "url": "https://youtu.be/9G2MRFs4vac",
-    "note": "Dr. Alok Kanojia (Healthy Gamer) on unlearning negative thought patterns, behavioral loops, and mental reframing."
+    "note": "Dr. Alok Kanojia (Healthy Gamer) on unlearning negative thought patterns, behavioral loops, and mental reframing.",
+    "tooltip": "fyi this was unexpectedly really good!"
   },
   {
     "title": "Blueprint for Mastering Every Conversation",
@@ -126,13 +135,5 @@
     "cover": "/podcasts/AadRflBO0MM.jpg",
     "url": "https://youtu.be/AadRflBO0MM",
     "note": "Dr. Hyman on hormone optimization, longevity, and functional medicine."
-  },
-  {
-    "title": "Using Your Mind to Control Your Physical Health & Longevity",
-    "guest": "Dr. Ellen Langer",
-    "channel": "Andrew Huberman",
-    "cover": "/podcasts/QYAgf_lfio4.jpg",
-    "url": "https://youtu.be/QYAgf_lfio4",
-    "note": "Dr. Ellen Langer on how mindset directly shapes physical health, aging, and longevity."
   }
 ]

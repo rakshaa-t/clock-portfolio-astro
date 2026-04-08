@@ -14,7 +14,7 @@ function initPodcasts(){
   if(!grid) return;
 
   grid.innerHTML=PODCASTS.map((pod,i)=>`
-    <a href="${esc(pod.url)}" target="_blank" rel="noopener noreferrer" class="podcast-card${i>=PODS_INITIAL?' podcast-extra':''}" aria-label="${esc(pod.title)}">
+    <a href="${esc(pod.url)}" target="_blank" rel="noopener noreferrer" class="podcast-card${i>=PODS_INITIAL?' podcast-extra':''}" aria-label="${esc(pod.title)}"${pod.tooltip?' data-tooltip="'+esc(pod.tooltip)+'"':''}>
       <div class="podcast-card-visual">
         <div class="podcast-card-wrap">
           <div class="podcast-cover">
@@ -51,6 +51,39 @@ function initPodcasts(){
   grid.addEventListener('click',(e)=>{
     const card=e.target.closest('.podcast-card');
     if(card) haptic('nudge');
+  });
+
+  // Cursor-following chat bubble for cards with data-tooltip
+  let bubble=document.querySelector('.cursor-bubble');
+  if(!bubble){
+    bubble=document.createElement('div');
+    bubble.className='cursor-bubble';
+    document.body.appendChild(bubble);
+  }
+  let bubbleActive=false;
+  grid.addEventListener('mouseover',(e)=>{
+    const card=e.target.closest('.podcast-card[data-tooltip]');
+    if(!card) return;
+    bubble.textContent=card.dataset.tooltip;
+    bubbleActive=true;
+    requestAnimationFrame(()=>{
+      bubble.style.opacity='1';
+      bubble.style.transform='translateY(0)';
+    });
+  });
+  grid.addEventListener('mouseout',(e)=>{
+    const card=e.target.closest('.podcast-card[data-tooltip]');
+    if(!card) return;
+    const related=e.relatedTarget;
+    if(related&&card.contains(related)) return;
+    bubbleActive=false;
+    bubble.style.opacity='0';
+    bubble.style.transform='translateY(2px)';
+  });
+  grid.addEventListener('mousemove',(e)=>{
+    if(!bubbleActive) return;
+    bubble.style.left=e.clientX+14+'px';
+    bubble.style.top=e.clientY+14+'px';
   });
 }
 

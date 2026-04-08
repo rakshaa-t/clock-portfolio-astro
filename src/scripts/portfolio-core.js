@@ -404,6 +404,8 @@ function initPortfolioCore(){
     card.setAttribute('role','button');
     const overlaySpan=card.querySelector('.puzzle-overlay span');
     if(overlaySpan) card.setAttribute('aria-label',overlaySpan.textContent);
+    // Cursor tooltip
+    if(proj.tooltip) card.setAttribute('data-tooltip',proj.tooltip);
     // Live badge
     if(proj.category==='live'){
       const badge=document.createElement('div');
@@ -438,6 +440,32 @@ function initPortfolioCore(){
     });
     card.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();activate();}});
   });
+
+  // Cursor-following chat bubble for cards with data-tooltip
+  const _puzzleGrid=document.querySelector('.puzzle-grid');
+  if(_puzzleGrid){
+    let bubble=document.querySelector('.cursor-bubble');
+    if(!bubble){bubble=document.createElement('div');bubble.className='cursor-bubble';document.body.appendChild(bubble);}
+    let bubbleActive=false;
+    _puzzleGrid.addEventListener('mouseover',(e)=>{
+      const card=e.target.closest('.puzzle-card[data-tooltip]');
+      if(!card) return;
+      bubble.textContent=card.dataset.tooltip;
+      bubbleActive=true;
+      requestAnimationFrame(()=>{bubble.style.opacity='1';bubble.style.transform='translateY(0)';});
+    });
+    _puzzleGrid.addEventListener('mouseout',(e)=>{
+      const card=e.target.closest('.puzzle-card[data-tooltip]');
+      if(!card) return;
+      if(e.relatedTarget&&card.contains(e.relatedTarget)) return;
+      bubbleActive=false;
+      bubble.style.opacity='0';bubble.style.transform='translateY(2px)';
+    });
+    _puzzleGrid.addEventListener('mousemove',(e)=>{
+      if(!bubbleActive) return;
+      bubble.style.left=e.clientX+14+'px';bubble.style.top=e.clientY+14+'px';
+    });
+  }
 
   // Lazy video playback + blur-up loading
   const _cardVideos=document.querySelectorAll('.puzzle-card video');
