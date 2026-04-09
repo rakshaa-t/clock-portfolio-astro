@@ -31,7 +31,7 @@ function DevicePill({ active, onClick, dActive, dActiveFg, dMuted, label }) {
       onMouseLeave={() => setPressed(false)}
       style={{
         height: 28, padding: "0 10px", borderRadius: 999, border: "none", cursor: "pointer",
-        fontSize: 9, letterSpacing: "0.08em", textTransform: "uppercase", fontFamily: "'DM Mono',monospace",
+        fontSize: 12, letterSpacing: "0.08em", textTransform: "uppercase", fontFamily: "'DM Mono',monospace",
         background: active ? dActive : "transparent", color: active ? dActiveFg : dMuted,
         transform: pressed ? "scale(0.95)" : "scale(1)",
         transition: `transform 200ms cubic-bezier(0.34, 1.56, 0.64, 1), background 160ms ${E.quart}, color 160ms ${E.quart}`,
@@ -60,7 +60,7 @@ function Chrome({ device, s }) {
           left: Math.round(18 * s), right: Math.round(18 * s),
           display: "flex", justifyContent: "space-between", alignItems: "center",
           color: "rgba(255,255,255,0.88)",
-          fontSize: Math.max(7, Math.round(10 * s)),
+          fontSize: Math.max(12, Math.round(12 * s)),
           fontWeight: 500, fontFamily: "-apple-system, sans-serif", zIndex: 3, transition: t,
         }}>
           <span>9:41</span>

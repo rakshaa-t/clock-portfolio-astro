@@ -8,23 +8,23 @@ import Layout from '../layouts/Layout.astro';
   .changelog{max-width:520px;margin:0 auto;padding:80px 24px 120px;}
   .changelog-back{
     display:inline-flex;align-items:center;gap:6px;
-    color:#8A857D;text-decoration:none;margin-bottom:48px;
+    color:var(--text-secondary);text-decoration:none;margin-bottom:48px;
   }
-  .changelog-back:hover{color:#3A3632;}
+  .changelog-back:hover{color:var(--text-primary);}
   .changelog-back svg{width:14px;height:14px;}
-  .changelog h1{color:#3A3632;margin-bottom:8px;}
-  .changelog-subtitle{color:#8A857D;margin-bottom:48px;}
+  .changelog h1{color:var(--text-primary);margin-bottom:8px;}
+  .changelog-subtitle{color:var(--text-secondary);margin-bottom:48px;}
   .changelog-entry{margin-bottom:48px;}
-  .changelog-version{display:inline-block;color:#8B7EC8;margin-bottom:6px;}
-  .changelog-date{color:#B0AAA2;margin-bottom:12px;}
-  .changelog-title{color:#3A3632;margin-bottom:8px;}
+  .changelog-version{display:inline-block;color:var(--accent);margin-bottom:6px;}
+  .changelog-date{color:var(--text-muted);margin-bottom:12px;}
+  .changelog-title{color:var(--text-primary);margin-bottom:8px;}
   .changelog-list{list-style:none;padding:0;}
   .changelog-list li{
-    position:relative;padding-left:16px;color:#5A5550;
+    position:relative;padding-left:16px;color:var(--text-secondary);
   }
   .changelog-list li::before{
     content:'';position:absolute;left:0;top:10px;
-    width:4px;height:4px;border-radius:50%;background:#B0AAA2;
+    width:4px;height:4px;border-radius:50%;background:var(--text-muted);
   }
 </style>
 

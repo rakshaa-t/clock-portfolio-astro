@@ -206,7 +206,7 @@ export default function ResizeDemo() {
               right: Math.round(18 * sizeScale * DEMO_S),
               display: "flex", justifyContent: "space-between", alignItems: "center",
               color: "rgba(255,255,255,0.88)",
-              fontSize: Math.max(7, Math.round(10 * sizeScale * DEMO_S)),
+              fontSize: Math.max(12, Math.round(12 * sizeScale * DEMO_S)),
               fontWeight: 500, fontFamily: "-apple-system, sans-serif", zIndex: 3,
             }}>
               <span>9:41</span>
@@ -236,7 +236,7 @@ export default function ResizeDemo() {
             position: "absolute", bottom: -28, left: "50%", transform: "translateX(-50%)",
             padding: "3px 10px", borderRadius: 6,
             background: "rgba(0,0,0,0.06)", color: "rgba(0,0,0,0.45)",
-            fontSize: 9, fontFamily: "'DM Mono', monospace",
+            fontSize: 12, fontFamily: "'DM Mono', monospace",
             letterSpacing: "0.08em", whiteSpace: "nowrap", pointerEvents: "none",
           }}>
             {Math.round(sizeScale * 100)}%

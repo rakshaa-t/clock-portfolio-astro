@@ -26,7 +26,7 @@ function DevicePill({ active, onClick, dActive, dActiveFg, dMuted, label }) {
       onMouseLeave={() => setPressed(false)}
       style={{
         height: 28, padding: "0 10px", borderRadius: 999, border: "none", cursor: "pointer",
-        fontSize: 9, letterSpacing: "0.08em", textTransform: "uppercase", fontFamily: "'DM Mono',monospace",
+        fontSize: 12, letterSpacing: "0.08em", textTransform: "uppercase", fontFamily: "'DM Mono',monospace",
         background: active ? dActive : "transparent", color: active ? dActiveFg : dMuted,
         transform: pressed ? "scale(0.95)" : "scale(1)",
         transition: `transform 200ms cubic-bezier(0.34, 1.56, 0.64, 1), background 160ms ${E.quart}, color 160ms ${E.quart}`,
@@ -87,7 +87,7 @@ export default function DockDemo() {
           {/* Import button */}
           <button style={{
             padding: dockHovered ? "10px 18px" : "9px 16px", borderRadius: 999, border: "none", cursor: "pointer",
-            background: dActive, color: dActiveFg, fontSize: 10, letterSpacing: "0.14em", textTransform: "uppercase",
+            background: dActive, color: dActiveFg, fontSize: 12, letterSpacing: "0.14em", textTransform: "uppercase",
             fontFamily: "'DM Mono', monospace", fontWeight: 500,
             transition: `padding 280ms ease-out`,
           }}>Import</button>
@@ -107,7 +107,7 @@ export default function DockDemo() {
                 boxShadow: "0 1px 3px rgba(0,0,0,0.1)", transition: `left 200ms ${E.spring}, background 160ms ${E.quart}`,
               }} />
             </div>
-            <span style={{ fontSize: 10, letterSpacing: "0.1em", textTransform: "uppercase", color: dMuted, whiteSpace: "nowrap" }}>Chrome</span>
+            <span style={{ fontSize: 12, letterSpacing: "0.1em", textTransform: "uppercase", color: dMuted, whiteSpace: "nowrap" }}>Chrome</span>
           </div>
 
           <div style={sep} />
