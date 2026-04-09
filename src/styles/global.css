@@ -934,7 +934,7 @@ a.about-dropdown-item:hover{opacity:0.7;}
 }
 .mymind-pill{
   padding:6px 12px;border:none;border-radius:var(--radius-sm);
-  background:rgba(0,0,0,0.04);color:rgba(0,0,0,0.45);
+  background:rgba(0,0,0,0.04);color:rgba(0,0,0,0.45);white-space:nowrap;
   cursor:pointer;transition:background 0.15s cubic-bezier(0.32,0.72,0,1),color 0.15s cubic-bezier(0.32,0.72,0,1);
   touch-action:manipulation;
 }
