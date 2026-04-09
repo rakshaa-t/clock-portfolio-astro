@@ -9,7 +9,7 @@ export const NOTES=[
     title:"Courses I've bought",
     date:"7 April 2026",sortDate:20260407,
     tags:["learning"],
-    preview:"Design engineering courses I've invested in.",
+    preview:"Structured learning pathways",
     readTime:"1 min read",
     rich:true,
     body:[
