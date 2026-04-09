@@ -1955,6 +1955,7 @@ a.about-dropdown-item:hover{opacity:0.7;}
   .about-cta{text-align:center;}
 
   .skill-item{margin-top:20px;}
+  .skill-item strong,.skill-item span{font-size:14px;}
 
   /* ═══ CODE COPY — stack below code on mobile ═══ */
   .skill-item .note-code{padding-right:14px;}
