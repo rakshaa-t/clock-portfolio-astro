@@ -500,6 +500,8 @@ function initPortfolioCore(){
         v.addEventListener('loadeddata',()=>v.classList.add('loaded'),{once:true});
         // Fallback: mobile browsers may skip loadeddata; mark loaded once playing
         v.addEventListener('playing',()=>v.classList.add('loaded'),{once:true});
+        // Final fallback: force visible after 2s if events never fire (mobile Safari)
+        setTimeout(()=>v.classList.add('loaded'),2000);
       }
     });
     if(!prefersReducedMotion){
