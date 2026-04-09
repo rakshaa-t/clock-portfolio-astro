@@ -162,5 +162,9 @@ function initAbout(){
   }
 }
 
-// Expose for data-astro-rerun inline script (sole init path)
+// Expose for data-astro-rerun inline script
 window.__initAbout=initAbout;
+// Re-init on every View Transition navigation (back/forward included)
+document.addEventListener('astro:page-load',()=>{
+  if(document.getElementById('sec-about')) initAbout();
+});

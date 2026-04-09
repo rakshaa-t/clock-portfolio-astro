@@ -400,6 +400,26 @@ function initPortfolioCore(){
     const idx=parseInt(card.dataset.project,10);
     const proj=PUZZLE_PROJECTS[idx];
     if(!proj) return;
+    // External links: wrap in <a> for native link behavior (Cmd-click, copy URL, etc.)
+    if('externalLink' in proj&&proj.externalLink){
+      const link=document.createElement('a');
+      link.href=proj.externalLink;
+      link.target='_blank';
+      link.rel='noopener noreferrer';
+      link.className='puzzle-card-link';
+      link.setAttribute('aria-label',proj.title);
+      if(proj.tooltip) link.setAttribute('data-tooltip',proj.tooltip);
+      card.parentNode.insertBefore(link,card);
+      link.appendChild(card);
+      // Live badge
+      if(proj.category==='live'){
+        const badge=document.createElement('div');
+        badge.className='puzzle-live-badge';
+        badge.innerHTML='<span class="puzzle-live-dot"></span>LIVE';
+        card.appendChild(badge);
+      }
+      return;
+    }
     card.setAttribute('tabindex','0');
     card.setAttribute('role','button');
     const overlaySpan=card.querySelector('.puzzle-overlay span');
@@ -414,10 +434,6 @@ function initPortfolioCore(){
       card.appendChild(badge);
     }
     function activate(){
-      if('externalLink' in proj){
-        if(proj.externalLink) window.open(proj.externalLink,'_blank');
-        return;
-      }
       haptic('nudge');
       openPuzzleModal(proj,card);
     }
@@ -469,20 +485,23 @@ function initPortfolioCore(){
     });
   }
 
-  // Lazy video playback + blur-up loading
+  // Lazy video playback + blur-up loading (respects reduced motion)
   const _cardVideos=document.querySelectorAll('.puzzle-card video');
   if(_cardVideos.length){
     _cardVideos.forEach(v=>{
+      if(prefersReducedMotion) v.pause();
       if(v.readyState>=2) v.classList.add('loaded');
       else v.addEventListener('loadeddata',()=>v.classList.add('loaded'),{once:true});
     });
-    const vidObs=new IntersectionObserver(entries=>{
-      entries.forEach(e=>{
-        if(e.isIntersecting&&!modalOpen) e.target.play().catch(()=>{});
-        else e.target.pause();
-      });
-    },{threshold:0.25});
-    _cardVideos.forEach(v=>vidObs.observe(v));
+    if(!prefersReducedMotion){
+      const vidObs=new IntersectionObserver(entries=>{
+        entries.forEach(e=>{
+          if(e.isIntersecting&&!modalOpen) e.target.play().catch(()=>{});
+          else e.target.pause();
+        });
+      },{threshold:0.25});
+      _cardVideos.forEach(v=>vidObs.observe(v));
+    }
   }
 
   // Keyboard + focus trap
@@ -512,5 +531,9 @@ function initPortfolioCore(){
 // Clean up haptics on page transition
 document.addEventListener('astro:before-swap',destroyHaptics,{once:true});
 
-// Expose for data-astro-rerun inline script (sole init path)
+// Expose for data-astro-rerun inline script
 window.__initPortfolioCore=initPortfolioCore;
+// Re-init on every View Transition navigation (back/forward included)
+document.addEventListener('astro:page-load',()=>{
+  if(document.querySelector('.puzzle-grid')) initPortfolioCore();
+});

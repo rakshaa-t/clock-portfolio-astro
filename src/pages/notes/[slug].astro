@@ -4,7 +4,7 @@ import { NOTES } from '../../data/notes.js';
 import DockDemo from '../../components/demos/DockDemo.jsx';
 import ResizeDemo from '../../components/demos/ResizeDemo.jsx';
 import MorphDemo from '../../components/demos/MorphDemo.jsx';
-import DevTools from '../../components/DevTools.jsx';
+
 
 const DEMO_MAP = { DockDemo, ResizeDemo, MorphDemo };
 
@@ -281,8 +281,14 @@ const isDev = import.meta.env.DEV;
 
   initTOC();
   document.addEventListener('astro:page-load', initTOC);
+
+  // Autoplay note videos only when reduced motion is not preferred
+  document.querySelectorAll('.note-video').forEach(v=>{
+    if(!window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+      v.play().catch(()=>{});
+    }
+  });
 </script>
 
-{isDev && <DevTools client:only="react" />}
 
 </Layout>

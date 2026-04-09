@@ -102,7 +102,7 @@ import { NOTES } from '../data/notes.js';
 
       <div class="puzzle-grid">
         <div class="puzzle-card" data-project="0" data-category="live">
-          <div class="puzzle-img"><video src="/notes/prevue/hero.mp4" autoplay loop muted playsinline aria-label="Prevue preview"></video></div>
+          <div class="puzzle-img"><video src="/notes/prevue/hero.mp4" loop muted playsinline aria-label="Prevue preview"></video></div>
           <div class="puzzle-overlay"><span>Prevue</span></div>
         </div>
         <div class="puzzle-card" data-project="1" data-category="client">
@@ -304,9 +304,10 @@ import { NOTES } from '../data/notes.js';
 <script>import '../scripts/scroll-effects.js';</script>
 
 <script is:inline data-astro-rerun>
-  // Sole init path for all sections.
-  // Module scripts only execute once — on ViewTransitions navigation
-  // they may not have loaded yet, so we await them before calling init.
+  // Init all sections + scroll restoration.
+  // Runs on every navigation via data-astro-rerun.
+  // Module scripts also register astro:page-load listeners as a backup
+  // for back/forward navigations where data-astro-rerun may not re-fire.
   (async function(){
     function ready(){
       return new Promise(function(r){
@@ -335,7 +336,6 @@ import { NOTES } from '../data/notes.js';
     var hashEl=hash&&document.getElementById(hash);
     if(hashEl){
       sessionStorage.removeItem('__scroll:/');
-      // Clear hash so reloads start at top, not at the section again
       history.replaceState(null,'',location.pathname);
       var attempts=0;
       function tryHash(){

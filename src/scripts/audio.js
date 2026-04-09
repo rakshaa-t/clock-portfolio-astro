@@ -121,8 +121,10 @@ function _initAudio(){
   }
 }
 
-// Expose for data-astro-rerun inline script (sole init path)
+// Expose for data-astro-rerun inline script
 window.__initAudio=_initAudio;
+// Re-init on every View Transition navigation (back/forward included)
+document.addEventListener('astro:page-load',()=>{ _initAudio(); });
 
 // Magic Mouse click sound — lazy-loaded MP3, fetched on first play
 let _mouseClickBuf=null,_mouseClickRaw=null,_decoding=null,_fetching=null;

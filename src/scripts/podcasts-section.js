@@ -93,3 +93,7 @@ function initPodcasts(){
 }
 
 window.__initPodcasts=initPodcasts;
+// Re-init on every View Transition navigation (back/forward included)
+document.addEventListener('astro:page-load',()=>{
+  if(document.getElementById('podcastGrid')) initPodcasts();
+});

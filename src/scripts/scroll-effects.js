@@ -162,3 +162,7 @@ function initScrollEffects(){
 }
 
 window.__initScrollEffects=initScrollEffects;
+// Re-init on every View Transition navigation (back/forward included)
+document.addEventListener('astro:page-load',()=>{
+  if(document.querySelector('.browse-section')) initScrollEffects();
+});

@@ -5,6 +5,14 @@
 
 export const MMIND_CARDS=[
   {
+    type:'image', img:'/mymind/small-thoughts.jpg', height:95,
+    caption:'Small Thoughts - Diana Lu',
+    title:'Small Thoughts',
+    source:'diana.lu', url:'https://diana.lu/point-n-talk#demos',
+    tldr:'Reflections on exploring interactions and building concepts you\'ve only imagined. Creating is a different kind of understanding.',
+    tags:['Inspiration'], category:'inspiration', date:'today'
+  },
+  {
     type:'image', img:'/mymind/designengineer-tools.png', height:90,
     caption:'Design Engineer Tools - curated directory',
     title:'Design Engineer Tools',

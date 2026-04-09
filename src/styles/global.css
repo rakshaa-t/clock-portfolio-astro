@@ -321,6 +321,7 @@ body{}
   max-width:520px;margin-left:auto;margin-right:auto;
   gap:12px;
 }
+.puzzle-card-link{display:contents;text-decoration:none;color:inherit;}
 .puzzle-card{
   border-radius:12px;position:relative;overflow:hidden;
   cursor:pointer;aspect-ratio:4/3;

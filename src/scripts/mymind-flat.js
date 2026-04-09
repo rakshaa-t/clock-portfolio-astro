@@ -288,5 +288,9 @@ function initMymind(){
   });
 }
 
-// Expose for data-astro-rerun inline script (sole init path)
+// Expose for data-astro-rerun inline script
 window.__initMymind=initMymind;
+// Re-init on every View Transition navigation (back/forward included)
+document.addEventListener('astro:page-load',()=>{
+  if(document.getElementById('mmindGrid')) initMymind();
+});

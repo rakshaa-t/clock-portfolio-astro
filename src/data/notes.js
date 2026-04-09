@@ -13,8 +13,6 @@ export const NOTES=[
     readTime:"1 min read",
     rich:true,
     body:[
-      {type:"text",html:`<p>A running list of courses I've bought.</p>`},
-
       {type:"text",html:`<p style="margin-top:36px"><a href="https://www.designengineer.xyz" target="_blank" rel="noopener" class="note-link"><strong>Design Engineer - Engineering Track</strong></a></p>`},
 
       {type:"text",html:`<p style="margin-top:36px"><a href="https://www.interfacecraft.dev" target="_blank" rel="noopener" class="note-link"><strong>Interface Craft</strong></a></p>`},
@@ -41,7 +39,7 @@ export const NOTES=[
     body:[
       // ── Hero video ──
       {type:"text",html:`<p style="margin-bottom:8px"><a href="https://prevue.raksha.design" target="_blank" rel="noopener" class="note-link"><strong>Prevue</strong></a> lets you paste the code of AI-generated artifacts and see them rendered inside real device mockups.</p>`},
-      {type:"text",html:`<video autoplay loop muted playsinline style="width:100%;border-radius:12px;margin:8px 0 16px;box-shadow:0 2px 12px rgba(0,0,0,0.06)"><source src="/notes/prevue/hero.mp4" type="video/mp4"></video>`},
+      {type:"text",html:`<video class="note-video" loop muted playsinline style="width:100%;border-radius:12px;margin:8px 0 16px;box-shadow:0 2px 12px rgba(0,0,0,0.06)"><source src="/notes/prevue/hero.mp4" type="video/mp4"></video>`},
 
       // ── Why ──
       {type:"text",html:`<p>As we know, everyone's building with AI, and one thing that's common is UI design and previewing it. To do this you've gotta set up a project and run a dev server, or ask your agent to set up a preview for you, which a lot of times is ugly. We're all building to eventually post our work, hence why I built prevue. Paste your code and see a preview, change device sizes, and add beautiful backgrounds. Basically a mockup tool, but instead of Figma designs you inject your code.</p>`},

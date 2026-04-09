@@ -129,8 +129,9 @@ function initBooks(){
     booksGrid.innerHTML='';
     closeBookPopover();
     const isFiltered=bookActiveFilter!=='all';
-    // Detect actual column count from CSS grid
-    const cols=getComputedStyle(booksGrid).gridTemplateColumns.split(' ').length;
+    // Detect actual column count from CSS grid (fallback to 8 if grid not laid out yet)
+    const rawCols=getComputedStyle(booksGrid).gridTemplateColumns;
+    const cols=rawCols&&rawCols!=='none'?Math.max(rawCols.split(' ').length,3):8;
     const initialCount=cols*BOOKS_ROWS;
     let visibleCount=0;
     KINDLE_BOOKS.forEach((book,i)=>{
@@ -211,5 +212,9 @@ function initBooks(){
   renderBooks();
 }
 
-// Expose for data-astro-rerun inline script (sole init path)
+// Expose for data-astro-rerun inline script
 window.__initBooks=initBooks;
+// Re-init on every View Transition navigation (back/forward included)
+document.addEventListener('astro:page-load',()=>{
+  if(document.getElementById('booksGrid')) initBooks();
+});

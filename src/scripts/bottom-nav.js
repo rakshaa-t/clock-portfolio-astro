@@ -183,3 +183,7 @@ function initBottomNav(){
 }
 
 window.__initBottomNav=initBottomNav;
+// Re-init on every View Transition navigation (back/forward included)
+document.addEventListener('astro:page-load',()=>{
+  if(document.getElementById('sideNav')||document.getElementById('burgerBtn')) initBottomNav();
+});
