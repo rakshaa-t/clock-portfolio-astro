@@ -846,9 +846,21 @@ a.about-dropdown-item:hover{opacity:0.7;}
 .note-code .kw{color:#7B6BA5;}.note-code .fn{color:#5A7BAF;}
 .note-code .str{color:#6B8F5E;}.note-code .num{color:#B87A4A;}
 .note-code .cm{color:rgba(0,0,0,0.25);}
-.note-code-copy{position:absolute;top:50%;right:8px;transform:translateY(-50%);background:rgba(0,0,0,0.04);border:1px solid rgba(0,0,0,0.06);border-radius:6px;padding:4px 8px;font-family:'Geist Mono',monospace;font-size:var(--text-sm);color:rgba(0,0,0,0.3);cursor:pointer;transition:opacity 0.15s cubic-bezier(0.32,0.72,0,1);}
+.note-code-copy{position:absolute;top:50%;right:8px;transform:translateY(-50%);background:rgba(0,0,0,0.04);border:1px solid rgba(0,0,0,0.06);border-radius:6px;padding:4px 8px;font-family:'Geist Mono',monospace;font-size:var(--text-sm);color:rgba(0,0,0,0.3);cursor:pointer;transition:opacity 0.15s cubic-bezier(0.32,0.72,0,1),color 0.15s cubic-bezier(0.32,0.72,0,1);}
 .note-code-copy:hover{opacity:0.7;}
 .note-code-copy:active{transform:translateY(-50%) scale(0.97);}
+.note-code-copy.copied{color:var(--accent);opacity:1;}
+/* ═══ SKILL FILTERS (Claude Skills note) ═══ */
+.skill-filters{
+  display:flex;gap:8px;padding:0 24px 16px;margin:0 -24px;
+  flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;
+}
+.skill-filters::-webkit-scrollbar{display:none;}
+.skill-item{margin-top:28px;}
+.skill-item .note-code{margin-top:6px;}
+.skill-cat-header{margin-top:32px;}
+.skill-filters+.skill-cat-header{margin-top:0;}
+.skill-item.skill-hidden,.skill-cat-header.skill-hidden{display:none;}
 .note-callout{background:rgba(139,126,200,0.06);border-left:3px solid #8B7EC8;border-radius:0 8px 8px 0;padding:12px 16px;margin:12px 0;font-size:var(--text-sm);color:rgba(0,0,0,0.5);line-height:1.6;}
 .note-embed{width:100%;border-radius:12px;margin:12px 0 4px;overflow:hidden;border:1px solid rgba(0,0,0,0.06);}
 .note-embed-placeholder{width:100%;height:280px;background:linear-gradient(145deg,#F5F3EF,#EDEAE6);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;cursor:pointer;transition:opacity 0.2s cubic-bezier(0.32,0.72,0,1);}
@@ -1830,7 +1842,7 @@ a.about-dropdown-item:hover{opacity:0.7;}
     overflow-x:auto;
     -webkit-overflow-scrolling:touch;
     scrollbar-width:none;
-    padding-bottom:8px;
+    padding-bottom:16px;
     margin-left:-20px;margin-right:-20px;
     padding-left:20px;padding-right:20px;
   }
@@ -1942,7 +1954,6 @@ a.about-dropdown-item:hover{opacity:0.7;}
     width:44px;height:44px;font-size:var(--text-h4);
     position:absolute;top:16px;right:16px;margin:0;
   }
-  .mymind-pill{min-height:48px;display:inline-flex;align-items:center;padding:4px 14px;border-radius:var(--radius-md);}
   .puzzle-show-more{min-height:48px;}
   .about-cta{min-width:48px;min-height:48px;display:inline-flex;align-items:center;justify-content:center;}
   .about-cta-primary{min-height:48px;display:inline-flex;align-items:center;}

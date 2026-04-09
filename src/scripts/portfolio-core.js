@@ -496,7 +496,11 @@ function initPortfolioCore(){
     _cardVideos.forEach(v=>{
       if(prefersReducedMotion) v.pause();
       if(v.readyState>=2) v.classList.add('loaded');
-      else v.addEventListener('loadeddata',()=>v.classList.add('loaded'),{once:true});
+      else{
+        v.addEventListener('loadeddata',()=>v.classList.add('loaded'),{once:true});
+        // Fallback: mobile browsers may skip loadeddata; mark loaded once playing
+        v.addEventListener('playing',()=>v.classList.add('loaded'),{once:true});
+      }
     });
     if(!prefersReducedMotion){
       const vidObs=new IntersectionObserver(entries=>{

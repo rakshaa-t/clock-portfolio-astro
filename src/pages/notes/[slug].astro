@@ -206,6 +206,37 @@ const isDev = import.meta.env.DEV;
   });
 </script>
 
+<!-- ═══ Skill Filters + Copy ═══ -->
+<script>
+  // Skill category filters
+  const skillFilters = document.getElementById('skillFilters');
+  if (skillFilters) {
+    skillFilters.addEventListener('click', (e) => {
+      const pill = e.target.closest('.mymind-pill');
+      if (!pill) return;
+      const filter = pill.dataset.filter;
+      skillFilters.querySelectorAll('.mymind-pill').forEach(p =>
+        p.classList.toggle('active', p.dataset.filter === filter)
+      );
+      document.querySelectorAll('[data-skill-cat]').forEach(el => {
+        if (filter === 'all') el.classList.remove('skill-hidden');
+        else el.classList.toggle('skill-hidden', el.dataset.skillCat !== filter);
+      });
+    });
+  }
+  // Copy install commands
+  document.querySelectorAll('.note-code-copy[data-cmd]').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      navigator.clipboard.writeText(btn.dataset.cmd).then(() => {
+        btn.textContent = 'Copied!';
+        btn.classList.add('copied');
+        setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 1500);
+      });
+    });
+  });
+</script>
+
 <!-- ═══ TOC Scroll Tracking ═══ -->
 <script>
   function initTOC() {
