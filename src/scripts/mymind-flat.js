@@ -9,6 +9,8 @@ const MMIND_ROWS=3; // show 3 full rows initially
 
 function initMymind(){
   const mmindGrid=document.getElementById('mmindGrid');
+  if(mmindGrid?.dataset.mymindInit==='1') return;
+  if(mmindGrid) mmindGrid.dataset.mymindInit='1';
   const mmindPopWrap=document.getElementById('mmindPopWrap');
   const mmindPopover=document.getElementById('mmindPopover');
   const mmindScrim=document.getElementById('mmindScrim');

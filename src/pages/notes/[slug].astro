@@ -99,7 +99,7 @@ const isDev = import.meta.env.DEV;
       {nextNote && nextNote.slug !== note.slug && (
         <div class="note-page-upnext">
           <div class="note-page-upnext-label t-tag">Up next</div>
-          <a href={`/notes/${nextNote.slug}`} target="_blank" rel="noopener noreferrer" class="note-card">
+          <a href={`/notes/${nextNote.slug}`} class="note-card">
             <div class="note-card-date t-tag">{nextNote.date}</div>
             <div class="note-card-title t-heading-sm">{nextNote.title}</div>
             <div class="note-card-preview t-body-sm">{nextNote.preview}</div>
@@ -179,7 +179,7 @@ const isDev = import.meta.env.DEV;
       {nextNote && nextNote.slug !== note.slug && (
         <div class="note-page-upnext">
           <div class="note-page-upnext-label t-tag">Up next</div>
-          <a href={`/notes/${nextNote.slug}`} target="_blank" rel="noopener noreferrer" class="note-card">
+          <a href={`/notes/${nextNote.slug}`} class="note-card">
             <div class="note-card-date t-tag">{nextNote.date}</div>
             <div class="note-card-title t-heading-sm">{nextNote.title}</div>
             <div class="note-card-preview t-body-sm">{nextNote.preview}</div>

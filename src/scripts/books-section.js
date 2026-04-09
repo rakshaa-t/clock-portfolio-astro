@@ -17,6 +17,8 @@ function getBookCategory(book){
 
 function initBooks(){
   const booksGrid=document.getElementById('booksGrid');
+  if(booksGrid?.dataset.booksInit==='1') return;
+  if(booksGrid) booksGrid.dataset.booksInit='1';
   const bookPopWrap=document.getElementById('bookPopWrap');
   const bookPopover=document.getElementById('bookPopover');
   const bookScrim=document.getElementById('bookScrim');

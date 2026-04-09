@@ -224,6 +224,10 @@ window.openPuzzleModal=openPuzzleModal;
 
 // ═══ INIT — runs on every page load ═══
 function initPortfolioCore(){
+  const pageRoot=document.querySelector('.page-content');
+  if(pageRoot?.dataset.portfolioCoreInit==='1') return;
+  if(pageRoot) pageRoot.dataset.portfolioCoreInit='1';
+
   modalOverlay=document.getElementById('modalOverlay');
   modalCard=document.getElementById('modalCard');
   modalBody=document.querySelector('.modal-body');
@@ -402,6 +406,7 @@ function initPortfolioCore(){
     if(!proj) return;
     // External links: wrap in <a> for native link behavior (Cmd-click, copy URL, etc.)
     if('externalLink' in proj&&proj.externalLink){
+      if(card.parentElement?.classList.contains('puzzle-card-link')) return;
       const link=document.createElement('a');
       link.href=proj.externalLink;
       link.target='_blank';

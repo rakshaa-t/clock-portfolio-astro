@@ -37,6 +37,10 @@ const _aboutDropData={
 };
 
 function initAbout(){
+  const aboutSection=document.getElementById('sec-about');
+  if(aboutSection?.dataset.aboutInit==='1') return;
+  if(aboutSection) aboutSection.dataset.aboutInit='1';
+
   const aboutPrimaryBtn=document.querySelector('.about-cta-primary');
   if(!aboutPrimaryBtn) return; // not on portfolio page
 

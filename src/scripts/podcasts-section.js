@@ -10,6 +10,8 @@ const PODS_INITIAL=6;
 
 function initPodcasts(){
   const grid=document.getElementById('podcastGrid');
+  if(grid?.dataset.podcastsInit==='1') return;
+  if(grid) grid.dataset.podcastsInit='1';
   const showMore=document.getElementById('podcastShowMore');
   if(!grid) return;
 
