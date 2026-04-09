@@ -29,7 +29,7 @@ function initMymind(){
     if(card.type==='image'){
       el.classList.add('mm-img-card');
       if(card.img){
-        el.innerHTML=`<div class="mm-thumb" style="height:${card.height}px;"><img src="${card.img}" alt="${esc(card.caption)}" loading="lazy"></div><div class="mm-caption">${card.caption}</div>`;
+        el.innerHTML=`<div class="mm-thumb" style="height:${card.height}px;"><img src="${card.img}" alt="${esc(card.caption)}" loading="lazy" decoding="async"></div><div class="mm-caption">${card.caption}</div>`;
       }else{
         el.innerHTML=`<div class="mm-thumb" style="background:${card.color};height:${card.height}px;"></div><div class="mm-caption">${card.caption}</div>`;
       }

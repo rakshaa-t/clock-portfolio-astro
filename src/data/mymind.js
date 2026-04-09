@@ -165,7 +165,7 @@ export const MMIND_CARDS=[
     tags:['Animation'], category:'animation', date:'5 days ago'
   },
   {
-    type:'image', img:'/mymind/satisfying-checkbox.gif', height:120,
+    type:'image', img:'/mymind/satisfying-checkbox.jpg', height:120,
     caption:'The World\u2019s Most Satisfying Checkbox',
     title:'The Most Satisfying Checkbox',
     source:'notbor.ing', url:'https://notbor.ing/words/the-most-satisfying-checkbox',

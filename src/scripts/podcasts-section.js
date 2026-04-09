@@ -18,7 +18,7 @@ function initPodcasts(){
       <div class="podcast-card-visual">
         <div class="podcast-card-wrap">
           <div class="podcast-cover">
-            <img src="${esc(pod.cover)}" alt="${esc(pod.title)}" loading="lazy" draggable="false">
+            <img src="${esc(pod.cover)}" alt="${esc(pod.title)}" loading="lazy" decoding="async" draggable="false">
           </div>
           <div class="podcast-play-btn" aria-hidden="true">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>

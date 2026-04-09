@@ -37,7 +37,7 @@ function initBooks(){
     el.setAttribute('aria-label',book.title);
     el.innerHTML=`
       <div class="book-cover-img">
-        <img src="${esc(book.cover)}" alt="${esc(book.title)}" loading="lazy">
+        <img src="${esc(book.cover)}" alt="${esc(book.title)}" loading="lazy" decoding="async">
         ${book.fav?'<div class="book-badge fav" data-tip="Excellent"><svg viewBox="0 0 24 24" fill="#C0392B" stroke="none" width="12" height="12"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 22 12 18.56 5.82 22 7 14.14l-5-4.87 6.91-1.01z"/></svg></div>':book.progress===100&&!book.noTag?'<div class="book-badge done" data-tip="Great"><svg viewBox="0 0 24 24" fill="#8B7EC8" stroke="none" width="12" height="12"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 22 12 18.56 5.82 22 7 14.14l-5-4.87 6.91-1.01z"/></svg></div>':''}
       </div>`;
     return el;
