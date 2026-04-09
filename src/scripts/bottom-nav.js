@@ -118,6 +118,40 @@ function initBottomNav(){
     },{signal:ac.signal});
   });
 
+  // ── Proximity opacity wave (desktop side-nav) ──
+  if(sideNav){
+    let itemCenters=[];
+    let proxRaf=0;
+    const SIGMA=40;
+
+    sideNav.addEventListener('mouseenter',()=>{
+      sideNav.classList.add('proximity-active');
+      itemCenters=sideItems.map(item=>{
+        const r=item.getBoundingClientRect();
+        return r.top+r.height/2;
+      });
+    },{signal:ac.signal});
+
+    sideNav.addEventListener('mousemove',(e)=>{
+      if(proxRaf) return;
+      const cy=e.clientY;
+      proxRaf=requestAnimationFrame(()=>{
+        proxRaf=0;
+        for(let i=0;i<sideItems.length;i++){
+          const dist=Math.abs(cy-itemCenters[i]);
+          const prox=Math.exp(-(dist*dist)/(2*SIGMA*SIGMA));
+          sideItems[i].style.setProperty('--prox',prox.toFixed(3));
+        }
+      });
+    },{passive:true,signal:ac.signal});
+
+    sideNav.addEventListener('mouseleave',()=>{
+      sideNav.classList.remove('proximity-active');
+      sideItems.forEach(item=>item.style.removeProperty('--prox'));
+      if(proxRaf){cancelAnimationFrame(proxRaf);proxRaf=0;}
+    },{signal:ac.signal});
+  }
+
   // Mobile menu item clicks
   menuItems.forEach((item,i)=>{
     item.addEventListener('click',e=>{

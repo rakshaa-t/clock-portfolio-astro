@@ -1237,7 +1237,7 @@ a.about-dropdown-item:hover{opacity:0.7;}
   background:none;border:none;cursor:pointer;
   padding:4px 0;
   transform-origin:right center;
-  transition:transform 0.4s var(--ease);
+  transition:transform 0.4s var(--ease),opacity 0.15s cubic-bezier(0.32,0.72,0,1);
 }
 /* ── Arc hover: all items bow into a semicircle centered on right edge ── */
 .side-nav:hover .side-nav-line:nth-child(1){transform:translateX(0) rotate(14deg);}
@@ -1272,6 +1272,14 @@ a.about-dropdown-item:hover{opacity:0.7;}
 }
 .side-nav-line:hover .side-nav-label{color:rgba(58,54,50,0.6);}
 .side-nav-line.active .side-nav-label{color:var(--text-primary);font-weight:500;}
+/* ── Proximity wave: cursor-distance opacity ── */
+.side-nav.proximity-active .side-nav-line:not(.active) .side-nav-label{
+  opacity:calc(0.4 + 0.6 * var(--prox,0));
+}
+.side-nav.proximity-active .side-nav-line:not(.active)::before{
+  width:calc(6px + 8px * var(--prox,0));
+  background:rgba(58,54,50, calc(0.12 + 0.18 * var(--prox,0)));
+}
 
 /* ═══ BURGER BUTTON — mobile, top-left ═══ */
 .burger-btn{
