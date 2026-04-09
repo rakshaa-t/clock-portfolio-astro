@@ -9,7 +9,7 @@ export const MMIND_CARDS=[
     caption:'Small Thoughts - Diana Lu',
     title:'Small Thoughts',
     source:'diana.lu', url:'https://diana.lu/point-n-talk#demos',
-    tldr:'Reflections on exploring interactions and building concepts you\'ve only imagined. Creating is a different kind of understanding.',
+    tldr:'Diana\'s portfolio case studies are amazing, couldn\'t help but think about this little note she left at the end of her case study.',
     tags:['Inspiration'], category:'inspiration', date:'today'
   },
   {
