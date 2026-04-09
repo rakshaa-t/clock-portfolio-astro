@@ -849,7 +849,7 @@ a.about-dropdown-item:hover{opacity:0.7;}
 .note-code .kw{color:#7B6BA5;}.note-code .fn{color:#5A7BAF;}
 .note-code .str{color:#6B8F5E;}.note-code .num{color:#B87A4A;}
 .note-code .cm{color:rgba(0,0,0,0.25);}
-.note-code-copy{position:absolute;top:50%;right:8px;transform:translateY(-50%);background:rgba(0,0,0,0.04);border:1px solid rgba(0,0,0,0.06);border-radius:6px;padding:4px 8px;font-family:'Geist Mono',monospace;font-size:var(--text-sm);color:rgba(0,0,0,0.3);cursor:pointer;transition:opacity 0.15s cubic-bezier(0.32,0.72,0,1),color 0.15s cubic-bezier(0.32,0.72,0,1);}
+.note-code-copy{position:absolute;top:50%;right:8px;transform:translateY(-50%);background:rgba(0,0,0,0.04);border:1px solid rgba(0,0,0,0.06);border-radius:6px;padding:4px 8px;font-family:'Geist Mono',monospace;font-size:var(--text-sm);color:rgba(0,0,0,0.45);cursor:pointer;transition:opacity 0.15s cubic-bezier(0.32,0.72,0,1),color 0.15s cubic-bezier(0.32,0.72,0,1);}
 .note-code-copy:hover{opacity:0.7;}
 .note-code-copy:active{transform:translateY(-50%) scale(0.97);}
 .note-code-copy.copied{color:var(--accent);opacity:1;}
@@ -859,10 +859,10 @@ a.about-dropdown-item:hover{opacity:0.7;}
   flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;
 }
 .skill-filters::-webkit-scrollbar{display:none;}
-.skill-item{margin-top:20px;}
+.skill-item{margin-top:40px;}
 .skill-item .note-code{margin-top:6px;}
-.skill-item strong{font-size:var(--text-sm);font-weight:600;}
-.skill-item span{font-size:var(--text-sm);}
+.skill-item strong{font-size:var(--t-body-sm-size);font-weight:600;color:var(--text-primary);}
+.skill-item span{font-size:var(--t-body-sm-size);}
 .skill-cat-header{margin-top:20px;padding-bottom:8px;border-bottom:1px solid rgba(0,0,0,0.08);}
 .skill-cat-header em{font-style:normal;font-family:'Geist Mono',monospace;font-size:var(--text-sm);font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-secondary);}
 .skill-item.skill-hidden,.skill-cat-header.skill-hidden{display:none;}
@@ -1653,7 +1653,7 @@ a.about-dropdown-item:hover{opacity:0.7;}
 .note-page-back:hover{opacity:0.7;}
 .note-page-back:active{opacity:0.5;}
 .note-page-date{
-  color:var(--text-muted);margin-bottom:8px;font-weight:400;font-size:var(--text-xs);
+  color:var(--text-secondary);margin-bottom:8px;font-weight:400;font-size:var(--text-xs);
 }
 .note-page-tags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px;}
 .note-page-tag{
@@ -1953,6 +1953,8 @@ a.about-dropdown-item:hover{opacity:0.7;}
   .stack-card:first-child{margin-left:0;}
   .about-cta-row{flex-direction:column;}
   .about-cta{text-align:center;}
+
+  .skill-item{margin-top:20px;}
 
   /* ═══ CODE COPY — stack below code on mobile ═══ */
   .skill-item .note-code{padding-right:14px;}
