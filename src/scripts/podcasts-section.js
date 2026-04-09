@@ -44,6 +44,11 @@ function initPodcasts(){
       grid.classList.toggle('expanded',expanded);
       showMore.textContent=expanded?'Show less':`Show ${extraCount} more`;
       showMore.setAttribute('aria-expanded',expanded);
+      if(expanded){
+        grid.querySelectorAll('.podcast-extra img[loading="lazy"]').forEach(img=>{
+          img.loading='eager';
+        });
+      }
     });
   }
 

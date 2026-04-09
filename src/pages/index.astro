@@ -369,49 +369,6 @@ import { NOTES } from '../data/notes.js';
   })();
 </script>
 
-<script is:inline data-astro-rerun>
-  // Greeting cursor bubble — only on fresh load when page is at the top (first section visible)
-  (function(){
-    // Skip if page restored to a scroll position (user was mid-page before reload)
-    if(window.scrollY>200) return;
-    var bubble=document.querySelector('.cursor-bubble');
-    if(!bubble){bubble=document.createElement('div');bubble.className='cursor-bubble';document.body.appendChild(bubble);}
-    var greetingText="hi! nice to see you here :)";
-    var active=false,hasMoved=false,lastX=0,lastY=0;
-    function dismiss(){
-      if(!active) return;
-      active=false;
-      bubble.style.opacity='0';bubble.style.transform='translateY(2px)';
-      document.removeEventListener('mousemove',onMove);
-    }
-    function show(){
-      if(active) return;
-      active=true;
-      bubble.style.left=lastX+14+'px';
-      bubble.style.top=lastY+14+'px';
-      bubble.textContent=greetingText;
-      bubble.style.opacity='1';bubble.style.transform='translateY(0)';
-      setTimeout(function(){if(active) dismiss();},2000);
-      var firstSection=document.getElementById('sec-about');
-      if(firstSection){
-        function checkScroll(){
-          if(!active) return;
-          if(window.scrollY>firstSection.offsetTop+firstSection.offsetHeight) dismiss();
-          else requestAnimationFrame(checkScroll);
-        }
-        requestAnimationFrame(checkScroll);
-      }
-    }
-    function onMove(e){
-      lastX=e.clientX;lastY=e.clientY;
-      bubble.style.left=lastX+14+'px';
-      bubble.style.top=lastY+14+'px';
-      if(!hasMoved){hasMoved=true;setTimeout(show,500);}
-    }
-    document.addEventListener('mousemove',onMove);
-  })();
-</script>
-
 <script is:inline>
   (function (C, A, L) { let p = function (a, ar) { a.q.push(ar); }; let d = C.document; C.Cal = C.Cal || function () { let cal = C.Cal; let ar = arguments; if (!cal.loaded) { cal.ns = {}; cal.q = cal.q || []; d.head.appendChild(d.createElement("script")).src = A; cal.loaded = true; } if (ar[0] === L) { const api = function () { p(api, arguments); }; const namespace = ar[1]; api.q = api.q || []; if(typeof namespace === "string"){cal.ns[namespace] = cal.ns[namespace] || api;p(cal.ns[namespace], ar);p(cal, ["initNamespace", namespace]);} else p(cal, ar); return;} p(cal, ar); }; })(window, "https://app.cal.com/embed/embed.js", "init");
   Cal("init", {origin:"https://app.cal.com"});

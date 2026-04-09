@@ -260,6 +260,8 @@ function initMymind(){
       mmindShowMore.textContent=expanding?'Show less':`Show ${n} more bookmarks`;
       mmindShowMore.setAttribute('aria-expanded',expanding);
       if(expanding){
+        // Force-load lazy images now that they're visible
+        mmindGrid.querySelectorAll('.mm-extra img[loading="lazy"]').forEach(img=>{img.loading='eager';});
         // Reveal extras with WAAPI stagger (compositor-thread, no layout reads).
         const extras=[...mmindGrid.querySelectorAll('.mm-extra')];
         const stagger=50;
