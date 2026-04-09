@@ -856,8 +856,8 @@ a.about-dropdown-item:hover{opacity:0.7;}
 .note-code-copy.copied{color:var(--accent);opacity:1;}
 /* ═══ SKILL FILTERS (Claude Skills note) ═══ */
 .skill-filters{
-  display:flex;gap:8px;padding:0 24px 16px;margin:0 -24px;
-  flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;
+  display:flex;gap:8px;padding:0 0 16px;
+  flex-wrap:wrap;
 }
 .skill-filters::-webkit-scrollbar{display:none;}
 .skill-item{margin-top:40px;}
@@ -1957,6 +1957,7 @@ a.about-dropdown-item:hover{opacity:0.7;}
 
   .skill-item{margin-top:20px;}
   .skill-item strong,.skill-item span{font-size:14px;}
+  .skill-filters{flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding:0 24px 16px;margin:0 -24px;}
 
   /* ═══ CODE COPY — stack below code on mobile ═══ */
   .skill-item .note-code{padding-right:14px;}
