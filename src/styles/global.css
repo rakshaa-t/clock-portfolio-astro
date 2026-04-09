@@ -849,9 +849,9 @@ a.about-dropdown-item:hover{opacity:0.7;}
 .note-code .kw{color:#7B6BA5;}.note-code .fn{color:#5A7BAF;}
 .note-code .str{color:#6B8F5E;}.note-code .num{color:#B87A4A;}
 .note-code .cm{color:rgba(0,0,0,0.25);}
-.note-code-copy{position:absolute;top:8px;right:8px;background:rgba(0,0,0,0.04);border:1px solid rgba(0,0,0,0.06);border-radius:6px;padding:4px 8px;font-family:'Geist Mono',monospace;font-size:var(--text-sm);color:rgba(0,0,0,0.3);cursor:pointer;transition:opacity 0.15s cubic-bezier(0.32,0.72,0,1),color 0.15s cubic-bezier(0.32,0.72,0,1);}
+.note-code-copy{position:absolute;top:50%;right:8px;transform:translateY(-50%);background:rgba(0,0,0,0.04);border:1px solid rgba(0,0,0,0.06);border-radius:6px;padding:4px 8px;font-family:'Geist Mono',monospace;font-size:var(--text-sm);color:rgba(0,0,0,0.3);cursor:pointer;transition:opacity 0.15s cubic-bezier(0.32,0.72,0,1),color 0.15s cubic-bezier(0.32,0.72,0,1);}
 .note-code-copy:hover{opacity:0.7;}
-.note-code-copy:active{transform:scale(0.97);}
+.note-code-copy:active{transform:translateY(-50%) scale(0.97);}
 .note-code-copy.copied{color:var(--accent);opacity:1;}
 /* ═══ SKILL FILTERS (Claude Skills note) ═══ */
 .skill-filters{
@@ -1951,6 +1951,11 @@ a.about-dropdown-item:hover{opacity:0.7;}
   .stack-card:first-child{margin-left:0;}
   .about-cta-row{flex-direction:column;}
   .about-cta{text-align:center;}
+
+  /* ═══ CODE COPY — stack below code on mobile ═══ */
+  .skill-item .note-code{padding-right:14px;}
+  .note-code-copy{position:static;transform:none;display:block;margin:0 0 0 auto;margin-top:8px;}
+  .note-code-copy:active{transform:scale(0.97);}
 
   /* ═══ TOUCH TARGETS — 48px minimum per WCAG ═══ */
   .pop-close{
