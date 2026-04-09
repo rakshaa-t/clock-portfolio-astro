@@ -96,7 +96,7 @@ export const NOTES=[
     preview:"49 skills, 5 MCP servers. Every skill I use with Claude Code...",
     rich:true,
     body:[
-      {type:"text",html:`<p><strong>49 skills</strong><br><span style="color:rgba(0,0,0,0.55)">38 installed from external sources, 11 custom in ~/.claude/skills/</span></p>`},
+      {type:"text",html:`<p><strong>49 skills</strong></p>`},
       {type:"text",html:`<div class="skill-filters" id="skillFilters"><button class="mymind-pill t-tag active" data-filter="all">All</button><button class="mymind-pill t-tag" data-filter="animation">Animation</button><button class="mymind-pill t-tag" data-filter="uiux">UI/UX</button><button class="mymind-pill t-tag" data-filter="layout">Layout</button><button class="mymind-pill t-tag" data-filter="systems">Systems</button><button class="mymind-pill t-tag" data-filter="a11y">Accessibility</button><button class="mymind-pill t-tag" data-filter="code">Code</button><button class="mymind-pill t-tag" data-filter="workflow">Workflow</button><button class="mymind-pill t-tag" data-filter="platform">Platform</button><button class="mymind-pill t-tag" data-filter="mcp">MCP</button></div>`},
 
       {type:"text",html:`<div data-skill-cat="animation" class="skill-cat-header"><em>Animation & Motion (14)</em></div>`},
