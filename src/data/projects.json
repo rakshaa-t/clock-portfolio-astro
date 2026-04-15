@@ -25,14 +25,22 @@
       "2026"
     ],
     "category": "client",
+    "link": "https://medium.com/@rakshatated98/case-study-4-ios-app-953304380192",
     "images": [
-      "/projects/studyloop.png"
+      "/projects/studyloop/hero.mp4",
+      "/projects/studyloop/today-summary.png",
+      "/projects/studyloop/session-timer.png",
+      "/projects/studyloop/phone-spread.png",
+      "/projects/studyloop/screens-grid.png"
     ],
     "slides": [
+      "#1A1A1A",
+      "#B8E04A",
+      "#A4D934",
+      "#F5C2D5",
       "#1A1A1A"
     ],
-    "desc": "Coming soon",
-    "comingSoon": true
+    "desc": "An iOS app case study in the EdTech space. The full write-up covers the research, flows, and visual direction end to end."
   },
   {
     "title": "Tickle",

@@ -118,8 +118,9 @@ function _showModal(project){
     carouselScroll.innerHTML=`<div class="carousel-slide"><div class="carousel-slide-color" style="background:${slides[0]}"><span class="coming-soon-label">I'm working on it</span></div></div>`;
   }else{
     carouselScroll.innerHTML=slides.map((s,i)=>{
-      if(project.images&&s.endsWith('.mp4')) return `<div class="carousel-slide"><video src="${s}" autoplay muted playsinline preload="metadata" aria-label="${esc(project.title)} demo video"></video></div>`;
-      if(project.images) return `<div class="carousel-slide"><img src="${s}" alt="${project.title} slide ${i+1}" loading="${i<2?'eager':'lazy'}" decoding="async" draggable="false"></div>`;
+      const bg=project.images&&project.slides&&project.slides[i]?` style="background:${project.slides[i]}"`:'';
+      if(project.images&&s.endsWith('.mp4')) return `<div class="carousel-slide"${bg}><video src="${s}" autoplay muted playsinline preload="metadata" aria-label="${esc(project.title)} demo video"></video></div>`;
+      if(project.images) return `<div class="carousel-slide"${bg}><img src="${s}" alt="${project.title} slide ${i+1}" loading="${i<2?'eager':'lazy'}" decoding="async" draggable="false"></div>`;
       return `<div class="carousel-slide"><div class="carousel-slide-color" style="background:${s}">${i===0?project.title.substring(0,2).toUpperCase():'IMG '+(i+1)}</div></div>`;
     }).join('');
   }
@@ -442,7 +443,7 @@ function initPortfolioCore(){
       haptic('nudge');
       openPuzzleModal(proj,card);
     }
-    if(proj.comingSoon){card.style.cursor='default';return;}
+    if(proj.comingSoon&&!proj.link){card.style.cursor='default';return;}
     if('externalLink' in proj&&!proj.externalLink){card.style.cursor='default';return;}
     // Track touch movement to suppress click-on-scroll misfires (iOS fires click on touchend
     // even after the finger moved — which was opening externalLink cards mid-scroll).
