@@ -191,6 +191,12 @@ function closeModal(){
   haptic(30);
   modalOverlay.classList.remove('open');
   document.body.style.overflow='';
+  // Clear stuck hover state: mouseleave doesn't fire on the card once the
+  // modal overlay intercepts the pointer, so .is-hovered stays set.
+  document.querySelectorAll('.puzzle-card.is-hovered').forEach(c=>{
+    c.classList.remove('is-hovered');
+    c.style.transform='';c.style.transition='';
+  });
   if(modalDescWrap){modalDescWrap.classList.remove('has-bottom-fade');modalDescWrap.classList.remove('has-scroll-fade');}
   document.querySelectorAll('.puzzle-card video').forEach(v=>{
     const r=v.getBoundingClientRect();
@@ -418,6 +424,8 @@ function initPortfolioCore(){
       if(proj.tooltip) link.setAttribute('data-tooltip',proj.tooltip);
       card.parentNode.insertBefore(link,card);
       link.appendChild(card);
+      // Anchor is the focus target now — strip role/tabindex from inner card
+      card.removeAttribute('role');card.removeAttribute('tabindex');
       // Live badge
       if(proj.category==='live'){
         const badge=document.createElement('div');
@@ -444,8 +452,8 @@ function initPortfolioCore(){
       haptic('nudge');
       openPuzzleModal(proj,card);
     }
-    if(proj.comingSoon&&!proj.link){card.style.cursor='default';return;}
-    if('externalLink' in proj&&!proj.externalLink){card.style.cursor='default';return;}
+    if(proj.comingSoon&&!proj.link){card.style.cursor='default';card.removeAttribute('role');card.removeAttribute('tabindex');return;}
+    if('externalLink' in proj&&!proj.externalLink){card.style.cursor='default';card.removeAttribute('role');card.removeAttribute('tabindex');return;}
     // Track touch movement to suppress click-on-scroll misfires (iOS fires click on touchend
     // even after the finger moved — which was opening externalLink cards mid-scroll).
     let touchStartX=0,touchStartY=0,touchMoved=false;

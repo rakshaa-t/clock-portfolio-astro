@@ -7,7 +7,7 @@ import { NOTES } from '../data/notes.js';
 
 <!-- ═══ MODAL ═══ -->
 <div class="modal-overlay" id="modalOverlay">
-  <div class="modal-backdrop" onclick="closeModal()" role="button" tabindex="-1" aria-label="Close modal"></div>
+  <div class="modal-backdrop" onclick="closeModal()" aria-hidden="true"></div>
   <div class="modal-card" id="modalCard" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
     <div class="sheet-handle"></div>
     <div class="modal-card-inner">
@@ -22,7 +22,7 @@ import { NOTES } from '../data/notes.js';
       <!-- Metadata area -->
       <div class="modal-body" id="modalBody">
         <div class="modal-meta">
-          <h3 class="modal-title t-heading" id="modalTitle"></h3>
+          <h2 class="modal-title t-heading" id="modalTitle"></h2>
           <div class="modal-tags" id="modalTags"></div>
         </div>
         <div class="modal-desc-wrap" id="modalDescWrap">
@@ -43,7 +43,7 @@ import { NOTES } from '../data/notes.js';
       <p class="subtitle t-subtitle">Product Designer</p>
 
       <div class="about-bio">
-        <p class="t-body">I work with <span class="about-drop-trigger" data-drop="agencies">agencies</span> and <span class="about-drop-trigger" data-drop="companies">product companies</span>, mostly on consumer iOS apps, healthcare platforms and AI software. I care a lot about the space between design and code.</p>
+        <p class="t-body">I work with <span class="about-drop-trigger" data-drop="agencies" role="button" tabindex="0">agencies</span> and <span class="about-drop-trigger" data-drop="companies" role="button" tabindex="0">product companies</span>, mostly on consumer iOS apps, healthcare platforms and AI software. I care a lot about the space between design and code.</p>
         <p class="t-body">If you'd like to work together, <a href="https://cal.com/raksha-tated-v2ee58/15min" class="about-bio-link cal-trigger" onclick="event.preventDefault()">book a call</a> or email <a href="mailto:hey@raksha.design" class="about-bio-link" id="aboutEmailLink">hey@raksha.design</a>. I'll get back within 12 hours. For anything else, <a href="https://x.com/rakshaa_t" class="about-bio-link" target="_blank" rel="noopener noreferrer">DM me on X</a>.</p>
       </div>
 
@@ -101,72 +101,72 @@ import { NOTES } from '../data/notes.js';
       </div>
 
       <div class="puzzle-grid">
-        <div class="puzzle-card" data-project="0" data-category="live">
-          <div class="puzzle-img"><video src="/notes/prevue/hero.mp4" autoplay loop muted playsinline preload="auto" aria-label="Prevue preview"></video></div>
+        <div class="puzzle-card" role="button" tabindex="0" data-project="0" data-category="live">
+          <div class="puzzle-img"><video src="/notes/prevue/hero.mp4" autoplay loop muted playsinline preload="auto" aria-hidden="true"></video></div>
           <div class="puzzle-overlay"><span>Prevue</span></div>
         </div>
-        <div class="puzzle-card" data-project="1" data-category="client">
-          <div class="puzzle-img"><video src="/projects/studyloop/hero.mp4" autoplay loop muted playsinline preload="auto" aria-label="StudyLoop App preview"></video></div>
+        <div class="puzzle-card" role="button" tabindex="0" data-project="1" data-category="client">
+          <div class="puzzle-img"><video src="/projects/studyloop/hero.mp4" autoplay loop muted playsinline preload="auto" aria-hidden="true"></video></div>
           <div class="puzzle-overlay"><span>StudyLoop App</span></div>
         </div>
-        <div class="puzzle-card" data-project="3" data-category="client">
+        <div class="puzzle-card" role="button" tabindex="0" data-project="3" data-category="client">
           <div class="puzzle-img"><img src="/projects/ova-app.jpg" alt="Ova App" loading="lazy"></div>
           <div class="puzzle-overlay"><span>Ova App</span></div>
         </div>
-        <div class="puzzle-card" data-project="4" data-category="client">
+        <div class="puzzle-card" role="button" tabindex="0" data-project="4" data-category="client">
           <div class="puzzle-img"><img src="/projects/greex-defi.jpg" alt="Greex DeFi" loading="lazy"></div>
           <div class="puzzle-overlay"><span>Greex DeFi</span></div>
         </div>
-        <div class="puzzle-card" data-project="5" data-category="client">
+        <div class="puzzle-card" role="button" tabindex="0" data-project="5" data-category="client">
           <div class="puzzle-img"><img src="/projects/indianoil.jpg" alt="IndianOil Dashboard" loading="lazy"></div>
           <div class="puzzle-overlay"><span>IndianOil Dashboard</span></div>
         </div>
-        <div class="puzzle-card" data-project="6" data-category="client">
+        <div class="puzzle-card" role="button" tabindex="0" data-project="6" data-category="client">
           <div class="puzzle-img"><img src="/projects/dealdoc-overview.jpg" alt="DealDoc" loading="lazy"></div>
           <div class="puzzle-overlay"><span>DealDoc</span></div>
         </div>
-        <div class="puzzle-card" data-project="2" data-category="client">
+        <div class="puzzle-card" role="button" tabindex="0" data-project="2" data-category="client">
           <div class="puzzle-img"><img src="/projects/pet-tickle.jpg" alt="Tickle" loading="lazy"></div>
           <div class="puzzle-overlay"><span>Tickle</span></div>
         </div>
-        <div class="puzzle-card" data-project="7" data-category="client">
+        <div class="puzzle-card" role="button" tabindex="0" data-project="7" data-category="client">
           <div class="puzzle-img"><img src="/projects/adiagnosis.jpg" alt="ADiagnosis" loading="lazy"></div>
           <div class="puzzle-overlay"><span>ADiagnosis</span></div>
         </div>
-        <div class="puzzle-card puzzle-extra" data-project="8" data-category="personal">
+        <div class="puzzle-card puzzle-extra" role="button" tabindex="0" data-project="8" data-category="personal">
           <div class="puzzle-img"><img src="/projects/vault-defi.jpg" alt="Vault DeFi" loading="lazy"></div>
           <div class="puzzle-overlay"><span>Vault DeFi</span></div>
         </div>
-        <div class="puzzle-card puzzle-extra" data-project="9" data-category="personal">
+        <div class="puzzle-card puzzle-extra" role="button" tabindex="0" data-project="9" data-category="personal">
           <div class="puzzle-img"><img src="/projects/cycling-app.jpg" alt="Strava concept redesign" loading="lazy"></div>
           <div class="puzzle-overlay"><span>Strava concept redesign</span></div>
         </div>
-        <div class="puzzle-card puzzle-extra" data-project="10" data-category="personal">
+        <div class="puzzle-card puzzle-extra" role="button" tabindex="0" data-project="10" data-category="personal">
           <div class="puzzle-img"><img src="/projects/chain-landing.jpg" alt="Chain Landing" loading="lazy"></div>
           <div class="puzzle-overlay"><span>Chain Landing</span></div>
         </div>
-        <div class="puzzle-card puzzle-extra" data-project="11" data-category="personal">
+        <div class="puzzle-card puzzle-extra" role="button" tabindex="0" data-project="11" data-category="personal">
           <div class="puzzle-img"><img src="/projects/skeu-buttons.jpg" alt="Skeuomorphic Buttons" loading="lazy"></div>
           <div class="puzzle-overlay"><span>Skeuomorphic Buttons</span></div>
         </div>
-        <div class="puzzle-card puzzle-extra" data-project="12" data-category="client">
+        <div class="puzzle-card puzzle-extra" role="button" tabindex="0" data-project="12" data-category="client">
           <div class="puzzle-img"><img src="/projects/cognix/cognix-landing.png" alt="Cognix Health" loading="lazy"></div>
           <div class="puzzle-overlay"><span>Cognix Health</span></div>
         </div>
-        <div class="puzzle-card puzzle-extra" data-project="13" data-category="personal">
+        <div class="puzzle-card puzzle-extra" role="button" tabindex="0" data-project="13" data-category="personal">
           <div class="puzzle-img"><img src="/projects/vercel-dashboard.jpg" alt="Vercel Dashboard" loading="lazy"></div>
           <div class="puzzle-overlay"><span>Vercel Dashboard</span></div>
         </div>
-        <div class="puzzle-card puzzle-extra" data-project="14" data-category="personal">
-          <div class="puzzle-img"><video src="/projects/magicpath-3.mp4" loop muted playsinline preload="none" aria-label="MagicPath animation preview"></video></div>
+        <div class="puzzle-card puzzle-extra" role="button" tabindex="0" data-project="14" data-category="personal">
+          <div class="puzzle-img"><video src="/projects/magicpath-3.mp4" loop muted playsinline preload="none" aria-hidden="true"></video></div>
           <div class="puzzle-overlay"><span>MagicPath</span></div>
         </div>
-        <div class="puzzle-card puzzle-extra" data-project="15" data-category="personal">
-          <div class="puzzle-img"><video src="/projects/card-tilt.mp4" loop muted playsinline preload="none" aria-label="Card Tilt animation preview"></video></div>
+        <div class="puzzle-card puzzle-extra" role="button" tabindex="0" data-project="15" data-category="personal">
+          <div class="puzzle-img"><video src="/projects/card-tilt.mp4" loop muted playsinline preload="none" aria-hidden="true"></video></div>
           <div class="puzzle-overlay"><span>Card Tilt</span></div>
         </div>
-        <div class="puzzle-card puzzle-extra" data-project="16" data-category="personal">
-          <div class="puzzle-img"><video src="/projects/magicpath-2.mp4" loop muted playsinline preload="none" aria-label="MagicPath Experiments animation preview"></video></div>
+        <div class="puzzle-card puzzle-extra" role="button" tabindex="0" data-project="16" data-category="personal">
+          <div class="puzzle-img"><video src="/projects/magicpath-2.mp4" loop muted playsinline preload="none" aria-hidden="true"></video></div>
           <div class="puzzle-overlay"><span>MagicPath Experiments</span></div>
         </div>
       </div>
