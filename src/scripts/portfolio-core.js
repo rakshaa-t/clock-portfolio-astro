@@ -114,6 +114,7 @@ function _showModal(project){
   carouselScroll.scrollLeft=0;
   const isComingSoon=!!project.comingSoon;
   const slides=project.images||project.slides;
+  document.querySelector('.modal-carousel')?.classList.toggle('modal-carousel--fit',project.fit==='contain');
   if(isComingSoon){
     carouselScroll.innerHTML=`<div class="carousel-slide"><div class="carousel-slide-color" style="background:${slides[0]}"><span class="coming-soon-label">I'm working on it</span></div></div>`;
   }else{

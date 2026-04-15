@@ -225,6 +225,8 @@ body{}
   aspect-ratio:5/4;
   overflow:hidden;background:var(--bg);
 }
+.modal-carousel--fit{aspect-ratio:4/3;}
+.modal-carousel--fit .carousel-slide img{object-fit:contain;outline:none;}
 .carousel-scroll{
   display:flex;height:100%;padding:0;gap:0;
   overflow-x:auto;scroll-snap-type:x mandatory;
