@@ -1678,6 +1678,8 @@ a.about-dropdown-item:hover{opacity:0.7;}
 }
 .note-page-body p{margin-bottom:16px;}
 .note-page-body .note-img{margin:32px 0;}
+.note-h2{font-size:inherit;font-weight:600;line-height:1.7;margin:0 0 16px;color:var(--text-primary);}
+.note-h3{font-size:inherit;font-weight:400;font-style:italic;line-height:1.7;margin:0 0 16px;color:var(--text-primary);}
 .note-page-body a{text-decoration:none;}
 .note-link{color:var(--text-primary);text-decoration:underline;text-decoration-thickness:1.5px;text-underline-offset:3px;text-decoration-color:rgba(0,0,0,0.35);transition:text-decoration-color 0.2s cubic-bezier(0.32,0.72,0,1);}
 .note-link:hover{text-decoration-color:rgba(0,0,0,0.5);}

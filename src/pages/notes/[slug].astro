@@ -35,14 +35,13 @@ function renderBlock(block, sectionId) {
   return '';
 }
 
-// Extract TOC headings from rich note body
+// Extract TOC headings from rich note body (h2 section markers)
 const tocHeadings = [];
 if (note.rich && Array.isArray(note.body)) {
   note.body.forEach((block, i) => {
     if (block.type === 'text' && block.html) {
-      const match = block.html.match(/<strong>([^<]+)<\/strong>/);
-      // Only standalone <strong> blocks (section headings), not inline emphasis
-      if (match && block.html.includes('margin-top')) {
+      const match = block.html.match(/<h2[^>]*class="note-h2"[^>]*>([^<]+)<\/h2>/);
+      if (match) {
         const text = match[1];
         const id = text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/-+$/, '');
         tocHeadings.push({ id, text, blockIndex: i });
@@ -61,9 +60,20 @@ const nextNote = NOTES[(currentIdx + 1) % NOTES.length];
 const isTeardown = !!note.teardown;
 const hasComponents = note.rich && note.body.some(b => b.type === 'component');
 const isDev = import.meta.env.DEV;
+
+const isoDate = note.sortDate
+  ? String(note.sortDate).replace(/^(\d{4})(\d{2})(\d{2})$/, '$1-$2-$3')
+  : undefined;
 ---
 
-<Layout title={`${note.title} — Raksha Tated`} description={note.preview} ogImage={note.og}>
+<Layout
+  title={`${note.title} — Raksha Tated`}
+  description={note.preview}
+  ogImage={note.og}
+  type="article"
+  publishedTime={isoDate}
+  tags={note.tags}
+>
 
 {isTeardown ? (
   <!-- ═══ TEARDOWN LAYOUT ═══ -->
@@ -74,7 +84,7 @@ const isDev = import.meta.env.DEV;
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
         Back
       </a>
-      <div class="td-date t-tag">{note.date}</div>
+      <time class="td-date t-tag" datetime={isoDate}>{note.date}</time>
       <h1 class="td-title t-heading">{note.title}</h1>
       {note.teardown.intro && <p class="td-intro t-body">{note.teardown.intro}</p>}
 
@@ -139,11 +149,11 @@ const isDev = import.meta.env.DEV;
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
         Back
       </a>
-      <div class="note-page-date t-tag">{note.date}</div>
+      <time class="note-page-date t-tag" datetime={isoDate}>{note.date}</time>
       <h1 class="note-page-title t-heading">{note.title}</h1>
 
       {/* ── Body: block-level rendering for React islands ── */}
-      <div class="note-page-body t-body">
+      <article class="note-page-body t-body">
         {hasComponents ? (
           note.body.map((block, i) => {
             if (block.type === 'component') {
@@ -169,7 +179,7 @@ const isDev = import.meta.env.DEV;
         ) : (
           <Fragment set:html={bodyHtml} />
         )}
-      </div>
+      </article>
 
       <div class="note-page-footer">
         <button class="note-page-share t-tag" id="shareOnX">

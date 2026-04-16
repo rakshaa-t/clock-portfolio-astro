@@ -31,35 +31,35 @@ export const NOTES=[
       {type:"text",html:`<p>As we know, everyone's building with AI, and one thing that's common is UI design and previewing it. To do this you've gotta set up a project and run a dev server, or ask your agent to set up a preview for you, which a lot of times is ugly. We're all building to eventually post our work, hence why I built prevue. Paste your code and see a preview, change device sizes, and add beautiful backgrounds. Basically a mockup tool, but instead of Figma designs you inject your code.</p>`},
 
       // ── Device frames ──
-      {type:"text",html:`<p style="margin-top:36px"><strong>Device frames</strong></p>`},
+      {type:"text",html:`<h2 class="note-h2" style="margin-top:36px">Device frames</h2>`},
       {type:"text",html:`<p>The frames are Apple device mockups that morph into mobile, tablet, or web sizes. They're drawn to match Apple's viewport dimensions.</p>`},
 
       // ── Device switching + rubber band ──
-      {type:"text",html:`<p style="margin-top:36px"><strong>Device switching and rubber band resize</strong></p>`},
+      {type:"text",html:`<h2 class="note-h2" style="margin-top:36px">Device switching and rubber band resize</h2>`},
       {type:"text",html:`<p>Each frame has corner handles you can drag to resize. The scaling locks to aspect ratio and has logarithmic resistance past the bounds. Pull too far and it springs back. The formula is simple, but getting the feel right took a while. The <code>0.15</code> controls how much it gives. <code>over * 3</code> makes resistance grow the further you pull.</p>`},
       {type:"component",id:"ResizeDemo",hint:"Drag a corner bracket to resize"},
 
       // ── Things that broke ──
-      {type:"text",html:`<p style="margin-top:36px"><strong>Things that broke</strong></p>`},
+      {type:"text",html:`<h2 class="note-h2" style="margin-top:36px">Things that broke</h2>`},
 
-      {type:"text",html:`<p><em>Device morph</em></p>`},
+      {type:"text",html:`<h3 class="note-h3">Device morph</h3>`},
       {type:"text",html:`<p>Device switching initially blink-switched between devices. I wanted to use a morph here for a smoother transition. Sounds simple, right? But when you actually preview code within it and the morph happens, the design inside breaks until it reaches the target device size. After lots of trial and error, I decided to add a frosted blur veil that slightly hides the swap, then dissolves when the morph settles.</p>`},
       {type:"component",id:"MorphDemo",hint:"Click to morph between devices"},
 
-      {type:"text",html:`<p style="margin-top:24px"><em>Edge-hover flickering</em></p>`},
+      {type:"text",html:`<h3 class="note-h3" style="margin-top:24px">Edge-hover flickering</h3>`},
       {type:"text",html:`<p>The dock scales up slightly on hover. The scale change moved the element boundary, pushing the cursor "outside," which triggered mouseleave, which scaled it back down, which moved the boundary back. Infinite loop. The whole dock was oscillating. The fix was a stable invisible hit-area wrapper so the hover zone never changes shape.</p>`},
       {type:"component",id:"DockDemo",hint:"Hover the dock"},
 
       // ── DialKit ──
-      {type:"text",html:`<p style="margin-top:36px"><strong>DialKit for live tuning</strong></p>`},
+      {type:"text",html:`<h2 class="note-h2" style="margin-top:36px">DialKit for live tuning</h2>`},
       {type:"text",html:`<p>Josh Puckett's Dialkit came in handy here, small hover states, opacity changes and spacing was made seamless through live fine tuning.</p>`},
 
       // ── Small details ──
-      {type:"text",html:`<p style="margin-top:36px"><strong>Small details</strong></p>`},
+      {type:"text",html:`<h2 class="note-h2" style="margin-top:36px">Small details</h2>`},
       {type:"text",html:`<p>The device pills do a tiny spring bounce when you switch. 2% scale for 280ms. I wanted to make the switch feel physical instead of instant.</p>`},
 
       // ── Takeaway ──
-      {type:"text",html:`<p style="margin-top:36px"><strong>Takeaway</strong></p>`},
+      {type:"text",html:`<h2 class="note-h2" style="margin-top:36px">Takeaway</h2>`},
       {type:"text",html:`<p>The functional stuff was maybe 30% of the effort. The other 70% is motion and feedback.</p>`},
 
       {type:"text",html:`<p style="margin-top:28px"><a href="https://prevue.raksha.design" target="_blank" rel="noopener" class="note-link">prevue.raksha.design</a></p>`},
@@ -82,7 +82,7 @@ export const NOTES=[
     preview:"49 skills, 5 MCP servers. Every skill I use with Claude Code...",
     rich:true,
     body:[
-      {type:"text",html:`<p><strong>49 skills</strong></p>`},
+      {type:"text",html:`<h2 class="note-h2">49 skills</h2>`},
       {type:"text",html:`<div class="skill-filters" id="skillFilters"><button class="mymind-pill t-tag active" data-filter="all">All</button><button class="mymind-pill t-tag" data-filter="animation">Animation</button><button class="mymind-pill t-tag" data-filter="uiux">UI/UX</button><button class="mymind-pill t-tag" data-filter="layout">Layout</button><button class="mymind-pill t-tag" data-filter="systems">Systems</button><button class="mymind-pill t-tag" data-filter="a11y">Accessibility</button><button class="mymind-pill t-tag" data-filter="code">Code</button><button class="mymind-pill t-tag" data-filter="workflow">Workflow</button><button class="mymind-pill t-tag" data-filter="platform">Platform</button><button class="mymind-pill t-tag" data-filter="mcp">MCP</button></div>`},
 
       {type:"text",html:`<div data-skill-cat="animation" class="skill-cat-header"><em>Animation & Motion (14)</em></div>`},

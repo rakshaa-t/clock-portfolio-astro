@@ -12,6 +12,8 @@
   "dependencies": {
     "@astrojs/mdx": "^4.3.14",
     "@astrojs/react": "^5.0.1",
+    "@astrojs/rss": "^4.0.18",
+    "@astrojs/sitemap": "^3.7.2",
     "@astrojs/vercel": "^9.0.4",
     "@microsoft/clarity": "^1.0.2",
     "@vercel/analytics": "^1.6.1",
