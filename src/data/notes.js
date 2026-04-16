@@ -5,20 +5,6 @@
 
 export const NOTES=[
   {
-    slug:"courses",
-    title:"Courses I've bought",
-    date:"7 April 2026",sortDate:20260407,
-    tags:["learning"],
-    preview:"Structured learning pathways",
-    readTime:"1 min read",
-    rich:true,
-    body:[
-      {type:"text",html:`<p style="margin-top:36px"><a href="https://www.designengineer.xyz" target="_blank" rel="noopener" class="note-link"><strong>Design Engineer - Engineering Track</strong></a></p>`},
-
-      {type:"text",html:`<p style="margin-top:36px"><a href="https://www.interfacecraft.dev" target="_blank" rel="noopener" class="note-link"><strong>Interface Craft</strong></a></p>`},
-    ]
-  },
-  {
     slug:"one-clickness",
     title:"The one-clickness of interfaces",
     date:"3 April 2026",sortDate:20260403,
@@ -170,6 +156,20 @@ export const NOTES=[
       {type:"text",html:`<div data-skill-cat="mcp" class="skill-item"><strong>Figma</strong><br><span style="color:rgba(0,0,0,0.55)">Figma design integration</span><div style="position:relative"><div class="note-code">figma</div><button class="note-code-copy" data-cmd="figma">Copy</button></div></div>`},
       {type:"text",html:`<div data-skill-cat="mcp" class="skill-item"><strong>Vercel</strong><br><span style="color:rgba(0,0,0,0.55)">Deploy, manage projects, and fetch logs from Vercel</span><div style="position:relative"><div class="note-code">vercel</div><button class="note-code-copy" data-cmd="vercel">Copy</button></div></div>`},
       {type:"text",html:`<div data-skill-cat="mcp" class="skill-item"><strong>Context7</strong><br><span style="color:rgba(0,0,0,0.55)">Up-to-date library documentation</span><div style="position:relative"><div class="note-code">context7</div><button class="note-code-copy" data-cmd="context7">Copy</button></div></div>`},
+    ]
+  },
+  {
+    slug:"courses",
+    title:"Courses I've bought",
+    date:"7 April 2026",sortDate:20260407,
+    tags:["learning"],
+    preview:"Structured learning pathways",
+    readTime:"1 min read",
+    rich:true,
+    body:[
+      {type:"text",html:`<p style="margin-top:36px"><a href="https://www.designengineer.xyz" target="_blank" rel="noopener" class="note-link"><strong>Design Engineer - Engineering Track</strong></a></p>`},
+
+      {type:"text",html:`<p style="margin-top:36px"><a href="https://www.interfacecraft.dev" target="_blank" rel="noopener" class="note-link"><strong>Interface Craft</strong></a></p>`},
     ]
   },
 ];
