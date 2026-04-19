@@ -1,27 +1,147 @@
 [
   {
-    "title": "Using Your Mind to Control Your Physical Health & Longevity",
-    "guest": "Dr. Ellen Langer",
-    "channel": "Andrew Huberman",
-    "cover": "/podcasts/QYAgf_lfio4.jpg",
-    "url": "https://youtu.be/QYAgf_lfio4",
-    "note": "Dr. Ellen Langer on how mindset directly shapes physical health, aging, and longevity."
+    "title": "The science of effortlessness: How to activate flow",
+    "guest": "Steven Kotler",
+    "channel": "Big Think",
+    "cover": "/podcasts/RZIn9tfeQ2I.jpg",
+    "url": "https://youtu.be/RZIn9tfeQ2I",
+    "note": "Steven Kotler on the neurochemistry of flow states, the conditions that trigger them, and how to train yourself to enter flow on demand."
   },
   {
-    "title": "How to Control Your Inner Voice & Increase Your Resilience",
-    "guest": "Dr. Ethan Kross",
-    "channel": "Andrew Huberman",
-    "cover": "/podcasts/Og56hmAspV8.jpg",
-    "url": "https://youtu.be/Og56hmAspV8",
-    "note": "Dr. Ethan Kross on quieting the inner critic, reframing self-talk, and building psychological resilience."
+    "title": "The bizarre phenomena that medicine struggles to explain",
+    "guest": "David Linden",
+    "channel": "Big Think",
+    "cover": "/podcasts/Hu1PyOP_NGA.jpg",
+    "url": "https://youtu.be/Hu1PyOP_NGA",
+    "note": "Neuroscientist David Linden on the edge cases of medicine: placebo, idiosyncratic drug responses, and what the weird outliers reveal about how bodies and minds actually work."
   },
   {
-    "title": "Inventing on Principle",
-    "guest": "",
-    "channel": "Bret Victor",
-    "cover": "/podcasts/NGYGl_xxfXA.jpg",
-    "url": "https://youtu.be/NGYGl_xxfXA",
-    "note": "Bret Victor's legendary talk on how creators need a guiding principle, and how immediate feedback transforms the way we build and think."
+    "title": "Quantum physics in 22 minutes",
+    "guest": "Brian Cox",
+    "channel": "Big Think",
+    "cover": "/podcasts/BHEhxPuMmQI.jpg",
+    "url": "https://youtu.be/BHEhxPuMmQI",
+    "note": "A tight explainer from Brian Cox on superposition, entanglement, and why the quantum world stops making intuitive sense the moment you zoom in."
+  },
+  {
+    "title": "The web hasn’t happened yet",
+    "guest": "Nick Jones and Devin Jacoviello",
+    "channel": "Figma",
+    "cover": "/podcasts/GadLRCdViPU.jpg",
+    "url": "https://youtu.be/GadLRCdViPU",
+    "note": "Config London 2025 talk on how the web is still early, the fidelity gap between native and browser, and where the next leap in UI craft is coming from."
+  },
+  {
+    "title": "The quantum roots of reality",
+    "guest": "Brian Cox",
+    "channel": "Big Think",
+    "cover": "/podcasts/kO41iURud9c.jpg",
+    "url": "https://youtu.be/kO41iURud9c",
+    "note": "Brian Cox on quantum mechanics as the substrate of everything, why reality behaves probabilistically at the smallest scales, and what that means for how we understand matter and time."
+  },
+  {
+    "title": "How To Optimize Hormone Health For Longevity",
+    "guest": "Dr. Mark Hyman",
+    "channel": "Mark Hyman, MD",
+    "cover": "/podcasts/AadRflBO0MM.jpg",
+    "url": "https://youtu.be/AadRflBO0MM",
+    "note": "Dr. Hyman on hormone optimization, longevity, and functional medicine."
+  },
+  {
+    "title": "You MUST Do This Before 10am!",
+    "guest": "Dr. Joe Dispenza",
+    "channel": "The Diary Of A CEO",
+    "cover": "/podcasts/rOYlOdDgYUU.jpg",
+    "url": "https://youtu.be/rOYlOdDgYUU",
+    "note": "Dispenza on morning routines, meditation, and rewiring your brain before the day starts."
+  },
+  {
+    "title": "The Yogi Book that Changed his Life",
+    "guest": "Dr. Joe Dispenza",
+    "channel": "Reprogramming Mind",
+    "cover": "/podcasts/iA8TIuxjh04.jpg",
+    "url": "https://youtu.be/iA8TIuxjh04",
+    "note": "Dispenza on the book that shifted his worldview and the results from his 7-day meditation retreats."
+  },
+  {
+    "title": "Becoming Supernatural",
+    "guest": "Dr. Joe Dispenza",
+    "channel": "Short Story Long",
+    "cover": "/podcasts/tGvM4fFVtrY.jpg",
+    "url": "https://youtu.be/tGvM4fFVtrY",
+    "note": "Dispenza on meditation, rewiring the brain, and becoming supernatural through practice."
+  },
+  {
+    "title": "Win The WAR of ART & Unlock Your Creative Potential",
+    "guest": "Steven Pressfield",
+    "channel": "André Duqum",
+    "cover": "/podcasts/0H8kHnReaVk.jpg",
+    "url": "https://youtu.be/0H8kHnReaVk",
+    "note": "Pressfield unpacks the War of Art: resistance, the muse, and doing the work."
+  },
+  {
+    "title": "How to Overcome Inner Resistance",
+    "guest": "Steven Pressfield",
+    "channel": "Andrew Huberman",
+    "cover": "/podcasts/cpKsogGdem4.jpg",
+    "url": "https://youtu.be/cpKsogGdem4",
+    "note": "The science and philosophy behind creative resistance, and practical tools to beat it."
+  },
+  {
+    "title": "What It Really Takes to Accomplish Your Dreams",
+    "guest": "Steven Pressfield",
+    "channel": "More Mark Manson",
+    "cover": "/podcasts/P5c6ZG5ct-0.jpg",
+    "url": "https://youtu.be/P5c6ZG5ct-0",
+    "note": "Steven Pressfield on resistance, turning pro, and what it actually costs to pursue meaningful work."
+  },
+  {
+    "title": "How to Access Your Creativity",
+    "guest": "Rick Rubin",
+    "channel": "Andrew Huberman",
+    "cover": "/podcasts/ycOBZZeVeAc.jpg",
+    "url": "https://youtu.be/ycOBZZeVeAc",
+    "note": "Rick Rubin on tapping into creativity: listening, noticing, and removing blocks."
+  },
+  {
+    "title": "Protocols to Access Creative Energy and Process",
+    "guest": "Rick Rubin",
+    "channel": "Andrew Huberman",
+    "cover": "/podcasts/GpgqXCkRO-w.jpg",
+    "url": "https://youtu.be/GpgqXCkRO-w",
+    "note": "Deep dive into creative protocols: environment, focus, and the role of the subconscious in the creative process."
+  },
+  {
+    "title": "Rick Rubin Addresses Criticisms & Opens Up About His Greatest Challenge in Life",
+    "guest": "Rick Rubin",
+    "channel": "Jay Shetty Podcast",
+    "cover": "/podcasts/60pHJXUjaJY.jpg",
+    "url": "https://youtu.be/60pHJXUjaJY",
+    "note": "Rick Rubin on criticism, creative purpose, and the greatest challenge he's faced."
+  },
+  {
+    "title": "The Path To Power: Ambition, Status, Strength & Respect - Robert Greene",
+    "guest": "Robert Greene",
+    "channel": "Chris Williamson",
+    "cover": "/podcasts/lnD01md5y0k.jpg",
+    "url": "https://youtu.be/lnD01md5y0k",
+    "note": "Robert Greene on ambition, power dynamics, status, and earning respect."
+  },
+  {
+    "title": "A Process for Finding & Achieving Your Unique Purpose",
+    "guest": "Robert Greene",
+    "channel": "Andrew Huberman",
+    "cover": "/podcasts/50BZQRT1dAg.jpg",
+    "url": "https://youtu.be/50BZQRT1dAg",
+    "note": "Robert Greene on finding your unique purpose, mastery, and aligning your life's work."
+  },
+  {
+    "title": "Blueprint for Mastering Every Conversation",
+    "guest": "Jay Shetty",
+    "channel": "Jay Shetty Podcast",
+    "cover": "/podcasts/uRQAhWZ1bxs.jpg",
+    "url": "https://youtu.be/uRQAhWZ1bxs",
+    "note": "Jay Shetty on communicating with confidence, mastering conversations, and building genuine connection."
   },
   {
     "title": "Unlearn Negative Thoughts & Behaviors Patterns",
@@ -33,107 +153,27 @@
     "tooltip": "fyi this was unexpectedly really good!"
   },
   {
-    "title": "Blueprint for Mastering Every Conversation",
-    "guest": "Jay Shetty",
-    "channel": "Jay Shetty Podcast",
-    "cover": "/podcasts/uRQAhWZ1bxs.jpg",
-    "url": "https://youtu.be/uRQAhWZ1bxs",
-    "note": "Jay Shetty on communicating with confidence, mastering conversations, and building genuine connection."
+    "title": "Inventing on Principle",
+    "guest": "",
+    "channel": "Bret Victor",
+    "cover": "/podcasts/NGYGl_xxfXA.jpg",
+    "url": "https://youtu.be/NGYGl_xxfXA",
+    "note": "Bret Victor's legendary talk on how creators need a guiding principle, and how immediate feedback transforms the way we build and think."
   },
   {
-    "title": "A Process for Finding & Achieving Your Unique Purpose",
-    "guest": "Robert Greene",
+    "title": "How to Control Your Inner Voice & Increase Your Resilience",
+    "guest": "Dr. Ethan Kross",
     "channel": "Andrew Huberman",
-    "cover": "/podcasts/50BZQRT1dAg.jpg",
-    "url": "https://youtu.be/50BZQRT1dAg",
-    "note": "Robert Greene on finding your unique purpose, mastery, and aligning your life's work."
+    "cover": "/podcasts/Og56hmAspV8.jpg",
+    "url": "https://youtu.be/Og56hmAspV8",
+    "note": "Dr. Ethan Kross on quieting the inner critic, reframing self-talk, and building psychological resilience."
   },
   {
-    "title": "The Path To Power: Ambition, Status, Strength & Respect - Robert Greene",
-    "guest": "Robert Greene",
-    "channel": "Chris Williamson",
-    "cover": "/podcasts/lnD01md5y0k.jpg",
-    "url": "https://youtu.be/lnD01md5y0k",
-    "note": "Robert Greene on ambition, power dynamics, status, and earning respect."
-  },
-  {
-    "title": "Rick Rubin Addresses Criticisms & Opens Up About His Greatest Challenge in Life",
-    "guest": "Rick Rubin",
-    "channel": "Jay Shetty Podcast",
-    "cover": "/podcasts/60pHJXUjaJY.jpg",
-    "url": "https://youtu.be/60pHJXUjaJY",
-    "note": "Rick Rubin on criticism, creative purpose, and the greatest challenge he's faced."
-  },
-  {
-    "title": "Protocols to Access Creative Energy and Process",
-    "guest": "Rick Rubin",
+    "title": "Using Your Mind to Control Your Physical Health & Longevity",
+    "guest": "Dr. Ellen Langer",
     "channel": "Andrew Huberman",
-    "cover": "/podcasts/GpgqXCkRO-w.jpg",
-    "url": "https://youtu.be/GpgqXCkRO-w",
-    "note": "Deep dive into creative protocols: environment, focus, and the role of the subconscious in the creative process."
-  },
-  {
-    "title": "How to Access Your Creativity",
-    "guest": "Rick Rubin",
-    "channel": "Andrew Huberman",
-    "cover": "/podcasts/ycOBZZeVeAc.jpg",
-    "url": "https://youtu.be/ycOBZZeVeAc",
-    "note": "Rick Rubin on tapping into creativity: listening, noticing, and removing blocks."
-  },
-  {
-    "title": "What It Really Takes to Accomplish Your Dreams",
-    "guest": "Steven Pressfield",
-    "channel": "More Mark Manson",
-    "cover": "/podcasts/P5c6ZG5ct-0.jpg",
-    "url": "https://youtu.be/P5c6ZG5ct-0",
-    "note": "Steven Pressfield on resistance, turning pro, and what it actually costs to pursue meaningful work."
-  },
-  {
-    "title": "How to Overcome Inner Resistance",
-    "guest": "Steven Pressfield",
-    "channel": "Andrew Huberman",
-    "cover": "/podcasts/cpKsogGdem4.jpg",
-    "url": "https://youtu.be/cpKsogGdem4",
-    "note": "The science and philosophy behind creative resistance, and practical tools to beat it."
-  },
-  {
-    "title": "Win The WAR of ART & Unlock Your Creative Potential",
-    "guest": "Steven Pressfield",
-    "channel": "André Duqum",
-    "cover": "/podcasts/0H8kHnReaVk.jpg",
-    "url": "https://youtu.be/0H8kHnReaVk",
-    "note": "Pressfield unpacks the War of Art: resistance, the muse, and doing the work."
-  },
-  {
-    "title": "Becoming Supernatural",
-    "guest": "Dr. Joe Dispenza",
-    "channel": "Short Story Long",
-    "cover": "/podcasts/tGvM4fFVtrY.jpg",
-    "url": "https://youtu.be/tGvM4fFVtrY",
-    "note": "Dispenza on meditation, rewiring the brain, and becoming supernatural through practice."
-  },
-  {
-    "title": "The Yogi Book that Changed his Life",
-    "guest": "Dr. Joe Dispenza",
-    "channel": "Reprogramming Mind",
-    "cover": "/podcasts/iA8TIuxjh04.jpg",
-    "url": "https://youtu.be/iA8TIuxjh04",
-    "note": "Dispenza on the book that shifted his worldview and the results from his 7-day meditation retreats."
-  },
-  {
-    "title": "You MUST Do This Before 10am!",
-    "guest": "Dr. Joe Dispenza",
-    "channel": "The Diary Of A CEO",
-    "cover": "/podcasts/rOYlOdDgYUU.jpg",
-    "url": "https://youtu.be/rOYlOdDgYUU",
-    "note": "Dispenza on morning routines, meditation, and rewiring your brain before the day starts."
-  },
-  {
-    "title": "How To Optimize Hormone Health For Longevity",
-    "guest": "Dr. Mark Hyman",
-    "channel": "Mark Hyman, MD",
-    "cover": "/podcasts/AadRflBO0MM.jpg",
-    "url": "https://youtu.be/AadRflBO0MM",
-    "note": "Dr. Hyman on hormone optimization, longevity, and functional medicine."
+    "cover": "/podcasts/QYAgf_lfio4.jpg",
+    "url": "https://youtu.be/QYAgf_lfio4",
+    "note": "Dr. Ellen Langer on how mindset directly shapes physical health, aging, and longevity."
   }
 ]

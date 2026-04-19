@@ -158,8 +158,9 @@ async function main() {
     note: '',
   };
 
-  // Append to array
-  podcasts.push(entry);
+  // Newest entries go at index 0 so the latest podcast appears at the top
+  // of the section. See feedback memory: project rule for podcasts ordering.
+  podcasts.unshift(entry);
 
   // Write back
   fs.writeFileSync(PODCASTS_JSON, JSON.stringify(podcasts, null, 2) + '\n', 'utf-8');
