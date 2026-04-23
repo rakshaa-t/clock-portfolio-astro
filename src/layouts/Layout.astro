@@ -137,10 +137,10 @@ const jsonLd = type === 'article'
         if(!s) return;
         // Reduced motion? Remove immediately.
         if(window.matchMedia('(prefers-reduced-motion:reduce)').matches){s.remove();return;}
-        // Handle is last to finish (1.0s delay + 0.5s = ~1.5s).
+        // Handle exit is last to finish (1.22s delay + 0.3s = ~1.52s).
         var handle=s.querySelector('.shutter-handle');
         handle.addEventListener('animationend',function(e){
-          if(e.animationName==='shutter-collapse-handle') s.remove();
+          if(e.animationName==='shutter-handle-exit') s.remove();
         });
         // Failsafe: remove after 2s no matter what.
         setTimeout(function(){if(s.parentNode) s.remove();},2000);

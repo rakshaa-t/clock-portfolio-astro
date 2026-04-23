@@ -1187,7 +1187,8 @@ a.about-dropdown-item:hover{opacity:0.7;}
   height:30px;
   margin-top:-1px;
   background:var(--text-muted);
-  animation:shutter-collapse-handle 0.5s ease-in-out 1.0s forwards;
+  overflow:hidden;
+  animation:shutter-handle-exit 0.3s ease-in-out 1.22s forwards;
 }
 .shutter-handle::before{
   content:"";
@@ -1200,6 +1201,7 @@ a.about-dropdown-item:hover{opacity:0.7;}
   transform:translate(-50%,-50%);
   background:var(--bg-raised);
   border-radius:999px;
+  animation:shutter-pill-compress 0.25s ease-in-out 1.0s forwards;
 }
 
 @keyframes shutter-collapse{
@@ -1212,12 +1214,17 @@ a.about-dropdown-item:hover{opacity:0.7;}
   90% {height:4px;}                         /* bounce 2: ~40% of bounce 1 */
   100%{height:0;}                           /* rest */
 }
-@keyframes shutter-collapse-handle{
-  0%  {height:30px;}
-  14% {height:33px;}                        /* tug */
-  55% {height:0;}                           /* snap */
-  72% {height:5px;}                         /* bounce */
-  100%{height:0;}                           /* rest */
+/* Phase 1: white pill compresses inside handle */
+@keyframes shutter-pill-compress{
+  0%  {transform:translate(-50%,-50%) scaleX(1) scaleY(1);}
+  20% {transform:translate(-50%,-50%) scaleX(1.1) scaleY(1);}  /* slight horizontal stretch */
+  70% {transform:translate(-50%,-50%) scaleX(0.3) scaleY(0.2);}
+  100%{transform:translate(-50%,-50%) scaleX(0) scaleY(0);}
+}
+/* Phase 2: handle slides up out of viewport (starts after pill is gone) */
+@keyframes shutter-handle-exit{
+  0%  {transform:translateY(0);}
+  100%{transform:translateY(-100%);height:0;}
 }
 
 /* ═══ REDUCED MOTION ═══ */
