@@ -114,12 +114,37 @@ const jsonLd = type === 'article'
     </script>
   </head>
   <body>
+    <!-- Shutter reveal — yui540 シャッター, opens from bottom -->
+    <div class="shutter-overlay" id="shutterOverlay" aria-hidden="true">
+      <div class="shutter-inner">
+        <div class="shutter-bar"></div>
+        <div class="shutter-bar"></div>
+        <div class="shutter-bar"></div>
+        <div class="shutter-bar"></div>
+        <div class="shutter-handle"></div>
+      </div>
+    </div>
     <slot />
     <script is:inline>
       // Reveal page — failsafe for dev mode where CSS loads async via JS.
       // In production the render-blocking <link> applies html{opacity:1} before
       // this runs, so it's a no-op. In dev mode this ensures the page appears.
       document.documentElement.style.opacity='1';
+
+      // Shutter reveal — plays on every page load.
+      (function(){
+        var s=document.getElementById('shutterOverlay');
+        if(!s) return;
+        // Reduced motion? Remove immediately.
+        if(window.matchMedia('(prefers-reduced-motion:reduce)').matches){s.remove();return;}
+        // Handle is last to finish (1.0s delay + 0.5s = ~1.5s).
+        var handle=s.querySelector('.shutter-handle');
+        handle.addEventListener('animationend',function(e){
+          if(e.animationName==='shutter-collapse-handle') s.remove();
+        });
+        // Failsafe: remove after 2s no matter what.
+        setTimeout(function(){if(s.parentNode) s.remove();},2000);
+      })();
 
       // Save scroll position before ViewTransitions navigates away.
       document.addEventListener('astro:before-preparation',function(){

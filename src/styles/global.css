@@ -1149,6 +1149,77 @@ a.about-dropdown-item:hover{opacity:0.7;}
   transform:scale(0.97);
 }
 
+/* ═══ SHUTTER REVEAL (page-load intro, yui540 シャッター) ═══ */
+.shutter-overlay{
+  position:fixed;
+  inset:0;
+  z-index:99999;
+  pointer-events:none;
+  overflow:hidden;
+}
+.shutter-inner{
+  position:absolute;
+  top:0;
+  left:0;
+  width:100%;
+}
+.shutter-bar{
+  --bar-h:calc((100dvh - 30px) / 4);
+  width:100%;
+  height:var(--bar-h);
+  margin-bottom:-1px;
+  animation:shutter-collapse 0.7s ease-in-out var(--d,0s) forwards;
+}
+/* Bottom bar collapses first → handle rises → page reveals bottom-to-top */
+.shutter-bar:nth-child(4){--d:0.2s;}
+.shutter-bar:nth-child(3){--d:0.32s;}
+.shutter-bar:nth-child(2){--d:0.44s;}
+.shutter-bar:nth-child(1){--d:0.56s;}
+.shutter-bar:nth-child(1),
+.shutter-bar:nth-child(3){background:var(--bg-inset);}
+.shutter-bar:nth-child(2),
+.shutter-bar:nth-child(4){background:var(--bg);}
+
+/* Handle at bottom with pill grip — rides up as bars collapse */
+.shutter-handle{
+  position:relative;
+  width:100%;
+  height:30px;
+  margin-top:-1px;
+  background:var(--text-muted);
+  animation:shutter-collapse-handle 0.5s ease-in-out 1.0s forwards;
+}
+.shutter-handle::before{
+  content:"";
+  display:block;
+  position:absolute;
+  top:50%;
+  left:50%;
+  width:50px;
+  height:12px;
+  transform:translate(-50%,-50%);
+  background:var(--bg-raised);
+  border-radius:999px;
+}
+
+@keyframes shutter-collapse{
+  /* Rubberband: tug down (stretch), snap up, bounce-settle */
+  0%  {height:var(--bar-h);}
+  14% {height:calc(var(--bar-h) + 8px);}   /* tug: stretches DOWN before releasing */
+  55% {height:0;}                           /* snap: rubber band releases upward */
+  70% {height:10px;}                        /* bounce 1: ~40% of overshoot range */
+  82% {height:0;}                           /* settle attempt */
+  90% {height:4px;}                         /* bounce 2: ~40% of bounce 1 */
+  100%{height:0;}                           /* rest */
+}
+@keyframes shutter-collapse-handle{
+  0%  {height:30px;}
+  14% {height:33px;}                        /* tug */
+  55% {height:0;}                           /* snap */
+  72% {height:5px;}                         /* bounce */
+  100%{height:0;}                           /* rest */
+}
+
 /* ═══ REDUCED MOTION ═══ */
 @media(prefers-reduced-motion:reduce){
   *,*::before,*::after{
@@ -1160,6 +1231,7 @@ a.about-dropdown-item:hover{opacity:0.7;}
   .modal-card{transition:transform 0s,opacity 0s,box-shadow 0s!important;}
   .mm-popover{transition:opacity 0s,transform 0s!important;}
   .book-pop{transition:opacity 0s,transform 0s!important;}
+  .shutter-overlay{display:none!important;}
   .reveal-item{opacity:1!important;transform:none!important;}
   .tilt-card{transform:none!important;}
   .puzzle-card.is-hovered{transform:none;}
