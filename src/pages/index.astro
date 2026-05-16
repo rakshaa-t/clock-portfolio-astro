@@ -251,15 +251,6 @@ import { NOTES } from '../data/notes.js';
       <div class="mm-scrim" id="bookScrim"></div>
     </div>
 
-    <!-- ═══ MEDIA — Cover grid with slide-out play button ═══ -->
-    <div class="browse-section" id="sec-media">
-      <h2 class="t-display">Media</h2>
-      <p class="subtitle t-subtitle">Feeding my mind with</p>
-
-      <div class="podcast-grid" id="podcastGrid"></div>
-      <button class="puzzle-show-more t-tag" id="podcastShowMore" aria-expanded="false">Show more media</button>
-    </div>
-
     <footer class="site-footer t-tag">
       <span>&copy; Raksha T 2026. V2.3.0</span>
       <span class="footer-sep">&middot;</span>
@@ -276,7 +267,6 @@ import { NOTES } from '../data/notes.js';
   <button class="side-nav-line" data-section="sec-notes" aria-label="Notes"><span class="side-nav-label">Notes</span></button>
   <button class="side-nav-line" data-section="sec-bookmarks" aria-label="Saves"><span class="side-nav-label">Saves</span></button>
   <button class="side-nav-line" data-section="sec-books" aria-label="Books"><span class="side-nav-label">Books</span></button>
-  <button class="side-nav-line" data-section="sec-media" aria-label="Media"><span class="side-nav-label">Media</span></button>
 </nav>
 
 <!-- ═══ BURGER (mobile: top-left, opens full-screen menu) ═══ -->
@@ -293,7 +283,6 @@ import { NOTES } from '../data/notes.js';
     <button class="mobile-menu-item t-heading-sm" data-section="sec-notes">Notes</button>
     <button class="mobile-menu-item t-heading-sm" data-section="sec-bookmarks">Saves</button>
     <button class="mobile-menu-item t-heading-sm" data-section="sec-books">Books</button>
-    <button class="mobile-menu-item t-heading-sm" data-section="sec-media">Media</button>
   </div>
 </div>
 
@@ -303,7 +292,6 @@ import { NOTES } from '../data/notes.js';
 <script>import '../scripts/mymind-flat.js';</script>
 <script>import '../scripts/about-section.js';</script>
 <script>import '../scripts/bottom-nav.js';</script>
-<script>import '../scripts/podcasts-section.js';</script>
 <script>import '../scripts/scroll-effects.js';</script>
 
 <script is:inline data-astro-rerun>
@@ -326,7 +314,6 @@ import { NOTES } from '../data/notes.js';
     if(window.__initPortfolioCore) window.__initPortfolioCore();
     if(window.__initBooks) window.__initBooks();
     if(window.__initMymind) window.__initMymind();
-    if(window.__initPodcasts) window.__initPodcasts();
     if(window.__initAbout) window.__initAbout();
     if(window.__initBottomNav) window.__initBottomNav();
     if(window.__initScrollEffects) window.__initScrollEffects();
