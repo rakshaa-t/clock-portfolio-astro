@@ -2142,6 +2142,7 @@
 .showcase-gallery-intro > p,
 .showcase-gallery-intro > span {
   color: var(--showcase-muted);
+  font-family: 'Showcase Frama', 'Helvetica Neue', sans-serif;
   font-size: 11px;
   letter-spacing: 0.02em;
   line-height: 1.3;
