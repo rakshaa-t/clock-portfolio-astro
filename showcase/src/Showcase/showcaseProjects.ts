@@ -31,17 +31,19 @@ export type ShowcaseProject = {
 
 const ASSET_BASE = 'https://raksha.design';
 const asset = (path: string) => `${ASSET_BASE}${path}`;
+const localAsset = (path: string) =>
+  `${import.meta.env.BASE_URL}${path.replace(/^\//, '')}`;
 /** Local strip thumbs only — never remote for the nav. */
 const thumb = (name: string, alt?: string, ext: 'jpg' | 'svg' = 'jpg'): ShowcaseMedia => ({
   type: 'image',
-  src: `/showcase-thumbs/${name}.${ext}`,
+  src: localAsset(`/showcase-thumbs/${name}.${ext}`),
   alt,
 });
 /** Tiny local loop + poster for strip. @deprecated — use localLoop() */
 const loopThumb = (name: string, alt?: string): ShowcaseMedia => ({
   type: 'loop',
-  src: `/showcase-thumbs/${name}-loop.mp4`,
-  poster: `/showcase-thumbs/${name}.jpg`,
+  src: localAsset(`/showcase-thumbs/${name}-loop.mp4`),
+  poster: localAsset(`/showcase-thumbs/${name}.jpg`),
   alt,
 });
 const image = (src: string, alt?: string): ShowcaseMedia => ({
@@ -55,11 +57,11 @@ const video = (src: string): ShowcaseMedia => ({
 });
 const localVideo = (src: string): ShowcaseMedia => ({
   type: 'video',
-  src,
+  src: localAsset(src),
 });
 const localImage = (src: string, alt?: string): ShowcaseMedia => ({
   type: 'image',
-  src,
+  src: localAsset(src),
   alt,
 });
 /** Full-quality strip loop with a high-res poster frame. */
@@ -69,8 +71,8 @@ const localLoop = (
   alt?: string,
 ): ShowcaseMedia => ({
   type: 'loop',
-  src: videoSrc,
-  poster: posterSrc,
+  src: localAsset(videoSrc),
+  poster: localAsset(posterSrc),
   alt,
 });
 
@@ -85,8 +87,8 @@ export const SHOWCASE_PROJECTS: ShowcaseProject[] = [
       'A looping organisational map, preserved from the supplied Figma frame as its exact rendered motion study.',
     thumbnail: {
       type: 'loop',
-      src: '/showcase-thumbs/figma-org-structure.mp4',
-      poster: '/showcase-thumbs/figma-org-structure-poster.svg',
+      src: localAsset('/showcase-thumbs/figma-org-structure.mp4'),
+      poster: localAsset('/showcase-thumbs/figma-org-structure-poster.svg'),
       alt: 'Animated organisational structure diagram',
     },
     presentation: {
