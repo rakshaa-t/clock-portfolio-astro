@@ -125,6 +125,8 @@ export type CarouselItem = {
 export const PROJECT_ASPECTS: Record<string, number> = {
   'figma-org-structure': 1.3326,
   prevue: 1.7062,
+  'mobile-motion-concept': 1.25,
+  'shape-morph-tool': 1,
   'toggle-demo-physics': 1.3333,
   'wavy-dropdown': 1,
   studyloop: 1.3333,
@@ -133,7 +135,6 @@ export const PROJECT_ASPECTS: Record<string, number> = {
   'magicpath-experiments': 1.6552,
   'card-tilt': 1.1594,
   magicpath: 1.5894,
-  'vercel-dashboard': 1.4842,
   'skeuomorphic-buttons': 1,
   'chain-landing': 1.25,
   'strava-redesign': 0.8,

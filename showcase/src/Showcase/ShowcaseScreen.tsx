@@ -834,32 +834,54 @@ function prefetchVideo(src: string) {
 function MobileLoopMedia({
   src,
   poster,
-  active,
 }: {
   src: string;
   poster: string;
-  active: boolean;
 }) {
   const videoRef = useRef<HTMLVideoElement>(null);
+  const [nearViewport, setNearViewport] = useState(false);
 
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
-    if (active) {
+
+    const observer = new IntersectionObserver(
+      ([entry]) => setNearViewport(entry.isIntersecting),
+      { rootMargin: '240px 0px', threshold: 0.01 },
+    );
+    observer.observe(video);
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+    if (!nearViewport) {
+      video.pause();
+      return;
+    }
+
+    if (!video.src) {
       video.src = src;
       video.load();
-      void video.play().catch(() => {});
-    } else {
-      video.pause();
-      video.removeAttribute('src');
-      video.load();
     }
-  }, [active, src]);
+    const play = () => void video.play().catch(() => {});
+    if (video.readyState >= HTMLMediaElement.HAVE_CURRENT_DATA) play();
+    else video.addEventListener('canplay', play, { once: true });
+  }, [nearViewport, src]);
 
   return (
     <>
-      <img src={poster} alt="" loading="lazy" decoding="async" aria-hidden={active} />
-      <video ref={videoRef} muted loop playsInline preload="none" aria-hidden={!active} />
+      <img src={poster} alt="" loading="lazy" decoding="async" aria-hidden="true" />
+      <video
+        ref={videoRef}
+        muted
+        loop
+        playsInline
+        autoPlay
+        preload="metadata"
+        aria-hidden="true"
+      />
     </>
   );
 }
@@ -889,10 +911,16 @@ function MobileProjectCard({
           <MobileLoopMedia
             src={thumbnail.src}
             poster={thumbnail.poster}
-            active={selected}
           />
         ) : thumbnail.type === 'video' ? (
-          <video src={thumbnail.src} muted playsInline preload="metadata" />
+          <video
+            src={thumbnail.src}
+            muted
+            loop
+            playsInline
+            autoPlay
+            preload="metadata"
+          />
         ) : (
           <i style={{ background: thumbnail.color }} />
         )}

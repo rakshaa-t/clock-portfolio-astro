@@ -131,6 +131,56 @@ export const SHOWCASE_PROJECTS: ShowcaseProject[] = [
     },
   },
   {
+    slug: 'mobile-motion-concept',
+    title: 'Mobile Motion Concept',
+    category: 'Experiment',
+    year: '2026',
+    tags: ['Mobile', 'Motion', 'Interaction'],
+    description:
+      'A mobile-screen motion study exploring pacing, hierarchy and tactile transitions in a compact interface.',
+    thumbnail: localLoop(
+      '/showcase-media/mobile-motion-concept/hero.mp4',
+      '/showcase-media/mobile-motion-concept/poster.png',
+      'Animated mobile interface concept',
+    ),
+    presentation: {
+      type: 'video',
+      media: localVideo('/showcase-media/mobile-motion-concept/hero.mp4'),
+    },
+    theme: {
+      background: '#dce3e9',
+      surface: '#edf2f5',
+      ink: '#1d2a32',
+      muted: '#64757e',
+      accent: '#3f7f95',
+    },
+  },
+  {
+    slug: 'shape-morph-tool',
+    title: 'Shape Morph Tool',
+    category: 'Experiment',
+    year: '2026',
+    tags: ['Generative motion', 'Tool design', 'Interaction'],
+    description:
+      'A concept tool that takes user-provided shapes, automatically morphs between them and generates the in-between motion.',
+    thumbnail: localLoop(
+      '/showcase-media/shape-morph-tool/hero.mp4',
+      '/showcase-media/shape-morph-tool/poster.png',
+      'Shape morphing tool concept',
+    ),
+    presentation: {
+      type: 'video',
+      media: localVideo('/showcase-media/shape-morph-tool/hero.mp4'),
+    },
+    theme: {
+      background: '#e8e1ec',
+      surface: '#f4eff6',
+      ink: '#30243a',
+      muted: '#786b82',
+      accent: '#9b5f9d',
+    },
+  },
+  {
     slug: 'toggle-demo-physics',
     title: 'Toggle Physics',
     category: 'Experiment',
@@ -230,6 +280,8 @@ export const SHOWCASE_PROJECTS: ShowcaseProject[] = [
         'DealDoc venture workspace overview',
       ),
     },
+    externalUrl:
+      'https://contra.com/p/XXMgFmLU-uiux-design-for-deal-docs-investment-workspace?r=rakshadesign',
     theme: {
       background: '#dce6ed',
       surface: '#edf3f6',
@@ -340,27 +392,6 @@ export const SHOWCASE_PROJECTS: ShowcaseProject[] = [
       ink: '#38283b',
       muted: '#806d82',
       accent: '#a069a7',
-    },
-  },
-  {
-    slug: 'vercel-dashboard',
-    title: 'Vercel Dashboard',
-    category: 'Experiment',
-    year: '2024',
-    tags: ['Dashboard', 'Concept', 'Developer tool'],
-    description:
-      'A deployment dashboard concept exploring hierarchy, operational clarity and compact information density.',
-    thumbnail: thumb('vercel-dashboard', 'Vercel dashboard concept'),
-    presentation: {
-      type: 'image',
-      media: image('/projects/vercel-dashboard.jpg', 'Vercel dashboard concept'),
-    },
-    theme: {
-      background: '#dce0ec',
-      surface: '#eef0f6',
-      ink: '#1d2230',
-      muted: '#697080',
-      accent: '#5568a1',
     },
   },
   {
