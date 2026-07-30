@@ -1235,14 +1235,18 @@ export function createCarousel(mount, callbacks = {}) {
       snapArmed &&
       !focusState.active &&
       Math.abs(target - scroll) < CONFIG.SNAP_DIST &&
-      performance.now() - lastWheelAt > CONFIG.SNAP_DELAY
+      performance.now() - lastWheelAt >
+        CONFIG.SNAP_DELAY * (0.45 + 0.55 * scrollEnergy)
     ) {
       snapTarget = centerForIndex(nearestIndex(target));
       snapArmed = false;
     }
 
     if (snapTarget !== null && !focusState.active) {
-      target += (snapTarget - target) * CONFIG.SNAP_STRENGTH;
+      const settleStrength =
+        CONFIG.SNAP_STRENGTH +
+        (1 - scrollEnergy) * CONFIG.SNAP_IDLE_BOOST;
+      target += (snapTarget - target) * settleStrength;
       if (Math.abs(snapTarget - target) < 0.2) {
         target = snapTarget;
         snapTarget = null;
@@ -1266,7 +1270,10 @@ export function createCarousel(mount, callbacks = {}) {
       1,
       Math.abs(rawSpeed) / Math.max(1, CONFIG.SHRINK_MAX),
     );
-    const k = norm > scrollEnergy ? CONFIG.SHRINK_ATTACK : CONFIG.SHRINK_DECAY;
+    const recovery =
+      CONFIG.SHRINK_DECAY +
+      (1 - scrollEnergy) * CONFIG.SHRINK_IDLE_DECAY_BOOST;
+    const k = norm > scrollEnergy ? CONFIG.SHRINK_ATTACK : recovery;
     scrollEnergy += (norm - scrollEnergy) * k;
 
     layout();

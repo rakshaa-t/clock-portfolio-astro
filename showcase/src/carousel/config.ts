@@ -10,9 +10,11 @@ export const CONFIG = {
   SNAP_DELAY: 60,
   // Keep snapping as a gentle steering correction, never a hard pull.
   SNAP_STRENGTH: 0.1,
+  SNAP_IDLE_BOOST: 0.1,
   SHRINK_MAX: 24,
   SHRINK_ATTACK: 0.14,
   SHRINK_DECAY: 0.06,
+  SHRINK_IDLE_DECAY_BOOST: 0.05,
   SHRINK_BASE: 0.25,
   SHRINK_FAST_BOOST: 0.09,
   DRAG_THRESHOLD: 3,
