@@ -1,0 +1,96 @@
+.liquid-glass-carousel {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  touch-action: none;
+  cursor: grab;
+  /* The carousel owns the viewport; the browser focus ring reads as a frame. */
+  outline: none;
+  /* Gives WebGL the same sampled color as the shell during boot/resize. */
+  background: var(--liquid-carousel-bg, var(--showcase-bg));
+}
+
+.liquid-glass-carousel:active {
+  cursor: grabbing;
+}
+
+.liquid-glass-carousel canvas {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+  /* Avoid subpixel blur from layout thrash while the row glides. */
+  transform: translateZ(0);
+}
+
+.liquid-glass-carousel__sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.liquid-glass-carousel__case-study {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  display: grid;
+  overflow: hidden;
+  box-sizing: border-box;
+  border-radius: 2px;
+  background: rgb(10 10 12 / 22%);
+  -webkit-backdrop-filter: blur(9px) saturate(0.92);
+  backdrop-filter: blur(9px) saturate(0.92);
+  color: #fff;
+  font-family: 'Showcase Frama', 'Helvetica Neue', sans-serif;
+  font-size: 17px;
+  font-weight: 500;
+  letter-spacing: 0;
+  line-height: 1;
+  opacity: 0;
+  pointer-events: none;
+  place-items: center;
+  transform: translate3d(-200vw, -200vh, 0);
+  transition: opacity 0ms linear, visibility 0ms linear;
+  visibility: hidden;
+  will-change: transform, opacity;
+}
+
+.liquid-glass-carousel__case-study span {
+  opacity: 0;
+  transform: scale(0.97);
+  transition: opacity 0ms linear, transform 0ms linear;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .liquid-glass-carousel__case-study[data-active='true'] {
+    opacity: 1;
+    transition: opacity 140ms cubic-bezier(0.16, 1, 0.3, 1);
+    visibility: visible;
+  }
+
+  .liquid-glass-carousel__case-study[data-active='true'] span {
+    opacity: 1;
+    transform: scale(1);
+    transition:
+      opacity 120ms cubic-bezier(0.16, 1, 0.3, 1),
+      transform 160ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+}
+
+@media (hover: none), (pointer: coarse) {
+  .liquid-glass-carousel__case-study {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .liquid-glass-carousel__case-study,
+  .liquid-glass-carousel__case-study span {
+    transition: none;
+  }
+}

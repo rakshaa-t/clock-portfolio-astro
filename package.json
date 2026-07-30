@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build",
+    "build": "npm --prefix showcase ci && npm --prefix showcase run build && astro build",
     "preview": "astro preview",
     "add:podcast": "node scripts/add-podcast.mjs",
     "add:book": "node scripts/add-book.mjs"
