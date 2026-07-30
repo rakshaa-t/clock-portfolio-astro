@@ -173,11 +173,11 @@ export const SHOWCASE_PROJECTS: ShowcaseProject[] = [
       media: localVideo('/showcase-media/shape-morph-tool/hero.mp4'),
     },
     theme: {
-      background: '#e8e1ec',
-      surface: '#f4eff6',
-      ink: '#30243a',
-      muted: '#786b82',
-      accent: '#9b5f9d',
+      background: '#e1e9d6',
+      surface: '#f4f7ee',
+      ink: '#263125',
+      muted: '#64705e',
+      accent: '#89ad5c',
     },
   },
   {
