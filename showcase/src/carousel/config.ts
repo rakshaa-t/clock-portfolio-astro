@@ -20,9 +20,9 @@ export const CONFIG = {
   DRAG_THRESHOLD: 3,
   // Video decode policy. Sources are prepared before their card enters, but
   // animation only starts once the strip is readable rather than flying past.
-  VIDEO_PRELOAD_DISTANCE: 600,
-  VIDEO_PLAY_DISTANCE: 320,
-  VIDEO_PLAY_MAX_SPEED: 18,
+  VIDEO_PRELOAD_DISTANCE: 720,
+  VIDEO_PLAY_DISTANCE: 420,
+  VIDEO_PLAY_MAX_SPEED: 28,
   VIDEO_MAX_ACTIVE: 3,
   VIDEO_EVICT_AFTER: 2500,
   // During a flick, the outward edge of panels near the viewport boundary

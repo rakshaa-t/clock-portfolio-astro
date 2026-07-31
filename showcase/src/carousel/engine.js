@@ -127,8 +127,9 @@ export function createCarousel(mount, callbacks = {}) {
       video.muted = true;
       video.loop = true;
       video.playsInline = true;
-      // Eager metadata for video-only items (no poster to show meanwhile).
-      video.preload = img.src && img.src !== img.video ? "none" : "metadata";
+      // Sources are still attached only for nearby panels, but once attached
+      // they need enough buffer to show their first frame before entering.
+      video.preload = "metadata";
       video.setAttribute("playsinline", "");
       video.setAttribute("muted", "");
       s.video = video;
@@ -175,6 +176,7 @@ export function createCarousel(mount, callbacks = {}) {
   function attachVideoSource(src) {
     if (!src.video || !src.videoSrc) return;
     if (src.video.src) return;
+    src.video.preload = "auto";
     src.video.src = src.videoSrc;
     src.videoRetryAt = 0;
     src.video.load();

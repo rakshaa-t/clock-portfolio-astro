@@ -148,7 +148,7 @@ export const SHOWCASE_PROJECTS: ShowcaseProject[] = [
       media: localVideo('/showcase-media/mobile-motion-concept/hero.mp4'),
     },
     theme: {
-      background: '#f3e9e1',
+      background: '#e7d9d3',
       surface: '#faf3ed',
       ink: '#2e2928',
       muted: '#716864',
