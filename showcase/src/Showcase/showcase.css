@@ -1977,7 +1977,7 @@
 .showcase-gallery-intro h1 {
   margin: 0;
   font-family: 'Showcase Exposure', Georgia, serif;
-  font-size: clamp(38px, 5.2vw, 78px);
+  font-size: clamp(38px, 5vw, 64px);
   font-weight: 400;
   letter-spacing: -0.015em;
   line-height: 0.92;
