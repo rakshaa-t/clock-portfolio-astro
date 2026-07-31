@@ -836,43 +836,64 @@ function MobileLoopMedia({
   poster,
 }: {
   src: string;
-  poster: string;
+  poster?: string;
 }) {
   const videoRef = useRef<HTMLVideoElement>(null);
-  const [nearViewport, setNearViewport] = useState(false);
+  const [shouldPreload, setShouldPreload] = useState(false);
+  const [shouldPlay, setShouldPlay] = useState(false);
 
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
 
-    const observer = new IntersectionObserver(
-      ([entry]) => setNearViewport(entry.isIntersecting),
-      { rootMargin: '240px 0px', threshold: 0.01 },
+    const preloadObserver = new IntersectionObserver(
+      ([entry]) => setShouldPreload(entry.isIntersecting),
+      { rootMargin: '720px 0px', threshold: 0.01 },
     );
-    observer.observe(video);
-    return () => observer.disconnect();
+    const playObserver = new IntersectionObserver(
+      ([entry]) => setShouldPlay(entry.isIntersecting),
+      { rootMargin: '420px 0px', threshold: 0.01 },
+    );
+
+    preloadObserver.observe(video);
+    playObserver.observe(video);
+    return () => {
+      preloadObserver.disconnect();
+      playObserver.disconnect();
+    };
   }, []);
 
   useEffect(() => {
     const video = videoRef.current;
+    if (!video || !shouldPreload || video.src) return;
+
+    video.preload = 'auto';
+    video.src = src;
+    video.load();
+  }, [shouldPreload, src]);
+
+  useEffect(() => {
+    const video = videoRef.current;
     if (!video) return;
-    if (!nearViewport) {
+    if (!shouldPlay) {
       video.pause();
       return;
     }
 
-    if (!video.src) {
-      video.src = src;
-      video.load();
-    }
-    const play = () => void video.play().catch(() => {});
+    const play = () => {
+      if (shouldPlay) void video.play().catch(() => {});
+    };
     if (video.readyState >= HTMLMediaElement.HAVE_CURRENT_DATA) play();
     else video.addEventListener('canplay', play, { once: true });
-  }, [nearViewport, src]);
+
+    return () => video.removeEventListener('canplay', play);
+  }, [shouldPlay]);
 
   return (
     <>
-      <img src={poster} alt="" loading="lazy" decoding="async" aria-hidden="true" />
+      {poster ? (
+        <img src={poster} alt="" loading="lazy" decoding="async" aria-hidden="true" />
+      ) : null}
       <video
         ref={videoRef}
         muted
@@ -913,22 +934,15 @@ function MobileProjectCard({
             poster={thumbnail.poster}
           />
         ) : thumbnail.type === 'video' ? (
-          <video
-            src={thumbnail.src}
-            muted
-            loop
-            playsInline
-            autoPlay
-            preload="metadata"
-          />
+          <MobileLoopMedia src={thumbnail.src} />
         ) : (
           <i style={{ background: thumbnail.color }} />
         )}
       </span>
       <span className="showcase-mobile-card__meta">
         <b>{project.title}</b>
-        <small>{project.category}</small>
-        <em>{project.year}</em>
+        <small>{project.description}</small>
+        <em>{project.category} / {project.year}</em>
       </span>
     </button>
   );
