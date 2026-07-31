@@ -941,22 +941,6 @@ export function ShowcaseScreen() {
   const selectedProject =
     SHOWCASE_PROJECTS.find((project) => project.slug === selectedSlug) ??
     SHOWCASE_PROJECTS[0];
-  const selectedIndex = SHOWCASE_PROJECTS.findIndex(
-    (project) => project.slug === selectedProject.slug,
-  );
-  const navigateProjects = (direction: number) => {
-    const nextIndex =
-      (selectedIndex + direction + SHOWCASE_PROJECTS.length) %
-      SHOWCASE_PROJECTS.length;
-    setSelectedSlug(SHOWCASE_PROJECTS[nextIndex].slug);
-  };
-  const [navOpen, setNavOpen] = useState(false);
-  const navCloseTimer = useRef(0);
-
-  useEffect(() => {
-    return () => window.clearTimeout(navCloseTimer.current);
-  }, []);
-
   useEffect(() => {
     document.title = `${selectedProject.title} — Selected work`;
   }, [selectedProject.title, selectedProject.slug]);
@@ -1038,45 +1022,6 @@ export function ShowcaseScreen() {
         ))}
       </section>
 
-      <nav
-        className={`showcase-project-nav${navOpen ? ' is-raised' : ''}`}
-        aria-label="Browse projects"
-        onPointerEnter={() => {
-          window.clearTimeout(navCloseTimer.current);
-          setNavOpen(true);
-        }}
-        onPointerLeave={() => {
-          window.clearTimeout(navCloseTimer.current);
-          navCloseTimer.current = window.setTimeout(() => {
-            setNavOpen(false);
-          }, 300);
-        }}
-      >
-        <span className="showcase-project-nav__grip" aria-hidden="true" />
-        <button
-          type="button"
-          onClick={() => navigateProjects(-1)}
-          aria-label="Previous project"
-        >
-          <svg viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M19 12H5M10 7l-5 5 5 5" />
-          </svg>
-        </button>
-        <span aria-live="polite">
-          <b>{String(selectedIndex + 1).padStart(2, '0')}</b>
-          <i />
-          {String(SHOWCASE_PROJECTS.length).padStart(2, '0')}
-        </span>
-        <button
-          type="button"
-          onClick={() => navigateProjects(1)}
-          aria-label="Next project"
-        >
-          <svg viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M5 12h14M14 7l5 5-5 5" />
-          </svg>
-        </button>
-      </nav>
     </main>
   );
 }
