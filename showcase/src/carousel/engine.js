@@ -229,7 +229,7 @@ export function createCarousel(mount, callbacks = {}) {
       });
   }
 
-  function syncVideoPlayback() {
+  function syncVideoPlayback(scrollSpeed) {
     if (document.hidden) {
       pauseAllVideos();
       return;
@@ -253,7 +253,10 @@ export function createCarousel(mount, callbacks = {}) {
         .slice(0, CONFIG.VIDEO_MAX_ACTIVE)
         .map((x) => x.i),
     );
-    const canAnimate = scrollEnergy <= CONFIG.VIDEO_PLAY_MAX_ENERGY;
+    // Use the immediate strip speed, not the intentionally slow-decaying
+    // decorative energy. This lets a preloaded video begin while it is still
+    // approaching the viewport, but skips the decode work during a real flick.
+    const canAnimate = Math.abs(scrollSpeed) <= CONFIG.VIDEO_PLAY_MAX_SPEED;
 
     sources.forEach((src, i) => {
       if (!src.video) return;
@@ -1375,7 +1378,7 @@ export function createCarousel(mount, callbacks = {}) {
 
     layout();
     syncCaseStudyOverlay();
-    syncVideoPlayback();
+    syncVideoPlayback(rawSpeed);
 
     if (lensEnabled) {
       // Lens uniforms + focus/entry fade of the distortion props.
