@@ -88,7 +88,7 @@ export const SHOWCASE_PROJECTS: ShowcaseProject[] = [
     thumbnail: {
       type: 'loop',
       src: localAsset('/showcase-thumbs/figma-org-structure.mp4'),
-      poster: localAsset('/showcase-thumbs/figma-org-structure-poster.svg'),
+      poster: localAsset('/showcase-thumbs/figma-org-structure-poster.png'),
       alt: 'Animated organisational structure diagram',
     },
     presentation: {

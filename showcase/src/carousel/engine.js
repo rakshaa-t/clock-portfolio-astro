@@ -148,10 +148,7 @@ export function createCarousel(mount, callbacks = {}) {
 
       const promoteVideoTexture = () => {
         if (s.videoReady) return;
-        if (
-          video.readyState < HTMLMediaElement.HAVE_CURRENT_DATA ||
-          video.currentTime < 0.05
-        ) {
+        if (video.readyState < HTMLMediaElement.HAVE_CURRENT_DATA) {
           return;
         }
         const vtex = new THREE.VideoTexture(video);
@@ -163,9 +160,11 @@ export function createCarousel(mount, callbacks = {}) {
         s.videoTex = vtex;
         s.videoReady = true;
         applyTexture(vtex);
-        video.removeEventListener("timeupdate", promoteVideoTexture);
       };
 
+      // A decoded first frame is enough for VideoTexture. Waiting for a later
+      // timeupdate can leave a hidden video on its poster indefinitely.
+      video.addEventListener("loadeddata", promoteVideoTexture);
       video.addEventListener("timeupdate", promoteVideoTexture);
       video.addEventListener("playing", promoteVideoTexture);
     }
