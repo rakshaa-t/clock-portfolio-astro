@@ -81,6 +81,11 @@ export function createCarousel(mount, callbacks = {}) {
       aspect: img.aspect || 1,
       locked: img.aspect != null,
       visible: false,
+      videoPreloadZone: false,
+      videoPlayZone: false,
+      videoLastNeededAt: 0,
+      videoPlayPending: false,
+      videoRetryAt: 0,
       videoReady: false,
       srcIndex,
     };
@@ -172,7 +177,57 @@ export function createCarousel(mount, callbacks = {}) {
     if (!src.video || !src.videoSrc) return;
     if (src.video.src) return;
     src.video.src = src.videoSrc;
+    src.videoRetryAt = 0;
     src.video.load();
+  }
+
+  function applySourceTexture(src, tex) {
+    src.tex = tex;
+    for (const p of pool) {
+      if (p.srcIndex === src.srcIndex && p.bound) {
+        p.mat.map = tex;
+        p.mat.needsUpdate = true;
+      }
+    }
+  }
+
+  function detachVideoSource(src) {
+    // Keep the poster bound while releasing off-strip decoder and buffering
+    // resources. Video-only panels stay attached so they never go blank.
+    if (!src.video || !src.video.src || !src.posterTex) return;
+    src.video.pause();
+    src.video.removeAttribute("src");
+    src.video.load();
+    src.videoPlayPending = false;
+    src.videoRetryAt = 0;
+    if (src.videoTex) src.videoTex.dispose();
+    src.videoTex = null;
+    src.videoReady = false;
+    applySourceTexture(src, src.posterTex);
+  }
+
+  function requestVideoPlay(src, now) {
+    const video = src.video;
+    if (
+      !video ||
+      !video.paused ||
+      src.videoPlayPending ||
+      now < src.videoRetryAt ||
+      video.readyState < HTMLMediaElement.HAVE_CURRENT_DATA
+    ) {
+      return;
+    }
+
+    src.videoPlayPending = true;
+    Promise.resolve(video.play())
+      .catch(() => {
+        // A transient decoder/autoplay rejection should not generate a promise
+        // every frame. The next viewport pass can retry shortly after.
+        src.videoRetryAt = performance.now() + 750;
+      })
+      .finally(() => {
+        src.videoPlayPending = false;
+      });
   }
 
   function syncVideoPlayback() {
@@ -181,24 +236,44 @@ export function createCarousel(mount, callbacks = {}) {
       return;
     }
 
-    // Play only near-center panels (max 3) — keeps decode cost off the strip.
+    const now = performance.now();
+    // Sources begin loading well before entry, while playback stays reserved
+    // for panels close to the viewport. This avoids wasting decode work on a
+    // quick flick without leaving slow movement with a cold first frame.
     const ranked = sources
       .map((src, i) => ({ src, i, dist: src.viewDist ?? Infinity }))
-      .filter((x) => x.src.video && x.src.visible)
+      .filter((x) => x.src.video && x.src.videoPreloadZone)
       .sort((a, b) => a.dist - b.dist);
 
-    const playSet = new Set(ranked.slice(0, 3).map((x) => x.i));
+    const preloadSet = new Set(
+      ranked.slice(0, CONFIG.VIDEO_MAX_ACTIVE).map((x) => x.i),
+    );
+    const playSet = new Set(
+      ranked
+        .filter((x) => x.src.videoPlayZone)
+        .slice(0, CONFIG.VIDEO_MAX_ACTIVE)
+        .map((x) => x.i),
+    );
+    const canAnimate = scrollEnergy <= CONFIG.VIDEO_PLAY_MAX_ENERGY;
 
     sources.forEach((src, i) => {
       if (!src.video) return;
-      if (playSet.has(i)) {
+      if (preloadSet.has(i)) {
         attachVideoSource(src);
-        if (src.video.readyState >= HTMLMediaElement.HAVE_CURRENT_DATA) {
-          void src.video.play().catch(() => {});
-        }
-        if (src.videoTex) src.videoTex.needsUpdate = true;
+        src.videoLastNeededAt = now;
+      }
+
+      if (playSet.has(i) && canAnimate) {
+        requestVideoPlay(src, now);
       } else if (!src.video.paused) {
         src.video.pause();
+      }
+
+      if (
+        !preloadSet.has(i) &&
+        now - src.videoLastNeededAt > CONFIG.VIDEO_EVICT_AFTER
+      ) {
+        detachVideoSource(src);
       }
     });
   }
@@ -314,12 +389,16 @@ export function createCarousel(mount, callbacks = {}) {
   let drag = null;
   let suppressClick = false;
 
-  // ---- liquid-glass lens: FBO + fullscreen pass ----
-  // The carousel renders into rt at device resolution (CSS-sized would render
-  // at 1x and upscale — blurry on retina); a fullscreen quad then samples it
-  // through the lens shader.
+  // ---- liquid-glass lens: optional FBO + fullscreen pass ----
   const dpr = renderer.getPixelRatio();
-  let rt = new THREE.WebGLRenderTarget(W * dpr, H * dpr);
+  const lensEnabled = LENS.enabled;
+  // Direct rendering is intentional for colour-accurate portfolio media.
+  // Keep the optional lens target at 1x1 while off rather than reserving a
+  // retina-sized framebuffer for a pass that never runs.
+  let rt = new THREE.WebGLRenderTarget(
+    lensEnabled ? W * dpr : 1,
+    lensEnabled ? H * dpr : 1,
+  );
   const lensScene = new THREE.Scene();
   const lensCam = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
   const lensUniforms = {
@@ -648,6 +727,8 @@ export function createCarousel(mount, callbacks = {}) {
     for (const src of sources) {
       src.visible = false;
       src.viewDist = Infinity;
+      src.videoPreloadZone = false;
+      src.videoPlayZone = false;
     }
     const half = W / 2;
     const buffer = CONFIG.PANEL_H; // generous horizontal buffer
@@ -779,6 +860,15 @@ export function createCarousel(mount, callbacks = {}) {
       p.mesh.position.set(finalX, finalY, 0);
       p.mesh.scale.set(finalW, finalH, 1);
 
+      const panelLeft = finalX - finalW / 2;
+      const panelRight = finalX + finalW / 2;
+      src.videoPreloadZone ||=
+        panelRight > -half - CONFIG.VIDEO_PRELOAD_DISTANCE &&
+        panelLeft < half + CONFIG.VIDEO_PRELOAD_DISTANCE;
+      src.videoPlayZone ||=
+        panelRight > -half - CONFIG.VIDEO_PLAY_DISTANCE &&
+        panelLeft < half + CONFIG.VIDEO_PLAY_DISTANCE;
+
       // screen rect (px, top-left origin) for pointer hit-testing
       const sx = centerX + W / 2;
       const sy = H / 2 - finalY;
@@ -888,7 +978,15 @@ export function createCarousel(mount, callbacks = {}) {
     if (focusState.active || entryActive || entrySettled) return;
     userInteracted = true;
     snapTarget = null;
-    target += (e.deltaY || e.deltaX) * CONFIG.WHEEL;
+    const dominantDelta =
+      Math.abs(e.deltaY) >= Math.abs(e.deltaX) ? e.deltaY : e.deltaX;
+    const normalizedDelta =
+      e.deltaMode === WheelEvent.DOM_DELTA_LINE
+        ? dominantDelta * 16
+        : e.deltaMode === WheelEvent.DOM_DELTA_PAGE
+          ? dominantDelta * H
+          : dominantDelta;
+    target += normalizedDelta * CONFIG.WHEEL;
     lastWheelAt = performance.now();
     snapArmed = true;
   }
@@ -1280,34 +1378,36 @@ export function createCarousel(mount, callbacks = {}) {
     syncCaseStudyOverlay();
     syncVideoPlayback();
 
-    // lens uniforms + focus/entry fade of the distortion props
-    lensUniforms.uCenter.value.set(LENS.posX, LENS.posY);
-    lensUniforms.uAspect.value = W / H;
-    if (LENS.fitViewport) {
-      const bleed = LENS.viewportBleed ?? 0;
-      lensUniforms.uSizeX.value = (W / H) * (0.5 + bleed);
-      lensUniforms.uSizeY.value = 0.5 + bleed;
-    } else {
-      lensUniforms.uSizeX.value = LENS.sizeX;
-      lensUniforms.uSizeY.value = LENS.sizeY;
+    if (lensEnabled) {
+      // Lens uniforms + focus/entry fade of the distortion props.
+      lensUniforms.uCenter.value.set(LENS.posX, LENS.posY);
+      lensUniforms.uAspect.value = W / H;
+      if (LENS.fitViewport) {
+        const bleed = LENS.viewportBleed ?? 0;
+        lensUniforms.uSizeX.value = (W / H) * (0.5 + bleed);
+        lensUniforms.uSizeY.value = 0.5 + bleed;
+      } else {
+        lensUniforms.uSizeX.value = LENS.sizeX;
+        lensUniforms.uSizeY.value = LENS.sizeY;
+      }
+      lensUniforms.uShape.value = LENS.shape === "square" ? 1.0 : 0.0;
+      lensUniforms.uSquareRound.value = LENS.squareRound;
+      lensUniforms.uCenterShade.value = LENS.centerShade ?? 0.09;
+      lensUniforms.uTime.value = performance.now() * 0.001;
+      const rad = (a) => (a * Math.PI) / 180;
+      lensUniforms.uRotation.value =
+        rad(LENS.rotation) + rad(LENS.spin) * (performance.now() * 0.001);
+      const fx = focusState.lensFx;
+      LENS_FX_KEYS.forEach((key) => {
+        lensUniforms[key].value = lensFxFull[key] * fx;
+      });
     }
-    lensUniforms.uShape.value = LENS.shape === "square" ? 1.0 : 0.0;
-    lensUniforms.uSquareRound.value = LENS.squareRound;
-    lensUniforms.uCenterShade.value = LENS.centerShade ?? 0.09;
-    lensUniforms.uTime.value = performance.now() * 0.001;
-    const rad = (a) => (a * Math.PI) / 180;
-    lensUniforms.uRotation.value =
-      rad(LENS.rotation) + rad(LENS.spin) * (performance.now() * 0.001);
-    const fx = focusState.lensFx;
-    LENS_FX_KEYS.forEach((key) => {
-      lensUniforms[key].value = lensFxFull[key] * fx;
-    });
 
     // Portfolio media must not be post-processed: a full-screen lens pass
     // alters video colour and gamma even when all visual controls are zero.
     // Direct rendering keeps the uploaded sRGB texture intact and avoids an
     // additional full-resolution render pass on every frame.
-    if (LENS.enabled) {
+    if (lensEnabled) {
       renderer.setRenderTarget(rt);
       renderer.render(scene, camera);
       renderer.setRenderTarget(null);
@@ -1355,8 +1455,10 @@ export function createCarousel(mount, callbacks = {}) {
     camera.top = H / 2;
     camera.bottom = -H / 2;
     camera.updateProjectionMatrix();
-    rt.setSize(W * dpr, H * dpr);
-    lensUniforms.uRes.value.set(W * dpr, H * dpr);
+    if (lensEnabled) {
+      rt.setSize(W * dpr, H * dpr);
+      lensUniforms.uRes.value.set(W * dpr, H * dpr);
+    }
   }
   window.addEventListener("resize", onResize);
 

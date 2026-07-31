@@ -18,6 +18,13 @@ export const CONFIG = {
   SHRINK_BASE: 0.25,
   SHRINK_FAST_BOOST: 0.09,
   DRAG_THRESHOLD: 3,
+  // Video decode policy. Sources are prepared before their card enters, but
+  // animation only starts once the strip is readable rather than flying past.
+  VIDEO_PRELOAD_DISTANCE: 600,
+  VIDEO_PLAY_DISTANCE: 180,
+  VIDEO_PLAY_MAX_ENERGY: 0.25,
+  VIDEO_MAX_ACTIVE: 3,
+  VIDEO_EVICT_AFTER: 2500,
   // During a flick, the outward edge of panels near the viewport boundary
   // lifts into a shallow cinematic flare. The centre panel remains flat.
   EDGE_FLARE_ENABLED: true,
