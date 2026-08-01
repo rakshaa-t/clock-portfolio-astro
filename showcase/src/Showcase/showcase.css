@@ -25,6 +25,8 @@
   --showcase-ink: #1e1d1a;
   --showcase-muted: #74716a;
   --showcase-accent: #6f63a8;
+  --showcase-display: 'SF Pro Display', -apple-system, BlinkMacSystemFont,
+    'Helvetica Neue', Arial, sans-serif;
   position: relative;
   isolation: isolate;
   min-height: 100svh;
@@ -38,6 +40,8 @@
     ),
     var(--showcase-bg);
   font-family: 'Showcase Exposure', 'Helvetica Neue', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
   transition:
     color 180ms cubic-bezier(0.16, 1, 0.3, 1),
     background-color 220ms cubic-bezier(0.16, 1, 0.3, 1);
@@ -124,7 +128,7 @@
 
 .showcase-intro h1 {
   margin: 0;
-  font-family: 'Showcase Frama', Georgia, serif;
+  font-family: var(--showcase-display);
   font-size: clamp(50px, 6.8vw, 106px);
   font-weight: 400;
   letter-spacing: -0.055em;
@@ -707,7 +711,7 @@
 }
 
 .showcase-color-stage strong {
-  font-family: 'Showcase Frama', Georgia, serif;
+  font-family: var(--showcase-display);
   font-size: clamp(62px, 10vw, 160px);
   font-style: italic;
   font-weight: 400;
@@ -1971,17 +1975,15 @@
   transform: translateY(20px);
 }
 
-/* Display line, set in Exposure. A serif carries its own optical width, so the
-   tight tracking a geometric sans wants here would run the serifs together;
-   line-height also opens up slightly to clear the descenders. */
+/* Display line uses the platform display face for a precise, neutral silhouette. */
 .showcase-gallery-intro h1 {
   margin: 0;
-  font-family: 'Showcase Exposure', Georgia, serif;
+  font-family: var(--showcase-display);
   font-size: clamp(38px, 5vw, 64px);
   font-weight: 400;
-  letter-spacing: -0.015em;
-  line-height: 0.92;
-  padding-left: 0.04em;
+  letter-spacing: 0;
+  line-height: 0.96;
+  padding-left: 0;
   transform: translateY(-12px);
   text-wrap: balance;
 }
@@ -2087,10 +2089,9 @@
     padding: 11px 10px 12px;
   }
 
-  /* Titles stay in Exposure across breakpoints; at this size the serif wants
-     tracking near zero rather than the sans's negative value. */
+  /* Titles use the same platform display face as the desktop gallery. */
   .showcase-mobile-card__meta b {
-    font-family: 'Showcase Exposure', Georgia, serif;
+    font-family: var(--showcase-display);
     font-size: 17px;
     font-weight: 400;
     letter-spacing: -0.005em;
