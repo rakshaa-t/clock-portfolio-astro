@@ -83,10 +83,12 @@ export function createCarousel(mount, callbacks = {}) {
       visible: false,
       videoPreloadZone: false,
       videoPlayZone: false,
-      videoLastNeededAt: 0,
+      videoViewportZone: false,
       videoPlayPending: false,
       videoRetryAt: 0,
       videoReady: false,
+      videoTextureApplied: false,
+      activateVideoTexture: null,
       srcIndex,
     };
 
@@ -108,7 +110,9 @@ export function createCarousel(mount, callbacks = {}) {
       tex.colorSpace = THREE.SRGBColorSpace;
       if (!s.locked && tex.image) s.aspect = tex.image.width / tex.image.height;
       s.posterTex = tex;
-      if (!s.videoReady) applyTexture(tex);
+      // A poster remains the visible fallback until a played video has
+      // delivered an actual frame to WebGL.
+      if (!s.videoTextureApplied) applyTexture(tex);
       recomputeTotal();
       // Keep the intended start panel centered while assets settle — never
       // yank back to index 0 (that was stretching the first paint).
@@ -147,6 +151,14 @@ export function createCarousel(mount, callbacks = {}) {
         }
       });
 
+      const activateVideoTexture = () => {
+        if (!s.videoTex || s.videoTextureApplied) return;
+        s.videoTextureApplied = true;
+        applyTexture(s.videoTex);
+      };
+
+      s.activateVideoTexture = activateVideoTexture;
+
       const promoteVideoTexture = () => {
         if (s.videoReady) return;
         if (video.readyState < HTMLMediaElement.HAVE_CURRENT_DATA) {
@@ -160,7 +172,9 @@ export function createCarousel(mount, callbacks = {}) {
         vtex.flipY = true;
         s.videoTex = vtex;
         s.videoReady = true;
-        applyTexture(vtex);
+        // Video-only sources have no poster to hold while their first frame
+        // reaches the GPU, so use their decoded current frame immediately.
+        if (!s.posterTex) activateVideoTexture();
       };
 
       // A decoded first frame is enough for VideoTexture. Waiting for a later
@@ -182,29 +196,21 @@ export function createCarousel(mount, callbacks = {}) {
     src.video.load();
   }
 
-  function applySourceTexture(src, tex) {
-    src.tex = tex;
-    for (const p of pool) {
-      if (p.srcIndex === src.srcIndex && p.bound) {
-        p.mat.map = tex;
-        p.mat.needsUpdate = true;
-      }
-    }
-  }
+  function activateVideoTextureOnFrame(src) {
+    const video = src.video;
+    if (!video || !src.activateVideoTexture) return;
 
-  function detachVideoSource(src) {
-    // Keep the poster bound while releasing off-strip decoder and buffering
-    // resources. Video-only panels stay attached so they never go blank.
-    if (!src.video || !src.video.src || !src.posterTex) return;
-    src.video.pause();
-    src.video.removeAttribute("src");
-    src.video.load();
-    src.videoPlayPending = false;
-    src.videoRetryAt = 0;
-    if (src.videoTex) src.videoTex.dispose();
-    src.videoTex = null;
-    src.videoReady = false;
-    applySourceTexture(src, src.posterTex);
+    const activate = () => {
+      if (video.readyState >= HTMLMediaElement.HAVE_CURRENT_DATA) {
+        src.activateVideoTexture();
+      }
+    };
+
+    if (typeof video.requestVideoFrameCallback === "function") {
+      video.requestVideoFrameCallback(activate);
+    } else {
+      requestAnimationFrame(activate);
+    }
   }
 
   function requestVideoPlay(src, now) {
@@ -221,6 +227,7 @@ export function createCarousel(mount, callbacks = {}) {
 
     src.videoPlayPending = true;
     Promise.resolve(video.play())
+      .then(() => activateVideoTextureOnFrame(src))
       .catch(() => {
         // A transient decoder/autoplay rejection should not generate a promise
         // every frame. The next viewport pass can retry shortly after.
@@ -246,38 +253,39 @@ export function createCarousel(mount, callbacks = {}) {
       .filter((x) => x.src.video && x.src.videoPreloadZone)
       .sort((a, b) => a.dist - b.dist);
 
-    const preloadSet = new Set(
-      ranked.slice(0, CONFIG.VIDEO_MAX_ACTIVE).map((x) => x.i),
-    );
     const playSet = new Set(
       ranked
         .filter((x) => x.src.videoPlayZone)
-        .slice(0, CONFIG.VIDEO_MAX_ACTIVE)
         .map((x) => x.i),
     );
-    // Use the immediate strip speed, not the intentionally slow-decaying
-    // decorative energy. This lets a preloaded video begin while it is still
-    // approaching the viewport, but skips the decode work during a real flick.
-    const canAnimate = Math.abs(scrollSpeed) <= CONFIG.VIDEO_PLAY_MAX_SPEED;
+    const preloadSet = new Set(
+      ranked.slice(0, CONFIG.VIDEO_MAX_PRELOAD).map((x) => x.i),
+    );
+    // Every on-screen tile must be attached, even when the bounded preload
+    // queue is full. It can keep its poster until the loop has a real frame.
+    playSet.forEach((index) => preloadSet.add(index));
+    // Use hysteresis around the playback cutoff. Raw frame velocity naturally
+    // oscillates as the target eases, so one threshold makes videos pause and
+    // resume repeatedly while a card is still visible.
+    const speed = Math.abs(scrollSpeed);
+    if (speed >= CONFIG.VIDEO_PLAY_MAX_SPEED) {
+      videoMotionPaused = true;
+    } else if (speed <= CONFIG.VIDEO_PLAY_RESUME_SPEED) {
+      videoMotionPaused = false;
+    }
 
     sources.forEach((src, i) => {
       if (!src.video) return;
       if (preloadSet.has(i)) {
         attachVideoSource(src);
-        src.videoLastNeededAt = now;
       }
 
-      if (playSet.has(i) && canAnimate) {
+      const shouldPlay =
+        playSet.has(i) && (!videoMotionPaused || src.videoViewportZone);
+      if (shouldPlay) {
         requestVideoPlay(src, now);
-      } else if (!src.video.paused) {
+      } else if (!src.videoViewportZone && !src.video.paused) {
         src.video.pause();
-      }
-
-      if (
-        !preloadSet.has(i) &&
-        now - src.videoLastNeededAt > CONFIG.VIDEO_EVICT_AFTER
-      ) {
-        detachVideoSource(src);
       }
     });
   }
@@ -724,7 +732,7 @@ export function createCarousel(mount, callbacks = {}) {
     return flare;
   }
 
-  function layout() {
+  function layout(videoPreloadDistance = CONFIG.VIDEO_PRELOAD_DISTANCE) {
     panelRects = [];
     centeredPanel = null;
     let centeredDist = Infinity;
@@ -733,6 +741,7 @@ export function createCarousel(mount, callbacks = {}) {
       src.viewDist = Infinity;
       src.videoPreloadZone = false;
       src.videoPlayZone = false;
+      src.videoViewportZone = false;
     }
     const half = W / 2;
     const buffer = CONFIG.PANEL_H; // generous horizontal buffer
@@ -867,11 +876,12 @@ export function createCarousel(mount, callbacks = {}) {
       const panelLeft = finalX - finalW / 2;
       const panelRight = finalX + finalW / 2;
       src.videoPreloadZone ||=
-        panelRight > -half - CONFIG.VIDEO_PRELOAD_DISTANCE &&
-        panelLeft < half + CONFIG.VIDEO_PRELOAD_DISTANCE;
+        panelRight > -half - videoPreloadDistance &&
+        panelLeft < half + videoPreloadDistance;
       src.videoPlayZone ||=
         panelRight > -half - CONFIG.VIDEO_PLAY_DISTANCE &&
         panelLeft < half + CONFIG.VIDEO_PLAY_DISTANCE;
+      src.videoViewportZone ||= panelRight > -half && panelLeft < half;
 
       // screen rect (px, top-left origin) for pointer hit-testing
       const sx = centerX + W / 2;
@@ -1327,8 +1337,15 @@ export function createCarousel(mount, callbacks = {}) {
 
   // ---- animation loop ----
   let raf = 0;
-  function tick() {
+  let videoMotionPaused = false;
+  let previousFrameAt = performance.now();
+  function tick(frameAt) {
     raf = 0;
+    const frameDuration = Math.min(
+      100,
+      Math.max(1, (frameAt ?? performance.now()) - previousFrameAt),
+    );
+    previousFrameAt = frameAt ?? performance.now();
 
     // Settle-snap: once input goes quiet, guide the existing target toward the
     // closest card centre. This avoids replacing the target in one visible jump.
@@ -1368,6 +1385,7 @@ export function createCarousel(mount, callbacks = {}) {
     // speeding up, decay slow when settling.
     const rawSpeed = scroll - prevScroll;
     prevScroll = scroll;
+    const scrollSpeed = (Math.abs(rawSpeed) / frameDuration) * 1000;
     const norm = Math.min(
       1,
       Math.abs(rawSpeed) / Math.max(1, CONFIG.SHRINK_MAX),
@@ -1378,9 +1396,14 @@ export function createCarousel(mount, callbacks = {}) {
     const k = norm > scrollEnergy ? CONFIG.SHRINK_ATTACK : recovery;
     scrollEnergy += (norm - scrollEnergy) * k;
 
-    layout();
+    const videoPreloadDistance = Math.min(
+      CONFIG.VIDEO_PRELOAD_MAX_DISTANCE,
+      CONFIG.VIDEO_PRELOAD_DISTANCE +
+        scrollSpeed * CONFIG.VIDEO_PRELOAD_LEAD_TIME,
+    );
+    layout(videoPreloadDistance);
     syncCaseStudyOverlay();
-    syncVideoPlayback(rawSpeed);
+    syncVideoPlayback(scrollSpeed);
 
     if (lensEnabled) {
       // Lens uniforms + focus/entry fade of the distortion props.

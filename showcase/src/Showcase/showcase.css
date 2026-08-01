@@ -2115,3 +2115,31 @@
   }
 
 }
+
+/* Keep the mobile project stack aligned to the desktop type system, with a
+   calm 40px rhythm between cards and 4px-grid spacing inside each card. */
+@media (max-width: 767px) {
+  .showcase-mobile-stack {
+    gap: 2.5rem;
+    padding: 1rem 0.75rem 2rem;
+  }
+
+  .showcase-mobile-card__meta {
+    column-gap: 0.75rem;
+    row-gap: 0.5rem;
+    padding: 1rem;
+  }
+
+  .showcase-mobile-card__meta small {
+    font-family: 'Showcase Frama', 'Helvetica Neue', sans-serif;
+    font-size: 0.8125rem;
+    letter-spacing: 0.005em;
+    line-height: 1.5;
+  }
+
+  .showcase-mobile-card__meta em {
+    font-family: 'Showcase Frama', 'Helvetica Neue', sans-serif;
+    font-size: 0.6875rem;
+    line-height: 1.3;
+  }
+}

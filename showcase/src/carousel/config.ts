@@ -21,10 +21,13 @@ export const CONFIG = {
   // Video decode policy. Sources are prepared before their card enters, but
   // animation only starts once the strip is readable rather than flying past.
   VIDEO_PRELOAD_DISTANCE: 720,
+  VIDEO_PRELOAD_LEAD_TIME: 0.65,
+  VIDEO_PRELOAD_MAX_DISTANCE: 1800,
   VIDEO_PLAY_DISTANCE: 420,
-  VIDEO_PLAY_MAX_SPEED: 28,
-  VIDEO_MAX_ACTIVE: 3,
-  VIDEO_EVICT_AFTER: 2500,
+  // Pixels per second, not pixels per frame: stable across 60/120Hz displays.
+  VIDEO_PLAY_MAX_SPEED: 1680,
+  VIDEO_PLAY_RESUME_SPEED: 960,
+  VIDEO_MAX_PRELOAD: 5,
   // During a flick, the outward edge of panels near the viewport boundary
   // lifts into a shallow cinematic flare. The centre panel remains flat.
   EDGE_FLARE_ENABLED: true,
