@@ -1,33 +1,33 @@
 import type { TimelineConfig } from "dialkit";
 
 /**
- * DialKit Long Jump — tuned authoring defaults.
+ * DialKit Long Jump — tuned defaults from the authored tab-filter component.
  * Phase progress only (0 → 1); geometry comes from clicked tabs at runtime.
  */
 export const LONG_JUMP_TIMELINE_CONFIG = {
-  duration: 0.46,
+  duration: 0.91 / 2 / 1.5,
 
   phaseWaypoint: {
     at: 0,
     from: { progress: 0 },
     to: { progress: 1 },
-    duration: 0.08,
+    duration: 0.41 / 2 / 1.5,
     transition: {
       type: "easing" as const,
-      ease: [0.42, 1.09, 1, 1] as [number, number, number, number],
-      duration: 0.08,
+      ease: [0.42, 0, 1, 1] as [number, number, number, number],
+      duration: 0.41 / 2 / 1.5,
     },
   },
 
   phaseTarget: {
-    at: 0.08,
+    at: 0.38 / 2 / 1.5,
     from: { progress: 0 },
     to: { progress: 1 },
-    duration: 0.11,
+    duration: 0.21 / 2 / 1.5,
     transition: {
       type: "easing" as const,
       ease: [0, 0, 0.58, 1] as [number, number, number, number],
-      duration: 0.11,
+      duration: 0.21 / 2 / 1.5,
     },
   },
 
@@ -35,35 +35,35 @@ export const LONG_JUMP_TIMELINE_CONFIG = {
     at: 0,
     from: { progress: 0 },
     to: { progress: 1 },
-    duration: 0.07,
+    duration: 0.42 / 2 / 1.5,
     transition: {
       type: "easing" as const,
-      ease: [1, 0, 0.58, 1] as [number, number, number, number],
-      duration: 0.07,
+      ease: [0, 0, 0.58, 1] as [number, number, number, number],
+      duration: 0.42 / 2 / 1.5,
     },
   },
 
   phaseTravel: {
-    at: 0.19,
+    at: 0.38 / 2 / 1.5,
     from: { progress: 0 },
     to: { progress: 1 },
-    duration: 0.11,
+    duration: 0.21 / 2 / 1.5,
     transition: {
       type: "easing" as const,
       ease: [0, 0, 1, 1] as [number, number, number, number],
-      duration: 0.11,
+      duration: 0.21 / 2 / 1.5,
     },
   },
 
   phaseExpand: {
-    at: 0.29,
+    at: 0.58 / 2 / 1.5,
     from: { progress: 0 },
     to: { progress: 1 },
-    duration: 0.17,
+    duration: 0.33 / 2 / 1.5,
     transition: {
       type: "easing" as const,
       ease: [0, 0, 0.58, 1] as [number, number, number, number],
-      duration: 0.17,
+      duration: 0.33 / 2 / 1.5,
     },
   },
 
@@ -71,11 +71,11 @@ export const LONG_JUMP_TIMELINE_CONFIG = {
     at: 0,
     from: { progress: 0 },
     to: { progress: 1 },
-    duration: 0.21,
+    duration: 0.42 / 2 / 1.5,
     transition: {
       type: "easing" as const,
       ease: [0.42, 0, 1, 1] as [number, number, number, number],
-      duration: 0.21,
+      duration: 0.42 / 2 / 1.5,
     },
   },
 
@@ -83,23 +83,23 @@ export const LONG_JUMP_TIMELINE_CONFIG = {
     at: 0,
     from: { mix: 1 },
     to: { mix: 0 },
-    duration: 0.21,
+    duration: 0.42 / 2 / 1.5,
     transition: {
       type: "easing" as const,
       ease: [0, 0, 1, 1] as [number, number, number, number],
-      duration: 0.21,
+      duration: 0.42 / 2 / 1.5,
     },
   },
 
   toLabel: {
-    at: 0.21,
+    at: 0.42 / 2 / 1.5,
     from: { mix: 0 },
     to: { mix: 1 },
-    duration: 0.24,
+    duration: 0.48 / 2 / 1.5,
     transition: {
       type: "easing" as const,
       ease: [0.5, 0, 0.5, 1] as [number, number, number, number],
-      duration: 0.24,
+      duration: 0.48 / 2 / 1.5,
     },
   },
 } satisfies TimelineConfig;
@@ -107,12 +107,10 @@ export const LONG_JUMP_TIMELINE_CONFIG = {
 export type LongJumpEndpoints = {
   fromX: number;
   fromW: number;
-  fromY: number;
   waypointX: number;
   waypointW: number;
   toX: number;
   toW: number;
-  toY: number;
   /** true = left→right (anchor left, grow right); false = right→left (anchor right, grow left) */
   forward: boolean;
 };
@@ -121,9 +119,15 @@ export function lerp(a: number, b: number, t: number) {
   return a + (b - a) * Math.min(1, Math.max(0, t));
 }
 
-export function mixColor(mix: number, color = '#000000') {
-  const hex = color.replace('#', '');
-  const value = hex.length === 3 ? hex.split('').map((part) => part + part).join('') : hex;
+export function mixColor(mix: number, color = "#000000") {
+  const hex = color.replace("#", "");
+  const value =
+    hex.length === 3
+      ? hex
+          .split("")
+          .map((part) => part + part)
+          .join("")
+      : hex;
   const parsed = Number.parseInt(value, 16);
   return `rgba(${(parsed >> 16) & 255}, ${(parsed >> 8) & 255}, ${parsed & 255}, ${0.44 + mix * 0.56})`;
 }
@@ -153,6 +157,7 @@ export function resolveLongJumpPose(
   ep: LongJumpEndpoints,
   squeezeW: number,
   travelW: number,
+  settleY = -0.037,
 ) {
   let width: number;
   if (phases.expand > 0) {
@@ -163,7 +168,7 @@ export function resolveLongJumpPose(
     width = lerp(ep.fromW, squeezeW, phases.squeeze);
   }
 
-  const y = lerp(ep.fromY, ep.toY, phases.y);
+  const y = lerp(0, settleY, phases.y);
 
   if (ep.forward) {
     const x =
@@ -173,7 +178,6 @@ export function resolveLongJumpPose(
     return { x, width, y };
   }
 
-  // Reverse: drive the RIGHT edge, derive left = right - width
   const fromRight = ep.fromX + ep.fromW;
   const waypointRight = ep.waypointX + ep.waypointW;
   const toRight = ep.toX + ep.toW;

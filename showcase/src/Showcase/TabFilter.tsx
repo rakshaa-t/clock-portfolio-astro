@@ -24,21 +24,85 @@ const TABS = [
 
 const ACTIVE_COLOR = "#000000";
 const INACTIVE_COLOR = "rgba(0, 0, 0, 0.44)";
-const MOTION_SPEED_MULTIPLIER = 1.3;
-const ADJACENT_DURATION = 0.2375;
-const ADJACENT_SQUEEZE_W = 3.64;
-const ADJACENT_TRAVEL_AT = 0.42;
-const ADJACENT_EXPAND_AT = 0.78;
-const ADJACENT_FROM_COLOR_AT = 0.32;
-const ADJACENT_TO_COLOR_START = 0.48;
-const ADJACENT_TO_COLOR_AT = 0.62;
-const ADJACENT_EASE: Ease[] = ["easeOut", "easeOut", "linear"];
-const LONG_JUMP_UNDERLINE_OPACITY = 0.55;
+const SQUEEZE_REV = 3.625;
+const SQUEEZE_FWD = 3.661;
 
 type Ease = string | [number, number, number, number];
 
+type Pose = { x: number; width: number; y: number; height: number };
+
+type SettleLook = {
+  height: number;
+  settleY: number;
+  widthScale: number;
+  xOffset: number;
+};
+
+type TabLabel = (typeof TABS)[number]["label"];
+type TabSettles = Record<TabLabel, SettleLook>;
+
+const INDICATOR_SETTLE_CONFIG = {
+  All: {
+    height: [1.53, 0.5, 8, 0.01] as [number, number, number, number],
+    settleY: [-0.43, -12, 12, 0.01] as [number, number, number, number],
+    widthScale: [0.4, 0.2, 1.6, 0.01] as [number, number, number, number],
+    xOffset: [0, -24, 24, 0.01] as [number, number, number, number],
+  },
+  Clients: {
+    height: [1.53, 0.5, 8, 0.01] as [number, number, number, number],
+    settleY: [-0.04, -12, 12, 0.01] as [number, number, number, number],
+    widthScale: [0.4, 0.2, 1.6, 0.01] as [number, number, number, number],
+    xOffset: [0, -24, 24, 0.01] as [number, number, number, number],
+  },
+  Experiments: {
+    height: [1.53, 0.5, 8, 0.01] as [number, number, number, number],
+    settleY: [-0.04, -12, 12, 0.01] as [number, number, number, number],
+    widthScale: [0.4, 0.2, 1.6, 0.01] as [number, number, number, number],
+    xOffset: [0, -24, 24, 0.01] as [number, number, number, number],
+  },
+  Live: {
+    height: [1.53, 0.5, 8, 0.01] as [number, number, number, number],
+    settleY: [-0.04, -12, 12, 0.01] as [number, number, number, number],
+    widthScale: [0.4, 0.2, 1.6, 0.01] as [number, number, number, number],
+    xOffset: [0, -24, 24, 0.01] as [number, number, number, number],
+  },
+  Mobile: {
+    height: [1.53, 0.5, 8, 0.01] as [number, number, number, number],
+    settleY: [-0.04, -12, 12, 0.01] as [number, number, number, number],
+    widthScale: [0.4, 0.2, 1.6, 0.01] as [number, number, number, number],
+    xOffset: [0, -24, 24, 0.01] as [number, number, number, number],
+  },
+};
+
+function settleLook(tabIndex: number, settles: TabSettles): SettleLook {
+  return settles[TABS[tabIndex].label];
+}
+
+type TabLayout = { left: number; width: number };
+
+function fallbackLayout(tabIndex: number): TabLayout {
+  const tab = TABS[tabIndex];
+  return { left: tab.underlineX, width: tab.underlineWidth };
+}
+
+function settlePose(
+  tabIndex: number,
+  settles: TabSettles,
+  layouts: TabLayout[] = [],
+): Pose {
+  const look = settleLook(tabIndex, settles);
+  const allLook = settleLook(0, settles);
+  const layout = layouts[tabIndex] ?? fallbackLayout(tabIndex);
+  const allLayout = layouts[0] ?? fallbackLayout(0);
+  const width = allLayout.width * allLook.widthScale;
+  const height = allLook.height;
+  const x = layout.left + (layout.width - width) / 2 + look.xOffset;
+  return { x, width, y: look.settleY, height };
+}
+
 type AdjacentProfile = {
   duration: number;
+  targetHitAt: number;
   fromColorAt: number;
   toColorStart: number;
   toColorAt: number;
@@ -47,46 +111,85 @@ type AdjacentProfile = {
   y: { values: number[]; times: number[]; ease: Ease[] };
 };
 
-type Pose = { x: number; width: number; y: number };
+function buildAdjacentForward(
+  fromLeft: number,
+  fromW: number,
+  toLeft: number,
+  toW: number,
+  fromY: number,
+  toY: number,
+): AdjacentProfile {
+  return {
+    duration: 1.325 / 2 / 1.5,
+    targetHitAt: (0.7722 - 0.6389) / 0.3611,
+    fromColorAt: (0.7736 - 0.6389) / 0.3611,
+    toColorStart: (0.8509 - 0.6389) / 0.3611,
+    toColorAt: (0.851 - 0.6389) / 0.3611,
+    x: {
+      values: [fromLeft, toLeft, toLeft],
+      times: [0, (0.7722 - 0.6389) / 0.3611, 1],
+      ease: ["easeOut", "linear"],
+    },
+    width: {
+      values: [fromW, SQUEEZE_FWD, toW, toW],
+      times: [0, (0.7722 - 0.6389) / 0.3611, (0.8719 - 0.6389) / 0.3611, 1],
+      ease: ["easeOut", "easeOut", "linear"],
+    },
+    y: {
+      values: [fromY, toY],
+      times: [0, 1],
+      ease: ["easeOut"],
+    },
+  };
+}
+
+function buildAdjacentReverse(
+  fromLeft: number,
+  fromW: number,
+  toLeft: number,
+  toW: number,
+  fromY: number,
+  toY: number,
+): AdjacentProfile {
+  const toRight = toLeft + toW;
+  const squeezeLeft = toRight - SQUEEZE_REV;
+
+  return {
+    duration: 0.928 / 2 / 1.5,
+    targetHitAt: (0.5618 - 0.3861) / 0.2528,
+    fromColorAt: (0.4575 - 0.3861) / 0.2528,
+    toColorStart: (0.5208 - 0.3861) / 0.2528,
+    toColorAt: (0.5209 - 0.3861) / 0.2528,
+    x: {
+      values: [fromLeft, squeezeLeft, toLeft, toLeft],
+      times: [0, (0.4637 - 0.3861) / 0.2528, (0.5618 - 0.3861) / 0.2528, 1],
+      ease: ["easeIn", "easeOut", "linear"],
+    },
+    width: {
+      values: [fromW, SQUEEZE_REV, toW, toW],
+      times: [0, (0.4637 - 0.3861) / 0.2528, (0.5618 - 0.3861) / 0.2528, 1],
+      ease: ["easeIn", "easeOut", "linear"],
+    },
+    y: {
+      values: [fromY, toY],
+      times: [0, 1],
+      ease: ["easeOut"],
+    },
+  };
+}
 
 function buildAdjacentProfile(
   fromIndex: number,
   toIndex: number,
-  to: Pose,
   start: Pose,
+  settles: TabSettles,
+  layouts: TabLayout[],
 ): AdjacentProfile {
+  const to = settlePose(toIndex, settles, layouts);
   const forward = toIndex > fromIndex;
-  const fromLeft = start.x;
-  const fromW = start.width;
-  const toLeft = to.x;
-  const toW = to.width;
-  const toRight = toLeft + toW;
-  const squeezeLeft = toRight - ADJACENT_SQUEEZE_W;
-  const xValues = forward
-    ? [fromLeft, toLeft, toLeft, toLeft]
-    : [fromLeft, squeezeLeft, toLeft, toLeft];
-
-  return {
-    duration: ADJACENT_DURATION,
-    fromColorAt: ADJACENT_FROM_COLOR_AT,
-    toColorStart: ADJACENT_TO_COLOR_START,
-    toColorAt: ADJACENT_TO_COLOR_AT,
-    x: {
-      values: xValues,
-      times: [0, ADJACENT_TRAVEL_AT, ADJACENT_EXPAND_AT, 1],
-      ease: ADJACENT_EASE,
-    },
-    width: {
-      values: [fromW, ADJACENT_SQUEEZE_W, toW, toW],
-      times: [0, ADJACENT_TRAVEL_AT, ADJACENT_EXPAND_AT, 1],
-      ease: ADJACENT_EASE,
-    },
-    y: {
-      values: [start.y, to.y],
-      times: [0, 1],
-      ease: ["linear"],
-    },
-  };
+  return forward
+    ? buildAdjacentForward(start.x, start.width, to.x, to.width, start.y, to.y)
+    : buildAdjacentReverse(start.x, start.width, to.x, to.width, start.y, to.y);
 }
 
 function waypointIndex(from: number, to: number) {
@@ -131,52 +234,35 @@ export default function TabFilter({
   const generationRef = useRef(0);
   const targetHitTimerRef = useRef<number | null>(null);
   const targetHitDoneRef = useRef(false);
+  const groupRef = useRef<HTMLDivElement>(null);
+  const labelRefs = useRef<(HTMLSpanElement | null)[]>([]);
+  const [layouts, setLayouts] = useState<TabLayout[]>(() =>
+    TABS.map((_, index) => fallbackLayout(index)),
+  );
+  const layoutsRef = useRef(layouts);
+  layoutsRef.current = layouts;
 
-  const underlineWidth = useMotionValue<number>(TABS[0].underlineWidth * 0.4);
-  const underlineX = useMotionValue<number>(TABS[0].underlineX);
-  const underlineY = useMotionValue<number>(-0.43);
-  const underlineOpacity = useMotionValue<number>(1);
+  const settles = useDialKit("Indicator Settle", INDICATOR_SETTLE_CONFIG, {
+    persist: { key: "tab-filter-indicator-settle-v4" },
+  }) as TabSettles;
+  const initialSettle = settlePose(0, settles, layouts);
+
+  const underlineWidth = useMotionValue<number>(initialSettle.width);
+  const underlineX = useMotionValue<number>(initialSettle.x);
+  const underlineY = useMotionValue<number>(initialSettle.y);
+  const underlineHeight = useMotionValue<number>(initialSettle.height);
 
   onChangeRef.current = onChange;
   onTargetHitRef.current = onTargetHit;
 
-  const indicatorSettle = useDialKit("Indicator Settle", {
-    All: {
-      height: 1.53,
-      settleY: -0.43,
-      widthScale: 0.4,
-      xOffset: 0,
+  const geo = useDialKit(
+    "Long Jump Geo",
+    {
+      squeezeW: [4.11, 2, 20, 0.01],
+      travelW: [34.25, 4, 40, 0.01],
     },
-    Clients: {
-      height: 1.53,
-      settleY: -0.04,
-      widthScale: 0.4,
-      xOffset: 0,
-    },
-    Experiments: {
-      height: 1.53,
-      settleY: -0.04,
-      widthScale: 0.4,
-      xOffset: 0,
-    },
-    Live: {
-      height: 1.53,
-      settleY: -0.04,
-      widthScale: 0.4,
-      xOffset: 0,
-    },
-    Mobile: {
-      height: 1.53,
-      settleY: -0.04,
-      widthScale: 0.4,
-      xOffset: 0,
-    },
-  });
-
-  const geo = useDialKit("Long Jump Geo", {
-    squeezeW: [18.98, 2, 20, 0.01],
-    travelW: [31.26, 4, 40, 0.01],
-  });
+    { persist: { key: "tab-filter-long-jump-geo-v2" } },
+  );
 
   // TODO(production): DialKit's clip.current values are the scrubbable authoring preview.
   // Replace them with equivalent real Motion animations using the tuned timeline
@@ -189,15 +275,40 @@ export default function TabFilter({
 
   longJumpRef.current = longJump;
 
-  const settledPoseForTab = (index: number): Pose => {
-    const tab = TABS[index];
-    const settle = indicatorSettle[tab.label];
-    return {
-      x: tab.underlineX + settle.xOffset,
-      width: tab.underlineWidth * settle.widthScale,
-      y: settle.settleY,
-    };
+  const measureLayouts = () => {
+    const group = groupRef.current;
+    if (!group) return;
+    const groupBox = group.getBoundingClientRect();
+    const next = TABS.map((_, index) => {
+      const el = labelRefs.current[index];
+      if (!el) return fallbackLayout(index);
+      const box = el.getBoundingClientRect();
+      return { left: box.left - groupBox.left, width: box.width };
+    });
+    setLayouts((previous) => {
+      const same = previous.every(
+        (layout, index) =>
+          Math.abs(layout.left - next[index].left) < 0.25 &&
+          Math.abs(layout.width - next[index].width) < 0.25,
+      );
+      return same ? previous : next;
+    });
   };
+
+  useEffect(() => {
+    measureLayouts();
+    const fontsReady =
+      "fonts" in document
+        ? document.fonts.ready.catch(() => undefined)
+        : Promise.resolve();
+    void fontsReady.then(() => measureLayouts());
+    const raf = requestAnimationFrame(() => measureLayouts());
+    window.addEventListener("resize", measureLayouts);
+    return () => {
+      cancelAnimationFrame(raf);
+      window.removeEventListener("resize", measureLayouts);
+    };
+  }, []);
 
   useEffect(() => {
     return () => {
@@ -208,8 +319,11 @@ export default function TabFilter({
     };
   }, []);
 
-  const readDialPose = (endpoints: LongJumpEndpoints): Pose =>
-    resolveLongJumpPose(
+  const readDialPose = (
+    endpoints: LongJumpEndpoints,
+    settleY: number,
+  ): Pose => {
+    const pose = resolveLongJumpPose(
       {
         waypoint: progressOf(tl.phaseWaypoint),
         target: progressOf(tl.phaseTarget),
@@ -221,21 +335,33 @@ export default function TabFilter({
       endpoints,
       geo.squeezeW,
       geo.travelW,
+      settleY,
     );
+    return { ...pose, height: underlineHeight.get() };
+  };
 
   const commitPose = (pose: Pose) => {
     underlineX.set(pose.x);
     underlineWidth.set(pose.width);
     underlineY.set(pose.y);
+    underlineHeight.set(pose.height);
   };
+
+  useEffect(() => {
+    if (longJump || adjacentTransition) return;
+    commitPose(settlePose(activeIndexRef.current, settles, layouts));
+  }, [settles, layouts, activeIndex, longJump, adjacentTransition]);
 
   const captureVisualPose = (): Pose => {
     const jump = longJumpRef.current;
-    if (jump) return readDialPose(jump.endpoints);
+    if (jump) {
+      return readDialPose(jump.endpoints, settleLook(jump.to, settles).settleY);
+    }
     return {
       x: underlineX.get(),
       width: underlineWidth.get(),
       y: underlineY.get(),
+      height: underlineHeight.get(),
     };
   };
 
@@ -258,9 +384,13 @@ export default function TabFilter({
 
   const abortDial = () => {
     if (longJumpRef.current) {
-      commitPose(readDialPose(longJumpRef.current.endpoints));
+      commitPose(
+        readDialPose(
+          longJumpRef.current.endpoints,
+          settleLook(longJumpRef.current.to, settles).settleY,
+        ),
+      );
     }
-    underlineOpacity.set(1);
     longJumpRef.current = null;
     setLongJump(null);
     tl.pause();
@@ -273,10 +403,10 @@ export default function TabFilter({
     start: Pose,
   ) => {
     const gen = ++generationRef.current;
+    const to = settlePose(toIndex, settles, layoutsRef.current);
 
     stopPlayback();
     commitPose(start);
-    underlineOpacity.set(1);
     targetHitDoneRef.current = false;
 
     playbackRef.current = [
@@ -295,12 +425,16 @@ export default function TabFilter({
         times: profile.y.times,
         ease: profile.y.ease,
       } as never),
+      animate(underlineHeight, [start.height, to.height], {
+        duration: profile.duration,
+        ease: "easeOut",
+      }),
     ];
 
     targetHitTimerRef.current = window.setTimeout(() => {
       targetHitTimerRef.current = null;
       notifyTargetHit(toIndex, gen);
-    }, profile.duration * ADJACENT_TRAVEL_AT * 1000);
+    }, profile.duration * profile.targetHitAt * 1000);
 
     Promise.all(playbackRef.current.map((c) => c.finished)).then(() => {
       if (generationRef.current !== gen) return;
@@ -310,24 +444,23 @@ export default function TabFilter({
   };
 
   const runLongJump = (fromIndex: number, toIndex: number, start: Pose) => {
-    const to = settledPoseForTab(toIndex);
-    const waypoint = settledPoseForTab(waypointIndex(fromIndex, toIndex));
+    const currentLayouts = layoutsRef.current;
+    const to = settlePose(toIndex, settles, currentLayouts);
+    const mid = waypointIndex(fromIndex, toIndex);
+    const waypoint = currentLayouts[mid] ?? fallbackLayout(mid);
     const gen = ++generationRef.current;
 
     stopPlayback();
     commitPose(start);
-    underlineOpacity.set(LONG_JUMP_UNDERLINE_OPACITY);
     targetHitDoneRef.current = false;
 
     const endpoints: LongJumpEndpoints = {
       fromX: start.x,
       fromW: start.width,
-      fromY: start.y,
-      waypointX: waypoint.x,
+      waypointX: waypoint.left,
       waypointW: waypoint.width,
       toX: to.x,
       toW: to.width,
-      toY: to.y,
       forward: toIndex > fromIndex,
     };
 
@@ -337,35 +470,37 @@ export default function TabFilter({
     setAdjacentTransition(null);
     tl.replay();
 
+    animate(underlineHeight, [start.height, to.height], {
+      duration: tl.duration,
+      ease: "easeOut",
+    });
+
     if (generationRef.current !== gen) return;
   };
 
   useEffect(() => {
     if (!longJump) return;
-    commitPose(readDialPose(longJump.endpoints));
+    commitPose(
+      readDialPose(
+        longJump.endpoints,
+        settleLook(longJump.to, settles).settleY,
+      ),
+    );
     if (progressOf(tl.phaseTarget) >= 1) {
       notifyTargetHit(longJump.to, generationRef.current);
     }
-  }, [longJump, tl.time, tl.playing, geo.squeezeW, geo.travelW]);
+  }, [longJump, tl.time, tl.playing, geo.squeezeW, geo.travelW, settles]);
 
   useEffect(() => {
     if (!longJump) return;
     if (tl.playing) return;
     if (tl.time < tl.duration - 0.02) return;
 
-    commitPose({
-      x: longJump.endpoints.toX,
-      width: longJump.endpoints.toW,
-      y: longJump.endpoints.toY,
-    });
+    commitPose(settlePose(longJump.to, settles, layoutsRef.current));
     longJumpRef.current = null;
     setLongJump(null);
     tl.seek(0);
-    animate(underlineOpacity, 1, {
-      duration: 0.06,
-      ease: "linear",
-    });
-  }, [longJump, tl.time, tl.playing, tl.duration]);
+  }, [longJump, tl.time, tl.playing, tl.duration, settles]);
 
   const handleSelect = (index: number) => {
     if (index === activeIndexRef.current) return;
@@ -385,8 +520,9 @@ export default function TabFilter({
       const profile = buildAdjacentProfile(
         fromIndex,
         index,
-        settledPoseForTab(index),
         start,
+        settles,
+        layoutsRef.current,
       );
       setAdjacentTransition({ from: fromIndex, to: index, profile });
       runAdjacentTransition(index, profile, start);
@@ -438,11 +574,15 @@ export default function TabFilter({
 
   return (
     <div className="tab-filter" data-node-id="853:501">
-      <div className="tab-filter__group" data-node-id="853:490">
+      <div
+        ref={groupRef}
+        className="tab-filter__group"
+        data-node-id="853:490"
+      >
         <div className="tab-filter__labels" role="tablist" data-node-id="853:457">
           {TABS.map((tab, index) => (
             <motion.button
-              key={`${tab.label}-${ink}`}
+              key={tab.label}
               type="button"
               role="tab"
               aria-selected={
@@ -461,7 +601,14 @@ export default function TabFilter({
                 scale: { duration: 0.1, ease: "easeOut" },
               }}
             >
-              <span className="tab-filter__label-text">{tab.label}</span>
+              <span
+                ref={(element) => {
+                  labelRefs.current[index] = element;
+                }}
+                className="tab-filter__label-text"
+              >
+                {tab.label}
+              </span>
             </motion.button>
           ))}
         </div>
@@ -470,11 +617,10 @@ export default function TabFilter({
           className="tab-filter__underline"
           data-node-id="853:465"
           style={{
-            scaleX: underlineWidth,
+            width: underlineWidth,
+            height: underlineHeight,
             x: underlineX,
             y: underlineY,
-            opacity: underlineOpacity,
-            height: indicatorSettle[TABS[activeIndex].label].height,
             backgroundColor: ink,
           }}
         />
