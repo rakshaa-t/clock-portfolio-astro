@@ -1,0 +1,136 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { SHOWCASE } from '../../data/showcase.js';
+import { renderBlock } from '../../lib/renderBlocks.js';
+
+export function getStaticPaths() {
+  return SHOWCASE.map((item) => ({
+    params: { slug: item.slug },
+    props: { item },
+  }));
+}
+
+const { item } = Astro.props;
+
+const currentIdx = SHOWCASE.findIndex((s) => s.slug === item.slug);
+const nextItem = SHOWCASE[(currentIdx + 1) % SHOWCASE.length];
+
+const isoDate = item.sortDate
+  ? String(item.sortDate).replace(/^(\d{4})(\d{2})(\d{2})$/, '$1-$2-$3')
+  : undefined;
+---
+
+<Layout
+  title={`${item.title} — Showcase — Raksha Tated`}
+  description={item.preview}
+  ogImage={item.og}
+  type="article"
+  publishedTime={isoDate}
+  tags={item.tags}
+>
+
+<div class="showcase-page showcase-detail">
+  <div class="showcase-page-inner showcase-detail-inner">
+    <a href="/showcase" class="note-page-back t-tag">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+      Showcase
+    </a>
+
+    {item.layout === 'gallery' && (
+      <>
+        <h1 class="showcase-detail-title t-heading">{item.title}</h1>
+        {item.preview && <p class="showcase-detail-lead t-body-sm">{item.preview}</p>}
+        <div class="showcase-gallery">
+          {(item.gallery || []).map((frame) => (
+            <figure class="showcase-gallery-item">
+              <div class="note-img showcase-detail-hero">
+                <img src={frame.src} alt={frame.caption || item.title} loading="lazy" />
+              </div>
+              {frame.caption && <figcaption class="note-img-caption t-body-sm">{frame.caption}</figcaption>}
+            </figure>
+          ))}
+        </div>
+      </>
+    )}
+
+    {item.layout === 'media' && (
+      <>
+        <h1 class="showcase-detail-title t-heading">{item.title}</h1>
+        <div class="showcase-detail-hero note-img">
+          {item.hero?.type === 'video' && (
+            <video src={item.hero.src} autoplay loop muted playsinline controls={false} />
+          )}
+          {item.hero?.type === 'image' && (
+            <img src={item.hero.src} alt={item.title} loading="eager" />
+          )}
+          {item.hero?.type === 'color' && (
+            <div class="showcase-detail-color" style={`background-color:${item.hero.color}`}>
+              <span class="t-heading-sm">{item.title}</span>
+            </div>
+          )}
+        </div>
+        {item.caption && <p class="showcase-detail-caption t-body">{item.caption}</p>}
+        {item.externalLink && (
+          <p class="showcase-detail-link-wrap t-body">
+            <a href={item.externalLink} class="note-link" target="_blank" rel="noopener noreferrer">
+              {item.externalLink.replace(/^https?:\/\//, '')}
+            </a>
+          </p>
+        )}
+      </>
+    )}
+
+    {item.layout === 'story' && item.body && (
+      <>
+        <time class="note-page-date t-tag" datetime={isoDate}>{item.date}</time>
+        <h1 class="note-page-title t-heading">{item.title}</h1>
+        <article class="note-page-body t-body">
+          {item.body.map((block) => (
+            <Fragment set:html={renderBlock(block)} />
+          ))}
+        </article>
+      </>
+    )}
+
+    <div class="note-page-footer">
+      <button class="note-page-share t-tag" id="shareOnX" type="button">
+        Share on <span class="sr-only">X</span><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" style="margin-left:2px;" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+      </button>
+    </div>
+
+    {nextItem && nextItem.slug !== item.slug && (
+      <div class="note-page-upnext">
+        <div class="note-page-upnext-label t-tag">Up next</div>
+        <a href={`/showcase/${nextItem.slug}`} class="note-card">
+          <div class="note-card-title t-heading-sm">{nextItem.title}</div>
+          <div class="note-card-preview t-body-sm">{nextItem.preview}</div>
+        </a>
+      </div>
+    )}
+  </div>
+</div>
+
+<script>
+  const shareBtn = document.getElementById('shareOnX');
+  if (shareBtn) {
+    shareBtn.addEventListener('click', () => {
+      const title = document.querySelector('.showcase-detail-title, .note-page-title')?.textContent || '';
+      window.open(
+        `https://x.com/intent/tweet?text=${encodeURIComponent(`"${title}"\n\nhttps://raksha.design${window.location.pathname}`)}`,
+        '_blank'
+      );
+    });
+  }
+  document.querySelectorAll('.note-card').forEach((card) => {
+    card.addEventListener('click', () => {
+      if (window.__clockAudio) window.__clockAudio.noteClick();
+    });
+  });
+  document.querySelectorAll('.showcase-detail-hero video').forEach((v) => {
+    if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      v.play().catch(() => {});
+    }
+  });
+</script>
+
+</Layout>

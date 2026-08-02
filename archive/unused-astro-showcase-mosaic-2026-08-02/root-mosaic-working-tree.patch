@@ -1,0 +1,1341 @@
+diff --git a/src/pages/changelog.astro b/src/pages/changelog.astro
+index c723b51..76045e3 100644
+--- a/src/pages/changelog.astro
++++ b/src/pages/changelog.astro
+@@ -37,6 +37,17 @@ import Layout from '../layouts/Layout.astro';
+   <h1 class="t-heading">Changelog</h1>
+   <p class="changelog-subtitle t-body-sm">What's new and what's changed on this site.</p>
+ 
++  <div class="changelog-entry">
++    <div class="changelog-version t-tag">V2.4.0</div>
++    <div class="changelog-date t-tag">July 2026</div>
++    <div class="changelog-title t-heading-sm">Showcase mosaic and Work case studies</div>
++    <ul class="changelog-list">
++      <li class="t-body-sm">New <a href="/showcase" class="footer-link">Showcase</a> page — dense 4-column mosaic grid with filters, lazy video tiles, and per-project detail pages</li>
++      <li class="t-body-sm">Homepage Work section now links to case studies and write-ups; full project grid moved to Showcase</li>
++      <li class="t-body-sm">Showcase nav item in side nav and mobile menu (routes to /showcase, not scroll-spy)</li>
++    </ul>
++  </div>
++
+   <div class="changelog-entry">
+     <div class="changelog-version t-tag">V2.3.1</div>
+     <div class="changelog-date t-tag">April 2026</div>
+diff --git a/src/pages/index.astro b/src/pages/index.astro
+index e41938e..7e58f0a 100644
+--- a/src/pages/index.astro
++++ b/src/pages/index.astro
+@@ -1,38 +1,11 @@
+ ---
+ import Layout from '../layouts/Layout.astro';
+ import { NOTES } from '../data/notes.js';
++import { CASE_STUDIES } from '../data/case-studies.js';
+ ---
+ 
+ <Layout title="Raksha Tated | Product Designer" description="Product Designer. Five years designing products, one year engineering them. Tech, healthcare and consumer apps. Select client work available.">
+ 
+-<!-- ═══ MODAL ═══ -->
+-<div class="modal-overlay" id="modalOverlay">
+-  <div class="modal-backdrop" onclick="closeModal()" aria-hidden="true"></div>
+-  <div class="modal-card" id="modalCard" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+-    <div class="sheet-handle"></div>
+-    <div class="modal-card-inner">
+-      <!-- Image area -->
+-      <div class="modal-carousel">
+-        <div class="carousel-scroll" id="carouselScroll"></div>
+-        <div class="carousel-counter" id="carouselCounter">1 / 3</div>
+-        <button class="modal-close" onclick="closeModal()" aria-label="Close modal">✕</button>
+-        <button class="carousel-btn prev" onclick="carouselPrev()" aria-label="Previous slide"><svg width="10" height="16" viewBox="0 0 10 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="8 2 2 8 8 14"/></svg></button>
+-        <button class="carousel-btn next" onclick="carouselNext()" aria-label="Next slide"><svg width="10" height="16" viewBox="0 0 10 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2 2 8 8 2 14"/></svg></button>
+-      </div>
+-      <!-- Metadata area -->
+-      <div class="modal-body" id="modalBody">
+-        <div class="modal-meta">
+-          <h2 class="modal-title t-heading" id="modalTitle"></h2>
+-          <div class="modal-tags" id="modalTags"></div>
+-        </div>
+-        <div class="modal-desc-wrap" id="modalDescWrap">
+-          <p class="modal-desc t-body" id="modalDesc"></p>
+-        </div>
+-      </div>
+-    </div>
+-  </div>
+-</div>
+-
+ <!-- ═══ PAGE CONTENT ═══ -->
+ <main class="page-content" id="mainContent">
+   <div class="page-inner">
+@@ -91,89 +64,32 @@ import { NOTES } from '../data/notes.js';
+       </div>
+     </div>
+ 
+-    <!-- ═══ WORK — Puzzle grid with category filters ═══ -->
++    <!-- ═══ WORK — Case study links ═══ -->
+     <div class="browse-section" id="sec-work">
+       <h2 class="t-display">Work</h2>
+-      <p class="subtitle t-subtitle">Select client and personal work</p>
++      <p class="subtitle t-subtitle">Case studies and write-ups</p>
+ 
+-      <div class="puzzle-filters" id="puzzleFilters">
+-        <button class="mymind-pill t-tag active" data-filter="all">All</button>
+-        <button class="mymind-pill t-tag" data-filter="live">Live</button>
+-        <button class="mymind-pill t-tag" data-filter="client">Client</button>
+-        <button class="mymind-pill t-tag" data-filter="personal">Experiments</button>
++      <div class="note-cards" id="caseStudyCards">
++        {CASE_STUDIES.map((cs) => (
++          <a
++            href={cs.href}
++            class="note-card"
++            target={cs.external ? '_blank' : undefined}
++            rel={cs.external ? 'noopener noreferrer' : undefined}
++          >
++            <div class="note-card-date t-tag">{cs.date}</div>
++            <div class="note-card-title t-heading-sm">{cs.title}</div>
++            <div class="note-card-preview t-body-sm">{cs.preview}</div>
++            <div class="note-card-tags">
++              {cs.tags.map((tag) => (
++                <span class="note-card-tag t-tag">{tag}</span>
++              ))}
++            </div>
++          </a>
++        ))}
+       </div>
+ 
+-      <div class="puzzle-grid">
+-        <div class="puzzle-card" role="button" tabindex="0" data-project="0" data-category="live">
+-          <div class="puzzle-img"><video src="/notes/prevue/hero.mp4" autoplay loop muted playsinline preload="auto" aria-hidden="true"></video></div>
+-          <div class="puzzle-overlay"><span>Prevue</span></div>
+-        </div>
+-        <div class="puzzle-card" role="button" tabindex="0" data-project="1" data-category="client">
+-          <div class="puzzle-img"><video src="/projects/studyloop/hero.mp4" autoplay loop muted playsinline preload="auto" aria-hidden="true"></video></div>
+-          <div class="puzzle-overlay"><span>StudyLoop App</span></div>
+-        </div>
+-        <div class="puzzle-card" role="button" tabindex="0" data-project="3" data-category="client">
+-          <div class="puzzle-img"><img src="/projects/ova-app.jpg" alt="Ova App" loading="lazy"></div>
+-          <div class="puzzle-overlay"><span>Ova App</span></div>
+-        </div>
+-        <div class="puzzle-card" role="button" tabindex="0" data-project="4" data-category="client">
+-          <div class="puzzle-img"><img src="/projects/greex-defi.jpg" alt="Greex DeFi" loading="lazy"></div>
+-          <div class="puzzle-overlay"><span>Greex DeFi</span></div>
+-        </div>
+-        <div class="puzzle-card" role="button" tabindex="0" data-project="5" data-category="client">
+-          <div class="puzzle-img"><img src="/projects/indianoil.jpg" alt="IndianOil Dashboard" loading="lazy"></div>
+-          <div class="puzzle-overlay"><span>IndianOil Dashboard</span></div>
+-        </div>
+-        <div class="puzzle-card" role="button" tabindex="0" data-project="6" data-category="client">
+-          <div class="puzzle-img"><img src="/projects/dealdoc-overview.jpg" alt="DealDoc" loading="lazy"></div>
+-          <div class="puzzle-overlay"><span>DealDoc</span></div>
+-        </div>
+-        <div class="puzzle-card" role="button" tabindex="0" data-project="2" data-category="client">
+-          <div class="puzzle-img"><img src="/projects/pet-tickle.jpg" alt="Tickle" loading="lazy"></div>
+-          <div class="puzzle-overlay"><span>Tickle</span></div>
+-        </div>
+-        <div class="puzzle-card" role="button" tabindex="0" data-project="7" data-category="client">
+-          <div class="puzzle-img"><img src="/projects/adiagnosis.jpg" alt="ADiagnosis" loading="lazy"></div>
+-          <div class="puzzle-overlay"><span>ADiagnosis</span></div>
+-        </div>
+-        <div class="puzzle-card puzzle-extra" role="button" tabindex="0" data-project="8" data-category="personal">
+-          <div class="puzzle-img"><img src="/projects/vault-defi.jpg" alt="Vault DeFi" loading="lazy"></div>
+-          <div class="puzzle-overlay"><span>Vault DeFi</span></div>
+-        </div>
+-        <div class="puzzle-card puzzle-extra" role="button" tabindex="0" data-project="9" data-category="personal">
+-          <div class="puzzle-img"><img src="/projects/cycling-app.jpg" alt="Strava concept redesign" loading="lazy"></div>
+-          <div class="puzzle-overlay"><span>Strava concept redesign</span></div>
+-        </div>
+-        <div class="puzzle-card puzzle-extra" role="button" tabindex="0" data-project="10" data-category="personal">
+-          <div class="puzzle-img"><img src="/projects/chain-landing.jpg" alt="Chain Landing" loading="lazy"></div>
+-          <div class="puzzle-overlay"><span>Chain Landing</span></div>
+-        </div>
+-        <div class="puzzle-card puzzle-extra" role="button" tabindex="0" data-project="11" data-category="personal">
+-          <div class="puzzle-img"><img src="/projects/skeu-buttons.jpg" alt="Skeuomorphic Buttons" loading="lazy"></div>
+-          <div class="puzzle-overlay"><span>Skeuomorphic Buttons</span></div>
+-        </div>
+-        <div class="puzzle-card puzzle-extra" role="button" tabindex="0" data-project="12" data-category="client">
+-          <div class="puzzle-img"><img src="/projects/cognix/cognix-landing.png" alt="Cognix Health" loading="lazy"></div>
+-          <div class="puzzle-overlay"><span>Cognix Health</span></div>
+-        </div>
+-        <div class="puzzle-card puzzle-extra" role="button" tabindex="0" data-project="13" data-category="personal">
+-          <div class="puzzle-img"><img src="/projects/vercel-dashboard.jpg" alt="Vercel Dashboard" loading="lazy"></div>
+-          <div class="puzzle-overlay"><span>Vercel Dashboard</span></div>
+-        </div>
+-        <div class="puzzle-card puzzle-extra" role="button" tabindex="0" data-project="14" data-category="personal">
+-          <div class="puzzle-img"><video src="/projects/magicpath-3.mp4" loop muted playsinline preload="none" aria-hidden="true"></video></div>
+-          <div class="puzzle-overlay"><span>MagicPath</span></div>
+-        </div>
+-        <div class="puzzle-card puzzle-extra" role="button" tabindex="0" data-project="15" data-category="personal">
+-          <div class="puzzle-img"><video src="/projects/card-tilt.mp4" loop muted playsinline preload="none" aria-hidden="true"></video></div>
+-          <div class="puzzle-overlay"><span>Card Tilt</span></div>
+-        </div>
+-        <div class="puzzle-card puzzle-extra" role="button" tabindex="0" data-project="16" data-category="personal">
+-          <div class="puzzle-img"><video src="/projects/magicpath-2.mp4" loop muted playsinline preload="none" aria-hidden="true"></video></div>
+-          <div class="puzzle-overlay"><span>MagicPath Experiments</span></div>
+-        </div>
+-      </div>
+-      <button class="puzzle-show-more t-tag" id="puzzleShowMore" aria-expanded="false">Show more work</button>
++      <a href="/showcase" class="showcase-cta t-tag">See all work →</a>
+     </div>
+ 
+     <!-- ═══ NOTES — Links to individual note pages ═══ -->
+@@ -252,7 +168,7 @@ import { NOTES } from '../data/notes.js';
+     </div>
+ 
+     <footer class="site-footer t-tag">
+-      <span>&copy; Raksha T 2026. V2.3.0</span>
++      <span>&copy; Raksha T 2026. V2.4.0</span>
+       <span class="footer-sep">&middot;</span>
+       <a href="/changelog" class="footer-link">Changelog</a>
+     </footer>
+@@ -264,6 +180,7 @@ import { NOTES } from '../data/notes.js';
+ <nav class="side-nav" id="sideNav" aria-label="Section navigation">
+   <button class="side-nav-line active" data-section="sec-about" aria-label="About"><span class="side-nav-label">About</span></button>
+   <button class="side-nav-line" data-section="sec-work" aria-label="Work"><span class="side-nav-label">Work</span></button>
++  <a href="/showcase" class="side-nav-line side-nav-link" aria-label="Showcase"><span class="side-nav-label">Showcase</span></a>
+   <button class="side-nav-line" data-section="sec-notes" aria-label="Notes"><span class="side-nav-label">Notes</span></button>
+   <button class="side-nav-line" data-section="sec-bookmarks" aria-label="Saves"><span class="side-nav-label">Saves</span></button>
+   <button class="side-nav-line" data-section="sec-books" aria-label="Books"><span class="side-nav-label">Books</span></button>
+@@ -280,6 +197,7 @@ import { NOTES } from '../data/notes.js';
+   <div class="mobile-menu">
+     <button class="mobile-menu-item t-heading-sm active" data-section="sec-about">About</button>
+     <button class="mobile-menu-item t-heading-sm" data-section="sec-work">Work</button>
++    <a href="/showcase" class="mobile-menu-item mobile-menu-link t-heading-sm">Showcase</a>
+     <button class="mobile-menu-item t-heading-sm" data-section="sec-notes">Notes</button>
+     <button class="mobile-menu-item t-heading-sm" data-section="sec-bookmarks">Saves</button>
+     <button class="mobile-menu-item t-heading-sm" data-section="sec-books">Books</button>
+diff --git a/src/scripts/bottom-nav.js b/src/scripts/bottom-nav.js
+index 1658443..d039659 100644
+--- a/src/scripts/bottom-nav.js
++++ b/src/scripts/bottom-nav.js
+@@ -6,184 +6,220 @@
+ import { smoothScrollToEl, swipeToDismiss } from './shared.js';
+ import { haptic } from './haptics.js';
+ 
+-let _cleanup=null;
+-
+-function initBottomNav(){
+-  if(_cleanup) _cleanup();
+-
+-  const sideNav=document.getElementById('sideNav');
+-  const burgerBtn=document.getElementById('burgerBtn');
+-  const menuWrap=document.getElementById('mobileMenuWrap');
+-  if(!sideNav&&!burgerBtn) return;
+-
+-  const sideItems=sideNav?[...sideNav.querySelectorAll('.side-nav-line')]:[];
+-  const menuItems=menuWrap?[...menuWrap.querySelectorAll('.mobile-menu-item')]:[];
+-
+-  const sections=sideItems.length
+-    ? sideItems.map(item=>document.getElementById(item.dataset.section)).filter(Boolean)
+-    : menuItems.map(item=>document.getElementById(item.dataset.section)).filter(Boolean);
+-  if(!sections.length) return;
+-
+-  let activeIdx=0;
+-  let programmaticScroll=false;
+-  let ticking=false;
+-  let menuOpen=false;
+-
+-  function setActive(idx){
+-    if(idx<0||idx>=sections.length||idx===activeIdx) return;
+-    activeIdx=idx;
+-    sideItems.forEach((item,i)=>item.classList.toggle('active',i===idx));
+-    menuItems.forEach((item,i)=>item.classList.toggle('active',i===idx));
++let _cleanup = null;
++
++function initBottomNav() {
++  if (_cleanup) _cleanup();
++
++  const sideNav = document.getElementById('sideNav');
++  const burgerBtn = document.getElementById('burgerBtn');
++  const menuWrap = document.getElementById('mobileMenuWrap');
++  if (!sideNav && !burgerBtn) return;
++
++  const sideItems = sideNav ? [...sideNav.querySelectorAll('.side-nav-line')] : [];
++  const scrollSideItems = sideItems.filter((item) => item.dataset.section);
++  const menuItems = menuWrap ? [...menuWrap.querySelectorAll('.mobile-menu-item')] : [];
++  const scrollMenuItems = menuItems.filter((item) => item.dataset.section);
++
++  const sections = scrollSideItems.length
++    ? scrollSideItems.map((item) => document.getElementById(item.dataset.section)).filter(Boolean)
++    : scrollMenuItems.map((item) => document.getElementById(item.dataset.section)).filter(Boolean);
++  if (!sections.length) return;
++
++  let activeIdx = 0;
++  let programmaticScroll = false;
++  let ticking = false;
++  let menuOpen = false;
++
++  function setActive(idx) {
++    if (idx < 0 || idx >= sections.length || idx === activeIdx) return;
++    activeIdx = idx;
++    scrollSideItems.forEach((item, i) => item.classList.toggle('active', i === idx));
++    scrollMenuItems.forEach((item, i) => item.classList.toggle('active', i === idx));
+   }
+ 
+-  function forceActive(idx){
+-    activeIdx=-1;
++  function forceActive(idx) {
++    activeIdx = -1;
+     setActive(idx);
+   }
+ 
+-  function updateActiveFromScroll(){
+-    if(programmaticScroll) return;
+-    const vh=window.innerHeight;
+-    let bestIdx=0,bestCoverage=0;
+-    for(let i=0;i<sections.length;i++){
+-      const r=sections[i].getBoundingClientRect();
+-      const visTop=Math.max(r.top,0);
+-      const visBot=Math.min(r.bottom,vh);
+-      const coverage=Math.max(0,visBot-visTop);
+-      if(coverage>bestCoverage){
+-        bestCoverage=coverage;
+-        bestIdx=i;
++  function updateActiveFromScroll() {
++    if (programmaticScroll) return;
++    const vh = window.innerHeight;
++    let bestIdx = 0;
++    let bestCoverage = 0;
++    for (let i = 0; i < sections.length; i++) {
++      const r = sections[i].getBoundingClientRect();
++      const visTop = Math.max(r.top, 0);
++      const visBot = Math.min(r.bottom, vh);
++      const coverage = Math.max(0, visBot - visTop);
++      if (coverage > bestCoverage) {
++        bestCoverage = coverage;
++        bestIdx = i;
+       }
+     }
+     setActive(bestIdx);
+   }
+ 
+-  function onScroll(){
+-    if(!ticking){
+-      ticking=true;
+-      requestAnimationFrame(()=>{
+-        ticking=false;
++  function onScroll() {
++    if (!ticking) {
++      ticking = true;
++      requestAnimationFrame(() => {
++        ticking = false;
+         updateActiveFromScroll();
+       });
+     }
+   }
+ 
+-  // ── Mobile menu toggle ──
+-  function openMenu(){
+-    if(menuOpen) return;
+-    menuOpen=true;
++  function openMenu() {
++    if (menuOpen) return;
++    menuOpen = true;
+     burgerBtn.classList.add('open');
+-    burgerBtn.setAttribute('aria-expanded','true');
++    burgerBtn.setAttribute('aria-expanded', 'true');
+     menuWrap.classList.add('open');
+-    document.body.style.overflow='hidden';
++    document.body.style.overflow = 'hidden';
+     haptic('light');
+   }
+ 
+-  function closeMenu(){
+-    if(!menuOpen) return;
+-    menuOpen=false;
++  function closeMenu() {
++    if (!menuOpen) return;
++    menuOpen = false;
+     burgerBtn.classList.remove('open');
+-    burgerBtn.setAttribute('aria-expanded','false');
++    burgerBtn.setAttribute('aria-expanded', 'false');
+     menuWrap.classList.remove('open');
+-    document.body.style.overflow='';
++    document.body.style.overflow = '';
+   }
+ 
+-  function toggleMenu(){
+-    if(menuOpen) closeMenu(); else openMenu();
++  function toggleMenu() {
++    if (menuOpen) closeMenu();
++    else openMenu();
+   }
+ 
+-  // ── Scroll to section ──
+-  function scrollToSection(idx){
+-    const sec=sections[idx];
+-    if(!sec) return;
+-    programmaticScroll=true;
+-    activeIdx=-1;
++  function scrollToSection(idx) {
++    const sec = sections[idx];
++    if (!sec) return;
++    programmaticScroll = true;
++    activeIdx = -1;
+     setActive(idx);
+-    if(menuOpen) closeMenu();
+-    smoothScrollToEl(sec,'start');
+-    setTimeout(()=>{programmaticScroll=false;},800);
++    if (menuOpen) closeMenu();
++    smoothScrollToEl(sec, 'start');
++    setTimeout(() => {
++      programmaticScroll = false;
++    }, 800);
+   }
+ 
+-  const ac=new AbortController();
+-  window.addEventListener('scroll',onScroll,{passive:true,signal:ac.signal});
++  const ac = new AbortController();
++  window.addEventListener('scroll', onScroll, { passive: true, signal: ac.signal });
+ 
+   forceActive(0);
+   updateActiveFromScroll();
+ 
+-  // Desktop side nav clicks
+-  sideItems.forEach((item,i)=>{
+-    item.addEventListener('click',e=>{
+-      e.preventDefault();
+-      scrollToSection(i);
+-    },{signal:ac.signal});
++  scrollSideItems.forEach((item, i) => {
++    item.addEventListener(
++      'click',
++      (e) => {
++        e.preventDefault();
++        scrollToSection(i);
++      },
++      { signal: ac.signal }
++    );
+   });
+ 
+-  // ── Proximity opacity wave (desktop side-nav) ──
+-  if(sideNav){
+-    let itemCenters=[];
+-    let proxRaf=0;
+-    const SIGMA=40;
+-
+-    sideNav.addEventListener('mouseenter',()=>{
+-      sideNav.classList.add('proximity-active');
+-      itemCenters=sideItems.map(item=>{
+-        const r=item.getBoundingClientRect();
+-        return r.top+r.height/2;
+-      });
+-    },{signal:ac.signal});
+-
+-    sideNav.addEventListener('mousemove',(e)=>{
+-      if(proxRaf) return;
+-      const cy=e.clientY;
+-      proxRaf=requestAnimationFrame(()=>{
+-        proxRaf=0;
+-        for(let i=0;i<sideItems.length;i++){
+-          const dist=Math.abs(cy-itemCenters[i]);
+-          const prox=Math.exp(-(dist*dist)/(2*SIGMA*SIGMA));
+-          sideItems[i].style.setProperty('--prox',prox.toFixed(3));
++  if (sideNav) {
++    let itemCenters = [];
++    let proxRaf = 0;
++    const SIGMA = 40;
++
++    sideNav.addEventListener(
++      'mouseenter',
++      () => {
++        sideNav.classList.add('proximity-active');
++        itemCenters = sideItems.map((item) => {
++          const r = item.getBoundingClientRect();
++          return r.top + r.height / 2;
++        });
++      },
++      { signal: ac.signal }
++    );
++
++    sideNav.addEventListener(
++      'mousemove',
++      (e) => {
++        if (proxRaf) return;
++        const cy = e.clientY;
++        proxRaf = requestAnimationFrame(() => {
++          proxRaf = 0;
++          for (let i = 0; i < sideItems.length; i++) {
++            const dist = Math.abs(cy - itemCenters[i]);
++            const prox = Math.exp(-(dist * dist) / (2 * SIGMA * SIGMA));
++            sideItems[i].style.setProperty('--prox', prox.toFixed(3));
++          }
++        });
++      },
++      { passive: true, signal: ac.signal }
++    );
++
++    sideNav.addEventListener(
++      'mouseleave',
++      () => {
++        sideNav.classList.remove('proximity-active');
++        sideItems.forEach((item) => item.style.removeProperty('--prox'));
++        if (proxRaf) {
++          cancelAnimationFrame(proxRaf);
++          proxRaf = 0;
+         }
+-      });
+-    },{passive:true,signal:ac.signal});
+-
+-    sideNav.addEventListener('mouseleave',()=>{
+-      sideNav.classList.remove('proximity-active');
+-      sideItems.forEach(item=>item.style.removeProperty('--prox'));
+-      if(proxRaf){cancelAnimationFrame(proxRaf);proxRaf=0;}
+-    },{signal:ac.signal});
++      },
++      { signal: ac.signal }
++    );
+   }
+ 
+-  // Mobile menu item clicks
+-  menuItems.forEach((item,i)=>{
+-    item.addEventListener('click',e=>{
+-      e.preventDefault();
+-      scrollToSection(i);
+-    },{signal:ac.signal});
++  scrollMenuItems.forEach((item, i) => {
++    item.addEventListener(
++      'click',
++      (e) => {
++        e.preventDefault();
++        scrollToSection(i);
++      },
++      { signal: ac.signal }
++    );
+   });
+ 
+-  // Burger button
+-  if(burgerBtn){
+-    burgerBtn.addEventListener('click',toggleMenu,{signal:ac.signal});
++  menuItems
++    .filter((item) => item.classList.contains('mobile-menu-link'))
++    .forEach((item) => {
++      item.addEventListener(
++        'click',
++        () => {
++          if (menuOpen) closeMenu();
++        },
++        { signal: ac.signal }
++      );
++    });
++
++  if (burgerBtn) {
++    burgerBtn.addEventListener('click', toggleMenu, { signal: ac.signal });
+   }
+ 
+-  // Sheet handle swipe/tap closes menu
+-  const menuHandle=menuWrap?menuWrap.querySelector('.sheet-handle'):null;
+-  const cleanupSwipe=swipeToDismiss(menuHandle,closeMenu);
++  const menuHandle = menuWrap ? menuWrap.querySelector('.sheet-handle') : null;
++  const cleanupSwipe = swipeToDismiss(menuHandle, closeMenu);
+ 
+-  // Escape key closes menu
+-  document.addEventListener('keydown',e=>{
+-    if(e.key==='Escape'&&menuOpen) closeMenu();
+-  },{signal:ac.signal});
++  document.addEventListener(
++    'keydown',
++    (e) => {
++      if (e.key === 'Escape' && menuOpen) closeMenu();
++    },
++    { signal: ac.signal }
++  );
+ 
+-  _cleanup=()=>{
++  _cleanup = () => {
+     ac.abort();
+     cleanupSwipe();
+-    if(menuOpen) closeMenu();
+-    _cleanup=null;
++    if (menuOpen) closeMenu();
++    _cleanup = null;
+   };
+ }
+ 
+-window.__initBottomNav=initBottomNav;
+-// Re-init on every View Transition navigation (back/forward included)
+-document.addEventListener('astro:page-load',()=>{
+-  if(document.getElementById('sideNav')||document.getElementById('burgerBtn')) initBottomNav();
++window.__initBottomNav = initBottomNav;
++document.addEventListener('astro:page-load', () => {
++  if (document.getElementById('sideNav') || document.getElementById('burgerBtn')) initBottomNav();
+ });
+diff --git a/src/scripts/portfolio-core.js b/src/scripts/portfolio-core.js
+index dfc902c..c0deb85 100644
+--- a/src/scripts/portfolio-core.js
++++ b/src/scripts/portfolio-core.js
+@@ -1,560 +1,94 @@
+ // ═══ PORTFOLIO CORE ═══
+-// Modal system, puzzle card handlers, show more, lazy video observer.
++// Notes filters, show more, note card click sounds.
+ // Re-initializes on every page load (ViewTransitions compatible).
+ 
+-import PUZZLE_PROJECTS from '../data/projects.json';
+-import { esc, prefersReducedMotion, smoothScrollToEl, swipeToDismiss } from './shared.js';
++import { smoothScrollToEl } from './shared.js';
+ import { haptic, destroyHaptics } from './haptics.js';
+ 
+-// ═══ STATE ═══
+-let modalOpen=false, carouselIndex=0, currentModalData=null, _modalTrigger=null;
++function initPortfolioCore() {
++  const pageRoot = document.querySelector('.page-content');
++  if (pageRoot?.dataset.portfolioCoreInit === '1') return;
++  if (pageRoot) pageRoot.dataset.portfolioCoreInit = '1';
+ 
+-// ═══ MUTABLE DOM REFS (re-assigned on each page load) ═══
+-let modalOverlay, modalCard, modalBody, modalDescWrap, carouselScroll;
+-let slideObserver=null;
++  const noteFilters = document.getElementById('noteFilters');
++  const noteCards = document.getElementById('noteCards');
++  const noteShowMore = document.getElementById('noteShowMore');
++  let noteExpanded = false;
++  let noteActiveFilter = 'all';
+ 
+-// ═══ PLACEHOLDER TEXT ═══
+-const PLACEHOLDER_DESC='A detailed case study for this project is coming soon. Check back for an in-depth look at the design process, challenges, and outcomes.';
+-
+-// ═══ 3D TILT ═══
+-const TILT_MAX=0.6;
+-let tiltRX=0,tiltRY=0,tiltTargetRX=0,tiltTargetRY=0,tiltVelRX=0,tiltVelRY=0;
+-let tiltCardCX=0,tiltCardCY=0,tiltCardW=0,tiltCardH=0;
+-let tiltRaf=null;
+-
+-function tiltLoop(){
+-  if(!modalOpen){tiltRaf=null;return;}
+-  const fx=(tiltTargetRX-tiltRX)*0.06;
+-  const fy=(tiltTargetRY-tiltRY)*0.06;
+-  tiltVelRX=(tiltVelRX+fx)*0.75;
+-  tiltVelRY=(tiltVelRY+fy)*0.75;
+-  tiltRX+=tiltVelRX;tiltRY+=tiltVelRY;
+-  modalCard.style.transform=`perspective(900px) rotateX(${tiltRX}deg) rotateY(${tiltRY}deg)`;
+-  tiltRaf=requestAnimationFrame(tiltLoop);
+-}
+-
+-function updateTiltRect(){
+-  const saved=modalCard.style.transform;
+-  modalCard.style.transform='perspective(900px) rotateX(0deg) rotateY(0deg)';
+-  const r=modalCard.getBoundingClientRect();
+-  modalCard.style.transform=saved;
+-  tiltCardCX=r.left+r.width/2;tiltCardCY=r.top+r.height/2;
+-  tiltCardW=r.width;tiltCardH=r.height;
+-}
+-
+-// ═══ CAROUSEL HELPERS ═══
+-function _slideCount(p){return (p.images||p.slides).length;}
+-
+-function updateCounter(){
+-  if(!currentModalData)return;
+-  const total=_slideCount(currentModalData);
+-  const counterEl=document.getElementById('carouselCounter');
+-  counterEl.textContent=total<=1?'':`${carouselIndex+1} / ${total}`;
+-}
+-
+-function updateCarouselButtons(){
+-  if(!currentModalData)return;
+-  document.querySelector('.carousel-btn.prev').disabled=(carouselIndex===0);
+-  document.querySelector('.carousel-btn.next').disabled=(carouselIndex===_slideCount(currentModalData)-1);
+-}
+-
+-function renderModalDesc(project,slideIdx){
+-  const descEl=document.getElementById('modalDesc');
+-  if(!project.desc){
+-    descEl.innerHTML=`<p>${esc(PLACEHOLDER_DESC)}</p>`;
+-    return;
+-  }
+-  const d=Array.isArray(project.desc)?project.desc[slideIdx]||project.desc[0]:project.desc;
+-  descEl.innerHTML=d.split('\n\n').map(p=>`<p>${esc(p)}</p>`).join('');
+-}
+-
+-function recheckDescScroll(){
+-  requestAnimationFrame(()=>{if(modalDescWrap){
+-    modalDescWrap.scrollTop=0;modalDescWrap.classList.remove('has-scroll-fade');
+-    const hasOverflow=modalDescWrap.scrollHeight>modalDescWrap.clientHeight+4;
+-    modalDescWrap.classList.toggle('has-bottom-fade',hasOverflow);
+-  }});
+-}
+-
+-// ═══ SNAP-SCROLL OBSERVER ═══
+-function setupSlideObserver(){
+-  if(slideObserver) slideObserver.disconnect();
+-  if(!carouselScroll) return;
+-  const slides=carouselScroll.querySelectorAll('.carousel-slide');
+-  if(!slides.length) return;
+-  slideObserver=new IntersectionObserver((entries)=>{
+-    for(const e of entries){
+-      if(e.isIntersecting){
+-        const idx=[...slides].indexOf(e.target);
+-        if(idx>=0&&idx!==carouselIndex){
+-          carouselIndex=idx;
+-          haptic(20);
+-          updateCounter();
+-          updateCarouselButtons();
+-          if(Array.isArray(currentModalData?.desc)){renderModalDesc(currentModalData,carouselIndex);recheckDescScroll();}
+-        }
+-      }
+-    }
+-  },{root:carouselScroll,threshold:0.6});
+-  slides.forEach(s=>slideObserver.observe(s));
+-}
+-
+-function scrollToSlide(idx){
+-  if(!carouselScroll) return;
+-  carouselScroll.scroll({
+-    left:carouselScroll.clientWidth*idx,
+-    behavior:prefersReducedMotion?'auto':'smooth'
+-  });
+-}
+-
+-// ═══ SHOW MODAL ═══
+-function _showModal(project){
+-  currentModalData=project;carouselIndex=0;modalOpen=true;
+-  carouselScroll=document.getElementById('carouselScroll');
+-  carouselScroll.scrollLeft=0;
+-  const isComingSoon=!!project.comingSoon;
+-  const slides=project.images||project.slides;
+-  document.querySelector('.modal-carousel')?.classList.toggle('modal-carousel--fit',project.fit==='contain');
+-  if(isComingSoon){
+-    carouselScroll.innerHTML=`<div class="carousel-slide"><div class="carousel-slide-color" style="background:${slides[0]}"><span class="coming-soon-label">I'm working on it</span></div></div>`;
+-  }else{
+-    carouselScroll.innerHTML=slides.map((s,i)=>{
+-      const bg=project.images&&project.slides&&project.slides[i]?` style="background:${project.slides[i]}"`:'';
+-      if(project.images&&s.endsWith('.mp4')) return `<div class="carousel-slide"${bg}><video src="${s}" autoplay muted playsinline preload="metadata" aria-label="${esc(project.title)} demo video"></video></div>`;
+-      if(project.images) return `<div class="carousel-slide"${bg}><img src="${s}" alt="${project.title} slide ${i+1}" loading="${i<2?'eager':'lazy'}" decoding="async" draggable="false"></div>`;
+-      return `<div class="carousel-slide"><div class="carousel-slide-color" style="background:${s}">${i===0?project.title.substring(0,2).toUpperCase():'IMG '+(i+1)}</div></div>`;
+-    }).join('');
+-  }
+-  // Blur-up: mark videos loaded once they have data
+-  carouselScroll.querySelectorAll('video').forEach(v=>{
+-    if(v.readyState>=2) v.classList.add('loaded');
+-    else v.addEventListener('loadeddata',()=>v.classList.add('loaded'),{once:true});
+-  });
+-  const counterEl=document.getElementById('carouselCounter');
+-  counterEl.textContent=(isComingSoon||slides.length===1)?'':`1 / ${slides.length}`;
+-  counterEl.style.display=(isComingSoon||slides.length===1)?'none':'';
+-  document.getElementById('modalTitle').textContent=project.title;
+-  const tagsEl=document.getElementById('modalTags');
+-  if(project.link&&project.link!=='#')tagsEl.innerHTML=`<a class="modal-tag link" href="${project.link}" target="_blank">View full case study <svg class="cta-arrow" width="11" height="11" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12L12 4"/><path d="M5 4h7v7"/></svg></a>`;
+-  else tagsEl.innerHTML='';
+-  const innerEl=document.querySelector('.modal-card-inner');
+-  innerEl.classList.toggle('coming-soon',isComingSoon);
+-  // Always show text area — render desc (or placeholder)
+-  renderModalDesc(project,0);
+-  const hideNav=isComingSoon||slides.length===1;
+-  document.querySelector('.carousel-btn.prev').style.display=hideNav?'none':'';
+-  document.querySelector('.carousel-btn.next').style.display=hideNav?'none':'';
+-  document.querySelectorAll('.puzzle-card video').forEach(v=>{try{v.pause();}catch(e){}});
+-  if(modalDescWrap){modalDescWrap.scrollTop=0;modalDescWrap.classList.remove('has-scroll-fade');modalDescWrap.classList.remove('has-bottom-fade');}
+-  modalOverlay.classList.add('open');
+-  modalCard.style.willChange='transform';
+-  document.body.style.overflow='hidden';
+-  // Move focus into modal for keyboard users
+-  requestAnimationFrame(()=>{const closeBtn=modalCard.querySelector('.modal-close');if(closeBtn)closeBtn.focus();});
+-  requestAnimationFrame(()=>{if(modalDescWrap){
+-    const hasOverflow=modalDescWrap.scrollHeight>modalDescWrap.clientHeight+4;
+-    modalDescWrap.classList.toggle('has-bottom-fade',hasOverflow);
+-  }});
+-  updateCarouselButtons();
+-
+-  // Setup snap-scroll observer for slide tracking
+-  setupSlideObserver();
+-
+-  tiltRX=0;tiltRY=0;tiltTargetRX=0;tiltTargetRY=0;tiltVelRX=0;tiltVelRY=0;
+-  const isMobileModal=window.matchMedia('(max-width:480px)').matches;
+-  if(isMobileModal){
+-    // Mobile: CSS scale handles animation, no tilt
+-  }else if(!prefersReducedMotion){
+-    // CSS transition handles scale(0.95)→scale(1), then start tilt
+-    const onTransitionEnd=(e)=>{
+-      if(e.target!==modalCard||e.propertyName!=='transform')return;
+-      modalCard.removeEventListener('transitionend',onTransitionEnd);
+-      if(modalOpen&&!tiltRaf) tiltRaf=requestAnimationFrame(tiltLoop);
+-    };
+-    modalCard.addEventListener('transitionend',onTransitionEnd);
+-  }else{
+-    modalCard.style.transform='none';
+-  }
+-}
+-
+-function openPuzzleModal(project,triggerEl){_modalTrigger=triggerEl||null;_showModal(project);}
+-
+-function closeModal(){
+-  modalOpen=false;
+-  const trigger=_modalTrigger;_modalTrigger=null;
+-  if(carouselScroll) document.querySelectorAll('#carouselScroll video').forEach(v=>{try{v.pause();v.removeAttribute('src');v.load();}catch(e){}});
+-  if(slideObserver){slideObserver.disconnect();slideObserver=null;}
+-  // Stop tilt and clear inline transform before removing .open
+-  // so CSS transitions cleanly from translateY(0) to translateY(100vh)
+-  if(tiltRaf){cancelAnimationFrame(tiltRaf);tiltRaf=null;}
+-  modalCard.style.transform='';modalCard.style.willChange='';
+-  haptic(30);
+-  modalOverlay.classList.remove('open');
+-  document.body.style.overflow='';
+-  // Clear stuck hover state: mouseleave doesn't fire on the card once the
+-  // modal overlay intercepts the pointer, so .is-hovered stays set.
+-  document.querySelectorAll('.puzzle-card.is-hovered').forEach(c=>{
+-    c.classList.remove('is-hovered');
+-    c.style.transform='';c.style.transition='';
+-  });
+-  if(modalDescWrap){modalDescWrap.classList.remove('has-bottom-fade');modalDescWrap.classList.remove('has-scroll-fade');}
+-  document.querySelectorAll('.puzzle-card video').forEach(v=>{
+-    const r=v.getBoundingClientRect();
+-    if(r.bottom>0&&r.top<window.innerHeight) v.play().catch(()=>{});
+-  });
+-  // Restore focus to trigger element
+-  if(trigger&&trigger.focus) trigger.focus();
+-}
+-
+-function carouselNext(){
+-  if(!currentModalData||carouselIndex>=_slideCount(currentModalData)-1)return;
+-  carouselIndex++;
+-  scrollToSlide(carouselIndex);
+-  updateCounter();
+-  if(Array.isArray(currentModalData.desc)){renderModalDesc(currentModalData,carouselIndex);recheckDescScroll();}
+-  updateCarouselButtons();
+-}
+-
+-function carouselPrev(){
+-  if(!currentModalData||carouselIndex<=0)return;
+-  carouselIndex--;
+-  scrollToSlide(carouselIndex);
+-  updateCounter();
+-  if(Array.isArray(currentModalData.desc)){renderModalDesc(currentModalData,carouselIndex);recheckDescScroll();}
+-  updateCarouselButtons();
+-}
+-
+-// ═══ EXPOSE TO GLOBAL SCOPE ═══
+-window.closeModal=closeModal;
+-window.carouselPrev=carouselPrev;
+-window.carouselNext=carouselNext;
+-window.openPuzzleModal=openPuzzleModal;
+-
+-// ═══ INIT — runs on every page load ═══
+-function initPortfolioCore(){
+-  const pageRoot=document.querySelector('.page-content');
+-  if(pageRoot?.dataset.portfolioCoreInit==='1') return;
+-  if(pageRoot) pageRoot.dataset.portfolioCoreInit='1';
+-
+-  modalOverlay=document.getElementById('modalOverlay');
+-  modalCard=document.getElementById('modalCard');
+-  modalBody=document.querySelector('.modal-body');
+-  modalDescWrap=document.getElementById('modalDescWrap');
+-  carouselScroll=document.getElementById('carouselScroll');
+-
+-  // Modal-dependent setup (only runs when modal elements exist, i.e. homepage)
+-  if(modalOverlay&&modalCard){
+-    // Scroll fade on description area
+-    if(modalDescWrap) modalDescWrap.addEventListener('scroll',function(){
+-      this.classList.toggle('has-scroll-fade',this.scrollTop>2);
+-      const atBottom=this.scrollHeight-this.scrollTop-this.clientHeight<4;
+-      const hasOverflow=this.scrollHeight>this.clientHeight+4;
+-      this.classList.toggle('has-bottom-fade',hasOverflow&&!atBottom);
+-    });
+-
+-    // Sheet handle swipe/tap closes modal
+-    const modalHandle=modalCard.querySelector('.sheet-handle');
+-    swipeToDismiss(modalHandle,closeModal);
+-
+-    if(!prefersReducedMotion){
+-      modalCard.addEventListener('mouseenter',()=>{if(modalOpen)updateTiltRect();});
+-      modalCard.addEventListener('mousemove',e=>{
+-        if(!modalOpen)return;
+-        if(!tiltCardW)updateTiltRect();
+-        const nx=(e.clientX-tiltCardCX)/tiltCardW;
+-        const ny=(e.clientY-tiltCardCY)/tiltCardH;
+-        tiltTargetRY=nx*TILT_MAX*2;
+-        tiltTargetRX=-ny*TILT_MAX*2;
+-      });
+-      modalCard.addEventListener('mouseleave',()=>{tiltTargetRX=0;tiltTargetRY=0;});
+-    }
+-  }
+-
+-  // Show more projects
+-  const puzzleShowMore=document.getElementById('puzzleShowMore');
+-  const puzzleGrid=document.querySelector('.puzzle-grid');
+-  const puzzleFilters=document.getElementById('puzzleFilters');
+-  let puzzleExpanded=false;
+-  let puzzleActiveFilter='all';
+-
+-  function puzzleExtraCount(){
+-    return puzzleGrid.querySelectorAll('.puzzle-extra:not(.filter-hidden)').length;
+-  }
+-  function puzzleMoreLabel(){
+-    const n=puzzleExtraCount();
+-    return `Show ${n} more`;
+-  }
+-
+-  if(puzzleShowMore){
+-    puzzleShowMore.textContent=puzzleMoreLabel();
+-    puzzleShowMore.addEventListener('click',()=>{
+-      haptic('success');
+-      if(!puzzleExpanded){
+-        puzzleGrid.classList.remove('collapsing');
+-        puzzleGrid.classList.add('expanded');
+-        puzzleShowMore.textContent='Show less';
+-        puzzleExpanded=true;
+-      }else{
+-        puzzleGrid.classList.remove('expanded');
+-        puzzleGrid.classList.add('collapsing');
+-        puzzleShowMore.textContent=puzzleMoreLabel();
+-        puzzleExpanded=false;
+-        smoothScrollToEl(puzzleShowMore,'center',0,600);
+-      }
+-      puzzleShowMore.setAttribute('aria-expanded',puzzleExpanded);
+-    });
+-  }
+-
+-  // Category filter pills
+-  if(puzzleFilters){
+-    puzzleFilters.addEventListener('click',(e)=>{
+-      const pill=e.target.closest('.mymind-pill');
+-      if(!pill) return;
+-      haptic(15);
+-      puzzleActiveFilter=pill.dataset.filter;
+-      puzzleFilters.querySelectorAll('.mymind-pill').forEach(p=>
+-        p.classList.toggle('active',p.dataset.filter===puzzleActiveFilter)
+-      );
+-      // Reset expanded state
+-      puzzleExpanded=false;
+-      puzzleGrid.classList.remove('expanded','collapsing');
+-      if(puzzleShowMore) puzzleShowMore.textContent=puzzleMoreLabel();
+-
+-      const isFiltered=puzzleActiveFilter!=='all';
+-      const allCards=puzzleGrid.querySelectorAll('.puzzle-card');
+-      allCards.forEach(card=>{
+-        const cat=card.dataset.category;
+-        const hidden=isFiltered&&cat!==puzzleActiveFilter;
+-        card.classList.toggle('filter-hidden',hidden);
+-      });
+-      // When filtered, show all matching (override puzzle-extra hiding)
+-      // When "all", restore default show-more behavior
+-      if(isFiltered){
+-        puzzleGrid.classList.add('expanded');
+-        if(puzzleShowMore) puzzleShowMore.classList.add('hidden');
+-      }else{
+-        puzzleGrid.classList.remove('expanded');
+-        if(puzzleShowMore) puzzleShowMore.classList.remove('hidden');
+-      }
+-    });
+-  }
+-
+-  // ═══ NOTES — filter pills + show more ═══
+-  const noteFilters=document.getElementById('noteFilters');
+-  const noteCards=document.getElementById('noteCards');
+-  const noteShowMore=document.getElementById('noteShowMore');
+-  let noteExpanded=false;
+-  let noteActiveFilter='all';
+-
+-  function noteExtraCount(){
+-    return noteCards?noteCards.querySelectorAll('.note-extra:not(.filter-hidden)').length:0;
++  function noteExtraCount() {
++    return noteCards ? noteCards.querySelectorAll('.note-extra:not(.filter-hidden)').length : 0;
+   }
+-  function noteMoreLabel(){
+-    const n=noteExtraCount();
++  function noteMoreLabel() {
++    const n = noteExtraCount();
+     return `Show ${n} more`;
+   }
+ 
+-  if(noteShowMore&&noteCards){
+-    noteShowMore.textContent=noteMoreLabel();
+-    if(noteExtraCount()===0) noteShowMore.classList.add('hidden');
+-    noteShowMore.addEventListener('click',()=>{
++  if (noteShowMore && noteCards) {
++    noteShowMore.textContent = noteMoreLabel();
++    if (noteExtraCount() === 0) noteShowMore.classList.add('hidden');
++    noteShowMore.addEventListener('click', () => {
+       haptic('success');
+-      if(!noteExpanded){
++      if (!noteExpanded) {
+         noteCards.classList.remove('collapsing');
+         noteCards.classList.add('expanded');
+-        noteShowMore.textContent='Show less';
+-        noteExpanded=true;
+-      }else{
++        noteShowMore.textContent = 'Show less';
++        noteExpanded = true;
++      } else {
+         noteCards.classList.remove('expanded');
+         noteCards.classList.add('collapsing');
+-        noteShowMore.textContent=noteMoreLabel();
+-        noteExpanded=false;
+-        smoothScrollToEl(noteShowMore,'center',0,600);
++        noteShowMore.textContent = noteMoreLabel();
++        noteExpanded = false;
++        smoothScrollToEl(noteShowMore, 'center', 0, 600);
+       }
+-      noteShowMore.setAttribute('aria-expanded',noteExpanded);
++      noteShowMore.setAttribute('aria-expanded', noteExpanded);
+     });
+   }
+ 
+-  if(noteFilters&&noteCards){
+-    noteFilters.addEventListener('click',(e)=>{
+-      const pill=e.target.closest('.mymind-pill');
+-      if(!pill) return;
++  if (noteFilters && noteCards) {
++    noteFilters.addEventListener('click', (e) => {
++      const pill = e.target.closest('.mymind-pill');
++      if (!pill) return;
+       haptic(15);
+-      noteActiveFilter=pill.dataset.filter;
+-      noteFilters.querySelectorAll('.mymind-pill').forEach(p=>
+-        p.classList.toggle('active',p.dataset.filter===noteActiveFilter)
++      noteActiveFilter = pill.dataset.filter;
++      noteFilters.querySelectorAll('.mymind-pill').forEach((p) =>
++        p.classList.toggle('active', p.dataset.filter === noteActiveFilter)
+       );
+-      noteExpanded=false;
+-      noteCards.classList.remove('expanded','collapsing');
+-
+-      const isFiltered=noteActiveFilter!=='all';
+-      noteCards.querySelectorAll('.note-card').forEach(card=>{
+-        const tags=(card.dataset.tags||'').split(',');
+-        const hidden=isFiltered&&!tags.includes(noteActiveFilter);
+-        card.classList.toggle('filter-hidden',hidden);
++      noteExpanded = false;
++      noteCards.classList.remove('expanded', 'collapsing');
++
++      const isFiltered = noteActiveFilter !== 'all';
++      noteCards.querySelectorAll('.note-card').forEach((card) => {
++        const tags = (card.dataset.tags || '').split(',');
++        const hidden = isFiltered && !tags.includes(noteActiveFilter);
++        card.classList.toggle('filter-hidden', hidden);
+       });
+-      if(isFiltered){
++      if (isFiltered) {
+         noteCards.classList.add('expanded');
+-        if(noteShowMore) noteShowMore.classList.add('hidden');
+-      }else{
++        if (noteShowMore) noteShowMore.classList.add('hidden');
++      } else {
+         noteCards.classList.remove('expanded');
+-        if(noteShowMore){
++        if (noteShowMore) {
+           noteShowMore.classList.remove('hidden');
+-          noteShowMore.textContent=noteMoreLabel();
+-          if(noteExtraCount()===0) noteShowMore.classList.add('hidden');
++          noteShowMore.textContent = noteMoreLabel();
++          if (noteExtraCount() === 0) noteShowMore.classList.add('hidden');
+         }
+       }
+     });
+   }
+ 
+-  // Puzzle card click handlers + keyboard access
+-  document.querySelectorAll('.puzzle-card[data-project]').forEach(card=>{
+-    const idx=parseInt(card.dataset.project,10);
+-    const proj=PUZZLE_PROJECTS[idx];
+-    if(!proj) return;
+-    // External links: wrap in <a> for native link behavior (Cmd-click, copy URL, etc.)
+-    if('externalLink' in proj&&proj.externalLink){
+-      if(card.parentElement?.classList.contains('puzzle-card-link')) return;
+-      const link=document.createElement('a');
+-      link.href=proj.externalLink;
+-      link.target='_blank';
+-      link.rel='noopener noreferrer';
+-      link.className='puzzle-card-link';
+-      link.setAttribute('aria-label',proj.title);
+-      if(proj.tooltip) link.setAttribute('data-tooltip',proj.tooltip);
+-      card.parentNode.insertBefore(link,card);
+-      link.appendChild(card);
+-      // Anchor is the focus target now — strip role/tabindex from inner card
+-      card.removeAttribute('role');card.removeAttribute('tabindex');
+-      // Live badge
+-      if(proj.category==='live'){
+-        const badge=document.createElement('div');
+-        badge.className='puzzle-live-badge';
+-        badge.innerHTML='<span class="puzzle-live-dot"></span>LIVE';
+-        card.appendChild(badge);
+-      }
+-      return;
+-    }
+-    card.setAttribute('tabindex','0');
+-    card.setAttribute('role','button');
+-    const overlaySpan=card.querySelector('.puzzle-overlay span');
+-    if(overlaySpan) card.setAttribute('aria-label',overlaySpan.textContent);
+-    // Cursor tooltip
+-    if(proj.tooltip) card.setAttribute('data-tooltip',proj.tooltip);
+-    // Live badge
+-    if(proj.category==='live'){
+-      const badge=document.createElement('div');
+-      badge.className='puzzle-live-badge';
+-      badge.innerHTML='<span class="puzzle-live-dot"></span>LIVE';
+-      card.appendChild(badge);
+-    }
+-    function activate(){
+-      haptic('nudge');
+-      openPuzzleModal(proj,card);
+-    }
+-    if(proj.comingSoon&&!proj.link){card.style.cursor='default';card.removeAttribute('role');card.removeAttribute('tabindex');return;}
+-    if('externalLink' in proj&&!proj.externalLink){card.style.cursor='default';card.removeAttribute('role');card.removeAttribute('tabindex');return;}
+-    // Track touch movement to suppress click-on-scroll misfires (iOS fires click on touchend
+-    // even after the finger moved — which was opening externalLink cards mid-scroll).
+-    let touchStartX=0,touchStartY=0,touchMoved=false;
+-    card.addEventListener('touchstart',e=>{
+-      const t=e.touches[0];
+-      touchStartX=t.clientX;touchStartY=t.clientY;touchMoved=false;
+-    },{passive:true});
+-    card.addEventListener('touchmove',e=>{
+-      const t=e.touches[0];
+-      if(Math.abs(t.clientX-touchStartX)>10||Math.abs(t.clientY-touchStartY)>10) touchMoved=true;
+-    },{passive:true});
+-    card.addEventListener('click',e=>{
+-      if(touchMoved){e.preventDefault();e.stopPropagation();return;}
+-      activate();
+-    });
+-    card.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();activate();}});
+-  });
+-
+-  // Cursor-following chat bubble for cards with data-tooltip
+-  const _puzzleGrid=document.querySelector('.puzzle-grid');
+-  if(_puzzleGrid){
+-    let bubble=document.querySelector('.cursor-bubble');
+-    if(!bubble){bubble=document.createElement('div');bubble.className='cursor-bubble';document.body.appendChild(bubble);}
+-    let bubbleActive=false;
+-    _puzzleGrid.addEventListener('mouseover',(e)=>{
+-      const card=e.target.closest('.puzzle-card[data-tooltip]');
+-      if(!card) return;
+-      bubbleActive=true;
+-      requestAnimationFrame(()=>{
+-        bubble.textContent=card.dataset.tooltip;
+-        bubble.style.opacity='1';bubble.style.transform='translateY(0)';
+-      });
+-    });
+-    _puzzleGrid.addEventListener('mouseout',(e)=>{
+-      const card=e.target.closest('.puzzle-card[data-tooltip]');
+-      if(!card) return;
+-      if(e.relatedTarget&&card.contains(e.relatedTarget)) return;
+-      bubbleActive=false;
+-      bubble.style.opacity='0';bubble.style.transform='translateY(2px)';
+-    });
+-    _puzzleGrid.addEventListener('mousemove',(e)=>{
+-      if(!bubbleActive) return;
+-      bubble.style.left=e.clientX+14+'px';bubble.style.top=e.clientY+14+'px';
+-    });
+-  }
+-
+-  // Lazy video playback + blur-up loading (respects reduced motion)
+-  const _cardVideos=document.querySelectorAll('.puzzle-card video');
+-  if(_cardVideos.length){
+-    _cardVideos.forEach(v=>{
+-      if(prefersReducedMotion) v.pause();
+-      if(v.readyState>=2) v.classList.add('loaded');
+-      else{
+-        v.addEventListener('loadeddata',()=>v.classList.add('loaded'),{once:true});
+-        // Fallback: mobile browsers may skip loadeddata; mark loaded once playing
+-        v.addEventListener('playing',()=>v.classList.add('loaded'),{once:true});
+-        // Final fallback: force visible after 2s if events never fire (mobile Safari)
+-        setTimeout(()=>v.classList.add('loaded'),2000);
+-      }
+-    });
+-    if(!prefersReducedMotion){
+-      const vidObs=new IntersectionObserver(entries=>{
+-        entries.forEach(e=>{
+-          if(e.isIntersecting&&!modalOpen) e.target.play().catch(()=>{});
+-          else e.target.pause();
+-        });
+-      },{threshold:0.25});
+-      _cardVideos.forEach(v=>vidObs.observe(v));
+-    }
+-  }
+-
+-  // Keyboard + focus trap
+-  document.addEventListener('keydown',e=>{
+-    if(e.key==='Escape'&&modalOpen){closeModal();return;}
+-    if(modalOpen&&e.key==='ArrowRight'){carouselNext();return;}
+-    if(modalOpen&&e.key==='ArrowLeft'){carouselPrev();return;}
+-    if(modalOpen&&e.key==='Tab'){
+-      const focusable=modalCard.querySelectorAll('button,[href],input,[tabindex]:not([tabindex="-1"])');
+-      if(!focusable.length) return;
+-      const first=focusable[0],last=focusable[focusable.length-1];
+-      if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus();}
+-      else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus();}
+-    }
+-  });
+-
+-  // Note card click sound (Magic Mouse click) — guard against duplicate listeners
+-  document.querySelectorAll('.note-card').forEach(card=>{
+-    if(card._bound) return;
+-    card._bound=true;
+-    card.addEventListener('click',()=>{
+-      if(window.__clockAudio) window.__clockAudio.noteClick();
++  document.querySelectorAll('.note-card').forEach((card) => {
++    if (card._bound) return;
++    card._bound = true;
++    card.addEventListener('click', () => {
++      if (window.__clockAudio) window.__clockAudio.noteClick();
+     });
+   });
+ }
+ 
+-// Clean up haptics on page transition
+-document.addEventListener('astro:before-swap',destroyHaptics,{once:true});
++document.addEventListener('astro:before-swap', destroyHaptics, { once: true });
+ 
+-// Expose for data-astro-rerun inline script
+-window.__initPortfolioCore=initPortfolioCore;
+-// Re-init on every View Transition navigation (back/forward included)
+-document.addEventListener('astro:page-load',()=>{
+-  if(document.querySelector('.puzzle-grid')) initPortfolioCore();
++window.__initPortfolioCore = initPortfolioCore;
++document.addEventListener('astro:page-load', () => {
++  if (document.querySelector('.page-content')) initPortfolioCore();
+ });
+diff --git a/src/styles/global.css b/src/styles/global.css
+index 1067406..cacd2ff 100644
+--- a/src/styles/global.css
++++ b/src/styles/global.css
+@@ -456,6 +456,129 @@ body{}
+   color:var(--text-secondary)!important;margin-left:auto;
+ }
+ 
++/* ═══ SHOWCASE MOSAIC ═══ */
++.showcase-page{
++  min-height:100vh;padding:40px 24px 80px;background:var(--bg);
++}
++.showcase-page-inner{
++  max-width:1120px;margin:0 auto;
++}
++.showcase-page-title{margin-bottom:4px;}
++.showcase-page-sub{margin-bottom:0;}
++.showcase-filters{
++  margin-top:20px;
++  max-width:none;
++}
++.showcase-mosaic{
++  display:grid;
++  grid-template-columns:repeat(4,1fr);
++  gap:3px;
++  margin-top:24px;
++}
++.showcase-tile{
++  position:relative;display:block;
++  aspect-ratio:4/3;
++  border-radius:var(--radius-md);
++  overflow:hidden;
++  text-decoration:none;color:inherit;
++  box-shadow:var(--shadow-object);
++  background:#f0eee9;
++  border:1px solid rgba(0,0,0,0.06);
++  border-bottom:2px solid rgba(0,0,0,0.1);
++  border-right:1px solid rgba(0,0,0,0.06);
++  border-top:1px solid rgba(255,255,255,0.15);
++  border-left:1px solid rgba(255,255,255,0.1);
++  transition:transform 0.2s cubic-bezier(0.32,0.72,0,1),box-shadow 0.2s cubic-bezier(0.32,0.72,0,1);
++}
++.showcase-tile::after{
++  content:'';position:absolute;inset:0;border-radius:var(--radius-md);
++  background:radial-gradient(ellipse at 30% 25%,rgba(255,255,255,0.18) 0%,transparent 55%);
++  pointer-events:none;z-index:2;
++  transition:opacity 0.2s cubic-bezier(0.32,0.72,0,1);
++}
++.showcase-tile.is-hovered,.showcase-tile:focus-visible{
++  transform:translateY(-2px) scale(1.01);
++  box-shadow:var(--shadow-md);
++}
++.showcase-tile.is-hovered::after,.showcase-tile:focus-visible::after{opacity:0.7;}
++.showcase-tile:active{transform:scale(0.97);}
++.showcase-tile.filter-hidden{display:none!important;}
++.showcase-tile__media{
++  position:absolute;inset:0;
++  transition:transform 0.3s cubic-bezier(0.32,0.72,0,1);
++}
++.showcase-tile.is-hovered .showcase-tile__media,.showcase-tile:focus-visible .showcase-tile__media{
++  transform:translateY(-28px);
++}
++.showcase-tile__media img,.showcase-tile__media video{
++  width:100%;height:100%;object-fit:cover;display:block;
++  pointer-events:none;
++  outline:1px solid rgba(0,0,0,0.08);outline-offset:-1px;
++}
++.showcase-tile__media video::-webkit-media-controls-start-playback-button,
++.showcase-tile__media video::-webkit-media-controls{display:none !important;-webkit-appearance:none;}
++.showcase-tile__color{
++  width:100%;height:100%;
++  display:flex;align-items:center;justify-content:center;
++  padding:16px;text-align:center;
++}
++.showcase-tile__color-label{color:var(--text-primary);}
++.showcase-tile__overlay{
++  position:absolute;bottom:0;left:0;right:0;
++  display:flex;align-items:center;
++  padding:0 12px;height:28px;
++  background:rgba(0,0,0,0.04);
++  transform:translateY(100%);
++  transition:transform 0.3s cubic-bezier(0.32,0.72,0,1);
++  z-index:3;pointer-events:none;
++}
++.showcase-tile.is-hovered .showcase-tile__overlay,.showcase-tile:focus-visible .showcase-tile__overlay{
++  transform:translateY(0);
++}
++.showcase-tile__overlay span{
++  font-family:'Geist',sans-serif;font-size:var(--text-sm);font-weight:500;
++  color:var(--text-primary);letter-spacing:-0.01em;
++  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
++}
++.showcase-detail-inner{max-width:720px;}
++.showcase-detail-title{margin:16px 0 8px;}
++.showcase-detail-lead{color:var(--text-secondary);margin-bottom:24px;}
++.showcase-detail-hero{margin:16px 0 24px;}
++.showcase-detail-hero video,.showcase-detail-hero img{
++  width:100%;height:auto;display:block;border-radius:var(--radius-md);
++  box-shadow:var(--shadow-object);
++}
++.showcase-detail-color{
++  aspect-ratio:16/10;border-radius:var(--radius-md);
++  display:flex;align-items:center;justify-content:center;
++  box-shadow:var(--shadow-object);
++  color:var(--text-primary);
++}
++.showcase-detail-caption{margin-bottom:16px;}
++.showcase-detail-link-wrap{margin-top:8px;}
++.showcase-gallery{display:flex;flex-direction:column;gap:24px;}
++.showcase-gallery-item{margin:0;}
++.showcase-cta{
++  display:inline-block;margin-top:28px;
++  color:var(--accent);text-decoration:none;
++  border-bottom:1px solid rgba(139,126,200,0.35);
++  transition:color 0.15s cubic-bezier(0.32,0.72,0,1);
++}
++.showcase-cta:hover{color:var(--text-primary);}
++@media(max-width:1023px){
++  .showcase-mosaic{grid-template-columns:repeat(3,1fr);}
++}
++@media(max-width:639px){
++  .showcase-mosaic{grid-template-columns:repeat(2,1fr);gap:8px;}
++  .showcase-page{padding:32px 16px 64px;}
++}
++@media(prefers-reduced-motion:reduce){
++  .showcase-tile,.showcase-tile__media,.showcase-tile__overlay{transition:none;}
++  .showcase-tile.is-hovered,.showcase-tile:focus-visible{transform:none;}
++  .showcase-tile.is-hovered .showcase-tile__media,.showcase-tile:focus-visible .showcase-tile__media{transform:none;}
++  .showcase-tile.is-hovered .showcase-tile__overlay,.showcase-tile:focus-visible .showcase-tile__overlay{transform:translateY(0);opacity:1;}
++}
++
+ /* ═══ ABOUT SECTION ═══ */
+ .about-bio{margin-bottom:32px;text-align:left;max-width:520px;margin-left:auto;margin-right:auto;}
+ .about-bio p{color:var(--text-secondary);margin-bottom:16px;text-wrap:pretty;}
+@@ -1250,6 +1373,13 @@ a.about-dropdown-item:hover{opacity:0.7;}
+   padding:4px 0;
+   transform-origin:right center;
+   transition:transform 0.4s var(--ease),opacity 0.15s cubic-bezier(0.32,0.72,0,1);
++  text-decoration:none;color:inherit;
++}
++.side-nav-link.active::before{
++  width:6px;background:rgba(58,54,50,0.18);
++}
++.side-nav-link.active .side-nav-label{
++  color:rgba(58,54,50,0.3);font-weight:400;
+ }
+ /* ── Arc hover: all items bow into a semicircle centered on right edge ── */
+ .side-nav:hover .side-nav-line:nth-child(1){transform:translateX(0) rotate(14deg);}
+@@ -1339,10 +1469,12 @@ a.about-dropdown-item:hover{opacity:0.7;}
+   color:rgba(58,54,50,0.35);background:none;border:none;cursor:pointer;
+   padding:8px 16px;
+   transition:color 0.2s var(--ease);
++  text-decoration:none;
+   min-height:48px;min-width:min(100%,240px);
+   display:inline-flex;align-items:center;justify-content:center;
+   touch-action:manipulation;
+ }
++.mobile-menu-link.active{color:rgba(58,54,50,0.35);}
+ .mobile-menu-item.active{color:var(--text-primary);}
+ .mobile-menu-item:active{transform:scale(0.97);}
+ /* Desktop knob — standalone, hidden on mobile */

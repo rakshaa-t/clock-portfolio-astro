@@ -1,0 +1,209 @@
+:root {
+  color: #f4f2ec;
+  background: #0a0a0a;
+  font-family: 'Showcase Frama', 'Helvetica Neue', sans-serif;
+}
+
+.menu-lab {
+  min-height: 100svh;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 72% 22%, rgb(255 255 255 / 0.08), transparent 28rem),
+    #0a0a0a;
+}
+
+.menu-lab__header,
+.menu-lab__footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  font-size: 0.6875rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.menu-lab__header {
+  position: absolute;
+  z-index: 2;
+  top: 1.25rem;
+  right: 1.25rem;
+  left: 1.25rem;
+  color: rgb(244 242 236 / 0.55);
+}
+
+.menu-lab__stage {
+  display: grid;
+  min-height: 100svh;
+  place-items: center;
+  padding: 1.5rem;
+}
+
+.menu-lab__note {
+  max-width: 19rem;
+  margin: 0;
+  color: rgb(244 242 236 / 0.54);
+  font-size: clamp(1rem, 1.8vw, 1.25rem);
+  line-height: 1.35;
+  text-align: center;
+}
+
+.menu-lab__trigger {
+  position: absolute;
+  right: 1.5rem;
+  bottom: 1.5rem;
+  display: inline-flex;
+  min-width: 7.5rem;
+  min-height: 3rem;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 1rem;
+  border: 1px solid rgb(244 242 236 / 0.3);
+  border-radius: 999px;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  font-size: 0.8125rem;
+}
+
+.menu-lab__trigger i,
+.menu-lab__close-mark::before,
+.menu-lab__close-mark::after {
+  display: block;
+  width: 1.125rem;
+  height: 1px;
+  background: currentColor;
+  content: '';
+}
+
+.menu-lab__trigger i::after {
+  display: block;
+  width: 1.125rem;
+  height: 1px;
+  margin-top: 0.3125rem;
+  background: currentColor;
+  content: '';
+}
+
+.menu-lab__scrim {
+  position: fixed;
+  inset: 0;
+  z-index: 3;
+  background: rgb(0 0 0 / 0.6);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 180ms ease;
+}
+
+.menu-lab__scrim[data-open='true'] {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.menu-lab__panel {
+  position: fixed;
+  z-index: 4;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid;
+  transform-origin: top center;
+  background: var(--lab-panel-bg);
+  color: #f4f2ec;
+  pointer-events: none;
+}
+
+.menu-lab__panel[data-open='true'] {
+  pointer-events: auto;
+}
+
+.menu-lab__panel-bar {
+  display: flex;
+  min-height: 4.5rem;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 1.5rem;
+  border-bottom: 1px solid rgb(255 255 255 / 0.12);
+  font-size: 0.6875rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.menu-lab__panel-bar button {
+  display: grid;
+  width: 2.75rem;
+  height: 2.75rem;
+  place-items: center;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+
+.menu-lab__close-mark {
+  position: relative;
+  display: block;
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+.menu-lab__close-mark::before,
+.menu-lab__close-mark::after {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+
+.menu-lab__close-mark::after {
+  transform: translate(-50%, -50%) rotate(-45deg);
+}
+
+.menu-lab__links {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  justify-content: center;
+  padding: 1.5rem;
+}
+
+.menu-lab__links a {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  color: inherit;
+  line-height: 0.96;
+  text-decoration: none;
+  transition: color 180ms ease;
+}
+
+.menu-lab__links a:hover {
+  color: #a8ff63;
+}
+
+.menu-lab__links small {
+  color: rgb(244 242 236 / 0.45);
+  font-size: 0.6875rem;
+  letter-spacing: 0.08em;
+}
+
+.menu-lab__footer {
+  padding: 1.5rem;
+  color: rgb(244 242 236 / 0.45);
+}
+
+@media (max-width: 767px) {
+  .menu-lab__header {
+    top: 1rem;
+    right: 1rem;
+    left: 1rem;
+  }
+
+  .menu-lab__header span:last-child {
+    display: none;
+  }
+
+  .menu-lab__trigger {
+    right: 1rem;
+    bottom: 1rem;
+  }
+}

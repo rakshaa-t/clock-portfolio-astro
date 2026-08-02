@@ -1,0 +1,13 @@
+---
+name: Prismatic Depth
+---
+
+# Prismatic Depth
+
+Light does not arrive flat. It refracts, scatters, pools in valleys of form and dissipates at edges where surfaces meet atmosphere. Prismatic Depth is the practice of treating color as a three-dimensional substance - something with weight, transparency, and geological layering. Every gradient is a cross-section through an imaginary mineral: compressed time made visible, where each stratum tells of a different pressure, a different era. The work must appear as though someone spent weeks calibrating the precise moment where violet surrenders to amber, where warmth bleeds through coolness like light through alabaster. Meticulously crafted, every chromatic transition the product of deep expertise.
+
+Composition follows the logic of atmospheric perspective. Color recedes and advances not through opacity alone but through chroma modulation - saturated tones press forward while desaturated fields breathe and retreat. The canvas becomes a landscape without horizon, where the viewer's eye travels through depth rather than across surface. There are no hard boundaries. Every transition is a negotiation between adjacent hues conducted with painstaking attention to perceptual smoothness. Master-level execution demands that no single gradient step is visible - the shifts must feel inevitable, as if the colors grew into their positions organically.
+
+Material honesty governs texture. Grain exists not as decoration but as evidence of process - the residue of light passing through imperfect glass, the particulate quality of pigment suspended in medium. Noise is calibrated with the same precision a printmaker applies to paper tooth: too coarse and it overwhelms, too fine and the surface reads as synthetic. The final surface should feel like holding a polished stone up to evening light - luminous but tactile, precious but natural. Every granular detail placed with the care of countless hours of refinement.
+
+Scale operates through asymmetric balance. The dominant chromatic mass anchors the composition off-center, creating gravitational pull that smaller accent zones orbit. Warm and cool temperatures exist in productive tension - neither dominates, but their boundary zone becomes the most energetically charged area of the piece. This liminal space is where the real design lives: the narrow band where purple deepens into shadow, where gold light catches and blooms against cooler fields. The work of someone at the absolute top of their field, laboring over each luminous intersection until it achieves the quality of something discovered rather than designed.

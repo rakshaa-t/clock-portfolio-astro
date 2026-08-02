@@ -1,0 +1,81 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { SHOWCASE } from '../../data/showcase.js';
+---
+
+<Layout
+  title="Showcase — Raksha Tated"
+  description="Select client work, live products, and experiments — videos, images, and interfaces."
+>
+
+<div class="showcase-page">
+  <div class="showcase-page-inner">
+    <a href="/" class="note-page-back t-tag" data-astro-reload>
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+      Back
+    </a>
+
+    <h1 class="t-display showcase-page-title">Showcase</h1>
+    <p class="subtitle t-subtitle showcase-page-sub">Client work, live products, and experiments.</p>
+
+    <div class="puzzle-filters showcase-filters" id="showcaseFilters">
+      <button class="mymind-pill t-tag active" data-filter="all" type="button">All</button>
+      <button class="mymind-pill t-tag" data-filter="live" type="button">Live</button>
+      <button class="mymind-pill t-tag" data-filter="client" type="button">Client</button>
+      <button class="mymind-pill t-tag" data-filter="personal" type="button">Experiments</button>
+    </div>
+
+    <div class="showcase-mosaic" id="showcaseMosaic">
+      {SHOWCASE.map((item) => (
+        <a
+          href={`/showcase/${item.slug}`}
+          class="showcase-tile"
+          data-category={item.category}
+          aria-label={item.title}
+        >
+          <div class="showcase-tile__media">
+            {item.tile.type === 'video' && (
+              <video
+                src={item.tile.src}
+                loop
+                muted
+                playsinline
+                preload="none"
+                aria-hidden="true"
+              />
+            )}
+            {item.tile.type === 'image' && (
+              <img src={item.tile.src} alt="" loading="lazy" />
+            )}
+            {item.tile.type === 'color' && (
+              <div
+                class="showcase-tile__color"
+                style={`background-color:${item.tile.color}`}
+              >
+                <span class="showcase-tile__color-label t-heading-sm">{item.title}</span>
+              </div>
+            )}
+          </div>
+          <div class="showcase-tile__overlay puzzle-overlay">
+            <span>{item.title}</span>
+          </div>
+          {item.category === 'live' && (
+            <div class="puzzle-live-badge">
+              <span class="puzzle-live-dot" />
+              LIVE
+            </div>
+          )}
+        </a>
+      ))}
+    </div>
+  </div>
+</div>
+
+<script>
+  import '../../scripts/showcase-grid.js';
+</script>
+<script is:inline data-astro-rerun>
+  if (window.__initShowcaseGrid) window.__initShowcaseGrid();
+</script>
+
+</Layout>
