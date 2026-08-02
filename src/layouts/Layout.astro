@@ -16,6 +16,7 @@ const { title, description, ogImage, type = 'website', publishedTime, tags } = A
 const siteUrl = 'https://raksha.design';
 const pageUrl = `${siteUrl}${Astro.url.pathname}`;
 const ogImageUrl = ogImage ? `${siteUrl}${ogImage}` : `${siteUrl}/og-image.png`;
+const showHomepageShutter = Astro.url.pathname === '/';
 
 const jsonLd = type === 'article'
   ? {
@@ -114,16 +115,18 @@ const jsonLd = type === 'article'
     </script>
   </head>
   <body>
-    <!-- Shutter reveal — opens from bottom -->
-    <div class="shutter-overlay" id="shutterOverlay" aria-hidden="true">
-      <div class="shutter-inner">
-        <div class="shutter-bar"></div>
-        <div class="shutter-bar"></div>
-        <div class="shutter-bar"></div>
-        <div class="shutter-bar"></div>
-        <div class="shutter-handle"></div>
+    {showHomepageShutter && (
+      <!-- Shutter reveal — homepage only -->
+      <div class="shutter-overlay" id="shutterOverlay" aria-hidden="true">
+        <div class="shutter-inner">
+          <div class="shutter-bar"></div>
+          <div class="shutter-bar"></div>
+          <div class="shutter-bar"></div>
+          <div class="shutter-bar"></div>
+          <div class="shutter-handle"></div>
+        </div>
       </div>
-    </div>
+    )}
     <slot />
     <script is:inline>
       // Reveal page — failsafe for dev mode where CSS loads async via JS.
@@ -131,7 +134,7 @@ const jsonLd = type === 'article'
       // this runs, so it's a no-op. In dev mode this ensures the page appears.
       document.documentElement.style.opacity='1';
 
-      // Shutter reveal — plays on every page load.
+      // Shutter reveal — only runs when the homepage overlay is rendered.
       (function(){
         var s=document.getElementById('shutterOverlay');
         if(!s) return;
