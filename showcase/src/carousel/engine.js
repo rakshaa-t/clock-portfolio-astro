@@ -14,11 +14,15 @@
 import * as THREE from "three";
 import { gsap } from "gsap";
 import { CONFIG, LENS, FOCUS, ENTRY } from "./config";
+import { resolveVideoPlaybackPolicy } from "./playbackPolicy.js";
+
+let carouselInstanceCount = 0;
 
 export function createCarousel(mount, callbacks = {}) {
   const {
     projects = [],
-    initialIndex = 0,
+    initialSourceId,
+    initialSourceIds,
     caseStudyOverlayElement = null,
     onActiveChange = () => {},
     onPanelSelect = onActiveChange,
@@ -30,8 +34,7 @@ export function createCarousel(mount, callbacks = {}) {
     throw new Error("createCarousel requires a non-empty projects array");
   }
 
-  const bootIndex =
-    ((initialIndex % projects.length) + projects.length) % projects.length;
+  const engineId = ++carouselInstanceCount;
 
   let W = mount.clientWidth;
   let H = mount.clientHeight;
@@ -71,10 +74,27 @@ export function createCarousel(mount, callbacks = {}) {
 
   // ---- load stills (+ optional looping videos) ----
   const loader = new THREE.TextureLoader();
+  const pool = [];
+  const fallbackTexture = new THREE.DataTexture(
+    new Uint8Array([24, 24, 24, 255]),
+    1,
+    1,
+  );
+  fallbackTexture.colorSpace = THREE.SRGBColorSpace;
+  fallbackTexture.needsUpdate = true;
+  let bootActiveIndex = 0;
   const sources = projects.map((img, srcIndex) => {
+    let resolvePosterReady;
     const s = {
-      tex: null,
-      posterTex: null,
+      id: img.id,
+      // An opaque fallback is available synchronously, so a slow poster can
+      // never leave a panel transparent while its source is still pending.
+      tex: fallbackTexture,
+      posterTex: fallbackTexture,
+      posterState: "pending",
+      posterReady: new Promise((resolve) => {
+        resolvePosterReady = resolve;
+      }),
       videoTex: null,
       video: null,
       videoSrc: img.video || null,
@@ -90,6 +110,13 @@ export function createCarousel(mount, callbacks = {}) {
       videoTextureApplied: false,
       activateVideoTexture: null,
       srcIndex,
+    };
+
+    const settlePoster = (state, tex = fallbackTexture) => {
+      s.posterState = state;
+      s.posterTex = tex;
+      if (!s.videoTextureApplied) applyTexture(tex);
+      resolvePosterReady();
     };
 
     const applyTexture = (tex) => {
@@ -109,6 +136,7 @@ export function createCarousel(mount, callbacks = {}) {
       tex.anisotropy = renderer.capabilities.getMaxAnisotropy();
       tex.colorSpace = THREE.SRGBColorSpace;
       if (!s.locked && tex.image) s.aspect = tex.image.width / tex.image.height;
+      s.posterState = "ready";
       s.posterTex = tex;
       // A poster remains the visible fallback until a played video has
       // delivered an actual frame to WebGL.
@@ -117,13 +145,17 @@ export function createCarousel(mount, callbacks = {}) {
       // Keep the intended start panel centered while assets settle — never
       // yank back to index 0 (that was stretching the first paint).
       if (!userInteracted) {
-        scroll = centerForIndex(bootIndex);
+        scroll = centerForActiveIndex(bootActiveIndex);
         target = scroll;
       }
+      resolvePosterReady();
     };
 
     if (img.src && img.src !== img.video) {
-      loader.load(img.src, onStill);
+      loader.load(img.src, onStill, undefined, () => settlePoster("error"));
+    } else {
+      // A video-only source still needs an opaque fallback during a fast flick.
+      settlePoster("error");
     }
 
     if (img.video) {
@@ -187,6 +219,10 @@ export function createCarousel(mount, callbacks = {}) {
     return s;
   });
 
+  const sourceIndexById = new Map(
+    sources.map((source, index) => [source.id, index]),
+  );
+
   function attachVideoSource(src) {
     if (!src.video || !src.videoSrc) return;
     if (src.video.src) return;
@@ -210,6 +246,18 @@ export function createCarousel(mount, callbacks = {}) {
       video.requestVideoFrameCallback(activate);
     } else {
       requestAnimationFrame(activate);
+    }
+  }
+
+  function showPoster(src) {
+    if (!src.posterTex) return;
+    src.videoTextureApplied = false;
+    src.tex = src.posterTex;
+    for (const p of pool) {
+      if (p.srcIndex === src.srcIndex && p.bound) {
+        p.mat.map = src.posterTex;
+        p.mat.needsUpdate = true;
+      }
     }
   }
 
@@ -248,8 +296,12 @@ export function createCarousel(mount, callbacks = {}) {
     // Sources begin loading well before entry, while playback stays reserved
     // for panels close to the viewport. This avoids wasting decode work on a
     // quick flick without leaving slow movement with a cold first frame.
-    const ranked = sources
-      .map((src, i) => ({ src, i, dist: src.viewDist ?? Infinity }))
+    const ranked = activeSourceIndices
+      .map((sourceIndex) => ({
+        src: sources[sourceIndex],
+        i: sourceIndex,
+        dist: sources[sourceIndex].viewDist ?? Infinity,
+      }))
       .filter((x) => x.src.video && x.src.videoPreloadZone)
       .sort((a, b) => a.dist - b.dist);
 
@@ -264,27 +316,37 @@ export function createCarousel(mount, callbacks = {}) {
     // Every on-screen tile must be attached, even when the bounded preload
     // queue is full. It can keep its poster until the loop has a real frame.
     playSet.forEach((index) => preloadSet.add(index));
-    // Use hysteresis around the playback cutoff. Raw frame velocity naturally
-    // oscillates as the target eases, so one threshold makes videos pause and
-    // resume repeatedly while a card is still visible.
-    const speed = Math.abs(scrollSpeed);
-    if (speed >= CONFIG.VIDEO_PLAY_MAX_SPEED) {
-      videoMotionPaused = true;
-    } else if (speed <= CONFIG.VIDEO_PLAY_RESUME_SPEED) {
-      videoMotionPaused = false;
-    }
+    const motionPolicy = resolveVideoPlaybackPolicy({
+      speed: Math.abs(scrollSpeed),
+      motionPaused: videoMotionPaused,
+      hidden: false,
+      active: true,
+      preloadEligible: false,
+      playEligible: false,
+      stopSpeed: CONFIG.VIDEO_PLAY_MAX_SPEED,
+      resumeSpeed: CONFIG.VIDEO_PLAY_RESUME_SPEED,
+    });
+    videoMotionPaused = motionPolicy.motionPaused;
 
     sources.forEach((src, i) => {
       if (!src.video) return;
-      if (preloadSet.has(i)) {
+      const policy = resolveVideoPlaybackPolicy({
+        speed: Math.abs(scrollSpeed),
+        motionPaused: videoMotionPaused,
+        hidden: false,
+        active: activeSourceIndexBySource.has(i),
+        preloadEligible: preloadSet.has(i),
+        playEligible: playSet.has(i),
+        stopSpeed: CONFIG.VIDEO_PLAY_MAX_SPEED,
+        resumeSpeed: CONFIG.VIDEO_PLAY_RESUME_SPEED,
+      });
+      if (policy.shouldPreload) {
         attachVideoSource(src);
       }
-
-      const shouldPlay =
-        playSet.has(i) && (!videoMotionPaused || src.videoViewportZone);
-      if (shouldPlay) {
+      if (policy.showPoster) showPoster(src);
+      if (policy.shouldPlay) {
         requestVideoPlay(src, now);
-      } else if (!src.videoViewportZone && !src.video.paused) {
+      } else if (!src.video.paused) {
         src.video.pause();
       }
     });
@@ -301,38 +363,81 @@ export function createCarousel(mount, callbacks = {}) {
     return sources[srcIndex].aspect * CONFIG.PANEL_H + CONFIG.GAP;
   }
 
-  // cumulative x of each source's slot, and the total loop width
+  // Active source layout is independent from the persistent source registry.
+  // This is what makes a filter change a positioning operation, not a scene
+  // teardown/rebuild.
+  let activeSourceIndices = [];
+  let activeSourceIndexBySource = new Map();
+  const sourceIds = Array.isArray(initialSourceIds)
+    ? initialSourceIds
+    : sources.map((source) => source.id);
+
+  function sourceIndicesForIds(ids) {
+    const seen = new Set();
+    const result = [];
+    for (const id of ids) {
+      const index = sourceIndexById.get(id);
+      if (index !== undefined && !seen.has(index)) {
+        seen.add(index);
+        result.push(index);
+      }
+    }
+    return result;
+  }
+
+  function setActiveSourceIndices(nextIndices) {
+    activeSourceIndices = nextIndices;
+    activeSourceIndexBySource = new Map(
+      activeSourceIndices.map((sourceIndex, activeIndex) => [sourceIndex, activeIndex]),
+    );
+  }
+
+  // cumulative x of each active source's slot, and the total loop width
   let offsets = [];
   let totalWidth = 0;
   function recomputeTotal() {
     offsets = [];
     let acc = 0;
-    for (let i = 0; i < sources.length; i++) {
+    for (const sourceIndex of activeSourceIndices) {
       offsets.push(acc);
-      acc += slotWidth(i);
+      acc += slotWidth(sourceIndex);
     }
     totalWidth = acc;
   }
+  const initialActiveSources = sourceIndicesForIds(sourceIds);
+  setActiveSourceIndices(
+    initialActiveSources.length ? initialActiveSources : [0],
+  );
   recomputeTotal();
+  bootActiveIndex = Math.max(
+    0,
+    activeSourceIndexBySource.get(sourceIndexById.get(initialSourceId)) ?? 0,
+  );
 
-  // scroll value that puts panel `idx` dead-center. idx is an unbounded
-  // integer (loop k, source = idx mod N) so focus / click / entry can aim
-  // at an exact panel copy.
-  function centerForIndex(idx) {
-    const N = sources.length;
+  // Scroll value that puts an active layout index dead-center. idx is
+  // unbounded so focus/click can aim at an exact copy in the repeated row.
+  function centerForActiveIndex(idx) {
+    const N = activeSourceIndices.length;
     const loop = Math.floor(idx / N);
-    const s = ((idx % N) + N) % N;
-    return offsets[s] + slotWidth(s) / 2 - CONFIG.GAP / 2 + loop * totalWidth;
+    const activeIndex = ((idx % N) + N) % N;
+    const sourceIndex = activeSourceIndices[activeIndex];
+    return (
+      offsets[activeIndex] +
+      slotWidth(sourceIndex) / 2 -
+      CONFIG.GAP / 2 +
+      loop * totalWidth
+    );
   }
 
-  // integer index (including loop) whose center is closest to `value`
-  function nearestIndex(value) {
+  // Integer active-layout index (including loop) closest to `value`.
+  function nearestActiveIndex(value) {
     if (!totalWidth) return 0;
-    const N = sources.length;
+    const N = activeSourceIndices.length;
     let best = 0;
     let bestDist = Infinity;
     for (let i = 0; i < N; i++) {
-      const center = offsets[i] + slotWidth(i) / 2 - CONFIG.GAP / 2;
+      const center =
+        offsets[i] + slotWidth(activeSourceIndices[i]) / 2 - CONFIG.GAP / 2;
       const k = Math.round((value - center) / totalWidth);
       const dist = Math.abs(center + k * totalWidth - value);
       if (dist < bestDist) {
@@ -343,13 +448,14 @@ export function createCarousel(mount, callbacks = {}) {
     return best;
   }
 
-  // which source index is closest to screen center (for the overlay text)
-  function centerIndex(value) {
+  // Which active layout index is closest to screen center.
+  function centerActiveIndex(value) {
     if (!totalWidth) return 0;
     let bestI = 0;
     let bestDist = Infinity;
-    for (let i = 0; i < sources.length; i++) {
-      const center = offsets[i] + slotWidth(i) / 2 - CONFIG.GAP / 2;
+    for (let i = 0; i < activeSourceIndices.length; i++) {
+      const center =
+        offsets[i] + slotWidth(activeSourceIndices[i]) / 2 - CONFIG.GAP / 2;
       const k = Math.round((value - center) / totalWidth);
       const dist = Math.abs(center + k * totalWidth - value);
       if (dist < bestDist) {
@@ -364,7 +470,6 @@ export function createCarousel(mount, callbacks = {}) {
   // ---- mesh pool ----
   // REPEATS copies of the whole image set so wide screens never run dry.
   const REPEATS = 4;
-  const pool = [];
   for (let r = 0; r < REPEATS; r++) {
     for (let i = 0; i < sources.length; i++) {
       const mat = new THREE.MeshBasicMaterial({
@@ -390,7 +495,7 @@ export function createCarousel(mount, callbacks = {}) {
   }
 
   // ---- scroll state ----
-  let scroll = centerForIndex(bootIndex); // start on the selected project
+  let scroll = centerForActiveIndex(bootActiveIndex); // start on the selected project
   let target = scroll; // desired
   let userInteracted = false; // true once the user scrolls (stops auto-recenter)
   let prevScroll = 0;
@@ -749,10 +854,17 @@ export function createCarousel(mount, callbacks = {}) {
       const rep = Math.floor(poolIdx / sources.length);
       const i = p.srcIndex;
       const src = sources[i];
+      const activeIndex = activeSourceIndexBySource.get(i);
+      if (activeIndex === undefined) {
+        p.mesh.visible = false;
+        lastCenterX[poolIdx] = undefined;
+        return;
+      }
 
       // slot center within one loop, shifted by scroll, wrapped, then pushed
       // out by this pool entry's repetition rung
-      const slotCenterInLoop = offsets[i] + slotWidth(i) / 2 - CONFIG.GAP / 2;
+      const slotCenterInLoop =
+        offsets[activeIndex] + slotWidth(i) / 2 - CONFIG.GAP / 2;
       let x = slotCenterInLoop - scroll;
       x = ((x % totalWidth) + totalWidth) % totalWidth;
       x += (rep - Math.floor(REPEATS / 2)) * totalWidth;
@@ -820,11 +932,11 @@ export function createCarousel(mount, callbacks = {}) {
         // constant-gap walk from the centered source, one copy per source.
         // Each slot uses ITS OWN current grow height, so a grown panel takes
         // more space and pushes neighbours outward.
-        const cSrc = centerIndex(scroll);
-        let di = i - cSrc;
-        if (di > sources.length / 2) di -= sources.length;
-        if (di < -sources.length / 2) di += sources.length;
-        const N = sources.length;
+        const cSrc = centerActiveIndex(scroll);
+        let di = activeIndex - cSrc;
+        if (di > activeSourceIndices.length / 2) di -= activeSourceIndices.length;
+        if (di < -activeSourceIndices.length / 2) di += activeSourceIndices.length;
+        const N = activeSourceIndices.length;
         const midRep = Math.floor(REPEATS / 2);
         if (rep !== midRep) {
           p.mesh.visible = false;
@@ -841,8 +953,8 @@ export function createCarousel(mount, callbacks = {}) {
             const sa = (((cSrc + k) % N) + N) % N;
             const sb = (((cSrc + k + 1) % N) + N) % N;
             off +=
-              (sources[sa].aspect * slotH(sa) +
-                sources[sb].aspect * slotH(sb)) /
+              (sources[activeSourceIndices[sa]].aspect * slotH(sa) +
+                sources[activeSourceIndices[sb]].aspect * slotH(sb)) /
                 2 +
               CONFIG.GAP;
           }
@@ -851,8 +963,8 @@ export function createCarousel(mount, callbacks = {}) {
             const sa = (((cSrc - k) % N) + N) % N;
             const sb = (((cSrc - k - 1) % N) + N) % N;
             off -=
-              (sources[sa].aspect * slotH(sa) +
-                sources[sb].aspect * slotH(sb)) /
+              (sources[activeSourceIndices[sa]].aspect * slotH(sa) +
+                sources[activeSourceIndices[sb]].aspect * slotH(sb)) /
                 2 +
               CONFIG.GAP;
           }
@@ -1088,8 +1200,8 @@ export function createCarousel(mount, callbacks = {}) {
       setCaseStudyOverlay(null);
       return;
     }
-    target = centerForIndex(nearestIndex(scroll + hit.centerX));
-    onPanelSelect(hit.srcIndex);
+    target = centerForActiveIndex(nearestActiveIndex(scroll + hit.centerX));
+    onPanelSelect(sources[hit.srcIndex].id);
     setCaseStudyOverlay(null);
 
     // Showcase uses the strip as navigation; focus mode remains available
@@ -1110,7 +1222,7 @@ export function createCarousel(mount, callbacks = {}) {
     focusState.poolIdx = focusPoolIdx;
 
     // pull scroll precisely to center so the focused panel is dead-centre
-    target = centerForIndex(nearestIndex(scroll));
+    target = centerForActiveIndex(nearestActiveIndex(scroll));
 
     // order the OTHER panels by distance from the focused card and group
     // near-equal distances, so left/right pairs leave together — a real
@@ -1239,7 +1351,7 @@ export function createCarousel(mount, callbacks = {}) {
     focusState.lensFx = 0; // no lens distortion during entry
 
     // center a panel cleanly; that panel rises first
-    target = centerForIndex(nearestIndex(scroll));
+    target = centerForActiveIndex(nearestActiveIndex(scroll));
     scroll = target;
 
     layout(); // populate lastCenterX
@@ -1275,15 +1387,19 @@ export function createCarousel(mount, callbacks = {}) {
     // grow stagger ranked by slot distance from the centered source, so
     // symmetric left/right pairs grow together. outward = center first,
     // inward = edges first.
-    const cSrcG = centerIndex(scroll);
-    const Ng = sources.length;
+    const cSrcG = centerActiveIndex(scroll);
+    const poolSourceCount = sources.length;
+    const Ng = activeSourceIndices.length;
     const midRepG = Math.floor(REPEATS / 2);
     const growList = [];
     let maxRank = 0;
     for (let k = 0; k < lastCenterX.length; k++) {
       if (lastCenterX[k] === undefined) continue;
-      if (Math.floor(k / Ng) !== midRepG) continue;
-      let di = (k % Ng) - cSrcG;
+      if (Math.floor(k / poolSourceCount) !== midRepG) continue;
+      const sourceIndex = k % poolSourceCount;
+      const activeIndex = activeSourceIndexBySource.get(sourceIndex);
+      if (activeIndex === undefined) continue;
+      let di = activeIndex - cSrcG;
       if (di > Ng / 2) di -= Ng;
       if (di < -Ng / 2) di += Ng;
       const r = Math.abs(di);
@@ -1357,7 +1473,7 @@ export function createCarousel(mount, callbacks = {}) {
       performance.now() - lastWheelAt >
         CONFIG.SNAP_DELAY * (0.45 + 0.55 * scrollEnergy)
     ) {
-      snapTarget = centerForIndex(nearestIndex(target));
+      snapTarget = centerForActiveIndex(nearestActiveIndex(target));
       snapArmed = false;
     }
 
@@ -1375,10 +1491,10 @@ export function createCarousel(mount, callbacks = {}) {
     scroll += (target - scroll) * CONFIG.EASE;
 
     // tell the host which image is centered (overlay text)
-    const ci = centerIndex(scroll);
+    const ci = centerActiveIndex(scroll);
     if (ci !== lastCenter) {
       lastCenter = ci;
-      onActiveChange(ci);
+      onActiveChange(sources[activeSourceIndices[ci]].id);
     }
 
     // scroll speed -> energy 0..1, drives the panel shrink. Attack fast when
@@ -1490,6 +1606,7 @@ export function createCarousel(mount, callbacks = {}) {
   window.addEventListener("resize", onResize);
 
   function destroy() {
+    filterGeneration += 1;
     stopTick();
     window.removeEventListener("resize", onResize);
     document.removeEventListener("visibilitychange", onVisibilityChange);
@@ -1504,6 +1621,9 @@ export function createCarousel(mount, callbacks = {}) {
     if (entryAnim) entryAnim.kill();
     if (caseStudyOverlayEnabled) {
       caseStudyOverlayElement.dataset.active = "false";
+    }
+    if (window.__showcaseCarouselDiagnostics === getDiagnostics) {
+      delete window.__showcaseCarouselDiagnostics;
     }
     el.style.cursor = "";
     renderer.dispose();
@@ -1522,27 +1642,80 @@ export function createCarousel(mount, callbacks = {}) {
       }
       const disposed = new Set();
       for (const tex of [s.videoTex, s.posterTex, s.tex]) {
-        if (tex && !disposed.has(tex)) {
+        if (tex && tex !== fallbackTexture && !disposed.has(tex)) {
           tex.dispose();
           disposed.add(tex);
         }
       }
     });
+    fallbackTexture.dispose();
     if (renderer.domElement.parentNode)
       renderer.domElement.parentNode.removeChild(renderer.domElement);
   }
 
-  function scrollToSourceIndex(srcIndex, immediate = false) {
+  let filterGeneration = 0;
+
+  function scrollToSourceId(sourceId, immediate = false) {
+    const sourceIndex = sourceIndexById.get(sourceId);
+    const activeIndex = activeSourceIndexBySource.get(sourceIndex);
+    if (activeIndex === undefined) return;
     userInteracted = true;
     snapTarget = null;
     snapArmed = false;
-    const goal = centerForIndex(srcIndex);
+    const goal = centerForActiveIndex(activeIndex);
     if (immediate) {
       scroll = goal;
       target = goal;
     } else {
       target = goal;
     }
+  }
+
+  function setFilter({ sourceIds: nextSourceIds, selectedSourceId } = {}) {
+    const nextIndices = sourceIndicesForIds(nextSourceIds ?? []);
+    if (!nextIndices.length) return Promise.resolve(false);
+    userInteracted = true;
+    const generation = ++filterGeneration;
+
+    const sameLayout =
+      nextIndices.length === activeSourceIndices.length &&
+      nextIndices.every((sourceIndex, index) => sourceIndex === activeSourceIndices[index]);
+    if (sameLayout) {
+      if (selectedSourceId) scrollToSourceId(selectedSourceId, false);
+      return Promise.resolve(true);
+    }
+
+    const currentSourceIndex = activeSourceIndices[centerActiveIndex(scroll)];
+    return Promise.all(nextIndices.map((sourceIndex) => sources[sourceIndex].posterReady)).then(
+      () => {
+        if (generation !== filterGeneration) return false;
+
+        const nextSet = new Set(nextIndices);
+        sources.forEach((source, sourceIndex) => {
+          if (nextSet.has(sourceIndex) || !source.video) return;
+          if (!source.video.paused) source.video.pause();
+          showPoster(source);
+        });
+
+        setActiveSourceIndices(nextIndices);
+        recomputeTotal();
+        const selectedIndex = sourceIndexById.get(selectedSourceId);
+        const targetSourceIndex = activeSourceIndexBySource.has(selectedIndex)
+          ? selectedIndex
+          : activeSourceIndexBySource.has(currentSourceIndex)
+            ? currentSourceIndex
+            : activeSourceIndices[0];
+        const targetActiveIndex = activeSourceIndexBySource.get(targetSourceIndex);
+        scroll = centerForActiveIndex(targetActiveIndex);
+        target = scroll;
+        userInteracted = true;
+        snapTarget = null;
+        snapArmed = false;
+        lastCenter = -1;
+        layout();
+        return true;
+      },
+    );
   }
 
   function refreshLayout() {
@@ -1556,11 +1729,43 @@ export function createCarousel(mount, callbacks = {}) {
     }
   }
 
+  function getDiagnostics() {
+    return {
+      engineId,
+      activeSourceIds: activeSourceIndices.map((sourceIndex) => sources[sourceIndex].id),
+      visiblePanels: pool
+        .filter((panel) => panel.mesh.visible)
+        .map((panel) => ({
+          sourceId: sources[panel.srcIndex].id,
+          hasTexture: Boolean(panel.mat.map),
+        })),
+      sources: sources.map((source) => ({
+        id: source.id,
+        active: activeSourceIndexBySource.has(source.srcIndex),
+        visible: source.visible,
+        posterState: source.posterState,
+        posterRenderable: Boolean(source.posterTex),
+        displayingPoster: source.tex === source.posterTex,
+        hasVideo: Boolean(source.video),
+        videoReady: source.videoReady,
+        inViewport: source.videoViewportZone,
+        playing: Boolean(source.video && !source.video.paused),
+        currentTime: source.video?.currentTime ?? 0,
+      })),
+    };
+  }
+
+  const diagnosticsKey = "__showcaseCarouselDiagnostics";
+  if (import.meta.env?.DEV) {
+    window[diagnosticsKey] = getDiagnostics;
+  }
+
   return {
     closeFocus,
     replayEntry: playEntry,
     refreshLayout,
-    scrollToSourceIndex,
+    scrollToSourceId,
+    setFilter,
     setClearColor(hex) {
       renderer.setClearColor(hex, 0);
     },

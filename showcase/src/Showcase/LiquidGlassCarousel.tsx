@@ -13,6 +13,7 @@ import {
   type CarouselItem,
 } from '../carousel/config';
 import {
+  SHOWCASE_PROJECTS,
   type ShowcaseProject,
 } from './showcaseProjects';
 import {
@@ -34,11 +35,12 @@ function toCarouselItem(project: ShowcaseProject): CarouselItem {
     project.slug === 'prevue' ? 'View live website' : 'View case study';
 
   if (thumb.type === 'image') {
-    return { src: thumb.src, aspect, brand, desc, caseStudyUrl, caseStudyLabel };
+    return { id: project.slug, src: thumb.src, aspect, brand, desc, caseStudyUrl, caseStudyLabel };
   }
 
   if (thumb.type === 'loop') {
     return {
+      id: project.slug,
       src: thumb.poster,
       video: thumb.src,
       aspect,
@@ -51,6 +53,7 @@ function toCarouselItem(project: ShowcaseProject): CarouselItem {
 
   if (thumb.type === 'video') {
     return {
+      id: project.slug,
       src: thumb.src,
       video: thumb.src,
       aspect,
@@ -62,6 +65,7 @@ function toCarouselItem(project: ShowcaseProject): CarouselItem {
   }
 
   return {
+    id: project.slug,
     src: '',
     aspect: aspect ?? 1,
     brand,
@@ -75,12 +79,12 @@ export function LiquidGlassCarousel({
   selectedSlug,
   onSelect,
   onScrollActivity,
-  projects: showcaseProjects,
+  sourceIds,
 }: {
   selectedSlug: string;
   onSelect: (project: ShowcaseProject) => void;
   onScrollActivity?: () => void;
-  projects: ShowcaseProject[];
+  sourceIds: string[];
 }) {
   const mountRef = useRef<HTMLDivElement>(null);
   const caseStudyOverlayRef = useRef<HTMLDivElement>(null);
@@ -90,8 +94,12 @@ export function LiquidGlassCarousel({
   const onSelectRef = useRef(onSelect);
   const onScrollActivityRef = useRef(onScrollActivity);
   const projects = useMemo(
-    () => showcaseProjects.map(toCarouselItem),
-    [showcaseProjects],
+    () => SHOWCASE_PROJECTS.map(toCarouselItem),
+    [],
+  );
+  const projectsBySlug = useMemo(
+    () => new Map(SHOWCASE_PROJECTS.map((project) => [project.slug, project])),
+    [],
   );
   const [isPhone, setIsPhone] = useState(() =>
     typeof window === 'undefined'
@@ -127,17 +135,17 @@ export function LiquidGlassCarousel({
 
     slugRef.current = selectedSlug;
     fromCarouselRef.current = false;
-    const initialIndex = Math.max(
-      0,
-      showcaseProjects.findIndex((project) => project.slug === selectedSlug),
-    );
+    const initialSourceId = sourceIds.includes(selectedSlug)
+      ? selectedSlug
+      : sourceIds[0];
 
     const engine = createCarousel(mount, {
       projects,
-      initialIndex,
+      initialSourceId,
+      initialSourceIds: sourceIds,
       caseStudyOverlayElement: caseStudyOverlayRef.current,
-      onActiveChange: (index: number) => {
-        const project = showcaseProjects[index];
+      onActiveChange: (sourceId: string) => {
+        const project = projectsBySlug.get(sourceId);
         if (project && project.slug !== slugRef.current) {
           fromCarouselRef.current = true;
           slugRef.current = project.slug;
@@ -145,8 +153,8 @@ export function LiquidGlassCarousel({
         }
         onScrollActivityRef.current?.();
       },
-      onPanelSelect: (index: number) => {
-        const project = showcaseProjects[index];
+      onPanelSelect: (sourceId: string) => {
+        const project = projectsBySlug.get(sourceId);
         if (project) {
           fromCarouselRef.current = true;
           slugRef.current = project.slug;
@@ -168,7 +176,19 @@ export function LiquidGlassCarousel({
       engine.destroy();
       engineRef.current = null;
     };
-  }, [isPhone, projects, showcaseProjects]);
+  }, [isPhone, projects, projectsBySlug]);
+
+  const sourceIdsKey = sourceIds.join('|');
+
+  useEffect(() => {
+    if (isPhone) return;
+    const engine = engineRef.current;
+    if (!engine) return;
+    const selectedSourceId = sourceIds.includes(selectedSlug)
+      ? selectedSlug
+      : sourceIds[0];
+    void engine.setFilter({ sourceIds, selectedSourceId });
+  }, [isPhone, sourceIdsKey]);
 
   useEffect(() => {
     if (isPhone) return;
@@ -182,11 +202,8 @@ export function LiquidGlassCarousel({
     slugRef.current = selectedSlug;
     const engine = engineRef.current;
     if (!engine) return;
-    const index = showcaseProjects.findIndex(
-      (project) => project.slug === selectedSlug,
-    );
-    if (index >= 0) engine.scrollToSourceIndex(index, false);
-  }, [isPhone, selectedSlug, showcaseProjects]);
+    engine.scrollToSourceId(selectedSlug, false);
+  }, [isPhone, selectedSlug]);
 
   useEffect(() => {
     if (isPhone) return;
@@ -194,24 +211,26 @@ export function LiquidGlassCarousel({
     const mount = mountRef.current;
     const engine = engineRef.current;
     if (!mount || !engine) return;
-    const project = showcaseProjects.find(
-      (item) => item.slug === selectedSlug,
-    );
+    const project = projectsBySlug.get(selectedSlug);
     const clear = project
       ? hexToNumber(getShowcaseStageBackground(project.theme.background))
       : null;
     if (clear !== null) engine.setClearColor(clear);
-  }, [isPhone, selectedSlug, showcaseProjects]);
+  }, [isPhone, projectsBySlug, selectedSlug]);
+
+  const activeProjects = sourceIds
+    .map((sourceId) => projectsBySlug.get(sourceId))
+    .filter((project): project is ShowcaseProject => Boolean(project));
 
   const selectedIndex = Math.max(
     0,
-    showcaseProjects.findIndex((project) => project.slug === selectedSlug),
+    activeProjects.findIndex((project) => project.slug === selectedSlug),
   );
 
   const selectIndex = (index: number) => {
     const wrapped =
-      (index + showcaseProjects.length) % showcaseProjects.length;
-    onSelectRef.current(showcaseProjects[wrapped]);
+      (index + activeProjects.length) % activeProjects.length;
+    onSelectRef.current(activeProjects[wrapped]);
     onScrollActivityRef.current?.();
   };
 
@@ -227,7 +246,7 @@ export function LiquidGlassCarousel({
       selectIndex(0);
     } else if (event.key === 'End') {
       event.preventDefault();
-      selectIndex(showcaseProjects.length - 1);
+      selectIndex(activeProjects.length - 1);
     } else if (event.key === 'Enter' || event.key === ' ') {
       event.preventDefault();
       selectIndex(selectedIndex);
@@ -249,13 +268,13 @@ export function LiquidGlassCarousel({
         style={
           {
             '--liquid-carousel-bg': getShowcaseStageBackground(
-              showcaseProjects[selectedIndex].theme.background,
+              activeProjects[selectedIndex].theme.background,
             ),
           } as CSSProperties
         }
       >
         <div className="liquid-glass-carousel__sr">
-          {showcaseProjects.map((project) => (
+          {activeProjects.map((project) => (
             <div
               key={project.slug}
               id={`liquid-carousel-option-${project.slug}`}

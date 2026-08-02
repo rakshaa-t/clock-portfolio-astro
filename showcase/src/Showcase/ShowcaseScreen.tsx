@@ -604,53 +604,6 @@ function prefetchImage(src: string) {
   img.src = src;
 }
 
-const warmedCarouselImages = new Set<string>();
-
-function warmImage(src: string, timeoutMs = 2500) {
-  if (warmedCarouselImages.has(src)) return Promise.resolve();
-
-  return new Promise<void>((resolve) => {
-    const img = new Image();
-    let done = false;
-    const finish = () => {
-      if (done) return;
-      done = true;
-      warmedCarouselImages.add(src);
-      resolve();
-    };
-
-    const timeout = window.setTimeout(finish, timeoutMs);
-    img.onload = () => {
-      window.clearTimeout(timeout);
-      finish();
-    };
-    img.onerror = () => {
-      window.clearTimeout(timeout);
-      finish();
-    };
-    img.decoding = 'async';
-    img.src = src;
-    if (img.complete && img.naturalWidth > 0) {
-      window.clearTimeout(timeout);
-      finish();
-    }
-  });
-}
-
-function getCarouselWarmSources(projects: ShowcaseProject[]) {
-  return projects.flatMap((project) => {
-    const thumb = project.thumbnail;
-    if (thumb.type === 'image') return [thumb.src];
-    if (thumb.type === 'loop') return [thumb.poster];
-    return [];
-  });
-}
-
-function warmCarouselThumbnails(projects: ShowcaseProject[]) {
-  const sources = Array.from(new Set(getCarouselWarmSources(projects)));
-  return Promise.all(sources.map((src) => warmImage(src))).then(() => {});
-}
-
 function StageMedia({
   media,
   onRatio,
@@ -1017,7 +970,9 @@ export function ShowcaseScreen() {
     SHOWCASE_PROJECTS[0].slug,
   );
   const [activeFilter, setActiveFilter] = useState<ShowcaseFilter>('All');
-  const [carouselProjects, setCarouselProjects] = useState(SHOWCASE_PROJECTS);
+  const [carouselSourceIds, setCarouselSourceIds] = useState(() =>
+    SHOWCASE_PROJECTS.map((project) => project.slug),
+  );
   const [carouselSelectedSlug, setCarouselSelectedSlug] = useState(
     SHOWCASE_PROJECTS[0].slug,
   );
@@ -1025,7 +980,6 @@ export function ShowcaseScreen() {
     filter: ShowcaseFilter;
     selectedSlug: string;
   } | null>(null);
-  const carouselSyncGenerationRef = useRef(0);
   const visibleProjects = useMemo(
     () => getProjectsForFilter(activeFilter),
     [activeFilter],
@@ -1086,7 +1040,6 @@ export function ShowcaseScreen() {
   const syncCarouselFilter = (filter: ShowcaseFilter) => {
     const projects = getProjectsForFilter(filter);
     const pending = pendingCarouselFilterRef.current;
-    const generation = ++carouselSyncGenerationRef.current;
     const nextSlug =
       pending?.filter === filter
         ? pending.selectedSlug
@@ -1095,11 +1048,8 @@ export function ShowcaseScreen() {
           : projects[0].slug;
 
     pendingCarouselFilterRef.current = null;
-    void warmCarouselThumbnails(projects).then(() => {
-      if (carouselSyncGenerationRef.current !== generation) return;
-      setCarouselProjects(projects);
-      setCarouselSelectedSlug(nextSlug);
-    });
+    setCarouselSourceIds(projects.map((project) => project.slug));
+    setCarouselSelectedSlug(nextSlug);
   };
 
   const theme = selectedProject.theme;
@@ -1143,7 +1093,7 @@ export function ShowcaseScreen() {
             setSelectedSlug(project.slug);
             setCarouselSelectedSlug(project.slug);
           }}
-          projects={carouselProjects}
+          sourceIds={carouselSourceIds}
         />
       </nav>
 

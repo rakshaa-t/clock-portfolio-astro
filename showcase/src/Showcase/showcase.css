@@ -2117,7 +2117,15 @@
   }
 
   .showcase-filter-nav {
-    display: none;
+    position: sticky;
+    top: 0;
+    left: 0;
+    z-index: 12;
+    display: block;
+    width: 100%;
+    padding: 14px 0 10px;
+    transform: none;
+    background: var(--showcase-bg);
   }
 
   .showcase-mobile-stack {

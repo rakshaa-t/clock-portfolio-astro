@@ -25,8 +25,8 @@ export const CONFIG = {
   VIDEO_PRELOAD_MAX_DISTANCE: 1800,
   VIDEO_PLAY_DISTANCE: 420,
   // Pixels per second, not pixels per frame: stable across 60/120Hz displays.
-  VIDEO_PLAY_MAX_SPEED: 1680,
-  VIDEO_PLAY_RESUME_SPEED: 960,
+  VIDEO_PLAY_MAX_SPEED: 2200,
+  VIDEO_PLAY_RESUME_SPEED: 1400,
   VIDEO_MAX_PRELOAD: 5,
   // During a flick, the outward edge of panels near the viewport boundary
   // lifts into a shallow cinematic flare. The centre panel remains flat.
@@ -114,6 +114,8 @@ export const ENTRY = {
 };
 
 export type CarouselItem = {
+  /** Stable project identity. Filtering and selection never use array indexes. */
+  id: string;
   /** Still / poster shown immediately (and for image-only projects). */
   src: string;
   /** Optional looping video — plays while the panel is on screen. */
