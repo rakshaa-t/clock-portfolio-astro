@@ -323,7 +323,7 @@ export const SHOWCASE_PROJECTS: ShowcaseProject[] = [
     slug: 'magicpath-experiments',
     title: 'MagicPath Experiments',
     category: 'Experiment',
-    year: '2024',
+    year: '2025',
     tags: ['Animation', 'Prototype', 'UI'],
     description:
       'A collection of compact motion studies made while exploring expressive interface behaviours.',
@@ -348,7 +348,7 @@ export const SHOWCASE_PROJECTS: ShowcaseProject[] = [
     slug: 'card-tilt',
     title: 'Card Tilt',
     category: 'Experiment',
-    year: '2024',
+    year: '2025',
     tags: ['Interaction', '3D', 'Motion'],
     description:
       'A pointer-driven perspective study that gives stacked cards convincing weight, depth and response.',
@@ -373,7 +373,7 @@ export const SHOWCASE_PROJECTS: ShowcaseProject[] = [
     slug: 'magicpath',
     title: 'Contextual AI Chats',
     category: 'Experiment',
-    year: '2024',
+    year: '2025',
     tags: ['AI', 'Learning', 'Interaction'],
     description:
       'An AI chat concept that explains ideas with visual context, interactive details and data views, so understanding does not depend on long-form reading alone.',
@@ -398,7 +398,7 @@ export const SHOWCASE_PROJECTS: ShowcaseProject[] = [
     slug: 'skeuomorphic-buttons',
     title: 'Skeuomorphic Buttons',
     category: 'Experiment',
-    year: '2024',
+    year: '2025',
     tags: ['UI', 'Tactility', 'Visual design'],
     description:
       'An exploration of tactile affordances through material, directional light and satisfying press states.',
@@ -419,7 +419,7 @@ export const SHOWCASE_PROJECTS: ShowcaseProject[] = [
     slug: 'chain-landing',
     title: 'Chain Landing',
     category: 'Experiment',
-    year: '2024',
+    year: '2025',
     tags: ['Web3', 'Landing page', 'Concept'],
     description:
       'A visual direction study for a chain-infrastructure product with an editorial, high-contrast rhythm.',
@@ -440,7 +440,7 @@ export const SHOWCASE_PROJECTS: ShowcaseProject[] = [
     slug: 'strava-redesign',
     title: 'Strava Concept',
     category: 'Experiment',
-    year: '2024',
+    year: '2025',
     tags: ['Mobile', 'Fitness', 'Social'],
     description:
       'A fitness-app redesign focused on activity storytelling, social loops and momentum.',
@@ -464,7 +464,7 @@ export const SHOWCASE_PROJECTS: ShowcaseProject[] = [
     slug: 'greex-defi',
     title: 'Greex DeFi',
     category: 'Client',
-    year: '2024',
+    year: '2025',
     tags: ['Fintech', 'Trading', 'Web3'],
     description:
       'A DeFi trading platform spanning order flow, identity verification and strategy tooling.',
@@ -493,7 +493,7 @@ export const SHOWCASE_PROJECTS: ShowcaseProject[] = [
     slug: 'indianoil-dashboard',
     title: 'IndianOil Dashboard',
     category: 'Client',
-    year: '2024',
+    year: '2025',
     tags: ['Enterprise', 'Dashboard', 'Operations'],
     description:
       'Enterprise work-permit management for contractors, compliance and safety-critical operations.',
@@ -518,7 +518,7 @@ export const SHOWCASE_PROJECTS: ShowcaseProject[] = [
     slug: 'ova-app',
     title: 'Ova App',
     category: 'Client',
-    year: '2024',
+    year: '2025',
     tags: ['Health', '0–1', 'Mobile'],
     description:
       'A women’s-health app developed from zero to one across onboarding, product features and motion.',
