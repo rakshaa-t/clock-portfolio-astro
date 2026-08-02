@@ -1455,6 +1455,14 @@ export function createCarousel(mount, callbacks = {}) {
   let raf = 0;
   let videoMotionPaused = false;
   let previousFrameAt = performance.now();
+
+  // Convert a 60fps follow amount to the equivalent amount for this frame.
+  // Fixed per-frame interpolation settles differently on 60Hz and 120Hz
+  // displays and visibly lags after a dropped frame.
+  function frameAdjusted(amount, frameDuration) {
+    return 1 - Math.pow(1 - amount, frameDuration / (1000 / 60));
+  }
+
   function tick(frameAt) {
     raf = 0;
     const frameDuration = Math.min(
@@ -1481,14 +1489,17 @@ export function createCarousel(mount, callbacks = {}) {
       const settleStrength =
         CONFIG.SNAP_STRENGTH +
         (1 - scrollEnergy) * CONFIG.SNAP_IDLE_BOOST;
-      target += (snapTarget - target) * settleStrength;
+      target +=
+        (snapTarget - target) *
+        frameAdjusted(settleStrength, frameDuration);
       if (Math.abs(snapTarget - target) < 0.2) {
         target = snapTarget;
         snapTarget = null;
       }
     }
 
-    scroll += (target - scroll) * CONFIG.EASE;
+    scroll +=
+      (target - scroll) * frameAdjusted(CONFIG.EASE, frameDuration);
 
     // tell the host which image is centered (overlay text)
     const ci = centerActiveIndex(scroll);
@@ -1510,7 +1521,8 @@ export function createCarousel(mount, callbacks = {}) {
       CONFIG.SHRINK_DECAY +
       (1 - scrollEnergy) * CONFIG.SHRINK_IDLE_DECAY_BOOST;
     const k = norm > scrollEnergy ? CONFIG.SHRINK_ATTACK : recovery;
-    scrollEnergy += (norm - scrollEnergy) * k;
+    scrollEnergy +=
+      (norm - scrollEnergy) * frameAdjusted(k, frameDuration);
 
     const videoPreloadDistance = Math.min(
       CONFIG.VIDEO_PRELOAD_MAX_DISTANCE,
