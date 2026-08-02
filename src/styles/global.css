@@ -1284,6 +1284,7 @@ a.about-dropdown-item:hover{opacity:0.7;}
   transition:color 0.2s var(--ease),opacity 0.2s var(--ease);
 }
 .nav-page-arrow{flex:none;}
+.side-nav-work{color:inherit;text-decoration:none;}
 .side-nav-line:hover .side-nav-label{color:rgba(58,54,50,0.6);}
 .side-nav-line.active .side-nav-label{color:var(--text-primary);font-weight:500;}
 /* ── Proximity wave: cursor-distance opacity ── */
