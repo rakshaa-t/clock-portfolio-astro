@@ -26,8 +26,16 @@ const ACTIVE_COLOR = "#000000";
 const INACTIVE_COLOR = "rgba(0, 0, 0, 0.44)";
 const UNDERLINE_Y_ACTIVE = -0.037;
 
-const SQUEEZE_REV = 3.625;
-const SQUEEZE_FWD = 3.661;
+const MOTION_SPEED_MULTIPLIER = 1.3;
+const ADJACENT_DURATION = 0.2375;
+const ADJACENT_SQUEEZE_W = 3.64;
+const ADJACENT_TRAVEL_AT = 0.42;
+const ADJACENT_EXPAND_AT = 0.78;
+const ADJACENT_FROM_COLOR_AT = 0.32;
+const ADJACENT_TO_COLOR_START = 0.48;
+const ADJACENT_TO_COLOR_AT = 0.62;
+const ADJACENT_EASE: Ease[] = ["easeOut", "easeOut", "linear"];
+const LONG_JUMP_UNDERLINE_OPACITY = 0.55;
 
 type Ease = string | [number, number, number, number];
 
@@ -43,70 +51,37 @@ type AdjacentProfile = {
 
 type Pose = { x: number; width: number; y: number };
 
-/**
- * L→R adjacent (Figma Live→Mobile timing).
- * Left edge rides to the target's LEFT, bar squeezes, then grows right.
- */
-function buildAdjacentForward(
-  fromLeft: number,
-  fromW: number,
-  toLeft: number,
-  toW: number,
+function buildAdjacentProfile(
+  fromIndex: number,
+  toIndex: number,
+  start: Pose,
 ): AdjacentProfile {
-  return {
-    duration: 1.325 / 2 / 1.5,
-    fromColorAt: (0.7736 - 0.6389) / 0.3611,
-    toColorStart: (0.8509 - 0.6389) / 0.3611,
-    toColorAt: (0.851 - 0.6389) / 0.3611,
-    x: {
-      values: [fromLeft, toLeft, toLeft],
-      times: [0, (0.7722 - 0.6389) / 0.3611, 1],
-      ease: ["easeOut", "linear"],
-    },
-    width: {
-      values: [fromW, SQUEEZE_FWD, toW, toW],
-      times: [0, (0.7722 - 0.6389) / 0.3611, (0.8719 - 0.6389) / 0.3611, 1],
-      ease: ["easeOut", "easeOut", "linear"],
-    },
-    y: {
-      values: [UNDERLINE_Y_ACTIVE, UNDERLINE_Y_ACTIVE],
-      times: [0, 1],
-      ease: ["linear"],
-    },
-  };
-}
-
-/**
- * R→L adjacent (Figma Mobile→Live timing, right-edge anchored).
- * Right edge rides to the target's RIGHT, bar squeezes there, then grows left.
- * left = right - width at every keyframe so shortening/growing happens on the left.
- */
-function buildAdjacentReverse(
-  fromLeft: number,
-  fromW: number,
-  toLeft: number,
-  toW: number,
-): AdjacentProfile {
-  const fromRight = fromLeft + fromW;
+  const to = TABS[toIndex];
+  const forward = toIndex > fromIndex;
+  const fromLeft = start.x;
+  const fromW = start.width;
+  const toLeft = to.underlineX;
+  const toW = to.underlineWidth;
   const toRight = toLeft + toW;
-  const squeezeLeft = toRight - SQUEEZE_REV;
+  const squeezeLeft = toRight - ADJACENT_SQUEEZE_W;
+  const xValues = forward
+    ? [fromLeft, toLeft, toLeft, toLeft]
+    : [fromLeft, squeezeLeft, toLeft, toLeft];
 
   return {
-    duration: 0.928 / 2 / 1.5,
-    fromColorAt: (0.4575 - 0.3861) / 0.2528,
-    toColorStart: (0.5208 - 0.3861) / 0.2528,
-    toColorAt: (0.5209 - 0.3861) / 0.2528,
+    duration: ADJACENT_DURATION,
+    fromColorAt: ADJACENT_FROM_COLOR_AT,
+    toColorStart: ADJACENT_TO_COLOR_START,
+    toColorAt: ADJACENT_TO_COLOR_AT,
     x: {
-      // left edges: start → (toRight - squeeze) → toLeft
-      // right edge path: fromRight → toRight → toRight
-      values: [fromLeft, squeezeLeft, toLeft, toLeft],
-      times: [0, (0.4637 - 0.3861) / 0.2528, (0.5618 - 0.3861) / 0.2528, 1],
-      ease: ["easeIn", "easeOut", "linear"],
+      values: xValues,
+      times: [0, ADJACENT_TRAVEL_AT, ADJACENT_EXPAND_AT, 1],
+      ease: ADJACENT_EASE,
     },
     width: {
-      values: [fromW, SQUEEZE_REV, toW, toW],
-      times: [0, (0.4637 - 0.3861) / 0.2528, (0.5618 - 0.3861) / 0.2528, 1],
-      ease: ["easeIn", "easeOut", "linear"],
+      values: [fromW, ADJACENT_SQUEEZE_W, toW, toW],
+      times: [0, ADJACENT_TRAVEL_AT, ADJACENT_EXPAND_AT, 1],
+      ease: ADJACENT_EASE,
     },
     y: {
       values: [UNDERLINE_Y_ACTIVE, UNDERLINE_Y_ACTIVE],
@@ -120,20 +95,9 @@ function waypointIndex(from: number, to: number) {
   return from + Math.sign(to - from);
 }
 
-function buildAdjacentProfile(
-  fromIndex: number,
-  toIndex: number,
-  start: Pose,
-): AdjacentProfile {
-  const to = TABS[toIndex];
-  const forward = toIndex > fromIndex;
-  return forward
-    ? buildAdjacentForward(start.x, start.width, to.underlineX, to.underlineWidth)
-    : buildAdjacentReverse(start.x, start.width, to.underlineX, to.underlineWidth);
-}
-
 type TabFilterProps = {
   onChange?: (label: (typeof TABS)[number]["label"]) => void;
+  onTargetHit?: (label: (typeof TABS)[number]["label"]) => void;
   ink?: string;
 };
 
@@ -144,7 +108,11 @@ const withOpacity = (color: string, opacity: number) => {
   return `rgba(${(parsed >> 16) & 255}, ${(parsed >> 8) & 255}, ${parsed & 255}, ${opacity})`;
 };
 
-export default function TabFilter({ onChange, ink = ACTIVE_COLOR }: TabFilterProps) {
+export default function TabFilter({
+  onChange,
+  onTargetHit,
+  ink = ACTIVE_COLOR,
+}: TabFilterProps) {
   const [activeIndex, setActiveIndex] = useState(0);
   const [adjacentTransition, setAdjacentTransition] = useState<{
     from: number;
@@ -159,15 +127,20 @@ export default function TabFilter({ onChange, ink = ACTIVE_COLOR }: TabFilterPro
 
   const activeIndexRef = useRef(0);
   const onChangeRef = useRef(onChange);
+  const onTargetHitRef = useRef(onTargetHit);
   const longJumpRef = useRef<typeof longJump>(null);
   const playbackRef = useRef<AnimationPlaybackControls[]>([]);
   const generationRef = useRef(0);
+  const targetHitTimerRef = useRef<number | null>(null);
+  const targetHitDoneRef = useRef(false);
 
   const underlineWidth = useMotionValue<number>(TABS[0].underlineWidth);
   const underlineX = useMotionValue<number>(TABS[0].underlineX);
   const underlineY = useMotionValue<number>(0);
+  const underlineOpacity = useMotionValue<number>(1);
 
   onChangeRef.current = onChange;
+  onTargetHitRef.current = onTargetHit;
 
   const geo = useDialKit("Long Jump Geo", {
     squeezeW: [6.69, 2, 20, 0.01],
@@ -184,6 +157,15 @@ export default function TabFilter({ onChange, ink = ACTIVE_COLOR }: TabFilterPro
   });
 
   longJumpRef.current = longJump;
+
+  useEffect(() => {
+    return () => {
+      if (targetHitTimerRef.current !== null) {
+        window.clearTimeout(targetHitTimerRef.current);
+      }
+      for (const c of playbackRef.current) c.stop();
+    };
+  }, []);
 
   const readDialPose = (endpoints: LongJumpEndpoints): Pose =>
     resolveLongJumpPose(
@@ -217,14 +199,27 @@ export default function TabFilter({ onChange, ink = ACTIVE_COLOR }: TabFilterPro
   };
 
   const stopPlayback = () => {
+    if (targetHitTimerRef.current !== null) {
+      window.clearTimeout(targetHitTimerRef.current);
+      targetHitTimerRef.current = null;
+    }
     for (const c of playbackRef.current) c.stop();
     playbackRef.current = [];
+  };
+
+  const notifyTargetHit = (toIndex: number, gen: number) => {
+    if (targetHitDoneRef.current) return;
+    if (generationRef.current !== gen) return;
+    if (activeIndexRef.current !== toIndex) return;
+    targetHitDoneRef.current = true;
+    onTargetHitRef.current?.(TABS[toIndex].label);
   };
 
   const abortDial = () => {
     if (longJumpRef.current) {
       commitPose(readDialPose(longJumpRef.current.endpoints));
     }
+    underlineOpacity.set(1);
     longJumpRef.current = null;
     setLongJump(null);
     tl.pause();
@@ -240,6 +235,8 @@ export default function TabFilter({ onChange, ink = ACTIVE_COLOR }: TabFilterPro
 
     stopPlayback();
     commitPose(start);
+    underlineOpacity.set(1);
+    targetHitDoneRef.current = false;
 
     playbackRef.current = [
       animate(underlineX, profile.x.values, {
@@ -259,6 +256,11 @@ export default function TabFilter({ onChange, ink = ACTIVE_COLOR }: TabFilterPro
       } as never),
     ];
 
+    targetHitTimerRef.current = window.setTimeout(() => {
+      targetHitTimerRef.current = null;
+      notifyTargetHit(toIndex, gen);
+    }, profile.duration * ADJACENT_TRAVEL_AT * 1000);
+
     Promise.all(playbackRef.current.map((c) => c.finished)).then(() => {
       if (generationRef.current !== gen) return;
       if (activeIndexRef.current !== toIndex) return;
@@ -273,6 +275,8 @@ export default function TabFilter({ onChange, ink = ACTIVE_COLOR }: TabFilterPro
 
     stopPlayback();
     commitPose(start);
+    underlineOpacity.set(LONG_JUMP_UNDERLINE_OPACITY);
+    targetHitDoneRef.current = false;
 
     const endpoints: LongJumpEndpoints = {
       fromX: start.x,
@@ -296,6 +300,9 @@ export default function TabFilter({ onChange, ink = ACTIVE_COLOR }: TabFilterPro
   useEffect(() => {
     if (!longJump) return;
     commitPose(readDialPose(longJump.endpoints));
+    if (progressOf(tl.phaseTarget) >= 1) {
+      notifyTargetHit(longJump.to, generationRef.current);
+    }
   }, [longJump, tl.time, tl.playing, geo.squeezeW, geo.travelW]);
 
   useEffect(() => {
@@ -311,6 +318,10 @@ export default function TabFilter({ onChange, ink = ACTIVE_COLOR }: TabFilterPro
     longJumpRef.current = null;
     setLongJump(null);
     tl.seek(0);
+    animate(underlineOpacity, 1, {
+      duration: 0.06,
+      ease: "linear",
+    });
   }, [longJump, tl.time, tl.playing, tl.duration]);
 
   const handleSelect = (index: number) => {
@@ -410,7 +421,13 @@ export default function TabFilter({ onChange, ink = ACTIVE_COLOR }: TabFilterPro
         <motion.div
           className="tab-filter__underline"
           data-node-id="853:465"
-          style={{ scaleX: underlineWidth, x: underlineX, y: underlineY, backgroundColor: ink }}
+          style={{
+            scaleX: underlineWidth,
+            x: underlineX,
+            y: underlineY,
+            opacity: underlineOpacity,
+            backgroundColor: ink,
+          }}
         />
       </div>
     </div>

@@ -1,33 +1,33 @@
 import type { TimelineConfig } from "dialkit";
 
 /**
- * DialKit Long Jump — tuned defaults from dock Copy, then 2× faster.
+ * DialKit Long Jump — tuned authoring defaults.
  * Phase progress only (0 → 1); geometry comes from clicked tabs at runtime.
  */
 export const LONG_JUMP_TIMELINE_CONFIG = {
-  duration: 0.91 / 2,
+  duration: 0.46,
 
   phaseWaypoint: {
     at: 0,
     from: { progress: 0 },
     to: { progress: 1 },
-    duration: 0.41 / 2,
+    duration: 0.08,
     transition: {
       type: "easing" as const,
-      ease: [0.42, 0, 1, 1] as [number, number, number, number],
-      duration: 0.41 / 2,
+      ease: [0.42, 1.09, 1, 1] as [number, number, number, number],
+      duration: 0.08,
     },
   },
 
   phaseTarget: {
-    at: 0.38 / 2,
+    at: 0.08,
     from: { progress: 0 },
     to: { progress: 1 },
-    duration: 0.21 / 2,
+    duration: 0.11,
     transition: {
       type: "easing" as const,
       ease: [0, 0, 0.58, 1] as [number, number, number, number],
-      duration: 0.21 / 2,
+      duration: 0.11,
     },
   },
 
@@ -35,35 +35,35 @@ export const LONG_JUMP_TIMELINE_CONFIG = {
     at: 0,
     from: { progress: 0 },
     to: { progress: 1 },
-    duration: 0.42 / 2,
+    duration: 0.05,
     transition: {
       type: "easing" as const,
-      ease: [0, 0, 0.58, 1] as [number, number, number, number],
-      duration: 0.42 / 2,
+      ease: [1, 0, 0.58, 1] as [number, number, number, number],
+      duration: 0.05,
     },
   },
 
   phaseTravel: {
-    at: 0.38 / 2,
+    at: 0.19,
     from: { progress: 0 },
     to: { progress: 1 },
-    duration: 0.21 / 2,
+    duration: 0.11,
     transition: {
       type: "easing" as const,
       ease: [0, 0, 1, 1] as [number, number, number, number],
-      duration: 0.21 / 2,
+      duration: 0.11,
     },
   },
 
   phaseExpand: {
-    at: 0.58 / 2,
+    at: 0.29,
     from: { progress: 0 },
     to: { progress: 1 },
-    duration: 0.33 / 2,
+    duration: 0.17,
     transition: {
       type: "easing" as const,
       ease: [0, 0, 0.58, 1] as [number, number, number, number],
-      duration: 0.33 / 2,
+      duration: 0.17,
     },
   },
 
@@ -71,11 +71,11 @@ export const LONG_JUMP_TIMELINE_CONFIG = {
     at: 0,
     from: { progress: 0 },
     to: { progress: 1 },
-    duration: 0.42 / 2,
+    duration: 0.21,
     transition: {
       type: "easing" as const,
       ease: [0.42, 0, 1, 1] as [number, number, number, number],
-      duration: 0.42 / 2,
+      duration: 0.21,
     },
   },
 
@@ -83,23 +83,23 @@ export const LONG_JUMP_TIMELINE_CONFIG = {
     at: 0,
     from: { mix: 1 },
     to: { mix: 0 },
-    duration: 0.42 / 2,
+    duration: 0.21,
     transition: {
       type: "easing" as const,
       ease: [0, 0, 1, 1] as [number, number, number, number],
-      duration: 0.42 / 2,
+      duration: 0.21,
     },
   },
 
   toLabel: {
-    at: 0.42 / 2,
+    at: 0.21,
     from: { mix: 0 },
     to: { mix: 1 },
-    duration: 0.48 / 2,
+    duration: 0.24,
     transition: {
       type: "easing" as const,
       ease: [0.5, 0, 0.5, 1] as [number, number, number, number],
-      duration: 0.48 / 2,
+      duration: 0.24,
     },
   },
 } satisfies TimelineConfig;

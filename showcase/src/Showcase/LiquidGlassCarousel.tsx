@@ -125,9 +125,11 @@ export function LiquidGlassCarousel({
     };
     fitPanel();
 
+    slugRef.current = selectedSlug;
+    fromCarouselRef.current = false;
     const initialIndex = Math.max(
       0,
-      showcaseProjects.findIndex((project) => project.slug === slugRef.current),
+      showcaseProjects.findIndex((project) => project.slug === selectedSlug),
     );
 
     const engine = createCarousel(mount, {

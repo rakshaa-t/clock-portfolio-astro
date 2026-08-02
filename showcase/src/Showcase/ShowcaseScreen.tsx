@@ -971,7 +971,13 @@ export function ShowcaseScreen() {
   );
   const [activeFilter, setActiveFilter] = useState<ShowcaseFilter>('All');
   const [carouselProjects, setCarouselProjects] = useState(SHOWCASE_PROJECTS);
-  const carouselFilterFrameRef = useRef<number | null>(null);
+  const [carouselSelectedSlug, setCarouselSelectedSlug] = useState(
+    SHOWCASE_PROJECTS[0].slug,
+  );
+  const pendingCarouselFilterRef = useRef<{
+    filter: ShowcaseFilter;
+    selectedSlug: string;
+  } | null>(null);
   const visibleProjects = useMemo(
     () => getProjectsForFilter(activeFilter),
     [activeFilter],
@@ -1016,30 +1022,32 @@ export function ShowcaseScreen() {
     };
   }, [selectedSlug, selectedProject.thumbnail, visibleProjects]);
 
-  useEffect(() => {
-    return () => {
-      if (carouselFilterFrameRef.current !== null) {
-        window.cancelAnimationFrame(carouselFilterFrameRef.current);
-      }
-    };
-  }, []);
-
   const selectFilter = (filter: ShowcaseFilter) => {
     const projects = getProjectsForFilter(filter);
 
     setActiveFilter(filter);
-    setSelectedSlug((current) => projects.some((project) => project.slug === current) ? current : projects[0].slug);
-
-    if (carouselFilterFrameRef.current !== null) {
-      window.cancelAnimationFrame(carouselFilterFrameRef.current);
-    }
-
-    carouselFilterFrameRef.current = window.requestAnimationFrame(() => {
-      carouselFilterFrameRef.current = window.requestAnimationFrame(() => {
-        carouselFilterFrameRef.current = null;
-        setCarouselProjects(projects);
-      });
+    setSelectedSlug((current) => {
+      const nextSlug = projects.some((project) => project.slug === current)
+        ? current
+        : projects[0].slug;
+      pendingCarouselFilterRef.current = { filter, selectedSlug: nextSlug };
+      return nextSlug;
     });
+  };
+
+  const syncCarouselFilter = (filter: ShowcaseFilter) => {
+    const projects = getProjectsForFilter(filter);
+    const pending = pendingCarouselFilterRef.current;
+    const nextSlug =
+      pending?.filter === filter
+        ? pending.selectedSlug
+        : projects.some((project) => project.slug === selectedSlug)
+          ? selectedSlug
+          : projects[0].slug;
+
+    pendingCarouselFilterRef.current = null;
+    setCarouselProjects(projects);
+    setCarouselSelectedSlug(nextSlug);
   };
 
   const theme = selectedProject.theme;
@@ -1069,13 +1077,20 @@ export function ShowcaseScreen() {
       </header>
 
       <nav className="showcase-filter-nav" aria-label="Project navigation">
-        <TabFilter ink={theme.ink} onChange={selectFilter} />
+        <TabFilter
+          ink={theme.ink}
+          onChange={selectFilter}
+          onTargetHit={syncCarouselFilter}
+        />
       </nav>
 
       <nav className="showcase-topbar" aria-label="Project navigation">
         <LiquidGlassCarousel
-          selectedSlug={selectedSlug}
-          onSelect={(project) => setSelectedSlug(project.slug)}
+          selectedSlug={carouselSelectedSlug}
+          onSelect={(project) => {
+            setSelectedSlug(project.slug);
+            setCarouselSelectedSlug(project.slug);
+          }}
           projects={carouselProjects}
         />
       </nav>
