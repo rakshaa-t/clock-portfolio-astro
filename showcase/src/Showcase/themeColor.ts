@@ -1,3 +1,12 @@
+export const SHOWCASE_FIXED_THEME = {
+  // The gallery stays visually stable while the active work changes.
+  background: '#39393c',
+  surface: '#414145',
+  ink: '#f7f4ee',
+  muted: '#aaa8a2',
+  accent: '#d4ff58',
+};
+
 function parseHex(hex: string) {
   const normalized = hex.replace('#', '').trim();
   if (!/^[0-9a-fA-F]{6}$/.test(normalized)) return null;

@@ -17,8 +17,8 @@ import {
   type ShowcaseProject,
 } from './showcaseProjects';
 import {
-  getShowcaseStageBackground,
   hexToNumber,
+  SHOWCASE_FIXED_THEME,
 } from './themeColor';
 import './liquid-glass-carousel.css';
 
@@ -211,12 +211,9 @@ export function LiquidGlassCarousel({
     const mount = mountRef.current;
     const engine = engineRef.current;
     if (!mount || !engine) return;
-    const project = projectsBySlug.get(selectedSlug);
-    const clear = project
-      ? hexToNumber(getShowcaseStageBackground(project.theme.background))
-      : null;
+    const clear = hexToNumber(SHOWCASE_FIXED_THEME.background);
     if (clear !== null) engine.setClearColor(clear);
-  }, [isPhone, projectsBySlug, selectedSlug]);
+  }, [isPhone, selectedSlug]);
 
   const activeProjects = sourceIds
     .map((sourceId) => projectsBySlug.get(sourceId))
@@ -267,9 +264,7 @@ export function LiquidGlassCarousel({
         onKeyDown={handleKeyDown}
         style={
           {
-            '--liquid-carousel-bg': getShowcaseStageBackground(
-              activeProjects[selectedIndex].theme.background,
-            ),
+            '--liquid-carousel-bg': SHOWCASE_FIXED_THEME.background,
           } as CSSProperties
         }
       >

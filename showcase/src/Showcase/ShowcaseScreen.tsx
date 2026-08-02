@@ -13,7 +13,7 @@ import {
   type ShowcaseMedia,
   type ShowcaseProject,
 } from './showcaseProjects';
-import { getShowcaseStageBackground } from './themeColor';
+import { SHOWCASE_FIXED_THEME } from './themeColor';
 import {
   type DialFeature,
   type DialParams,
@@ -1052,8 +1052,8 @@ export function ShowcaseScreen() {
     setCarouselSelectedSlug(nextSlug);
   };
 
-  const theme = selectedProject.theme;
-  const stageBackground = getShowcaseStageBackground(theme.background);
+  const theme = SHOWCASE_FIXED_THEME;
+  const stageBackground = theme.background;
   const style = {
     '--showcase-bg': stageBackground,
     '--showcase-strip': stageBackground,

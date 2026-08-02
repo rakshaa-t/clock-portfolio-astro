@@ -68,12 +68,24 @@ test('filters retain the renderer and never expose a blank panel', async ({
   await page.goto('./');
   await expect(page.locator('.liquid-glass-carousel canvas')).toHaveCount(1);
   const { engineId } = await diagnostics(page);
+  const fixedPalette = await page.locator('.showcase-shell').evaluate((shell) => {
+    const styles = getComputedStyle(shell);
+    return { background: styles.backgroundColor, color: styles.color };
+  });
 
   for (const label of Object.keys(FILTERS)) {
     await chooseFilter(page, label);
     const state = await diagnostics(page);
     expect(state.engineId).toBe(engineId);
     expect(state.visiblePanels.every((panel) => panel.hasTexture)).toBe(true);
+    await expect(page.locator('.showcase-shell')).toHaveCSS(
+      'background-color',
+      fixedPalette.background,
+    );
+    await expect(page.locator('.showcase-shell')).toHaveCSS(
+      'color',
+      fixedPalette.color,
+    );
   }
 
   for (let cycle = 0; cycle < 20; cycle += 1) {
