@@ -19,6 +19,7 @@ import {
   type DialParams,
 } from './indicatorDials';
 import { LiquidGlassCarousel } from './LiquidGlassCarousel';
+import TabFilter from './TabFilter';
 import './showcase.css';
 
 function TileImage({ src, fallback }: { src: string; fallback: string }) {
@@ -580,11 +581,74 @@ function ProjectStrip({
 }
 
 const DEFAULT_MEDIA_RATIO = 16 / 10;
+type ShowcaseFilter = 'All' | 'Clients' | 'Experiments' | 'Live' | 'Mobile';
+
+function getProjectsForFilter(filter: ShowcaseFilter) {
+  if (filter === 'All') return SHOWCASE_PROJECTS;
+  if (filter === 'Mobile') {
+    return SHOWCASE_PROJECTS.filter((project) => project.tags.includes('Mobile'));
+  }
+
+  const category =
+    filter === 'Clients'
+      ? 'Client'
+      : filter === 'Experiments'
+        ? 'Experiment'
+        : 'Live';
+  return SHOWCASE_PROJECTS.filter((project) => project.category === category);
+}
 
 function prefetchImage(src: string) {
   const img = new Image();
   img.decoding = 'async';
   img.src = src;
+}
+
+const warmedCarouselImages = new Set<string>();
+
+function warmImage(src: string, timeoutMs = 2500) {
+  if (warmedCarouselImages.has(src)) return Promise.resolve();
+
+  return new Promise<void>((resolve) => {
+    const img = new Image();
+    let done = false;
+    const finish = () => {
+      if (done) return;
+      done = true;
+      warmedCarouselImages.add(src);
+      resolve();
+    };
+
+    const timeout = window.setTimeout(finish, timeoutMs);
+    img.onload = () => {
+      window.clearTimeout(timeout);
+      finish();
+    };
+    img.onerror = () => {
+      window.clearTimeout(timeout);
+      finish();
+    };
+    img.decoding = 'async';
+    img.src = src;
+    if (img.complete && img.naturalWidth > 0) {
+      window.clearTimeout(timeout);
+      finish();
+    }
+  });
+}
+
+function getCarouselWarmSources(projects: ShowcaseProject[]) {
+  return projects.flatMap((project) => {
+    const thumb = project.thumbnail;
+    if (thumb.type === 'image') return [thumb.src];
+    if (thumb.type === 'loop') return [thumb.poster];
+    return [];
+  });
+}
+
+function warmCarouselThumbnails(projects: ShowcaseProject[]) {
+  const sources = Array.from(new Set(getCarouselWarmSources(projects)));
+  return Promise.all(sources.map((src) => warmImage(src))).then(() => {});
 }
 
 function StageMedia({
@@ -952,9 +1016,23 @@ export function ShowcaseScreen() {
   const [selectedSlug, setSelectedSlug] = useState(
     SHOWCASE_PROJECTS[0].slug,
   );
+  const [activeFilter, setActiveFilter] = useState<ShowcaseFilter>('All');
+  const [carouselProjects, setCarouselProjects] = useState(SHOWCASE_PROJECTS);
+  const [carouselSelectedSlug, setCarouselSelectedSlug] = useState(
+    SHOWCASE_PROJECTS[0].slug,
+  );
+  const pendingCarouselFilterRef = useRef<{
+    filter: ShowcaseFilter;
+    selectedSlug: string;
+  } | null>(null);
+  const carouselSyncGenerationRef = useRef(0);
+  const visibleProjects = useMemo(
+    () => getProjectsForFilter(activeFilter),
+    [activeFilter],
+  );
   const selectedProject =
-    SHOWCASE_PROJECTS.find((project) => project.slug === selectedSlug) ??
-    SHOWCASE_PROJECTS[0];
+    visibleProjects.find((project) => project.slug === selectedSlug) ??
+    visibleProjects[0];
   useEffect(() => {
     document.title = `${selectedProject.title} — Selected work`;
   }, [selectedProject.title, selectedProject.slug]);
@@ -979,18 +1057,50 @@ export function ShowcaseScreen() {
       prefetchImage(thumb.src);
     }
 
-    const index = SHOWCASE_PROJECTS.findIndex(
+    const index = visibleProjects.findIndex(
       (project) => project.slug === selectedSlug,
     );
     const next =
-      SHOWCASE_PROJECTS[(index + 1) % SHOWCASE_PROJECTS.length]?.thumbnail;
+      visibleProjects[(index + 1) % visibleProjects.length]?.thumbnail;
     if (next?.type === 'image') prefetchImage(next.src);
     else if (next?.type === 'loop') prefetchImage(next.poster);
 
     return () => {
       for (const link of links) link.remove();
     };
-  }, [selectedSlug, selectedProject.thumbnail]);
+  }, [selectedSlug, selectedProject.thumbnail, visibleProjects]);
+
+  const selectFilter = (filter: ShowcaseFilter) => {
+    const projects = getProjectsForFilter(filter);
+
+    setActiveFilter(filter);
+    setSelectedSlug((current) => {
+      const nextSlug = projects.some((project) => project.slug === current)
+        ? current
+        : projects[0].slug;
+      pendingCarouselFilterRef.current = { filter, selectedSlug: nextSlug };
+      return nextSlug;
+    });
+  };
+
+  const syncCarouselFilter = (filter: ShowcaseFilter) => {
+    const projects = getProjectsForFilter(filter);
+    const pending = pendingCarouselFilterRef.current;
+    const generation = ++carouselSyncGenerationRef.current;
+    const nextSlug =
+      pending?.filter === filter
+        ? pending.selectedSlug
+        : projects.some((project) => project.slug === selectedSlug)
+          ? selectedSlug
+          : projects[0].slug;
+
+    pendingCarouselFilterRef.current = null;
+    void warmCarouselThumbnails(projects).then(() => {
+      if (carouselSyncGenerationRef.current !== generation) return;
+      setCarouselProjects(projects);
+      setCarouselSelectedSlug(nextSlug);
+    });
+  };
 
   const theme = selectedProject.theme;
   const stageBackground = getShowcaseStageBackground(theme.background);
@@ -1018,15 +1128,27 @@ export function ShowcaseScreen() {
         <span>{selectedProject.category}</span>
       </header>
 
+      <nav className="showcase-filter-nav" aria-label="Project navigation">
+        <TabFilter
+          ink={theme.ink}
+          onChange={selectFilter}
+          onTargetHit={syncCarouselFilter}
+        />
+      </nav>
+
       <nav className="showcase-topbar" aria-label="Project navigation">
         <LiquidGlassCarousel
-          selectedSlug={selectedSlug}
-          onSelect={(project) => setSelectedSlug(project.slug)}
+          selectedSlug={carouselSelectedSlug}
+          onSelect={(project) => {
+            setSelectedSlug(project.slug);
+            setCarouselSelectedSlug(project.slug);
+          }}
+          projects={carouselProjects}
         />
       </nav>
 
       <section className="showcase-mobile-stack" aria-label="Selected projects">
-        {SHOWCASE_PROJECTS.map((project) => (
+        {visibleProjects.map((project) => (
           <MobileProjectCard
             key={project.slug}
             project={project}
