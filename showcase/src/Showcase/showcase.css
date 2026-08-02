@@ -1934,6 +1934,8 @@
 }
 
 .showcase-gallery-intro {
+  --intro-content-nudge: 20px;
+  --intro-label-center-offset: -58px;
   position: relative;
   z-index: 2;
   display: grid;
@@ -1963,6 +1965,7 @@
   letter-spacing: 0.02em;
   line-height: 1.3;
   text-transform: none;
+  transform: translateY(calc(var(--intro-content-nudge) + var(--intro-label-center-offset)));
 }
 
 .showcase-gallery-intro > span {
@@ -1971,8 +1974,11 @@
 
 .showcase-gallery-intro div {
   display: grid;
+  width: min(46rem, 100%);
   gap: 12px;
-  transform: translateY(20px);
+  justify-self: center;
+  text-align: center;
+  transform: translateY(var(--intro-content-nudge));
 }
 
 /* Display line uses the platform display face for a precise, neutral silhouette. */
@@ -1993,6 +1999,7 @@
    enough to keep the eye returning to the right line. */
 .showcase-gallery-intro div > p {
   max-width: 46ch;
+  margin-inline: auto;
   color: color-mix(in srgb, var(--showcase-muted) 72%, var(--showcase-ink));
   font-family: 'Showcase Frama', 'Helvetica Neue', sans-serif;
   font-size: 13px;
@@ -2009,6 +2016,82 @@
   padding-top: 0;
   border-bottom: 0;
   background: var(--showcase-bg);
+}
+
+.showcase-filter-nav {
+  position: absolute;
+  z-index: 12;
+  top: clamp(1.25rem, 3vw, 2.5rem);
+  left: 50%;
+  width: 100%;
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+.tab-filter {
+  position: relative;
+  width: 327.579px;
+  height: 22.57px;
+  margin: 0 auto;
+  pointer-events: auto;
+}
+
+.tab-filter__group {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 327.579px;
+  height: 22.57px;
+  transform: translateX(-50%);
+}
+
+.tab-filter__labels {
+  position: absolute;
+  top: 0;
+  left: 0.579px;
+  width: 327px;
+  height: 19px;
+  font-family: "SF Pro Display", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 19px;
+  white-space: nowrap;
+}
+
+.tab-filter__label {
+  position: absolute;
+  top: -12.5px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  border: none;
+  padding: 0;
+  background: none;
+  cursor: pointer;
+  font: inherit;
+  text-align: left;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.tab-filter__label:focus-visible {
+  outline: none;
+}
+
+.tab-filter__label:focus-visible .tab-filter__label-text {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+.tab-filter__underline {
+  position: absolute;
+  top: 21.04px;
+  left: 0;
+  width: 1px;
+  height: 1.531px;
+  background: #000000;
+  transform-origin: left center;
+  will-change: transform;
 }
 
 .showcase-mobile-stack {
@@ -2030,6 +2113,10 @@
   }
 
   .showcase-topbar {
+    display: none;
+  }
+
+  .showcase-filter-nav {
     display: none;
   }
 
