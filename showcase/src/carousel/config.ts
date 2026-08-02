@@ -3,14 +3,14 @@ export const CONFIG = {
   PANEL_H: 450, // px height — same for every panel; width = aspect × height
   PANEL_HEIGHT_RATIO: 0.6,
   GAP: 12, // px gap between panels (reference default)
-  EASE: 0.1,
+  EASE: 0.16,
   WHEEL: 1.19,
   SNAP: true,
   SNAP_DIST: 149,
   SNAP_DELAY: 60,
-  // Keep snapping as a gentle steering correction, never a hard pull.
-  SNAP_STRENGTH: 0.1,
-  SNAP_IDLE_BOOST: 0.1,
+  // A quick steering correction keeps the row responsive after a flick.
+  SNAP_STRENGTH: 0.16,
+  SNAP_IDLE_BOOST: 0.16,
   SHRINK_MAX: 24,
   SHRINK_ATTACK: 0.14,
   SHRINK_DECAY: 0.06,
