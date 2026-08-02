@@ -16,8 +16,8 @@ function initBottomNav(){
   const menuWrap=document.getElementById('mobileMenuWrap');
   if(!sideNav&&!burgerBtn) return;
 
-  const sideItems=sideNav?[...sideNav.querySelectorAll('.side-nav-line')]:[];
-  const menuItems=menuWrap?[...menuWrap.querySelectorAll('.mobile-menu-item')]:[];
+  const sideItems=sideNav?[...sideNav.querySelectorAll('.side-nav-line[data-section]')]:[];
+  const menuItems=menuWrap?[...menuWrap.querySelectorAll('.mobile-menu-item[data-section]')]:[];
 
   const sections=sideItems.length
     ? sideItems.map(item=>document.getElementById(item.dataset.section)).filter(Boolean)

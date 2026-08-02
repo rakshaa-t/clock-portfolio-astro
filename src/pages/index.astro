@@ -5,34 +5,6 @@ import { NOTES } from '../data/notes.js';
 
 <Layout title="Raksha Tated | Product Designer" description="Product Designer. Five years designing products, one year engineering them. Tech, healthcare and consumer apps. Select client work available.">
 
-<!-- ═══ MODAL ═══ -->
-<div class="modal-overlay" id="modalOverlay">
-  <div class="modal-backdrop" onclick="closeModal()" aria-hidden="true"></div>
-  <div class="modal-card" id="modalCard" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
-    <div class="sheet-handle"></div>
-    <div class="modal-card-inner">
-      <!-- Image area -->
-      <div class="modal-carousel">
-        <div class="carousel-scroll" id="carouselScroll"></div>
-        <div class="carousel-counter" id="carouselCounter">1 / 3</div>
-        <button class="modal-close" onclick="closeModal()" aria-label="Close modal">✕</button>
-        <button class="carousel-btn prev" onclick="carouselPrev()" aria-label="Previous slide"><svg width="10" height="16" viewBox="0 0 10 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="8 2 2 8 8 14"/></svg></button>
-        <button class="carousel-btn next" onclick="carouselNext()" aria-label="Next slide"><svg width="10" height="16" viewBox="0 0 10 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2 2 8 8 2 14"/></svg></button>
-      </div>
-      <!-- Metadata area -->
-      <div class="modal-body" id="modalBody">
-        <div class="modal-meta">
-          <h2 class="modal-title t-heading" id="modalTitle"></h2>
-          <div class="modal-tags" id="modalTags"></div>
-        </div>
-        <div class="modal-desc-wrap" id="modalDescWrap">
-          <p class="modal-desc t-body" id="modalDesc"></p>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
 <!-- ═══ PAGE CONTENT ═══ -->
 <main class="page-content" id="mainContent">
   <div class="page-inner">
@@ -89,91 +61,6 @@ import { NOTES } from '../data/notes.js';
           </span>
         </div>
       </div>
-    </div>
-
-    <!-- ═══ WORK — Puzzle grid with category filters ═══ -->
-    <div class="browse-section" id="sec-work">
-      <h2 class="t-display">Work</h2>
-      <p class="subtitle t-subtitle">Select client and personal work</p>
-
-      <div class="puzzle-filters" id="puzzleFilters">
-        <button class="mymind-pill t-tag active" data-filter="all">All</button>
-        <button class="mymind-pill t-tag" data-filter="live">Live</button>
-        <button class="mymind-pill t-tag" data-filter="client">Client</button>
-        <button class="mymind-pill t-tag" data-filter="personal">Experiments</button>
-      </div>
-
-      <div class="puzzle-grid">
-        <div class="puzzle-card" role="button" tabindex="0" data-project="0" data-category="live">
-          <div class="puzzle-img"><video src="/notes/prevue/hero.mp4" autoplay loop muted playsinline preload="auto" aria-hidden="true"></video></div>
-          <div class="puzzle-overlay"><span>Prevue</span></div>
-        </div>
-        <div class="puzzle-card" role="button" tabindex="0" data-project="1" data-category="client">
-          <div class="puzzle-img"><video src="/projects/studyloop/hero.mp4" autoplay loop muted playsinline preload="auto" aria-hidden="true"></video></div>
-          <div class="puzzle-overlay"><span>StudyLoop App</span></div>
-        </div>
-        <div class="puzzle-card" role="button" tabindex="0" data-project="3" data-category="client">
-          <div class="puzzle-img"><img src="/projects/ova-app.jpg" alt="Ova App" loading="lazy"></div>
-          <div class="puzzle-overlay"><span>Ova App</span></div>
-        </div>
-        <div class="puzzle-card" role="button" tabindex="0" data-project="4" data-category="client">
-          <div class="puzzle-img"><img src="/projects/greex-defi.jpg" alt="Greex DeFi" loading="lazy"></div>
-          <div class="puzzle-overlay"><span>Greex DeFi</span></div>
-        </div>
-        <div class="puzzle-card" role="button" tabindex="0" data-project="5" data-category="client">
-          <div class="puzzle-img"><img src="/projects/indianoil.jpg" alt="IndianOil Dashboard" loading="lazy"></div>
-          <div class="puzzle-overlay"><span>IndianOil Dashboard</span></div>
-        </div>
-        <div class="puzzle-card" role="button" tabindex="0" data-project="6" data-category="client">
-          <div class="puzzle-img"><img src="/projects/dealdoc-overview.jpg" alt="DealDoc" loading="lazy"></div>
-          <div class="puzzle-overlay"><span>DealDoc</span></div>
-        </div>
-        <div class="puzzle-card" role="button" tabindex="0" data-project="2" data-category="client">
-          <div class="puzzle-img"><img src="/projects/pet-tickle.jpg" alt="Tickle" loading="lazy"></div>
-          <div class="puzzle-overlay"><span>Tickle</span></div>
-        </div>
-        <div class="puzzle-card" role="button" tabindex="0" data-project="7" data-category="client">
-          <div class="puzzle-img"><img src="/projects/adiagnosis.jpg" alt="ADiagnosis" loading="lazy"></div>
-          <div class="puzzle-overlay"><span>ADiagnosis</span></div>
-        </div>
-        <div class="puzzle-card puzzle-extra" role="button" tabindex="0" data-project="8" data-category="personal">
-          <div class="puzzle-img"><img src="/projects/vault-defi.jpg" alt="Vault DeFi" loading="lazy"></div>
-          <div class="puzzle-overlay"><span>Vault DeFi</span></div>
-        </div>
-        <div class="puzzle-card puzzle-extra" role="button" tabindex="0" data-project="9" data-category="personal">
-          <div class="puzzle-img"><img src="/projects/cycling-app.jpg" alt="Strava concept redesign" loading="lazy"></div>
-          <div class="puzzle-overlay"><span>Strava concept redesign</span></div>
-        </div>
-        <div class="puzzle-card puzzle-extra" role="button" tabindex="0" data-project="10" data-category="personal">
-          <div class="puzzle-img"><img src="/projects/chain-landing.jpg" alt="Chain Landing" loading="lazy"></div>
-          <div class="puzzle-overlay"><span>Chain Landing</span></div>
-        </div>
-        <div class="puzzle-card puzzle-extra" role="button" tabindex="0" data-project="11" data-category="personal">
-          <div class="puzzle-img"><img src="/projects/skeu-buttons.jpg" alt="Skeuomorphic Buttons" loading="lazy"></div>
-          <div class="puzzle-overlay"><span>Skeuomorphic Buttons</span></div>
-        </div>
-        <div class="puzzle-card puzzle-extra" role="button" tabindex="0" data-project="12" data-category="client">
-          <div class="puzzle-img"><img src="/projects/cognix/cognix-landing.png" alt="Cognix Health" loading="lazy"></div>
-          <div class="puzzle-overlay"><span>Cognix Health</span></div>
-        </div>
-        <div class="puzzle-card puzzle-extra" role="button" tabindex="0" data-project="13" data-category="personal">
-          <div class="puzzle-img"><img src="/projects/vercel-dashboard.jpg" alt="Vercel Dashboard" loading="lazy"></div>
-          <div class="puzzle-overlay"><span>Vercel Dashboard</span></div>
-        </div>
-        <div class="puzzle-card puzzle-extra" role="button" tabindex="0" data-project="14" data-category="personal">
-          <div class="puzzle-img"><video src="/projects/magicpath-3.mp4" loop muted playsinline preload="none" aria-hidden="true"></video></div>
-          <div class="puzzle-overlay"><span>MagicPath</span></div>
-        </div>
-        <div class="puzzle-card puzzle-extra" role="button" tabindex="0" data-project="15" data-category="personal">
-          <div class="puzzle-img"><video src="/projects/card-tilt.mp4" loop muted playsinline preload="none" aria-hidden="true"></video></div>
-          <div class="puzzle-overlay"><span>Card Tilt</span></div>
-        </div>
-        <div class="puzzle-card puzzle-extra" role="button" tabindex="0" data-project="16" data-category="personal">
-          <div class="puzzle-img"><video src="/projects/magicpath-2.mp4" loop muted playsinline preload="none" aria-hidden="true"></video></div>
-          <div class="puzzle-overlay"><span>MagicPath Experiments</span></div>
-        </div>
-      </div>
-      <button class="puzzle-show-more t-tag" id="puzzleShowMore" aria-expanded="false">Show more work</button>
     </div>
 
     <!-- ═══ NOTES — Links to individual note pages ═══ -->
@@ -263,7 +150,9 @@ import { NOTES } from '../data/notes.js';
 <!-- ═══ SIDE NAV (desktop: vertical lines, left edge) ═══ -->
 <nav class="side-nav" id="sideNav" aria-label="Section navigation">
   <button class="side-nav-line active" data-section="sec-about" aria-label="About"><span class="side-nav-label">About</span></button>
-  <button class="side-nav-line" data-section="sec-work" aria-label="Work"><span class="side-nav-label">Work</span></button>
+  <a class="side-nav-line side-nav-work" href="/showcase/" aria-label="Work — open showcase">
+    <span class="side-nav-label">Work <svg class="nav-page-arrow" width="11" height="11" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12 12 4"/><path d="M5 4h7v7"/></svg></span>
+  </a>
   <button class="side-nav-line" data-section="sec-notes" aria-label="Notes"><span class="side-nav-label">Notes</span></button>
   <button class="side-nav-line" data-section="sec-bookmarks" aria-label="Saves"><span class="side-nav-label">Saves</span></button>
   <button class="side-nav-line" data-section="sec-books" aria-label="Books"><span class="side-nav-label">Books</span></button>
@@ -279,7 +168,7 @@ import { NOTES } from '../data/notes.js';
   <div class="sheet-handle"></div>
   <div class="mobile-menu">
     <button class="mobile-menu-item t-heading-sm active" data-section="sec-about">About</button>
-    <button class="mobile-menu-item t-heading-sm" data-section="sec-work">Work</button>
+    <a class="mobile-menu-item t-heading-sm" href="/showcase/">Work <svg class="nav-page-arrow" width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12 12 4"/><path d="M5 4h7v7"/></svg></a>
     <button class="mobile-menu-item t-heading-sm" data-section="sec-notes">Notes</button>
     <button class="mobile-menu-item t-heading-sm" data-section="sec-bookmarks">Saves</button>
     <button class="mobile-menu-item t-heading-sm" data-section="sec-books">Books</button>
@@ -287,7 +176,6 @@ import { NOTES } from '../data/notes.js';
 </div>
 
 <script>import '../scripts/audio.js';</script>
-<script>import '../scripts/portfolio-core.js';</script>
 <script>import '../scripts/books-section.js';</script>
 <script>import '../scripts/mymind-flat.js';</script>
 <script>import '../scripts/about-section.js';</script>
@@ -308,10 +196,6 @@ import { NOTES } from '../data/notes.js';
     }
     await ready();
     // If modules haven't set their globals yet, wait briefly for them
-    if(!window.__initPortfolioCore){
-      await new Promise(function(r){setTimeout(r,0);});
-    }
-    if(window.__initPortfolioCore) window.__initPortfolioCore();
     if(window.__initBooks) window.__initBooks();
     if(window.__initMymind) window.__initMymind();
     if(window.__initAbout) window.__initAbout();

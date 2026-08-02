@@ -1277,11 +1277,13 @@ a.about-dropdown-item:hover{opacity:0.7;}
 }
 /* ── Labels ── */
 .side-nav-label{
+  display:inline-flex;align-items:center;gap:3px;
   font-family:'Geist',sans-serif;font-size:var(--t-body-sm-size);font-weight:400;
   color:rgba(58,54,50,0.3);letter-spacing:0.01em;white-space:nowrap;
   pointer-events:none;
   transition:color 0.2s var(--ease),opacity 0.2s var(--ease);
 }
+.nav-page-arrow{flex:none;}
 .side-nav-line:hover .side-nav-label{color:rgba(58,54,50,0.6);}
 .side-nav-line.active .side-nav-label{color:var(--text-primary);font-weight:500;}
 /* ── Proximity wave: cursor-distance opacity ── */
@@ -1340,7 +1342,8 @@ a.about-dropdown-item:hover{opacity:0.7;}
   padding:8px 16px;
   transition:color 0.2s var(--ease);
   min-height:48px;min-width:min(100%,240px);
-  display:inline-flex;align-items:center;justify-content:center;
+  display:inline-flex;align-items:center;justify-content:center;gap:5px;
+  text-decoration:none;
   touch-action:manipulation;
 }
 .mobile-menu-item.active{color:var(--text-primary);}
