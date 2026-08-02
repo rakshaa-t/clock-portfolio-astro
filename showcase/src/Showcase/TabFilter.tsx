@@ -24,8 +24,6 @@ const TABS = [
 
 const ACTIVE_COLOR = "#000000";
 const INACTIVE_COLOR = "rgba(0, 0, 0, 0.44)";
-const UNDERLINE_Y_ACTIVE = -0.037;
-
 const MOTION_SPEED_MULTIPLIER = 1.3;
 const ADJACENT_DURATION = 0.2375;
 const ADJACENT_SQUEEZE_W = 3.64;
@@ -54,14 +52,14 @@ type Pose = { x: number; width: number; y: number };
 function buildAdjacentProfile(
   fromIndex: number,
   toIndex: number,
+  to: Pose,
   start: Pose,
 ): AdjacentProfile {
-  const to = TABS[toIndex];
   const forward = toIndex > fromIndex;
   const fromLeft = start.x;
   const fromW = start.width;
-  const toLeft = to.underlineX;
-  const toW = to.underlineWidth;
+  const toLeft = to.x;
+  const toW = to.width;
   const toRight = toLeft + toW;
   const squeezeLeft = toRight - ADJACENT_SQUEEZE_W;
   const xValues = forward
@@ -84,7 +82,7 @@ function buildAdjacentProfile(
       ease: ADJACENT_EASE,
     },
     y: {
-      values: [UNDERLINE_Y_ACTIVE, UNDERLINE_Y_ACTIVE],
+      values: [start.y, to.y],
       times: [0, 1],
       ease: ["linear"],
     },
@@ -134,17 +132,50 @@ export default function TabFilter({
   const targetHitTimerRef = useRef<number | null>(null);
   const targetHitDoneRef = useRef(false);
 
-  const underlineWidth = useMotionValue<number>(TABS[0].underlineWidth);
+  const underlineWidth = useMotionValue<number>(TABS[0].underlineWidth * 0.4);
   const underlineX = useMotionValue<number>(TABS[0].underlineX);
-  const underlineY = useMotionValue<number>(0);
+  const underlineY = useMotionValue<number>(-0.43);
   const underlineOpacity = useMotionValue<number>(1);
 
   onChangeRef.current = onChange;
   onTargetHitRef.current = onTargetHit;
 
+  const indicatorSettle = useDialKit("Indicator Settle", {
+    All: {
+      height: 1.53,
+      settleY: -0.43,
+      widthScale: 0.4,
+      xOffset: 0,
+    },
+    Clients: {
+      height: 1.53,
+      settleY: -0.04,
+      widthScale: 0.4,
+      xOffset: 0,
+    },
+    Experiments: {
+      height: 1.53,
+      settleY: -0.04,
+      widthScale: 0.4,
+      xOffset: 0,
+    },
+    Live: {
+      height: 1.53,
+      settleY: -0.04,
+      widthScale: 0.4,
+      xOffset: 0,
+    },
+    Mobile: {
+      height: 1.53,
+      settleY: -0.04,
+      widthScale: 0.4,
+      xOffset: 0,
+    },
+  });
+
   const geo = useDialKit("Long Jump Geo", {
-    squeezeW: [6.69, 2, 20, 0.01],
-    travelW: [12, 4, 40, 0.01],
+    squeezeW: [18.98, 2, 20, 0.01],
+    travelW: [31.26, 4, 40, 0.01],
   });
 
   // TODO(production): DialKit's clip.current values are the scrubbable authoring preview.
@@ -157,6 +188,16 @@ export default function TabFilter({
   });
 
   longJumpRef.current = longJump;
+
+  const settledPoseForTab = (index: number): Pose => {
+    const tab = TABS[index];
+    const settle = indicatorSettle[tab.label];
+    return {
+      x: tab.underlineX + settle.xOffset,
+      width: tab.underlineWidth * settle.widthScale,
+      y: settle.settleY,
+    };
+  };
 
   useEffect(() => {
     return () => {
@@ -269,8 +310,8 @@ export default function TabFilter({
   };
 
   const runLongJump = (fromIndex: number, toIndex: number, start: Pose) => {
-    const to = TABS[toIndex];
-    const waypoint = TABS[waypointIndex(fromIndex, toIndex)];
+    const to = settledPoseForTab(toIndex);
+    const waypoint = settledPoseForTab(waypointIndex(fromIndex, toIndex));
     const gen = ++generationRef.current;
 
     stopPlayback();
@@ -281,10 +322,12 @@ export default function TabFilter({
     const endpoints: LongJumpEndpoints = {
       fromX: start.x,
       fromW: start.width,
-      waypointX: waypoint.underlineX,
-      waypointW: waypoint.underlineWidth,
-      toX: to.underlineX,
-      toW: to.underlineWidth,
+      fromY: start.y,
+      waypointX: waypoint.x,
+      waypointW: waypoint.width,
+      toX: to.x,
+      toW: to.width,
+      toY: to.y,
       forward: toIndex > fromIndex,
     };
 
@@ -313,7 +356,7 @@ export default function TabFilter({
     commitPose({
       x: longJump.endpoints.toX,
       width: longJump.endpoints.toW,
-      y: UNDERLINE_Y_ACTIVE,
+      y: longJump.endpoints.toY,
     });
     longJumpRef.current = null;
     setLongJump(null);
@@ -339,7 +382,12 @@ export default function TabFilter({
     onChangeRef.current?.(TABS[index].label);
 
     if (hops === 1) {
-      const profile = buildAdjacentProfile(fromIndex, index, start);
+      const profile = buildAdjacentProfile(
+        fromIndex,
+        index,
+        settledPoseForTab(index),
+        start,
+      );
       setAdjacentTransition({ from: fromIndex, to: index, profile });
       runAdjacentTransition(index, profile, start);
       return;
@@ -426,6 +474,7 @@ export default function TabFilter({
             x: underlineX,
             y: underlineY,
             opacity: underlineOpacity,
+            height: indicatorSettle[TABS[activeIndex].label].height,
             backgroundColor: ink,
           }}
         />

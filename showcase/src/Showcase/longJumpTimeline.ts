@@ -35,11 +35,11 @@ export const LONG_JUMP_TIMELINE_CONFIG = {
     at: 0,
     from: { progress: 0 },
     to: { progress: 1 },
-    duration: 0.05,
+    duration: 0.07,
     transition: {
       type: "easing" as const,
       ease: [1, 0, 0.58, 1] as [number, number, number, number],
-      duration: 0.05,
+      duration: 0.07,
     },
   },
 
@@ -107,10 +107,12 @@ export const LONG_JUMP_TIMELINE_CONFIG = {
 export type LongJumpEndpoints = {
   fromX: number;
   fromW: number;
+  fromY: number;
   waypointX: number;
   waypointW: number;
   toX: number;
   toW: number;
+  toY: number;
   /** true = left→right (anchor left, grow right); false = right→left (anchor right, grow left) */
   forward: boolean;
 };
@@ -161,7 +163,7 @@ export function resolveLongJumpPose(
     width = lerp(ep.fromW, squeezeW, phases.squeeze);
   }
 
-  const y = lerp(0, -0.037, phases.y);
+  const y = lerp(ep.fromY, ep.toY, phases.y);
 
   if (ep.forward) {
     const x =
