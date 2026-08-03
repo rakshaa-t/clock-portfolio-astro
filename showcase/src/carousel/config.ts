@@ -17,7 +17,6 @@ export const CONFIG = {
   SHRINK_IDLE_DECAY_BOOST: 0.05,
   SHRINK_BASE: 0.25,
   SHRINK_FAST_BOOST: 0.09,
-  DRAG_THRESHOLD: 3,
   // Video decode policy. Sources are prepared before their card enters, but
   // animation only starts once the strip is readable rather than flying past.
   VIDEO_PRELOAD_DISTANCE: 720,

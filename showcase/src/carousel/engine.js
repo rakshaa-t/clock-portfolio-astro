@@ -503,8 +503,6 @@ export function createCarousel(mount, callbacks = {}) {
   let lastWheelAt = 0;
   let snapArmed = false; // wheel input arms the settle-snap; it fires once
   let snapTarget = null;
-  let drag = null;
-  let suppressClick = false;
 
   // ---- liquid-glass lens: optional FBO + fullscreen pass ----
   const dpr = renderer.getPixelRatio();
@@ -1029,7 +1027,7 @@ export function createCarousel(mount, callbacks = {}) {
 
   // ---- case-study overlay ----
   // This independent DOM layer sits above the WebGL canvas but never takes
-  // pointer events, so it cannot interfere with carousel drag/click handling.
+  // pointer events, so it cannot interfere with carousel click/hover handling.
   const caseStudyOverlayEnabled =
     Boolean(caseStudyOverlayElement) &&
     window.matchMedia("(hover: hover) and (pointer: fine)").matches;
@@ -1117,43 +1115,8 @@ export function createCarousel(mount, callbacks = {}) {
     snapArmed = true;
   }
 
-  function onPointerDown(e) {
-    if (e.button !== 0 || focusState.active || entryActive || entrySettled)
-      return;
-    drag = {
-      pointerId: e.pointerId,
-      startX: e.clientX,
-      startTarget: target,
-      moved: false,
-    };
-    snapTarget = null;
-    setCaseStudyOverlay(null);
-    try {
-      el.setPointerCapture(e.pointerId);
-    } catch {
-      // Pointer capture can fail if the event has already been cancelled.
-    }
-  }
-
   function onPointerMove(e) {
     lastPointer = { x: e.clientX, y: e.clientY };
-
-    if (drag && drag.pointerId === e.pointerId) {
-      const dx = e.clientX - drag.startX;
-      if (!drag.moved && Math.abs(dx) > CONFIG.DRAG_THRESHOLD) {
-        drag.moved = true;
-        suppressClick = true;
-        userInteracted = true;
-      }
-      if (drag.moved) {
-        e.preventDefault();
-        target = drag.startTarget - dx;
-        snapArmed = true;
-        lastWheelAt = performance.now();
-      }
-      setCaseStudyOverlay(null);
-      return;
-    }
 
     if (focusState.active) {
       setCaseStudyOverlay(null);
@@ -1166,29 +1129,7 @@ export function createCarousel(mount, callbacks = {}) {
     setCaseStudyOverlay(null);
   }
 
-  function onPointerUp(e) {
-    if (!drag || drag.pointerId !== e.pointerId) return;
-    const moved = drag.moved;
-    drag = null;
-    if (moved) {
-      lastWheelAt = performance.now();
-      snapArmed = true;
-      window.setTimeout(() => {
-        suppressClick = false;
-      }, 0);
-    }
-    try {
-      el.releasePointerCapture(e.pointerId);
-    } catch {
-      // Already released.
-    }
-  }
-
   function onClick(e) {
-    if (suppressClick) {
-      suppressClick = false;
-      return;
-    }
     if (focusState.active || entryActive || entrySettled) return;
     const hit = panelAtPointer(e.clientX, e.clientY);
     if (!hit) return;
@@ -1444,10 +1385,7 @@ export function createCarousel(mount, callbacks = {}) {
   }
 
   el.addEventListener("wheel", onWheel, { passive: false });
-  el.addEventListener("pointerdown", onPointerDown);
   el.addEventListener("pointermove", onPointerMove);
-  el.addEventListener("pointerup", onPointerUp);
-  el.addEventListener("pointercancel", onPointerUp);
   el.addEventListener("pointerleave", onLeave);
   el.addEventListener("click", onClick);
 
@@ -1623,10 +1561,7 @@ export function createCarousel(mount, callbacks = {}) {
     window.removeEventListener("resize", onResize);
     document.removeEventListener("visibilitychange", onVisibilityChange);
     el.removeEventListener("wheel", onWheel);
-    el.removeEventListener("pointerdown", onPointerDown);
     el.removeEventListener("pointermove", onPointerMove);
-    el.removeEventListener("pointerup", onPointerUp);
-    el.removeEventListener("pointercancel", onPointerUp);
     el.removeEventListener("pointerleave", onLeave);
     el.removeEventListener("click", onClick);
     if (focusState.anim) focusState.anim.kill();

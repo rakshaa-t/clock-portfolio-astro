@@ -3,16 +3,11 @@
   width: 100%;
   height: 100%;
   overflow: hidden;
-  touch-action: none;
-  cursor: grab;
+  touch-action: pan-y;
   /* The carousel owns the viewport; the browser focus ring reads as a frame. */
   outline: none;
   /* Gives WebGL the same sampled color as the shell during boot/resize. */
   background: var(--liquid-carousel-bg, var(--showcase-bg));
-}
-
-.liquid-glass-carousel:active {
-  cursor: grabbing;
 }
 
 .liquid-glass-carousel canvas {
