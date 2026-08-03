@@ -17,6 +17,7 @@ function initBottomNav(){
   if(!sideNav&&!burgerBtn) return;
 
   const sideItems=sideNav?[...sideNav.querySelectorAll('.side-nav-line[data-section]')]:[];
+  const sideWaveItems=sideNav?[...sideNav.querySelectorAll('.side-nav-line')]:[];
   const menuItems=menuWrap?[...menuWrap.querySelectorAll('.mobile-menu-item[data-section]')]:[];
 
   const sections=sideItems.length
@@ -126,7 +127,7 @@ function initBottomNav(){
 
     sideNav.addEventListener('mouseenter',()=>{
       sideNav.classList.add('proximity-active');
-      itemCenters=sideItems.map(item=>{
+      itemCenters=sideWaveItems.map(item=>{
         const r=item.getBoundingClientRect();
         return r.top+r.height/2;
       });
@@ -137,17 +138,17 @@ function initBottomNav(){
       const cy=e.clientY;
       proxRaf=requestAnimationFrame(()=>{
         proxRaf=0;
-        for(let i=0;i<sideItems.length;i++){
+        for(let i=0;i<sideWaveItems.length;i++){
           const dist=Math.abs(cy-itemCenters[i]);
           const prox=Math.exp(-(dist*dist)/(2*SIGMA*SIGMA));
-          sideItems[i].style.setProperty('--prox',prox.toFixed(3));
+          sideWaveItems[i].style.setProperty('--prox',prox.toFixed(3));
         }
       });
     },{passive:true,signal:ac.signal});
 
     sideNav.addEventListener('mouseleave',()=>{
       sideNav.classList.remove('proximity-active');
-      sideItems.forEach(item=>item.style.removeProperty('--prox'));
+      sideWaveItems.forEach(item=>item.style.removeProperty('--prox'));
       if(proxRaf){cancelAnimationFrame(proxRaf);proxRaf=0;}
     },{signal:ac.signal});
   }
