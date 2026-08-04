@@ -44,6 +44,20 @@ function initAbout(){
   const aboutPrimaryBtn=document.querySelector('.about-cta-primary');
   if(!aboutPrimaryBtn) return; // not on portfolio page
 
+  // The beam travels 160% of each word's width. Match its physical velocity
+  // across labels by scaling short-word duration from the widest label.
+  const syncTextBeamDurations=()=>{
+    const targets=[...document.querySelectorAll('.about-drop-trigger,.about-bio-link')];
+    const widths=targets.map(target=>target.getBoundingClientRect().width);
+    const widest=Math.max(...widths,1);
+    widths.forEach((width,index)=>{
+      const duration=Math.max(400,Math.round((width/widest)*1300));
+      targets[index].style.setProperty('--about-text-beam-duration',`${duration}ms`);
+    });
+  };
+  syncTextBeamDurations();
+  document.fonts?.ready?.then(syncTextBeamDurations);
+
   aboutPrimaryBtn.addEventListener('mousedown',()=>aboutClickSound('primary'));
   aboutPrimaryBtn.addEventListener('touchstart',()=>aboutClickSound('primary'),{passive:true});
 
@@ -102,13 +116,44 @@ function initAbout(){
   // Location toggle — guard against duplicate listeners on View Transition re-init
   const locToggle=document.getElementById('locationToggle');
   const locText=document.getElementById('locationText');
-  if(locToggle&&!locToggle._bound){
+  if(locToggle&&locText&&!locToggle._bound){
     locToggle._bound=true;
+    const locationTextWidth=locText.getBoundingClientRect().width;
+    locText.style.display='inline-block';
+    locText.style.minWidth=`${locationTextWidth}px`;
+    let locationTextTimer=0,locationTextFrame=0;
+    function setLocationText(value){
+      if(locationTextTimer){clearTimeout(locationTextTimer);locationTextTimer=0;}
+      if(locationTextFrame){cancelAnimationFrame(locationTextFrame);locationTextFrame=0;}
+      if(locText.textContent===value){
+        locText.classList.remove('is-leaving','is-entering');
+        return;
+      }
+      if(window.matchMedia('(prefers-reduced-motion:reduce)').matches){
+        locText.classList.remove('is-leaving','is-entering');
+        locText.textContent=value;
+        return;
+      }
+      locText.classList.remove('is-entering');
+      locText.classList.add('is-leaving');
+      locationTextTimer=window.setTimeout(()=>{
+        locationTextTimer=0;
+        locText.textContent=value;
+        locText.classList.remove('is-leaving');
+        locText.classList.add('is-entering');
+        locationTextFrame=requestAnimationFrame(()=>{
+          locationTextFrame=requestAnimationFrame(()=>{
+            locText.classList.remove('is-entering');
+            locationTextFrame=0;
+          });
+        });
+      },80);
+    }
     function toggleLocation(){
       locToggle.classList.toggle('on');
       const isOn=locToggle.classList.contains('on');
       locToggle.setAttribute('aria-checked',isOn);
-      locText.textContent=isOn?'Remote':'IST, UTC+0 and AEDT';
+      setLocationText(isOn?'Remote':'IST, UTC+0 and AEDT');
       aboutClickSound('secondary');
     }
     locToggle.addEventListener('mousedown',toggleLocation);

@@ -52,7 +52,7 @@ function initMymind(){
     if(card.source)html+=`<a class="pop-source" href="${card.url||'#'}" target="_blank">${card.source} \u2197</a>`;
     if(card.tldr)html+=`<div class="pop-tldr">${card.tldr}</div>`;
     if(card.tags?.length)html+=`<div class="pop-tags">${card.tags.map(t=>`<span class="pop-tag">${t}</span>`).join('')}</div>`;
-    html+=`<div class="pop-footer"><span class="pop-date">${card.date}</span><button class="pop-copy" data-copy="${esc(copyText)}"><svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="5" width="9" height="9" rx="1.5"/><path d="M5 11H3.5A1.5 1.5 0 012 9.5v-7A1.5 1.5 0 013.5 1h7A1.5 1.5 0 0112 2.5V5"/></svg> Copy</button></div>`;
+    html+=`<div class="pop-footer"><span class="pop-date">${card.date}</span><button class="pop-copy" data-copy="${esc(copyText)}"><span class="pop-copy-icon" aria-hidden="true"><svg class="pop-copy-copy-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="5" width="9" height="9" rx="1.5"/><path d="M5 11H3.5A1.5 1.5 0 012 9.5v-7A1.5 1.5 0 013.5 1h7A1.5 1.5 0 0112 2.5V5"/></svg><svg class="pop-copy-check-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 8 7 11 12 5"/></svg></span><span class="pop-copy-label">Copy</span></button></div>`;
     mmindPopover.innerHTML=html;
 
     const isMobile=window.matchMedia('(max-width:480px)').matches;
@@ -106,13 +106,16 @@ function initMymind(){
     mmindCloseBtn.focus();
     const copyBtn=mmindPopover.querySelector('.pop-copy');
     if(copyBtn){
+      const copyLabel=copyBtn.querySelector('.pop-copy-label');
+      let copyResetTimer=0;
       copyBtn.addEventListener('click',(e)=>{
         e.stopPropagation();
         navigator.clipboard.writeText(copyBtn.dataset.copy).then(()=>{
-          copyBtn.innerHTML='<svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 8 7 11 12 5"/></svg> Copied!';
+          if(copyResetTimer)clearTimeout(copyResetTimer);
+          copyLabel.textContent='Copied!';
           copyBtn.classList.add('copied');
-          setTimeout(()=>{
-            copyBtn.innerHTML='<svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="5" width="9" height="9" rx="1.5"/><path d="M5 11H3.5A1.5 1.5 0 012 9.5v-7A1.5 1.5 0 013.5 1h7A1.5 1.5 0 0112 2.5V5"/></svg> Copy';
+          copyResetTimer=setTimeout(()=>{
+            copyLabel.textContent='Copy';
             copyBtn.classList.remove('copied');
           },1500);
         });
