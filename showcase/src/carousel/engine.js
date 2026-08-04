@@ -250,7 +250,15 @@ export function createCarousel(mount, callbacks = {}) {
   }
 
   function showPoster(src) {
-    if (!src.posterTex) return;
+    // The fast-motion policy is evaluated every animation frame. Once a
+    // poster is already bound, rebinding every pooled material marks them all
+    // dirty and causes avoidable WebGL work right in the scroll hot path.
+    if (
+      !src.posterTex ||
+      (!src.videoTextureApplied && src.tex === src.posterTex)
+    ) {
+      return;
+    }
     src.videoTextureApplied = false;
     src.tex = src.posterTex;
     for (const p of pool) {
@@ -1393,6 +1401,7 @@ export function createCarousel(mount, callbacks = {}) {
   let raf = 0;
   let videoMotionPaused = false;
   let previousFrameAt = performance.now();
+  const MAX_SCROLL_FRAME_DURATION = 34;
 
   // Convert a 60fps follow amount to the equivalent amount for this frame.
   // Fixed per-frame interpolation settles differently on 60Hz and 120Hz
@@ -1404,7 +1413,10 @@ export function createCarousel(mount, callbacks = {}) {
   function tick(frameAt) {
     raf = 0;
     const frameDuration = Math.min(
-      100,
+      // Do not turn a stalled frame into one large position leap. We retain
+      // the time-correct response at normal refresh rates while capping a
+      // recovery step to roughly two 60Hz frames.
+      MAX_SCROLL_FRAME_DURATION,
       Math.max(1, (frameAt ?? performance.now()) - previousFrameAt),
     );
     previousFrameAt = frameAt ?? performance.now();
@@ -1514,7 +1526,12 @@ export function createCarousel(mount, callbacks = {}) {
   }
 
   function startTick() {
-    if (!raf && !document.hidden) raf = requestAnimationFrame(tick);
+    if (!raf && !document.hidden) {
+      // A tab restore can leave a very old frame timestamp behind. Start from
+      // now so returning to the page does not visibly skip the carousel.
+      previousFrameAt = performance.now();
+      raf = requestAnimationFrame(tick);
+    }
   }
 
   function stopTick() {
