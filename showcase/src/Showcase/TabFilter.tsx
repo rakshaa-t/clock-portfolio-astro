@@ -612,18 +612,6 @@ export default function TabFilter({
             </motion.button>
           ))}
         </div>
-
-        <motion.div
-          className="tab-filter__underline"
-          data-node-id="853:465"
-          style={{
-            width: underlineWidth,
-            height: underlineHeight,
-            x: underlineX,
-            y: underlineY,
-            backgroundColor: ink,
-          }}
-        />
       </div>
     </div>
   );

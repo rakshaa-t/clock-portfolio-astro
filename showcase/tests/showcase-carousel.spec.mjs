@@ -67,6 +67,7 @@ test('filters retain the renderer and never expose a blank panel', async ({
 }) => {
   await page.goto('./');
   await expect(page.locator('.liquid-glass-carousel canvas')).toHaveCount(1);
+  await expect(page.locator('.tab-filter__underline')).toHaveCount(0);
   const { engineId } = await diagnostics(page);
   const fixedPalette = await page.locator('.showcase-shell').evaluate((shell) => {
     const styles = getComputedStyle(shell);

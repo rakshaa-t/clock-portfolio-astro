@@ -2083,17 +2083,6 @@
   border-radius: 2px;
 }
 
-.tab-filter__underline {
-  position: absolute;
-  top: 21.04px;
-  left: 0;
-  width: 1px;
-  height: 1.531px;
-  background: #000000;
-  transform-origin: left center;
-  will-change: transform;
-}
-
 .showcase-mobile-stack {
   display: none;
 }
