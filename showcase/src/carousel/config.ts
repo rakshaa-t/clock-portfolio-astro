@@ -7,10 +7,11 @@ export const CONFIG = {
   WHEEL: 1.19,
   SNAP: true,
   SNAP_DIST: 149,
-  SNAP_DELAY: 60,
-  // A quick steering correction keeps the row responsive after a flick.
-  SNAP_STRENGTH: 0.16,
-  SNAP_IDLE_BOOST: 0.16,
+  // Let the natural scroll easing finish before gently correcting to a card.
+  SNAP_DELAY: 130,
+  // The snap must read as the tail of the scroll, never a second movement.
+  SNAP_STRENGTH: 0.04,
+  SNAP_IDLE_BOOST: 0.06,
   SHRINK_MAX: 24,
   SHRINK_ATTACK: 0.14,
   SHRINK_DECAY: 0.06,
