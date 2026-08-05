@@ -8,7 +8,6 @@ import {
 } from "motion/react";
 import {
   LONG_JUMP_TIMELINE_CONFIG,
-  mixColor,
   progressOf,
   resolveLongJumpPose,
   type LongJumpEndpoints,
@@ -102,10 +101,6 @@ function settlePose(
 
 type AdjacentProfile = {
   duration: number;
-  targetHitAt: number;
-  fromColorAt: number;
-  toColorStart: number;
-  toColorAt: number;
   x: { values: number[]; times: number[]; ease: Ease[] };
   width: { values: number[]; times: number[]; ease: Ease[] };
   y: { values: number[]; times: number[]; ease: Ease[] };
@@ -121,10 +116,6 @@ function buildAdjacentForward(
 ): AdjacentProfile {
   return {
     duration: 1.325 / 2 / 1.5,
-    targetHitAt: (0.7722 - 0.6389) / 0.3611,
-    fromColorAt: (0.7736 - 0.6389) / 0.3611,
-    toColorStart: (0.8509 - 0.6389) / 0.3611,
-    toColorAt: (0.851 - 0.6389) / 0.3611,
     x: {
       values: [fromLeft, toLeft, toLeft],
       times: [0, (0.7722 - 0.6389) / 0.3611, 1],
@@ -156,10 +147,6 @@ function buildAdjacentReverse(
 
   return {
     duration: 0.928 / 2 / 1.5,
-    targetHitAt: (0.5618 - 0.3861) / 0.2528,
-    fromColorAt: (0.4575 - 0.3861) / 0.2528,
-    toColorStart: (0.5208 - 0.3861) / 0.2528,
-    toColorAt: (0.5209 - 0.3861) / 0.2528,
     x: {
       values: [fromLeft, squeezeLeft, toLeft, toLeft],
       times: [0, (0.4637 - 0.3861) / 0.2528, (0.5618 - 0.3861) / 0.2528, 1],
@@ -198,7 +185,6 @@ function waypointIndex(from: number, to: number) {
 
 type TabFilterProps = {
   onChange?: (label: (typeof TABS)[number]["label"]) => void;
-  onTargetHit?: (label: (typeof TABS)[number]["label"]) => void;
   ink?: string;
 };
 
@@ -211,7 +197,6 @@ const withOpacity = (color: string, opacity: number) => {
 
 export default function TabFilter({
   onChange,
-  onTargetHit,
   ink = ACTIVE_COLOR,
 }: TabFilterProps) {
   const [activeIndex, setActiveIndex] = useState(0);
@@ -228,12 +213,9 @@ export default function TabFilter({
 
   const activeIndexRef = useRef(0);
   const onChangeRef = useRef(onChange);
-  const onTargetHitRef = useRef(onTargetHit);
   const longJumpRef = useRef<typeof longJump>(null);
   const playbackRef = useRef<AnimationPlaybackControls[]>([]);
   const generationRef = useRef(0);
-  const targetHitTimerRef = useRef<number | null>(null);
-  const targetHitDoneRef = useRef(false);
   const groupRef = useRef<HTMLDivElement>(null);
   const labelRefs = useRef<(HTMLSpanElement | null)[]>([]);
   const [layouts, setLayouts] = useState<TabLayout[]>(() =>
@@ -253,7 +235,6 @@ export default function TabFilter({
   const underlineHeight = useMotionValue<number>(initialSettle.height);
 
   onChangeRef.current = onChange;
-  onTargetHitRef.current = onTargetHit;
 
   const geo = useDialKit(
     "Long Jump Geo",
@@ -312,9 +293,6 @@ export default function TabFilter({
 
   useEffect(() => {
     return () => {
-      if (targetHitTimerRef.current !== null) {
-        window.clearTimeout(targetHitTimerRef.current);
-      }
       for (const c of playbackRef.current) c.stop();
     };
   }, []);
@@ -366,20 +344,8 @@ export default function TabFilter({
   };
 
   const stopPlayback = () => {
-    if (targetHitTimerRef.current !== null) {
-      window.clearTimeout(targetHitTimerRef.current);
-      targetHitTimerRef.current = null;
-    }
     for (const c of playbackRef.current) c.stop();
     playbackRef.current = [];
-  };
-
-  const notifyTargetHit = (toIndex: number, gen: number) => {
-    if (targetHitDoneRef.current) return;
-    if (generationRef.current !== gen) return;
-    if (activeIndexRef.current !== toIndex) return;
-    targetHitDoneRef.current = true;
-    onTargetHitRef.current?.(TABS[toIndex].label);
   };
 
   const abortDial = () => {
@@ -407,7 +373,6 @@ export default function TabFilter({
 
     stopPlayback();
     commitPose(start);
-    targetHitDoneRef.current = false;
 
     playbackRef.current = [
       animate(underlineX, profile.x.values, {
@@ -431,11 +396,6 @@ export default function TabFilter({
       }),
     ];
 
-    targetHitTimerRef.current = window.setTimeout(() => {
-      targetHitTimerRef.current = null;
-      notifyTargetHit(toIndex, gen);
-    }, profile.duration * profile.targetHitAt * 1000);
-
     Promise.all(playbackRef.current.map((c) => c.finished)).then(() => {
       if (generationRef.current !== gen) return;
       if (activeIndexRef.current !== toIndex) return;
@@ -452,7 +412,6 @@ export default function TabFilter({
 
     stopPlayback();
     commitPose(start);
-    targetHitDoneRef.current = false;
 
     const endpoints: LongJumpEndpoints = {
       fromX: start.x,
@@ -486,9 +445,6 @@ export default function TabFilter({
         settleLook(longJump.to, settles).settleY,
       ),
     );
-    if (progressOf(tl.phaseTarget) >= 1) {
-      notifyTargetHit(longJump.to, generationRef.current);
-    }
   }, [longJump, tl.time, tl.playing, geo.squeezeW, geo.travelW, settles]);
 
   useEffect(() => {
@@ -534,42 +490,7 @@ export default function TabFilter({
   };
 
   const getColor = (index: number) => {
-    if (longJump) {
-      const { from, to } = longJump;
-      if (index === from) {
-        return mixColor(Number(tl.fromLabel?.current?.mix ?? 1), ink);
-      }
-      if (index === to) {
-        return mixColor(Number(tl.toLabel?.current?.mix ?? 0), ink);
-      }
-      return withOpacity(ink, 0.44);
-    }
-
-    if (!adjacentTransition) {
-      return index === activeIndex ? ink : withOpacity(ink, 0.44);
-    }
-
-    const { from, to } = adjacentTransition;
-    if (index === from) return withOpacity(ink, 0.44);
-    if (index === to) return ink;
-    return withOpacity(ink, 0.44);
-  };
-
-  const getColorTransition = (index: number) => {
-    if (longJump || !adjacentTransition) return { duration: 0 };
-
-    const { from, to, profile } = adjacentTransition;
-    if (index === from) {
-      return { duration: profile.duration * profile.fromColorAt, ease: "linear" as const };
-    }
-    if (index === to) {
-      return {
-        duration: profile.duration,
-        times: [0, profile.toColorStart - 0.0001, profile.toColorStart, profile.toColorAt],
-        ease: ["linear", "linear", "linear"],
-      };
-    }
-    return { duration: 0 };
+    return index === activeIndex ? ink : withOpacity(ink, 0.44);
   };
 
   return (
@@ -595,11 +516,7 @@ export default function TabFilter({
               data-node-id={tab.id}
               onClick={() => handleSelect(index)}
               animate={{ color: getColor(index) }}
-              whileTap={{ scale: 0.95 }}
-              transition={{
-                color: getColorTransition(index) as never,
-                scale: { duration: 0.1, ease: "easeOut" },
-              }}
+              transition={{ color: { duration: 0 } }}
             >
               <span
                 ref={(element) => {

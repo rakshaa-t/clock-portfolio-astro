@@ -976,10 +976,6 @@ export function ShowcaseScreen() {
   const [carouselSelectedSlug, setCarouselSelectedSlug] = useState(
     SHOWCASE_PROJECTS[0].slug,
   );
-  const pendingCarouselFilterRef = useRef<{
-    filter: ShowcaseFilter;
-    selectedSlug: string;
-  } | null>(null);
   const visibleProjects = useMemo(
     () => getProjectsForFilter(activeFilter),
     [activeFilter],
@@ -1026,28 +1022,12 @@ export function ShowcaseScreen() {
 
   const selectFilter = (filter: ShowcaseFilter) => {
     const projects = getProjectsForFilter(filter);
+    const nextSlug = projects.some((project) => project.slug === selectedSlug)
+      ? selectedSlug
+      : projects[0].slug;
 
     setActiveFilter(filter);
-    setSelectedSlug((current) => {
-      const nextSlug = projects.some((project) => project.slug === current)
-        ? current
-        : projects[0].slug;
-      pendingCarouselFilterRef.current = { filter, selectedSlug: nextSlug };
-      return nextSlug;
-    });
-  };
-
-  const syncCarouselFilter = (filter: ShowcaseFilter) => {
-    const projects = getProjectsForFilter(filter);
-    const pending = pendingCarouselFilterRef.current;
-    const nextSlug =
-      pending?.filter === filter
-        ? pending.selectedSlug
-        : projects.some((project) => project.slug === selectedSlug)
-          ? selectedSlug
-          : projects[0].slug;
-
-    pendingCarouselFilterRef.current = null;
+    setSelectedSlug(nextSlug);
     setCarouselSourceIds(projects.map((project) => project.slug));
     setCarouselSelectedSlug(nextSlug);
   };
@@ -1082,7 +1062,6 @@ export function ShowcaseScreen() {
         <TabFilter
           ink={theme.ink}
           onChange={selectFilter}
-          onTargetHit={syncCarouselFilter}
         />
       </nav>
 
